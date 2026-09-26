@@ -6,6 +6,7 @@ import type {
   Position,
 } from "@/lib/schemas";
 import { newId } from "./drawing";
+import { type LayoutItem, planSite, type Surroundings } from "./site-layout";
 import { localFrame } from "./transform";
 
 // Procedural starting shapes (smart start, P1.9) and starting layouts (P1.10).
@@ -197,13 +198,79 @@ const overlaps = (a: Box, b: Box, gap: number) =>
   a.y0 - gap < b.y1 &&
   b.y0 - gap < a.y1;
 
+type LayoutComponent = Pick<Component, "id" | "type" | "subtype" | "params">;
+
 /**
- * Places the given components around `centre` (roads first as a street grid, then
- * buildings fronting the roads with setbacks, then parks in the remaining space),
- * without overlaps. Returns geometry per component id. Deterministic for a seed.
+ * Places the given components around `centre`. With the map's `surroundings`, it
+ * plans on real ground (site-layout.ts): road work on existing streets, buildings
+ * and parks on open land facing a street, parking by the biggest building, culverts
+ * where a road crosses water, all inside the optional project `boundary`. Anything
+ * it can't fit, or everything when there's no map data, gets the plain grid layout.
+ * Returns geometry per component id. Deterministic for a seed.
  */
 export function generateLayout(
-  components: Pick<Component, "id" | "type" | "subtype" | "params">[],
+  components: LayoutComponent[],
+  centre: Position,
+  seed: number,
+  surroundings?: Surroundings,
+  boundary?: Position[],
+): Record<string, ComponentGeometry> {
+  if (!surroundings?.streets.length)
+    return gridLayout(components, centre, seed);
+  const rand = rng(seed);
+  const items = components.map((c): LayoutItem => {
+    const size = sizeFor(c);
+    if (size.kind === "line")
+      return {
+        id: c.id,
+        kind: "road",
+        lengthM: size.lengthM,
+        roadClass:
+          typeof c.params.roadClass === "string"
+            ? c.params.roadClass
+            : undefined,
+      };
+    if (size.kind === "point")
+      return {
+        id: c.id,
+        kind: c.subtype === "pumping_station" ? "spot" : "crossing",
+      };
+    return {
+      id: c.id,
+      kind: "area",
+      role:
+        c.type === "building" || c.type === "parking" || c.type === "park"
+          ? c.type
+          : "custom",
+      // A building's plot includes its setback, as in smartGeometry.
+      widthM: size.widthM + (c.type === "building" ? 2 * size.setbackM : 0),
+      depthM: size.depthM + (c.type === "building" ? 2 * size.setbackM : 0),
+    };
+  });
+  const placed = planSite(items, centre, surroundings, rand, boundary);
+  const out: Record<string, ComponentGeometry> = {};
+  for (const c of components) {
+    const p = placed[c.id];
+    if (!p) continue;
+    if (p.kind === "line")
+      out[c.id] = {
+        primary: {
+          type: "Feature",
+          properties: {},
+          geometry: { type: "LineString", coordinates: p.line },
+        },
+        features: [],
+      };
+    else if (p.kind === "point") out[c.id] = smartGeometry(c, p.at);
+    else out[c.id] = smartGeometry(c, p.centre, p.bearingDeg);
+  }
+  const rest = components.filter((c) => !out[c.id]);
+  return rest.length ? { ...gridLayout(rest, centre, seed), ...out } : out;
+}
+
+/** Street-grid layout with no knowledge of the map (the fallback). */
+function gridLayout(
+  components: LayoutComponent[],
   centre: Position,
   seed: number,
 ): Record<string, ComponentGeometry> {

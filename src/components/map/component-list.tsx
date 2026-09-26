@@ -38,6 +38,7 @@ import { intlLocale, type Locale } from "@/lib/i18n/routing";
 import type { Component, ComponentType } from "@/lib/schemas";
 import { useStore } from "@/lib/store/store";
 import { cn } from "@/lib/utils";
+import { readSurroundings } from "./read-surroundings";
 import { useMap } from "./map-context";
 
 const typeIcon: Record<ComponentType, LucideIcon> = {
@@ -83,7 +84,8 @@ export function ComponentList() {
     s.components.some((c) => c.origin === "generated" && c.status === "drawn"),
   );
 
-  function layout(regenerate: boolean) {
+  const [placing, setPlacing] = useState(false);
+  async function layout(regenerate: boolean) {
     const store = useStore.getState();
     const area = store.areaBoundary && featureBounds(store.areaBoundary);
     const centre = area
@@ -92,9 +94,17 @@ export function ComponentList() {
         ? (map.getCenter().toArray() as [number, number])
         : null;
     if (!centre) return;
-    store.generateLayout(
+    // Streets, buildings and water already on the map, so the layout fits the ground.
+    setPlacing(true);
+    const surroundings = map
+      ? await readSurroundings(map, centre).catch(() => undefined)
+      : undefined;
+    setPlacing(false);
+    const latest = useStore.getState();
+    latest.generateLayout(
       centre,
-      regenerate ? store.layoutSeed + 1 : store.layoutSeed,
+      regenerate ? latest.layoutSeed + 1 : latest.layoutSeed,
+      surroundings,
     );
     const all = useStore
       .getState()
@@ -166,7 +176,8 @@ export function ComponentList() {
             size="icon-sm"
             aria-label={canGenerate ? t("generate") : t("regenerate")}
             title={canGenerate ? t("generate") : t("regenerate")}
-            onClick={() => layout(!canGenerate)}
+            disabled={placing}
+            onClick={() => void layout(!canGenerate)}
           >
             {canGenerate ? <Sparkles /> : <Shuffle />}
           </Button>

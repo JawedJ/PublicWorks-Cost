@@ -10,11 +10,13 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 - **Status:** at sync point   <!-- not started | in progress | blocked | at sync point -->
 - **Next action:** Demo projects (P4.4: draw three in the app, download project files for B; waiting on the human to pick them). Then P10 polish (needs the human's go-ahead).
 - **Blockers / needs from B:** see Requests below.
-- **Last updated:** 2026-09-26 (build list tags removable with ×; sample-data badge removed from the top bar; P6.3 site context in the engine, automatic lookup; rotate/tilt mode; P7.4 creation flow with Gemini parse + review; P50/share in the component list; project file buttons in the top bar; language toggle removed; park features from the prompt placed with the park; workspace height fix; UI tweaks: resizable side panels, narrower estimate panel, building names in 3D; P1.7–P1.18, P3.2–P3.4, P3.9a, P4.3, P4.5, P5.1, P6.1–P6.2, P9.1–P9.5 merged to `main`)
+- **Last updated:** 2026-09-26 (map-aware starting layout; build list tags removable with ×; sample-data badge removed from the top bar; P6.3 site context in the engine, automatic lookup; rotate/tilt mode; P7.4 creation flow with Gemini parse + review; P50/share in the component list; project file buttons in the top bar; language toggle removed; park features from the prompt placed with the park; workspace height fix; UI tweaks: resizable side panels, narrower estimate panel, building names in 3D; P1.7–P1.18, P3.2–P3.4, P3.9a, P4.3, P4.5, P5.1, P6.1–P6.2, P9.1–P9.5 merged to `main`)
 
 ## Handoff notes
 
 > Where an unfinished task stopped, gotchas, things to verify. Replace each session.
+
+- Layout: `generateLayout(components, centre, seed, surroundings?, boundary?)`; `readSurroundings(map, centre)` (`src/components/map/read-surroundings.ts`) jumps to zoom 15 at the centre and waits for tiles (≤4 s). Rough edges: in dense downtowns plots land in whatever open lots exist, so a project can spread out; tile-clipped building fragments are treated as separate obstacles (fine); satellite (hybrid) style may lack buildings.
 
 - **Pace (per the human, 2026-09-26):** fast MVP. Batch tasks, verify main functionality only (checks + one smoke screenshot), log rough edges here instead of polishing.
 - Editing (P1.7): selected component's shapes are copied into Terra Draw select mode (`draw-controller.tsx`, ids `<componentId>|p|s|f`). Only outlines go to Terra Draw (it rejects holes); `withElementShape` puts holes back. Clicks on shapes are picked by `pickElement` (Terra Draw's own click selection is off). Move/rotate/scale of the whole component are MapLibre markers (`transform-handles.tsx`) with live preview (`previewComponentGeometry` + `endGeometryPreview` = one undo step). Known rough edges: rotated shapes scale in the axis-aligned frame; Terra Draw's grab distance is its 40 px default (grabs corners on small shapes); the Terra Draw overlay fill covers holes.

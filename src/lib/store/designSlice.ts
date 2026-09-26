@@ -34,6 +34,7 @@ import {
   withPlannedFeatures,
   smartGeometry,
 } from "@/lib/geo/generate";
+import type { Surroundings } from "@/lib/geo/site-layout";
 import { mirrorAbout, translateFeature } from "@/lib/geo/transform";
 import type { Store } from "./store";
 
@@ -198,7 +199,11 @@ export type DesignSlice = DesignSnapshot & {
    * Places every planned component (and re-places generated ones that weren't edited)
    * around `centre` as one undo step. Returns how many were placed.
    */
-  generateLayout: (centre: Position, seed?: number) => number;
+  generateLayout: (
+    centre: Position,
+    seed?: number,
+    surroundings?: Surroundings,
+  ) => number;
 
   undo: () => void;
   redo: () => void;
@@ -535,13 +540,34 @@ export const createDesignSlice: StateCreator<Store, [], [], DesignSlice> = (
       get().selectComponent(c.id);
       return c.id;
     },
-    generateLayout: (centre, seed) => {
+    generateLayout: (centre, seed, surroundings) => {
       const layoutSeed = seed ?? get().layoutSeed;
-      const targets = get().components.filter(
-        (c) => c.status === "planned" || c.origin === "generated",
-      );
+      const isTarget = (c: Component) =>
+        c.status === "planned" || c.origin === "generated";
+      const targets = get().components.filter(isTarget);
       if (!targets.length) return 0;
-      const placed = generateLayoutFor(targets, centre, layoutSeed);
+      // What the user drew themselves stays put, so the layout builds around it.
+      const own = get().components.filter((c) => !isTarget(c) && c.geometry);
+      const shapes = own.flatMap((c) => {
+        const g = c.geometry!.primary.geometry;
+        return g.type === "Polygon" ? [g.coordinates[0]!] : [];
+      });
+      const lines = own.flatMap((c) => {
+        const g = c.geometry!.primary.geometry;
+        return g.type === "LineString" ? [g.coordinates] : [];
+      });
+      const boundary = get().areaBoundary?.geometry.coordinates[0];
+      const placed = generateLayoutFor(
+        targets,
+        centre,
+        layoutSeed,
+        surroundings && {
+          ...surroundings,
+          blocked: [...surroundings.blocked, ...shapes],
+          keepClear: [...surroundings.keepClear, ...lines],
+        },
+        boundary,
+      );
       set({ layoutSeed });
       commit({
         components: get().components.map((c) =>
