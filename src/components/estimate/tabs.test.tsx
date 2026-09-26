@@ -3,9 +3,10 @@ import type { ReactElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { scopeEstimate } from "@/lib/estimate/scope";
-import { northgateEstimate as est } from "@/lib/fixtures";
+import { northgateEstimate as est, northgateProject } from "@/lib/fixtures";
 import messages from "../../../messages/en.json";
 import { EstimateTab } from "./estimate-tab";
+import { InputsTab } from "./inputs-tab";
 import { LineItemsTab } from "./line-items-tab";
 
 // Smoke test: tabs render the Northgate fixture with no missing strings.
@@ -47,4 +48,13 @@ describe("estimate panel tabs", () => {
       expect(html).toContain(scoped.lineItems[0]!.description.en);
     });
   }
+
+  it("Inputs tab renders params with source badges", () => {
+    const { html, errors } = render(
+      <InputsTab components={northgateProject.components} componentId={null} />,
+    );
+    expect(errors).toEqual([]);
+    for (const c of northgateProject.components) expect(html).toContain(c.name);
+    expect(html).toContain("Default");
+  });
 });

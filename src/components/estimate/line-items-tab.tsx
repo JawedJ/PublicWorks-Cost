@@ -10,6 +10,7 @@ import {
   LineItemCategorySchema,
 } from "@/lib/schemas";
 import { useStore } from "@/lib/store/store";
+import { NumberInput } from "./number-input";
 
 // P3.10: line items grouped by component, then category. Quantity and unit
 // price are editable (overrides); edited cells are marked and can be reset.
@@ -180,7 +181,6 @@ function Row({ item: l }: { item: LineItem }) {
 
 const round2 = (n: number) => Math.round(n * 100) / 100;
 
-/** Number that edits in place: commit on blur or Enter, Escape cancels. */
 function Cell({
   label,
   value,
@@ -198,31 +198,11 @@ function Cell({
   if (!onChange) return <span className="figures">{display}</span>;
   return (
     <span className="flex flex-col items-end gap-0.5">
-      <input
-        key={value}
-        type="number"
-        min={0}
-        step="any"
-        aria-label={label}
-        defaultValue={value}
-        className={`w-full rounded border bg-background px-1 py-0.5 text-right figures ${
-          overridden ? "border-primary bg-primary/5 font-medium" : ""
-        }`}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") e.currentTarget.blur();
-          if (e.key === "Escape") {
-            e.currentTarget.value = String(value);
-            e.currentTarget.blur();
-          }
-        }}
-        onBlur={(e) => {
-          const v = Number(e.currentTarget.value);
-          if (e.currentTarget.value === "" || !Number.isFinite(v) || v < 0) {
-            e.currentTarget.value = String(value);
-            return;
-          }
-          if (v !== value) onChange(v);
-        }}
+      <NumberInput
+        label={label}
+        value={value}
+        highlighted={overridden}
+        onCommit={onChange}
       />
       <span className="text-xs text-muted-foreground figures">{display}</span>
       {overridden && (

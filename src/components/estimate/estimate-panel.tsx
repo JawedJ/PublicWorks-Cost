@@ -6,20 +6,22 @@ import { scopeEstimate } from "@/lib/estimate/scope";
 import { useEstimate } from "@/lib/estimate/useEstimate";
 import { useStore } from "@/lib/store/store";
 import { EstimateTab } from "./estimate-tab";
+import { InputsTab } from "./inputs-tab";
 import { LineItemsTab } from "./line-items-tab";
 
-const TABS = ["estimate", "lineItems"] as const;
+const TABS = ["estimate", "lineItems", "inputs"] as const;
 type Tab = (typeof TABS)[number];
 
 // Right panel. A mounts it in the workspace layout (P3.2).
 // Scope (P3.5) = the shared selection: whole project, or the selected component.
-// Tabs: Estimate (P3.6), Line items (P3.10); Inputs (P3.11) comes next.
+// Tabs: Estimate (P3.6), Line items (P3.10), Inputs (P3.11).
 
 export function EstimatePanel() {
   const t = useTranslations("estimate");
   const { estimate, computing } = useEstimate();
   const selectComponent = useStore((s) => s.selectComponent);
   const selectedId = useStore((s) => s.selectedComponentId);
+  const components = useStore((s) => s.components);
   const [tab, setTab] = useState<Tab>("estimate");
 
   if (!estimate || estimate.components.length === 0) {
@@ -73,10 +75,17 @@ export function EstimatePanel() {
         ))}
       </div>
       <div role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`}>
-        {tab === "estimate" ? (
+        {tab === "estimate" && (
           <EstimateTab estimate={estimate} scoped={scoped} />
-        ) : (
+        )}
+        {tab === "lineItems" && (
           <LineItemsTab estimate={estimate} scoped={scoped} />
+        )}
+        {tab === "inputs" && (
+          <InputsTab
+            components={components}
+            componentId={scoped.component?.componentId ?? null}
+          />
         )}
       </div>
     </section>

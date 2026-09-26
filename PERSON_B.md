@@ -6,9 +6,9 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Current state
 
-- **Current task:** P3.11 Inputs tab (P3.6, P3.9b, P3.10, P4.1–P4.2 done)
+- **Current task:** P3.7 market evidence card (P3.6, P3.9b, P3.10, P3.11, P4.1–P4.2 done)
 - **Status:** not started   <!-- not started | in progress | blocked | at sync point -->
-- **Next action:** P3.11, P3.7, P3.8, B.3, then zoning (Waterloo only: Z.1, Z.2, Z.5, Z.6).
+- **Next action:** P3.7, P3.8, B.3, then zoning (Waterloo only: Z.1, Z.2, Z.5, Z.6).
 - **Blockers / needs from A:** none
 - **Last updated:** 2026-09-26 (P3.6 Estimate tab)
 
@@ -16,6 +16,7 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 > Where an unfinished task stopped, gotchas, things to verify. Replace each session.
 
+- P3.11: `<InputsTab components componentId/>` in `inputs-tab.tsx` (third panel tab). Each catalog param, highest cost impact first, resolved value (subtype defaults applied), number/enum/boolean editor, source badge (Default / You / From prompt / From document / From site) with evidence, "Use default" → `clearComponentParam`. Edits use `setComponentParam` (source `user`). Shared `NumberInput` (commit on blur/Enter) in `number-input.tsx`, also used by line items. `useEstimate` now shares one result per store state across all callers (panel, map colours, 3D, component list), so extra callers are free; new callers start from the cached result.
 - P4.1–P4.2: `src/lib/project-file.ts` (pure, tested): `serializeProject` (stamps `CURRENT_SCHEMA_VERSION`), `projectFileName(name)` → `slug.pwcost.json`, `parseProjectFile(text)` → `{ ok, project }` or `{ ok: false, error: too_large | invalid_json | not_project | newer_version | invalid, detail }` (first zod issue path). No migrations (only v1). Buttons in `src/components/project-file/project-file-buttons.tsx`: `<DownloadProjectButton/>` (disabled with no components) and `<OpenProjectButton/>` (file picker, confirm before replacing work, `loadProject` then `router.push("/workspace")`, inline error). Strings under `projectFile`. Not mounted yet: request to A.
 - P3.10: `EstimatePanel` now has a tab bar (Estimate, Line items; add Inputs in P3.11 to `TABS`). `<LineItemsTab>` in `line-items-tab.tsx`: grouped by component (estimate order, project-level items last, read-only), then category (schema order); quantity and unit price edit in place (blur/Enter commits, Escape cancels) via `setOverride(componentId, kind, localId)` where `localId` = line id minus `${componentId}:`; overridden cells are highlighted with a Reset link, plus "Reset all" per component. Strings under `lineItems`. `tabs.test.tsx` renders both tabs with Northgate through `renderToStaticMarkup` and fails on missing strings (vitest now also picks up `*.test.tsx`).
 - P3.6: `<EstimateTab estimate scoped/>` in `src/components/estimate/estimate-tab.tsx`. Shows P50 + a P10–P90 bar with the P50 marker, class badge with accuracy range (`CLASS_RANGE` now exported from `@/engine`) and up to 5 improvement hints (click selects that component), and for the whole project: contingency and overrun risk cards plus the per-component list. Component scope shows its share instead. `scopeEstimate` now also returns `hints`. P3.9b: `<FlagsList flags names?/>` in `flags-list.tsx`: severity-sorted (high → info) with icon, explanation, cost effect; for the whole project it names the component(s) (or "Whole project") and clicking a single-component flag scopes the panel to it.
@@ -36,6 +37,7 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Requests to Person A
 
+- **P50 and share in the component list (P3.11).** Use `useEstimate().estimate?.components` (`componentId`, `p50`, `share`); `useEstimate` is now computed once and shared, so calling it from the list costs nothing. Undrawn components have no entry.
 - **Mount the project file buttons (P4.1–P4.2 done).** `import { DownloadProjectButton, OpenProjectButton } from "@/components/project-file/project-file-buttons"`. Put both in the workspace top bar (`<TopBar>` children) and `<OpenProjectButton/>` on the landing page next to the demos. Both take an optional `variant` (`outline` default). Open handles validation, the replace confirm, errors, and navigating to `/workspace`.
 - **French is dropped (the human's call, SPEC 17 + Change log).** English only from now on: no need to add keys to `fr.json`, and please hide or remove the EN/FR language toggle (landing/layout are yours). Nothing else needs ripping out; `/fr` routing and `{ en, fr }` text can stay unused.
 - **P7.4 creation flow is unblocked.** In `landing-start.tsx` `start()`: `const r = await requestParse(prompt, locale)` → show `<BuildListReview initial={r.draft} source={r.source} onConfirm={(d) => { applyDraft(d); router.push("/workspace"); }} onBack={...} />` (both from `@/components/build-list/...`). `applyDraft` does `newProject` + `addComponents` with `paramMeta` source `ai_prompt` + evidence, and sets start date. Size hints `storeys`, `areaM2`, `lengthM`, `gfaOverrideM2` kept as your ids. `r.notice` (`ai_busy` / `ai_unavailable`) is there if you want a small notice. `BuildListItem.spatialHint` is free text ("next to the library") if Generate layout wants it later.
@@ -83,7 +85,7 @@ While A scaffolds, draft these locally; commit right after A's scaffold lands on
 - [ ] P3.8 Per-component breakdown, distribution chart, category breakdown, drivers tornado, per-unit metrics
 - [x] P3.9b Flags list in the panel (A owns the map markers)
 - [x] P3.10 Line items tab: grouped editable table, sources, overrides, reset
-- [ ] P3.11 Inputs tab: parameters per component with source badges; P50 and share for A's component list
+- [x] P3.11 Inputs tab: parameters per component with source badges; P50 and share for A's component list
 - [ ] B.3 `CustomPricingForm` for custom elements (matched / own rate), mounted by A's Add menu
 - [~] P7.1 AI provider interface + GeminiProvider (default), AnthropicProvider, NoneProvider; zod structured output, retry, timeout, 429 handling, per-IP rate limit, caching
 - [x] P7.2 `/api/ai/parse` → build list (types, counts, params, spatial hints) + keyword fallback
@@ -145,6 +147,6 @@ Flags only; never block, never change the estimate. Do Waterloo first (demo city
 | CanadaBuys awards (real data, evidence only) | `scripts/fetch-canadabuys.ts` → `src/data/public/canadabuys-awards.json`; schema in `src/lib/schemas/public-data.ts` | `pnpm data:canadabuys`; `pnpm data:refresh` runs all public data scripts; OGL-Canada |
 | Cost engine: component templates | `src/engine/types.ts`, `params.ts`, `text.ts`, `index.ts` (`computeEstimate`), `escalation.ts`, `rng.ts`, `templates/*.ts`; tests in `src/engine/__tests__/` | Pure TS, SPEC 6–7 |
 | Northgate fixtures (sample project + estimate for A's views) | `src/lib/fixtures/` | `import { northgateProject, northgateEstimate } from "@/lib/fixtures"` |
-| Estimate panel + scope selector (whole project / one component), Estimate tab (range bar, class + hints, contingency, overrun risk), flags list, Line items tab (editable overrides) | `src/components/estimate/estimate-panel.tsx`, `estimate-tab.tsx`, `flags-list.tsx`, `line-items-tab.tsx`, `tabs.test.tsx`, `src/lib/estimate/scope.ts` (+ test), `useEstimate.ts` | Scope follows the shared selection |
+| Estimate panel + scope selector (whole project / one component), Estimate tab (range bar, class + hints, contingency, overrun risk), flags list, Line items tab (editable overrides), Inputs tab (params + source badges) | `src/components/estimate/estimate-panel.tsx`, `estimate-tab.tsx`, `flags-list.tsx`, `line-items-tab.tsx`, `inputs-tab.tsx`, `number-input.tsx`, `tabs.test.tsx`, `src/lib/estimate/scope.ts` (+ test), `useEstimate.ts` | Scope follows the shared selection |
 | AI provider + prompt parse (build list) | `src/lib/ai/` (`provider.ts`, `gemini.ts`, `parse.ts` + test, `index.ts`), `src/app/api/ai/parse/route.ts`, `src/lib/schemas/draft.ts` | No key → keyword fallback |
 | Build list review (creation flow step 2) | `src/components/build-list/` | A mounts it in P7.4 |

@@ -253,7 +253,8 @@
     "tabs": {
       "label": "Estimate views",
       "estimate": "Estimate",
-      "lineItems": "Line items"
+      "lineItems": "Line items",
+      "inputs": "Inputs"
     }
   },
   "visuals": {
@@ -358,6 +359,18 @@
       "not_project": "That file isn't a PublicWorks Cost project file.",
       "newer_version": "This project file was made with a newer version of the app (file version {detail}) and can't be opened here.",
       "invalid": "This project file is damaged or incomplete and can't be opened. Details: {detail}"
+    }
+  },
+  "inputs": {
+    "empty": "No components yet.",
+    "none": "This component has no inputs; it's priced from its drawn size and rate.",
+    "reset": "Use default",
+    "sources": {
+      "default": "Default",
+      "user": "You",
+      "ai_prompt": "From prompt",
+      "ai_document": "From document",
+      "site_context": "From site"
     }
   }
 }
