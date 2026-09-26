@@ -188,6 +188,9 @@
     "empty": "Draw a road, park, building, or structure to see its estimated cost.",
     "undrawn": "{count, plural, one {# planned component isn't drawn yet} other {# planned components aren't drawn yet}} and adds no cost.",
     "flags": "Things to check",
-    "componentNote": "Component figures come from the same simulation and don't add up to the project total."
+    "componentNote": "Component figures come from the same simulation and don't add up to the project total.",
+    "scope": "Showing",
+    "wholeProject": "Whole project",
+    "shareOfProject": "{pct}% of project P50"
   }
 }

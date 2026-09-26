@@ -6,16 +6,17 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Current state
 
-- **Current task:** P3.5 scope selector (S2 integration done: `useEstimate` uses A's `measureProject`, panel mounted by A)
+- **Current task:** P3.6 Estimate tab
 - **Status:** not started   <!-- not started | in progress | blocked | at sync point -->
-- **Next action:** P3.5 → P3.6 → P3.9b → P3.10, then P7.1–P7.3 AI parse, P4.1–P4.2 project files, P3.7/P3.8/P3.11/B.3, then zoning (Waterloo only: Z.1, Z.2, Z.5, Z.6).
+- **Next action:** P3.6 → P3.9b → P3.10, then P7.1–P7.3 AI parse, P4.1–P4.2 project files, P3.7/P3.8/P3.11/B.3, then zoning (Waterloo only: Z.1, Z.2, Z.5, Z.6).
 - **Blockers / needs from A:** none
-- **Last updated:** 2026-09-26 (P3.1 switched to A's `measureProject`)
+- **Last updated:** 2026-09-26 (P3.5 done)
 
 ## Handoff notes
 
 > Where an unfinished task stopped, gotchas, things to verify. Replace each session.
 
+- P3.5: scope = A's `selectedComponentId` (no separate state). Tabs get scoped range, class, line items and flags from `scopeEstimate(estimate, selectedId)` in `src/lib/estimate/scope.ts`; an unknown id falls back to whole project. Contingency and the component list show only for the whole project.
 - P2.1 schemas are merged to `main`.
 - P2.5: `pnpm data:bcpi` runs `scripts/fetch-statcan-bcpi.ts` with plain `node` (Node 26 strips types; `scripts/package.json` sets ESM). Scripts can't use the `@/` alias. `statcanBcpi` from `@/data`: series keyed by `geo` × `type` × `division`, points `["2026Q2", 108.9]` oldest first. A few type × division combos aren't published (e.g. Ottawa single-detached earthwork); the engine must fall back to the composite division.
 - P2.8: engine pattern. Each template (`src/engine/templates/*.ts`) exports a `ComponentTemplate` (`src/engine/types.ts`): `paramCatalog`, optional `subtypeDefaults`, `deriveQuantities(ctx) → QuantityLine[]`, `flags(ctx) → TemplateFlag[]`. A `QuantityLine` has a component-local `localId` (overrides are keyed by it; line item id will be `${componentId}:${localId}`) and a `PriceRef` (`unitPrice` id, or `direct` price for building/park/structure/custom). `resolveParams` fills defaults and clamps. Bilingual text via `t()` / `L()` in `src/engine/text.ts`. Test helpers in `src/engine/__tests__/helpers.ts`. Road params reuse the fixture ids; new ids: `scope`, `cycling`, `watermainMaterial`, `rockExpected`, `utilityConflicts`, `boulevardWidthM`.
@@ -69,7 +70,7 @@ While A scaffolds, draft these locally; commit right after A's scaffold lands on
 - [x] P3.1 `useEstimate()` wired to the live store (uses A's `measureProject`), debounced, Web Worker if needed — **the S2 integration milestone**
 
 ### S2 → S3 — Estimate panel, AI flow & project files · Core
-- [ ] P3.5 Scope selector: whole project / single component, respected by all tabs
+- [x] P3.5 Scope selector: whole project / single component, respected by all tabs
 - [ ] P3.6 Estimate tab: range display, class badge + hints, contingency, overrun risk card
 - [ ] P3.7 Market evidence card: StatCan price trend, matched CanadaBuys awards with links, optional municipal tenders, sources footnote
 - [ ] P3.8 Per-component breakdown, distribution chart, category breakdown, drivers tornado, per-unit metrics
@@ -136,3 +137,4 @@ Flags only; never block, never change the estimate. Do Waterloo first (demo city
 | CanadaBuys awards (real data, evidence only) | `scripts/fetch-canadabuys.ts` → `src/data/public/canadabuys-awards.json`; schema in `src/lib/schemas/public-data.ts` | `pnpm data:canadabuys`; `pnpm data:refresh` runs all public data scripts; OGL-Canada |
 | Cost engine: component templates | `src/engine/types.ts`, `params.ts`, `text.ts`, `index.ts` (`computeEstimate`), `escalation.ts`, `rng.ts`, `templates/*.ts`; tests in `src/engine/__tests__/` | Pure TS, SPEC 6–7 |
 | Northgate fixtures (sample project + estimate for A's views) | `src/lib/fixtures/` | `import { northgateProject, northgateEstimate } from "@/lib/fixtures"` |
+| Estimate panel + scope selector (whole project / one component) | `src/components/estimate/estimate-panel.tsx`, `src/lib/estimate/scope.ts` (+ test), `useEstimate.ts` | Scope follows the shared selection |
