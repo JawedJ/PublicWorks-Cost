@@ -68,3 +68,7 @@ Run typecheck, lint, and all tests; fix failures; confirm the phase's "Done when
 - Components small and focused; client components only where interactivity requires it.
 - Tailwind + shadcn/ui; Public Sans with tabular numerals for figures.
 - Name things by what users understand (e.g. "Download project file", not "serialize state").
+
+## Next.js version note
+
+@AGENTS.md

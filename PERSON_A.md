@@ -29,7 +29,7 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` dropped. **Core** = needed for the demo. **Stretch** = drop first if behind.
 
 ### Before S1 (first hour) — Foundation · Core
-- [ ] P0.1 Scaffold Next.js (App Router) + TypeScript strict + pnpm
+- [x] P0.1 Scaffold Next.js (App Router) + TypeScript strict + pnpm
 - [ ] P0.2 Tailwind + shadcn/ui + Public Sans + design tokens (light/dark)
 - [ ] P0.3 next-intl with `/en` and `/fr` routing, `messages/en.json`, `messages/fr.json`
 - [ ] P0.4 Zustand, zod, Vitest, ESLint, Prettier; scripts `typecheck`, `lint`, `test`
