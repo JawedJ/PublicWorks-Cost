@@ -89,6 +89,9 @@ export type DesignSlice = DesignSnapshot & {
   drawing: Drawing | null;
   /** Waiting for a map click to drop a smart-start shape for this target (P1.9). */
   smartPlacing: Extract<DrawTarget, { kind: "new" | "planned" }> | null;
+  /** Roads drawn with the line tool follow the street network (P1.17). */
+  snapToStreets: boolean;
+  setSnapToStreets: (on: boolean) => void;
   /** Seed of the last generated layout; Regenerate uses the next one. */
   layoutSeed: number;
   /** Why the last finished shape was not applied (shown by the draw toolbar). */
@@ -290,6 +293,8 @@ export const createDesignSlice: StateCreator<Store, [], [], DesignSlice> = (
     drawing: null,
     drawNotice: null,
     smartPlacing: null,
+    snapToStreets: false,
+    setSnapToStreets: (snapToStreets) => set({ snapToStreets }),
     layoutSeed: 1,
 
     selectComponent: (componentId) =>

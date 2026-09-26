@@ -237,6 +237,37 @@ async function createDraw(map: MapLibreMap): Promise<TerraDraw> {
   return draw;
 }
 
+/**
+ * Replaces a just-drawn road with the street-network route between its points.
+ * Keeps the straight line if routing fails. Applied as a preview so the drawing
+ * stays one undo step.
+ */
+async function snapRoad(id: string, shape: AnyFeature) {
+  if (shape.geometry.type !== "LineString") return;
+  try {
+    const res = await fetch("/api/geo/snap", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ points: shape.geometry.coordinates.slice(0, 25) }),
+    });
+    if (!res.ok) return;
+    const { coordinates } = (await res.json()) as {
+      coordinates: [number, number][];
+    };
+    const c = useStore.getState().components.find((x) => x.id === id);
+    if (!c?.geometry || coordinates.length < 2) return;
+    useStore.getState().previewComponentGeometry(id, {
+      ...c.geometry,
+      primary: {
+        ...c.geometry.primary,
+        geometry: { type: "LineString", coordinates },
+      },
+    });
+  } catch {
+    // Straight segments stay.
+  }
+}
+
 /** Our shapes in Terra Draw, without its own vertex and midpoint handles. */
 function ownFeatures(draw: TerraDraw): GeoJSONStoreFeatures[] {
   return draw.getSnapshot().filter((f) => parseEditId(String(f.id)));
@@ -338,8 +369,17 @@ export function DrawController() {
           properties: {},
           geometry: f?.geometry,
         });
-        if (shape.success) useStore.getState().finishDrawing(shape.data);
-        else useStore.getState().cancelDrawing();
+        if (!shape.success) return useStore.getState().cancelDrawing();
+        const store = useStore.getState();
+        const target = store.drawing?.target;
+        const isRoad =
+          (target?.kind === "new" && target.type === "road") ||
+          (target?.kind === "planned" &&
+            store.components.find((c) => c.id === target.componentId)?.type ===
+              "road");
+        const newId = store.finishDrawing(shape.data);
+        if (newId && isRoad && store.snapToStreets)
+          void snapRoad(newId, shape.data);
       });
       setGeneration((n) => n + 1);
     };

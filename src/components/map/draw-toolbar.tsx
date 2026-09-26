@@ -4,6 +4,7 @@ import {
   ChevronDown,
   Circle,
   Lasso,
+  Magnet,
   MapPin,
   Pentagon,
   Plus,
@@ -102,6 +103,7 @@ export function DrawToolbar() {
   const drawing = useStore((s) => s.drawing);
   const drawNotice = useStore((s) => s.drawNotice);
   const smartPlacing = useStore((s) => s.smartPlacing);
+  const snapToStreets = useStore((s) => s.snapToStreets);
   const selectedSectionId = useStore((s) => s.selectedElement?.sectionId);
   const selectedFeatureId = useStore((s) => s.selectedElement?.featureId);
   const selected = useStore((s) =>
@@ -358,6 +360,23 @@ export function DrawToolbar() {
             );
           })}
         </div>
+        {tools.includes("line") &&
+          target &&
+          ((target.kind === "new" && target.type === "road") ||
+            (target.kind === "planned" && planned?.type === "road")) && (
+            <Button
+              variant={snapToStreets ? "default" : "ghost"}
+              size="icon-sm"
+              aria-pressed={snapToStreets}
+              aria-label={t("tools.snap")}
+              title={t("tools.snap")}
+              onClick={() =>
+                useStore.getState().setSnapToStreets(!snapToStreets)
+              }
+            >
+              <Magnet />
+            </Button>
+          )}
         {smartTarget && (
           <Button
             variant={smartPlacing ? "default" : "ghost"}

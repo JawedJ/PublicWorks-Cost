@@ -124,7 +124,8 @@
         "line": "Line",
         "freehandLine": "Freehand line",
         "point": "Point",
-        "smart": "Smart start: click the map to drop a typical shape"
+        "smart": "Smart start: click the map to drop a typical shape",
+        "snap": "Snap to streets (route along the street network)"
       },
       "hints": {
         "polygon": "Click to add corners. Click the first corner again to finish.",

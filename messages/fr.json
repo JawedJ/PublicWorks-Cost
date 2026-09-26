@@ -124,7 +124,8 @@
         "line": "Ligne",
         "freehandLine": "Ligne à main levée",
         "point": "Point",
-        "smart": "Départ intelligent : cliquez sur la carte pour déposer une forme type"
+        "smart": "Départ intelligent : cliquez sur la carte pour déposer une forme type",
+        "snap": "Suivre les rues (tracé selon le réseau routier)"
       },
       "hints": {
         "polygon": "Cliquez pour ajouter des sommets. Cliquez de nouveau sur le premier sommet pour terminer.",
