@@ -25,6 +25,14 @@ export function EstimatePanel() {
   const components = useStore((s) => s.components);
   const region = useStore((s) => s.project.region);
   const [tab, setTab] = useState<Tab>("estimate");
+  // Creation flow (P7.4, A): once the last planned component is placed, go to Questions.
+  const planned = components.filter((c) => c.status === "planned").length;
+  const [prevPlanned, setPrevPlanned] = useState(planned);
+  if (planned !== prevPlanned) {
+    setPrevPlanned(planned);
+    if (prevPlanned > 0 && planned === 0 && components.length > 0)
+      setTab("questions");
+  }
 
   if (!estimate || estimate.components.length === 0) {
     return (
