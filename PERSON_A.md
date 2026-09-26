@@ -117,4 +117,4 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 ## Environment
 
 - **Vercel URL:** https://publicworkscost.vercel.app (dashboard: https://vercel.com/hackathon-aqeeljawed/publicworkscost)
-- **Env vars configured in Vercel:** none yet (add `NEXT_PUBLIC_MAPTILER_KEY`, `GEMINI_API_KEY`, `AI_PROVIDER` before P1.1 / P7)
+- **Env vars configured in Vercel:** `NEXT_PUBLIC_MAPTILER_KEY` (verified live 2026-09-26: MapTiler streets, satellite, search). Still to add before P7: `GEMINI_API_KEY`, `AI_PROVIDER`.
