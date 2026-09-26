@@ -1,0 +1,110 @@
+# PERSON_B.md — Engine, data, AI & outputs
+
+**Role:** everything behind the numbers and the words: schemas, the cost engine, seed and public data (StatCan, CanadaBuys), the estimate panel, AI (prompt parsing, build list, questions, documents, narrative), project files, scenarios, and exports.
+**Owns:** see `TEAM.md` section 2. **Contracts you provide:** schemas, fixtures, `computeEstimate`, `useEstimate`, `projectSlice.ts`, `<EstimatePanel/>` (TEAM.md section 3).
+Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
+
+## Current state
+
+- **Current task:** P2.1
+- **Status:** not started   <!-- not started | in progress | blocked | at sync point -->
+- **Next action:** Write the zod schemas while A scaffolds; commit as soon as A's scaffold is on `main`.
+- **Blockers / needs from A:** none
+- **Last updated:** —
+
+## Handoff notes
+
+> Where an unfinished task stopped, gotchas, things to verify. Replace each session.
+
+- _(none yet)_
+
+## Requests to Person A
+
+- _(none yet)_
+
+---
+
+## Task list (in order)
+
+Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` dropped. **Core** = needed for the demo. **Stretch** = drop first if behind.
+
+### Before S1 (first hour) — Contracts · Core
+While A scaffolds, draft these locally; commit right after A's scaffold lands on `main`.
+- [ ] P2.1 Zod schemas: Project, Component, Geometry, BuildingSection, PlacedFeature, Measurements, Scenario, Estimate, LineItem (with `elementRef`, log it in the SPEC Change log), Flag, reference data
+- [ ] B.1 Fixtures: `src/lib/fixtures/northgate.project.json` and `northgate.estimate.json` (valid against the schemas; hand-written numbers are fine)
+- [ ] P0.5 Stateless API route conventions (zod validation helper, error format, in-memory rate limiter)
+- [ ] B.2 `projectSlice.ts` (params, paramMeta, overrides, settings, scenarios) plugged into A's `store.ts`
+
+### S1 → S2 — Data & engine · Core
+- [ ] P2.2 Seed data: `unit-prices.json`
+- [ ] P2.3 Seed data: `building-costs.json` (incl. housing subtypes), `park-features.json`, `structures.json`
+- [ ] P2.4 Seed data: `regional-factors.json` (incl. reference CMA per region), `overrun-reference.json`
+- [ ] P2.5 Script `fetch-statcan-bcpi.ts` → `src/data/public/statcan-bcpi.json` + schema
+- [ ] P2.6 Script `fetch-canadabuys.ts` → `src/data/public/canadabuys-awards.json` + schema
+- [ ] P2.7 `pnpm data:refresh`; commit generated files
+- [ ] P2.8 Component type: road + tests
+- [ ] P2.9 Component type: park + tests
+- [ ] P2.10 Component type: building (sections, GFA, shape complexity, roofs, fit-on-site, school/hospital uncertainty) + tests
+- [ ] P2.11 Component type: structure + tests
+- [ ] P2.12 Custom elements: matched or user-entered rates, wide bands, lower class + tests
+- [ ] P2.13 Pricing: regional factor, BCPI escalation (labelled proxies), trailing-trend default rate, shocks, overrides + tests
+- [ ] P2.14 Winter logic, soft costs, taxes + tests
+- [ ] P2.15 Estimate class from completeness score + improvement hints + tests
+- [ ] P2.16 Seeded Monte Carlo + overrun reference + contingency + tests
+- [ ] P2.17 Drivers (tornado, by component) + flags aggregation + tests
+- [ ] P2.18 Project roll-up: per-component costs, mobilization, per-component + project percentiles, project class + tests
+- [ ] P2.19 `computeEstimate()` entry point; multi-component and determinism tests
+- [ ] P3.1 `useEstimate()` wired to the live store (uses A's `measureProject`), debounced, Web Worker if needed — **the S2 integration milestone**
+
+### S2 → S3 — Estimate panel, AI flow & project files · Core
+- [ ] P3.5 Scope selector: whole project / single component, respected by all tabs
+- [ ] P3.6 Estimate tab: range display, class badge + hints, contingency, overrun risk card
+- [ ] P3.7 Market evidence card: StatCan price trend, matched CanadaBuys awards with links, optional municipal tenders, sources footnote
+- [ ] P3.8 Per-component breakdown, distribution chart, category breakdown, drivers tornado, per-unit metrics
+- [ ] P3.9b Flags list in the panel (A owns the map markers)
+- [ ] P3.10 Line items tab: grouped editable table, sources, overrides, reset
+- [ ] P3.11 Inputs tab: parameters per component with source badges; P50 and share for A's component list
+- [ ] B.3 `CustomPricingForm` for custom elements (matched / own rate), mounted by A's Add menu
+- [ ] P7.1 AI provider interface + GeminiProvider (default), AnthropicProvider, NoneProvider; zod structured output, retry, timeout, 429 handling, per-IP rate limit, caching
+- [ ] P7.2 `/api/ai/parse` → build list (types, counts, params, spatial hints) + keyword fallback
+- [ ] P7.3 Build list review screen (edit, remove, duplicate, add components)
+- [ ] P4.1 Project file schema with `schemaVersion` + download (`.pwcost.json`)
+- [ ] P4.2 Open project file with zod validation and clear errors
+
+### S3 → S4 — Questions, exports, demos
+- [ ] P7.5 `/api/ai/questions` across components + fallback + Questions panel · Core
+- [ ] P4.4 Three demo projects (A draws geometry in the app and downloads the project file; you add params, cached AI outputs, and scenarios) · Core
+- [ ] P7.8 Cached AI outputs for demo projects · Core
+- [ ] P5.2 PDF council report (template narrative, A's map snapshot), EN/FR · Core
+- [ ] P5.3 Excel workbook (Summary, Line Items, Assumptions, Scenarios) · Core
+- [ ] P5.4 Export tab · Core
+- [ ] P7.7 `/api/ai/narrative` with number check + template fallback; used in PDF · Stretch
+- [ ] P8.1 Scenario create/duplicate/rename/delete · Stretch
+- [ ] P8.2 What-if controls (date shift, price shocks, param changes, add/remove components) · Stretch
+- [ ] P8.3 Comparison view (up to 3) · Stretch
+- [ ] P8.4 Scenarios in exports · Stretch
+- [ ] P6.3 Site-context flags in engine + reports; auto-filled params (uses A's `/api/geo/context`) · Stretch
+- [ ] P7.6 Document upload + `/api/ai/extract` + accept/reject review · Stretch
+- [ ] P9.6 Optional concept image provider (disabled without key) · Stretch
+
+### S4 → S5 — Polish (after feature freeze)
+- [ ] P10.1 French translations (all namespaces; ask A to review theirs)
+- [ ] P10.4 Empty, loading, and error states (your areas)
+- [ ] P10.6 `/data` page (all datasets incl. StatCan and CanadaBuys: source, date, licence, limits; BCPI trend chart)
+- [ ] P10.7 Rehearse demo walkthrough with A (SPEC section 23); record video together
+
+---
+
+## Depends on Person A
+
+- Scaffold and `store.ts` on `main` (S1).
+- `measureComponent` / `measureProject` (by S2). Until then, test the engine with fixture measurements.
+- Workspace layout mounting `<EstimatePanel/>` (S3), creation-flow navigation, landing page calling your parse endpoint.
+- Map snapshot helper for the PDF (S4).
+- Demo project geometry (S4).
+
+## Feature map (your files)
+
+| Feature | Key files | Notes |
+| --- | --- | --- |
+| _(fill in as you build)_ | | |
