@@ -62,7 +62,9 @@
       "map3d": "3D map",
       "colourByCost": "Colour by cost",
       "site3d": "3D site",
-      "zoning": "Zoning"
+      "zoning": "Zoning",
+      "issues": "Things to check",
+      "issuesHint": "Highlight on the map what the flags are about: buildings in the way, creeks, rail, schools and hospitals nearby"
     },
     "noCost": "No cost yet",
     "rotateMode": "Rotate mode: drag on the map to turn it (and tilt it in the 3D map)",

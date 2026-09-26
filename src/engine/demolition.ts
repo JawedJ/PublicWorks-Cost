@@ -53,6 +53,8 @@ export type ExistingBuildings = {
   floorAreaM2: number;
   /** Named buildings, for the flag text. */
   names: string[];
+  /** Site feature ids of the buildings, for highlighting them on the map. */
+  ids: string[];
 };
 
 const frame = (lat: number) => {
@@ -114,7 +116,13 @@ export function existingBuildingsOn(
   c: Pick<Component, "type" | "geometry">,
   site: SiteContext | undefined,
 ): ExistingBuildings {
-  const none = { count: 0, footprintM2: 0, floorAreaM2: 0, names: [] };
+  const none = {
+    count: 0,
+    footprintM2: 0,
+    floorAreaM2: 0,
+    names: [],
+    ids: [],
+  };
   const g = c.geometry;
   if (!site || !g || g.primary.geometry.type !== "Polygon") return none;
   if (c.type !== "building" && c.type !== "park" && c.type !== "parking")
@@ -131,7 +139,7 @@ export function existingBuildingsOn(
     Math.max(...r.map((p) => p[1])),
   ];
   const [x0, y0, x1, y1] = box(outline);
-  const out: ExistingBuildings = { ...none, names: [] };
+  const out: ExistingBuildings = { ...none, names: [], ids: [] };
   for (const f of site.features) {
     if (f.kind !== "building" || f.geometry.geometry.type !== "Polygon")
       continue;
@@ -152,6 +160,7 @@ export function existingBuildingsOn(
     if (!inRing(centre, outline) && !hitsSection) continue;
     const footprint = area(ring);
     out.count += 1;
+    out.ids.push(f.id);
     out.footprintM2 += footprint;
     out.floorAreaM2 += footprint * storeys(f.tags);
     if (f.name && out.names.length < 3) out.names.push(f.name);

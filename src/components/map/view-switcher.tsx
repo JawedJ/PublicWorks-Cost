@@ -19,6 +19,8 @@ export function ViewSwitcher() {
   const setColourByCost = useStore((s) => s.setColourByCost);
   const showZoning = useStore((s) => s.showZoning);
   const setShowZoning = useStore((s) => s.setShowZoning);
+  const showIssues = useStore((s) => s.showIssues);
+  const setShowIssues = useStore((s) => s.setShowIssues);
 
   useEffect(() => {
     if (!map) return;
@@ -81,6 +83,22 @@ export function ViewSwitcher() {
             )}
           >
             {t("zoning")}
+          </button>
+        )}
+        {viewMode !== "site3d" && (
+          <button
+            type="button"
+            aria-pressed={showIssues}
+            title={t("issuesHint")}
+            onClick={() => setShowIssues(!showIssues)}
+            className={cn(
+              "rounded-md border px-3 py-1.5 text-xs font-medium shadow-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
+              showIssues
+                ? "bg-foreground text-background"
+                : "bg-card hover:bg-muted",
+            )}
+          >
+            {t("issues")}
           </button>
         )}
       </div>

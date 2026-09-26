@@ -30,20 +30,24 @@ export async function readSurroundings(
 
   const [lng, lat] = map.getCenter().toArray();
   const moved = Math.hypot(lng - centre[0], lat - centre[1]) > 0.002;
-  if (map.getZoom() < 15 || moved) {
-    map.jumpTo({
-      center: [centre[0], centre[1]],
-      zoom: Math.max(map.getZoom(), 15),
-    });
-  }
-  if (!map.areTilesLoaded())
-    await new Promise<void>((done) => {
-      const timer = setTimeout(done, 4000);
+  const wait = () =>
+    new Promise<void>((done) => {
+      const timer = setTimeout(done, 5000);
       map.once("idle", () => {
         clearTimeout(timer);
         done();
       });
     });
+  if (map.getZoom() < 15 || moved) {
+    // Buildings are only in the detailed tiles: go there and wait for them to load
+    // (checking areTilesLoaded() right after the jump sees the old tiles).
+    const loaded = wait();
+    map.jumpTo({
+      center: [centre[0], centre[1]],
+      zoom: Math.max(map.getZoom(), 15),
+    });
+    await loaded;
+  } else if (!map.areTilesLoaded()) await wait();
 
   const read = (sourceLayer: string) =>
     map.querySourceFeatures(sourceId, { sourceLayer });
