@@ -1,5 +1,5 @@
 import { NextIntlClientProvider } from "next-intl";
-import { createElement, type ReactElement } from "react";
+import type { ReactElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { scopeEstimate } from "@/lib/estimate/scope";
@@ -13,16 +13,14 @@ import { LineItemsTab } from "./line-items-tab";
 function render(el: ReactElement) {
   const errors: string[] = [];
   const html = renderToStaticMarkup(
-    createElement(
-      NextIntlClientProvider,
-      {
-        locale: "en",
-        messages,
-        timeZone: "America/Toronto",
-        onError: (e) => errors.push(e.message),
-      },
-      el,
-    ),
+    <NextIntlClientProvider
+      locale="en"
+      messages={messages}
+      timeZone="America/Toronto"
+      onError={(e) => errors.push(e.message)}
+    >
+      {el}
+    </NextIntlClientProvider>,
   );
   return { html, errors };
 }
@@ -34,7 +32,7 @@ describe("estimate panel tabs", () => {
 
     it(`Estimate tab renders (${scope})`, () => {
       const { html, errors } = render(
-        createElement(EstimateTab, { estimate: est, scoped }),
+        <EstimateTab estimate={est} scoped={scoped} />,
       );
       expect(errors).toEqual([]);
       expect(html).toContain(`Class ${scoped.estimateClass} estimate`);
@@ -43,7 +41,7 @@ describe("estimate panel tabs", () => {
 
     it(`Line items tab renders (${scope})`, () => {
       const { html, errors } = render(
-        createElement(LineItemsTab, { estimate: est, scoped }),
+        <LineItemsTab estimate={est} scoped={scoped} />,
       );
       expect(errors).toEqual([]);
       expect(html).toContain(scoped.lineItems[0]!.description.en);
