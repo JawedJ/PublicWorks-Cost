@@ -6,11 +6,11 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Current state
 
-- **Current task:** P3.1 (`useEstimate` wired to the store)
+- **Current task:** at S2 sync point (engine + `useEstimate` + minimal `<EstimatePanel/>` on main)
 - **Status:** not started   <!-- not started | in progress | blocked | at sync point -->
-- **Next action:** P3.1 `src/lib/estimate/useEstimate.ts` (debounced `computeEstimate` on store changes). A's `measure.ts` isn't on main yet, so use a temporary approximate measure and swap when it lands.
+- **Next action:** check with A: mount `<EstimatePanel/>`, swap `approx-measure` for A's `measureProject` when P1.14 lands. Then P3.5–P3.11 panel tabs, P7.1–P7.3 AI parse, P4.1–P4.2 project files, zoning Z.1–Z.6.
 - **Blockers / needs from A:** none
-- **Last updated:** 2026-09-26 (engine P2.10–P2.19 done)
+- **Last updated:** 2026-09-26 (P3.1 done)
 
 ## Handoff notes
 
@@ -19,6 +19,7 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 - P2.1 schemas are merged to `main`.
 - P2.5: `pnpm data:bcpi` runs `scripts/fetch-statcan-bcpi.ts` with plain `node` (Node 26 strips types; `scripts/package.json` sets ESM). Scripts can't use the `@/` alias. `statcanBcpi` from `@/data`: series keyed by `geo` × `type` × `division`, points `["2026Q2", 108.9]` oldest first. A few type × division combos aren't published (e.g. Ottawa single-detached earthwork); the engine must fall back to the composite division.
 - P2.8: engine pattern. Each template (`src/engine/templates/*.ts`) exports a `ComponentTemplate` (`src/engine/types.ts`): `paramCatalog`, optional `subtypeDefaults`, `deriveQuantities(ctx) → QuantityLine[]`, `flags(ctx) → TemplateFlag[]`. A `QuantityLine` has a component-local `localId` (overrides are keyed by it; line item id will be `${componentId}:${localId}`) and a `PriceRef` (`unitPrice` id, or `direct` price for building/park/structure/custom). `resolveParams` fills defaults and clamps. Bilingual text via `t()` / `L()` in `src/engine/text.ts`. Test helpers in `src/engine/__tests__/helpers.ts`. Road params reuse the fixture ids; new ids: `scope`, `cycling`, `watermainMaterial`, `rockExpected`, `utilityConflicts`, `boulevardWidthM`.
+- P3.1: `useEstimate()` in `src/lib/estimate/useEstimate.ts` (150 ms debounce, fixed seed, main thread). It uses a TEMPORARY `approx-measure.ts` (equirectangular); switch the import to A's `measureProject` when it lands. Minimal `<EstimatePanel/>` in `src/components/estimate/estimate-panel.tsx` (P50, range, class, contingency, per-component list that selects on click, flags); strings under `estimate` in messages.
 - P2.10–P2.19: `computeEstimate(project, measurements, refData, { seed, now?, iterations? })` in `src/engine/index.ts` (MVP-simple). Unit prices include region × BCPI (price year → latest quarter; non-buildings use non-residential as proxy) × scenario shock × 8% winter premium. Escalation to construction midpoint is a separate amount; the BCPI trailing-8q rate is used while `settings.escalationRate` is still the 0.04 default. Mobilization = 6% of direct (one project line). Soft cost %s per type in `SOFT`. Class from answered high-impact params. Monte Carlo: triangular per line, correlated by price category (ρ 0.6), lognormal overrun per component. Drivers = price categories only. Northgate: ~$52M P50, 42 ms for 5,000 iterations.
 - P2.9: park feature params live in `featureParamCatalog` (per kind) in `templates/park.ts`, resolved with `resolveDefinitions`. Feature line ids are `feature:<featureId>` (+ `:lighting`). Kinds in `park-features.json` without params (skate_park, dog_park, …) are priced by drawn area; `custom` kinds are skipped until P2.12; unknown kinds get a `park_feature_not_priced` flag.
 - P2.6/P2.7: `pnpm data:refresh` runs both scripts (~1 min). CanadaBuys needs a browser-like User-Agent (403 otherwise). Filter: CNST category + delivery region naming Ontario/Ottawa/NCR (not Gatineau/Quebec); no region → skipped. ~98 awards; `tags` (road/utilities/park/building/structure) come from title + GSIN/UNSPSC keywords and are rough ("building" is broad). No stable notice URL in the data, so `url` is a CanadaBuys search link by solicitation number.
@@ -30,6 +31,7 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Requests to Person A
 
+- **Mount `<EstimatePanel/>` (S2).** `import { EstimatePanel } from "@/components/estimate/estimate-panel"` in the workspace right column. It works now with drawn components.
 - **Batch component update (small, for P7.5 "apply to all similar").** An `updateComponents(patches: { id, patch }[])` in `designSlice` that applies several patches as one undo step. Not needed before S3.
 - **Zoning map layer (new, SPEC 8.3).** A toggleable layer showing zones inside the project area, coloured by zone family, with the zone code and by-law on click. Data: `project.zoningContext` (schema coming in Z.1, in `src/lib/schemas`). Also show zoning flags with your existing flag markers (P3.9a). Not needed before S3.
 - `measureProject` should return `ProjectMeasurements` as `{ components: Record<componentId, Measurements>, totals }`, and include `Measurements.sections` (per-section footprintM2, perimeterM, grossFloorAreaM2) for buildings. See `src/lib/schemas/measurements.ts`.
@@ -66,7 +68,7 @@ While A scaffolds, draft these locally; commit right after A's scaffold lands on
 - [x] P2.17 Drivers (tornado, by component) + flags aggregation + tests
 - [x] P2.18 Project roll-up: per-component costs, mobilization, per-component + project percentiles, project class + tests
 - [x] P2.19 `computeEstimate()` entry point; multi-component and determinism tests
-- [ ] P3.1 `useEstimate()` wired to the live store (uses A's `measureProject`), debounced, Web Worker if needed — **the S2 integration milestone**
+- [x] P3.1 `useEstimate()` wired to the live store (uses A's `measureProject`), debounced, Web Worker if needed — **the S2 integration milestone**
 
 ### S2 → S3 — Estimate panel, AI flow & project files · Core
 - [ ] P3.5 Scope selector: whole project / single component, respected by all tabs

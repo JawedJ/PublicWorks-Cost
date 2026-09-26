@@ -108,5 +108,16 @@
         "cancel": "Appuyez sur Échap pour annuler."
       }
     }
+  },
+  "estimate": {
+    "title": "Coût estimé (P50)",
+    "range": "Fourchette probable {p10} – {p90} (P10–P90)",
+    "class": "Estimation de classe {cls}",
+    "contingency": "imprévus recommandés {amount}",
+    "computing": "Calcul en cours…",
+    "empty": "Dessinez une route, un parc, un bâtiment ou une structure pour voir son coût estimé.",
+    "undrawn": "{count, plural, one {# composant prévu n'est pas encore dessiné} other {# composants prévus ne sont pas encore dessinés}} et n'ajoute aucun coût.",
+    "flags": "Points à vérifier",
+    "componentNote": "Les montants par composant viennent de la même simulation et ne s'additionnent pas au total du projet."
   }
 }

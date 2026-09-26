@@ -108,5 +108,16 @@
         "cancel": "Press Esc to cancel."
       }
     }
+  },
+  "estimate": {
+    "title": "Estimated cost (P50)",
+    "range": "Likely range {p10} – {p90} (P10–P90)",
+    "class": "Class {cls} estimate",
+    "contingency": "recommended contingency {amount}",
+    "computing": "Calculating…",
+    "empty": "Draw a road, park, building, or structure to see its estimated cost.",
+    "undrawn": "{count, plural, one {# planned component isn't drawn yet} other {# planned components aren't drawn yet}} and adds no cost.",
+    "flags": "Things to check",
+    "componentNote": "Component figures come from the same simulation and don't add up to the project total."
   }
 }
