@@ -435,22 +435,21 @@ In the Estimate tab, a **"Market evidence"** card shows real public data related
 
 ### 8.3 Zoning limits (real, advisory flags only)
 
-Buildings are checked against **real municipal zoning limits** in four cities: **Waterloo, Toronto, Ottawa, Vancouver**. Anywhere else, or if a lookup fails, the building gets an info flag: "Zoning not checked: no zoning data for this municipality." Zoning never blocks drawing and **never changes the estimate**; it only produces flags (section 7.7).
+Buildings are checked against **real municipal zoning limits** in three Ontario cities: **Waterloo, Toronto, Ottawa**. Anywhere else, or if a lookup fails, the building gets an info flag: "Zoning not checked: no zoning data for this municipality." Zoning never blocks drawing and **never changes the estimate**; it only produces flags (section 7.7).
 
 **Two parts per city:**
 - **Zone map** (which zone applies where), from each city's open data:
   - Waterloo: City of Waterloo Open Data zoning layer (By-law 2018-050).
   - Toronto: Zoning By-law 569-2013 shapefiles on Toronto Open Data, including the **height overlay** (numeric height limits).
   - Ottawa: City of Ottawa zoning map service. Confirm which by-law is in force (2008-250 or its replacement, 2026-50) before transcribing.
-  - Vancouver: "Zoning districts and labels" on the City of Vancouver Open Data Portal.
-  Where a city offers a point/area query service (ArcGIS REST, Opendatasoft), `/api/zoning` queries it at runtime for the project area, with cache, timeout, and the fallback flag above. Where it doesn't (Toronto), a script in `scripts/` simplifies the layer into committed JSON (keep it small; clip or simplify as needed).
-- **Zone limits** (what each zone allows), hand-transcribed from the by-law text into `src/data/zoning/<city>.json`: per zone code, max height (m), max storeys, max lot coverage (%), max density (FSI), minimum front/side/rear setbacks (m), and permitted use categories (matched to building subtypes). Every value cites its by-law section and has a retrieval date. Cover the main zone families per city (residential, mixed-use, commercial, institutional, open space). Zones not transcribed get an info flag naming the zone and by-law ("Zone X: limits not loaded, check By-law ___"). Site-specific zones (Toronto exceptions, Vancouver CD-1) are flagged as site-specific, never guessed. Where a height overlay gives a numeric limit (Toronto), it takes precedence over the zone table.
+  Where a city offers a point/area query service (ArcGIS REST), `/api/zoning` queries it at runtime for the project area, with cache, timeout, and the fallback flag above. Where it doesn't (Toronto), a script in `scripts/` simplifies the layer into committed JSON (keep it small; clip or simplify as needed).
+- **Zone limits** (what each zone allows), hand-transcribed from the by-law text into `src/data/zoning/<city>.json`: per zone code, max height (m), max storeys, max lot coverage (%), max density (FSI), minimum front/side/rear setbacks (m), and permitted use categories (matched to building subtypes). Every value cites its by-law section and has a retrieval date. Cover the main zone families per city (residential, mixed-use, commercial, institutional, open space). Zones not transcribed get an info flag naming the zone and by-law ("Zone X: limits not loaded, check By-law ___"). Site-specific zones (e.g. Toronto exceptions) are flagged as site-specific, never guessed. Where a height overlay gives a numeric limit (Toronto), it takes precedence over the zone table.
 
 **Checks (engine, pure):** for each building, find the zone(s) its sections fall in, then compare: tallest section height and storeys vs max; combined footprint / site area vs coverage; GFA / site area vs FSI; section distance to site boundary vs setbacks (only when a site is drawn); building subtype vs permitted uses. Each breach is a `warning` flag naming the component, the limit, the design value, the zone, and the by-law section, plus "Advisory: may need a minor variance or rezoning; verify with the municipality." Partial data → check only what's known.
 
 **Data flow:** the lookup result is stored on the project as `zoningContext` (like `siteContext`, saved in the project file, with a demo snapshot for demo projects) so the engine stays network-free and deterministic.
 
-**Limits to state in the UI and on the `/data` page:** hand-transcribed and advisory, main zones only, may lag recent amendments, not a building code review. Costs remain Ontario-based (regional factors and taxes); a Vancouver project gets zoning flags but Ontario-style pricing until BC factors exist.
+**Limits to state in the UI and on the `/data` page:** hand-transcribed and advisory, main zones only, may lag recent amendments, not a building code review.
 
 Create a `/data` page listing every dataset, what it contains, that it is sample data, and how real data would replace it (public tender results, published cost guides, municipal partners).
 
@@ -736,7 +735,7 @@ Complete one phase at a time. Each phase is broken into numbered tasks in `PROGR
 
 ## 24. Out of scope for now
 
-Saved projects / database / share links, user accounts and permissions, real (licensed) pricing data, funding program planning/matching (future roadmap item), tender/bid analysis, automated scraping of tender sites, detailed design drawings, building code compliance review, zoning outside the four cities in section 8.3, full BIM/IFC import, payments, admin dashboards, multi-user real-time editing.
+Saved projects / database / share links, user accounts and permissions, real (licensed) pricing data, funding program planning/matching (future roadmap item), tender/bid analysis, automated scraping of tender sites, detailed design drawings, building code compliance review, zoning outside the three cities in section 8.3, full BIM/IFC import, payments, admin dashboards, multi-user real-time editing.
 
 ---
 
@@ -758,3 +757,4 @@ One line per change to this spec: `YYYY-MM-DD P#.#: what changed and why`. Newes
 - 2026-09-26 P1.3 [A]: Components (including their params, paramMeta, overrides) live in the design store slice so geometry and parameter edits share one undo/redo history; project meta, settings, and scenarios stay in the project slice. Duplicates are offset 25 m east and south.
 - 2026-09-26 P0.5 [B]: API route conventions in `src/lib/api`: `jsonRoute` wrapper (rate limit → zod body validation → handler), error body `{ error: { code, message, issues?, retryAfterSeconds? } }` with stable codes the UI translates, 422 for validation failures, 429 with `Retry-After`; in-memory per-IP fixed-window limits per route family (ai, geo, export), per server instance.
 - 2026-09-26 Z [B]: Added real zoning limits for Waterloo, Toronto, Ottawa, Vancouver (new section 8.3): zone maps from city open data (runtime query with cache/fallback, or script-built JSON), hand-transcribed limits with by-law citations, engine checks produce advisory flags only (never block, never change the estimate). `Project` gets `zoningContext`. Needs a zoning map layer from A (see PERSON_B.md requests). Building code review stays out of scope.
+- 2026-09-26 Z [B]: Dropped Vancouver from zoning (section 8.3); zoning covers Waterloo, Toronto, Ottawa, all in Ontario like the rest of the pricing.

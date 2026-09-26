@@ -81,9 +81,8 @@ Flags only; never block, never change the estimate. Do Waterloo first (demo city
 - [ ] Z.2 Waterloo: zone map lookup + `src/data/zoning/waterloo.json` limits (By-law 2018-050)
 - [ ] Z.3 Toronto: script-built zone + height overlay JSON + `toronto.json` limits (By-law 569-2013)
 - [ ] Z.4 Ottawa: confirm by-law in force (2008-250 vs 2026-50), map lookup + `ottawa.json` limits
-- [ ] Z.5 Vancouver: map lookup + `vancouver.json` district limits; CD-1 flagged as site-specific
-- [ ] Z.6 Engine zoning checks (height, storeys, coverage, FSI, setbacks, uses) → advisory flags + tests
-- [ ] Z.7 Zoning section on `/data` page and in flags list (source, by-law, date, limits)
+- [ ] Z.5 Engine zoning checks (height, storeys, coverage, FSI, setbacks, uses) → advisory flags + tests
+- [ ] Z.6 Zoning section on `/data` page and in flags list (source, by-law, date, limits)
 
 ### S3 → S4 — Questions, exports, demos
 - [ ] P7.5 `/api/ai/questions` across components + fallback + Questions panel · Core
