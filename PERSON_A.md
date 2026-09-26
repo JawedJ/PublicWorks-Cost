@@ -6,11 +6,11 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Current state
 
-- **Current task:** P1.3
+- **Current task:** P1.4
 - **Status:** not started   <!-- not started | in progress | blocked | at sync point -->
-- **Next action:** P1.3: add components (from B's `src/lib/schemas` `Component` / `ComponentGeometry`) to `designSlice.ts`: add/remove/duplicate, planned/drawn, user/generated, undo/redo. Then P1.4 component list panel.
-- **Blockers / needs from B:** none (B's schemas are on `main` as of P2.1).
-- **Last updated:** 2026-09-26 (P1.1 + P1.2 merged to `main` and live on Vercel)
+- **Next action:** P1.4 component list panel (select, zoom to, rename, duplicate, hide/show, delete) using the P1.3 store actions. Needs a bbox helper in `src/lib/geo` for "zoom to".
+- **Blockers / needs from B:** none.
+- **Last updated:** 2026-09-26 (P1.3 merged to `main`)
 
 ## Handoff notes
 
@@ -20,7 +20,8 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 - `pnpm typecheck` runs `next typegen` first (needed for the global `PageProps` / `LayoutProps` types).
 - i18n lives in `src/lib/i18n/` (`routing.ts`, `navigation.ts`, `request.ts`); use `Link`/`useRouter` from `@/lib/i18n/navigation`, not `next/link`. Messages are typed from `messages/en.json` (`src/global.d.ts`).
 - Dark mode follows the OS; a `.dark` / `.light` class on `<html>` forces it. Map colours are tokens: `water`, `park`, `pavement`, `building`, `warning`, `sample`. Use the `figures` utility for tabular numerals.
-- Store: `designSlice` currently has selection, view mode, colour by cost, units. Components + undo/redo come in P1.3 once B's schemas exist.
+- Store (P1.3): `designSlice` holds `components: Component[]` (full objects, params included) and `areaBoundary`, plus selection, undo/redo (`past`/`future` snapshots of `{components, areaBoundary}`, cap 100). Every design action goes through `commit()`, which records history and drops a selection that no longer exists. `addComponents` = one undo step (build list / generated layout). `setComponentGeometry(id, g, origin?)` marks drawn; default origin `user`, the generator passes `generated`. `duplicateComponent(id, name?)` offsets 25 m E/S, new section/feature ids, selects the copy; the UI passes the translated name. `loadDesign()` replaces everything and clears history (for project files).
+- For live drags (P1.7), call `setComponentGeometry` only on drag end so each drag is one undo step.
 - MapLibre 6: its CSS sets `position: relative` on the container, so size it with `h-full w-full`, not `absolute inset-0`. The worker must be served from `/maplibre/` (see `setWorkerUrl` in `map-view.tsx`).
 - Commits: plain `P1.3 [A]: …` messages under the user's name, **no Co-Authored-By trailer**.
 - Visual checks: no Chrome on this Mac. Use Playwright Chromium (already downloaded to `~/Library/Caches/ms-playwright`): in a scratch folder `pnpm add playwright`, then a script that opens `http://localhost:3123/en/workspace` (after `pnpm build && pnpm start -p 3123`) with launch args `--use-angle=swiftshader --enable-unsafe-swiftshader` and takes a screenshot.
@@ -28,7 +29,7 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Requests to Person B
 
-- _(none yet)_
+- B.2: component params/paramMeta/overrides live on the components in `designSlice`. Edit them with `updateComponent(id, { params, paramMeta, overrides })` so they share undo history; keep project meta, settings, and scenarios in `projectSlice`. Opening a project file should call `loadDesign({ components, areaBoundary })`.
 
 ---
 
@@ -49,7 +50,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 ### S1 → S2 — Map & drawing · Core
 - [x] P1.1 Workspace page with MapLibre, basemap (MapTiler, OpenFreeMap fallback), controls
 - [x] P1.2 Geocoding search with fly-to
-- [ ] P1.3 Store: multiple components (planned/drawn, user/generated), selection, undo/redo
+- [x] P1.3 Store: multiple components (planned/drawn, user/generated), selection, undo/redo
 - [ ] P1.4 Component list panel (select, zoom to, rename, duplicate, hide/show, delete)
 - [ ] P1.5 Freeform draw tools: polygon, rectangle, circle/ellipse, freehand, line/polyline, point; project area
 - [ ] P1.7 Editing: move, rotate, scale, vertex edit, holes, duplicate, mirror, delete
@@ -107,7 +108,8 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 | i18n routing | `src/lib/i18n/*`, `src/proxy.ts`, `messages/*.json` | locales `en`, `fr`; `intlLocale` maps to `en-CA`/`fr-CA` |
 | Layout shell | `src/app/[locale]/layout.tsx`, `src/components/layout/*` | top bar, sample-data badge, language toggle |
 | Design tokens | `src/app/globals.css` | light/dark, map colours, `figures` utility |
-| Store | `src/lib/store/store.ts`, `designSlice.ts` (+ test), `projectSlice.ts` (B's stub) | selection contract |
+| Store | `src/lib/store/store.ts`, `designSlice.ts` (+ test), `projectSlice.ts` (B's stub) | selection contract; components, project area, undo/redo, duplicate |
+| Geometry transforms | `src/lib/geo/transform.ts` | `translateFeature` in metres (duplicate offset) |
 | Pages | `src/app/[locale]/page.tsx` (landing placeholder), `src/app/[locale]/workspace/page.tsx` | |
 | Place search | `src/components/map/geocoder.tsx`, `src/lib/geo/geocode.ts` (+ test) | MapTiler search-as-you-type (Canada, current language); Nominatim on Enter without a key; 6 s timeout |
 | Map | `src/components/map/map-view.tsx`, `map-context.tsx` (`useMap()`), `basemap-toggle.tsx`, `workspace-shell.tsx`; `src/lib/geo/basemaps.ts` | MapTiler streets/hybrid, OpenFreeMap positron without key; worker copied to `public/maplibre` by `pnpm copy:maplibre` (runs in dev/build) |
