@@ -6,9 +6,9 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Current state
 
-- **Current task:** P4.1–P4.2 project files (P3.6, P3.9b, P3.10 done)
+- **Current task:** P3.11 Inputs tab (P3.6, P3.9b, P3.10, P4.1–P4.2 done)
 - **Status:** not started   <!-- not started | in progress | blocked | at sync point -->
-- **Next action:** P4.1–P4.2 project files, then P3.7/P3.8/P3.11/B.3, then zoning (Waterloo only: Z.1, Z.2, Z.5, Z.6).
+- **Next action:** P3.11, P3.7, P3.8, B.3, then zoning (Waterloo only: Z.1, Z.2, Z.5, Z.6).
 - **Blockers / needs from A:** none
 - **Last updated:** 2026-09-26 (P3.6 Estimate tab)
 
@@ -16,6 +16,7 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 > Where an unfinished task stopped, gotchas, things to verify. Replace each session.
 
+- P4.1–P4.2: `src/lib/project-file.ts` (pure, tested): `serializeProject` (stamps `CURRENT_SCHEMA_VERSION`), `projectFileName(name)` → `slug.pwcost.json`, `parseProjectFile(text)` → `{ ok, project }` or `{ ok: false, error: too_large | invalid_json | not_project | newer_version | invalid, detail }` (first zod issue path). No migrations (only v1). Buttons in `src/components/project-file/project-file-buttons.tsx`: `<DownloadProjectButton/>` (disabled with no components) and `<OpenProjectButton/>` (file picker, confirm before replacing work, `loadProject` then `router.push("/workspace")`, inline error). Strings under `projectFile`. Not mounted yet: request to A.
 - P3.10: `EstimatePanel` now has a tab bar (Estimate, Line items; add Inputs in P3.11 to `TABS`). `<LineItemsTab>` in `line-items-tab.tsx`: grouped by component (estimate order, project-level items last, read-only), then category (schema order); quantity and unit price edit in place (blur/Enter commits, Escape cancels) via `setOverride(componentId, kind, localId)` where `localId` = line id minus `${componentId}:`; overridden cells are highlighted with a Reset link, plus "Reset all" per component. Strings under `lineItems`. `tabs.test.tsx` renders both tabs with Northgate through `renderToStaticMarkup` and fails on missing strings (vitest now also picks up `*.test.tsx`).
 - P3.6: `<EstimateTab estimate scoped/>` in `src/components/estimate/estimate-tab.tsx`. Shows P50 + a P10–P90 bar with the P50 marker, class badge with accuracy range (`CLASS_RANGE` now exported from `@/engine`) and up to 5 improvement hints (click selects that component), and for the whole project: contingency and overrun risk cards plus the per-component list. Component scope shows its share instead. `scopeEstimate` now also returns `hints`. P3.9b: `<FlagsList flags names?/>` in `flags-list.tsx`: severity-sorted (high → info) with icon, explanation, cost effect; for the whole project it names the component(s) (or "Whole project") and clicking a single-component flag scopes the panel to it.
 - P7.1–P7.3 (first pass, "get A unblocked"): `src/lib/ai/` has the `AIProvider` interface, `AIUnavailableError`, `noneProvider`, and a REST `createGeminiProvider` (JSON schema from zod, validated, 1 retry, 20 s timeout, 429 → `rate_limited`). `getAIProvider()` reads env; no key → none. `parsePrompt()` in `src/lib/ai/parse.ts` validates types/subtypes/params against the engine catalogs + A's size hints (`storeys`, `areaM2`, `lengthM`; `gfaOverrideM2` is a real param), expands counts (max 20), caches AI results in memory, and falls back to A's `keywordParse`. Route `POST /api/ai/parse` `{ prompt, locale }` → `ParseResponse` (`src/lib/schemas/draft.ts`). Client: `requestParse()` (never throws; local fallback) + `applyDraft()` in `src/components/build-list/build-list.ts`, `<BuildListReview>` in `build-list-review.tsx`, strings under `buildList`. Tested live with Gemini: parse uses the fast model (`GEMINI_MODEL_FAST`, default `gemini-flash-lite-latest`, ~2–3 s); `gemini-flash-latest` (3.8 Flash, thinking) took >20 s. Today's date is passed in so "next spring" resolves. Park amenities come back as `features` (park-features.json kinds) on the park item. **Not done yet (polish):** AnthropicProvider; spatial hints are text only; features aren't placed by `applyDraft` (needs A's layout); keyword fallback splits "streets with watermains and sewers" into separate components.
@@ -35,10 +36,10 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Requests to Person A
 
+- **Mount the project file buttons (P4.1–P4.2 done).** `import { DownloadProjectButton, OpenProjectButton } from "@/components/project-file/project-file-buttons"`. Put both in the workspace top bar (`<TopBar>` children) and `<OpenProjectButton/>` on the landing page next to the demos. Both take an optional `variant` (`outline` default). Open handles validation, the replace confirm, errors, and navigating to `/workspace`.
 - **French is dropped (the human's call, SPEC 17 + Change log).** English only from now on: no need to add keys to `fr.json`, and please hide or remove the EN/FR language toggle (landing/layout are yours). Nothing else needs ripping out; `/fr` routing and `{ en, fr }` text can stay unused.
 - **P7.4 creation flow is unblocked.** In `landing-start.tsx` `start()`: `const r = await requestParse(prompt, locale)` → show `<BuildListReview initial={r.draft} source={r.source} onConfirm={(d) => { applyDraft(d); router.push("/workspace"); }} onBack={...} />` (both from `@/components/build-list/...`). `applyDraft` does `newProject` + `addComponents` with `paramMeta` source `ai_prompt` + evidence, and sets start date. Size hints `storeys`, `areaM2`, `lengthM`, `gfaOverrideM2` kept as your ids. `r.notice` (`ai_busy` / `ai_unavailable`) is there if you want a small notice. `BuildListItem.spatialHint` is free text ("next to the library") if Generate layout wants it later.
 - **Park features from the prompt (small, with P7.4).** A park `BuildListItem` may have `features: string[]` (park-features.json kinds, e.g. `playground`, `splash_pad`). `applyDraft` can't place them (no geometry), so the review screen shows them but they're dropped on Continue. Could Generate layout / smart start place them inside the park? Tell me the shape you want (e.g. `applyDraft` returning `{ componentId, features }[]`, or storing them on the component) and I'll adapt.
-- **Batch component update (small, for P7.5 "apply to all similar").** An `updateComponents(patches: { id, patch }[])` in `designSlice` that applies several patches as one undo step. Not needed before S3.
 - **Zoning map layer (new, SPEC 8.3).** A toggleable layer showing zones inside the project area, coloured by zone family, with the zone code and by-law on click. Data: `project.zoningContext` (schema coming in Z.1, in `src/lib/schemas`). Also show zoning flags with your existing flag markers (P3.9a). Not needed before S3.
 
 ---
@@ -87,8 +88,8 @@ While A scaffolds, draft these locally; commit right after A's scaffold lands on
 - [~] P7.1 AI provider interface + GeminiProvider (default), AnthropicProvider, NoneProvider; zod structured output, retry, timeout, 429 handling, per-IP rate limit, caching
 - [x] P7.2 `/api/ai/parse` → build list (types, counts, params, spatial hints) + keyword fallback
 - [x] P7.3 Build list review screen (edit, remove, duplicate, add components)
-- [ ] P4.1 Project file schema with `schemaVersion` + download (`.pwcost.json`)
-- [ ] P4.2 Open project file with zod validation and clear errors
+- [x] P4.1 Project file schema with `schemaVersion` + download (`.pwcost.json`)
+- [x] P4.2 Open project file with zod validation and clear errors
 
 ### S2 → S3 — Zoning limits (SPEC 8.3) · Core
 Flags only; never block, never change the estimate. Do Waterloo first (demo city).
@@ -137,6 +138,7 @@ Flags only; never block, never change the estimate. Do Waterloo first (demo city
 | --- | --- | --- |
 | Schemas (Project, Component, Geometry, Scenario, Measurements, Estimate, LineItem, Flag, reference data) | `src/lib/schemas/*.ts`, tests in `src/lib/schemas/__tests__/` | Import from `@/lib/schemas` (index re-exports all) |
 | API route conventions (zod body validation, error format, per-IP rate limiter) | `src/lib/api/` (`route.ts`, `errors.ts`, `rate-limit.ts`, `api.test.ts`) | Import from `@/lib/api`; shared with A's `/api/geo/*` routes |
+| Project files (download/open `.pwcost.json`) | `src/lib/project-file.ts` (+ test), `src/components/project-file/project-file-buttons.tsx` | A mounts the buttons |
 | Project store slice (project meta, settings, scenarios, param/override helpers) | `src/lib/store/projectSlice.ts` (+ test) | `selectProject(state)` gives the full `Project` |
 | Seed data (sample prices, SPEC 8) | `src/data/*.json`, loaded and validated in `src/data/index.ts` (+ `__tests__/seed-data.test.ts`) | `import { refData } from "@/data"` for the engine (or each file by name); 22 Ontario regions, 28 overrun reference entries (lognormal, mu set so P(factor > 1) = probabilityOfOverrun); 102 unit-price items, 11 building subtypes, 17 park feature kinds, 16 structure items, priceYear 2025; mobilization is a % in the engine, not a unit price |
 | StatCan BCPI (real data) | `scripts/fetch-statcan-bcpi.ts` → `src/data/public/statcan-bcpi.json`; schema `src/lib/schemas/public-data.ts`; tests `src/data/__tests__/public-data.test.ts` | `pnpm data:bcpi`; Statistics Canada Open Licence |
