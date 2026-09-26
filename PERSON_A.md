@@ -6,11 +6,11 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Current state
 
-- **Current task:** P9.1 (road cross-section), then P1.17 snap to streets
-- **Status:** in progress   <!-- not started | in progress | blocked | at sync point -->
-- **Next action:** Remaining Core items depend on B: P7.4 creation flow (needs B's parse + build-list screen). Stretch left: P9.1, P1.17, P6.1–P6.2, P9.2–P9.5.
-- **Blockers / needs from B:** see Requests below (measure import swap, AI parse to replace the landing keyword fallback, zoning schema).
-- **Last updated:** 2026-09-26 (P1.7–P1.16, P3.2–P3.4, P3.9a, P4.3, P4.5, P5.1 merged to `main`)
+- **Current task:** none in progress; all my Core and Stretch tasks through S4 are merged except P7.4
+- **Status:** at sync point   <!-- not started | in progress | blocked | at sync point -->
+- **Next action:** P7.4 creation flow once B's parse endpoint + build-list screen land (swap the landing keyword fallback for B's parse). Then polish after feature freeze: P10.2 accessibility, P10.3 mobile, P10.5 performance, P10.8 final deploy. Zoning map layer when B's Z.1 schema is on main.
+- **Blockers / needs from B:** see Requests below.
+- **Last updated:** 2026-09-26 (P1.7–P1.18, P3.2–P3.4, P3.9a, P4.3, P4.5, P5.1, P6.1–P6.2, P9.1–P9.5 merged to `main`)
 
 ## Handoff notes
 
@@ -22,6 +22,8 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 - Plan rendering (P1.11–13): `src/lib/render/plan.ts` builds one GeoJSON with a `layer` property; `plan-layers.tsx` styles it under the interactive `pw-*` layers, which are transparent (`plan` property) unless Colour by cost is on. Metric widths use a zoom-exponential expression (must be the outermost expression; no `max()` around it).
 - `useEstimate()` is called twice (EstimatePanel and ComponentLayers) → two engine runs per change. Fine for now; B could move the estimate into the store.
 - Landing prompt uses a TEMPORARY keyword parser (`src/components/landing/keyword-parse.ts`) until B's `/api/ai/parse`; it creates planned components with size hints `gfaOverrideM2`, `storeys`, `areaM2`, `lengthM` that smart start / Generate layout read.
+- 3D site (P9.2–P9.5): `src/components/visuals/site-scene.tsx`, plain three.js + OrbitControls, rebuilt on every design/selection/colour change (fine at demo scale). Pipes are drawn under every road at fixed depths (not from params yet).
+- Site context (P6): `/api/geo/context` needs a User-Agent header for Overpass; Overpass sometimes 504s → `source: "unavailable"`. Result stored with B's `setSiteContext`; B's engine can turn it into flags (P6.3).
 - `captureMapSnapshot` / `useMapSnapshot` (`src/components/map/snapshot.ts`) not yet exercised in a browser.
 
 - Next.js is **16.3** (Middleware is now `src/proxy.ts`; read `node_modules/next/dist/docs/` before using Next APIs, see `AGENTS.md`).
@@ -105,10 +107,10 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 - [x] P6.1 `/api/geo/context` (Overpass) with cache/timeout/fallback · Stretch
 - [x] P6.2 Site tab + map overlays with buffer rings · Stretch
 - [x] P9.1 Road cross-section SVG per road, opens on selection, clickable · Stretch
-- [ ] P9.2 3D site scene in the view switcher; positioned from map coordinates; shared selection · Stretch
-- [ ] P9.3 3D elements: buildings · Stretch
-- [ ] P9.4 3D elements: parks, roads with buried pipes, structures · Stretch
-- [ ] P9.5 Colour by cost + cost tooltips in 3D site · Stretch
+- [x] P9.2 3D site scene in the view switcher; positioned from map coordinates; shared selection · Stretch
+- [x] P9.3 3D elements: buildings · Stretch
+- [x] P9.4 3D elements: parks, roads with buried pipes, structures · Stretch
+- [x] P9.5 Colour by cost + cost tooltips in 3D site · Stretch
 
 ### S4 → S5 — Polish (after feature freeze)
 - [ ] P10.2 Accessibility pass (your areas)

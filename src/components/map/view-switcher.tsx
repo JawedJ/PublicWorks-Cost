@@ -7,7 +7,7 @@ import { useStore } from "@/lib/store/store";
 import { cn } from "@/lib/utils";
 import { useMap } from "./map-context";
 
-const VIEWS = ["plan2d", "map3d"] as const satisfies ViewMode[];
+const VIEWS = ["plan2d", "map3d", "site3d"] as const satisfies ViewMode[];
 
 /** Switch between the 2D plan and the 3D map (tilted, buildings extruded). */
 export function ViewSwitcher() {
@@ -20,6 +20,7 @@ export function ViewSwitcher() {
 
   useEffect(() => {
     if (!map) return;
+    if (viewMode === "site3d") return;
     if (viewMode === "map3d")
       map.easeTo({ pitch: 60, bearing: -20, duration: 600 });
     else map.easeTo({ pitch: 0, bearing: 0, duration: 600 });

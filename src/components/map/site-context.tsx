@@ -176,25 +176,21 @@ export function SiteContextPanel() {
         body: JSON.stringify({ bbox }),
       });
       const parsed = SiteContextSchema.safeParse(await res.json());
-      useStore
-        .getState()
-        .setSiteContext(
-          parsed.success
-            ? parsed.data
-            : {
-                source: "unavailable",
-                fetchedAt: new Date().toISOString(),
-                features: [],
-              },
-        );
+      useStore.getState().setSiteContext(
+        parsed.success
+          ? parsed.data
+          : {
+              source: "unavailable",
+              fetchedAt: new Date().toISOString(),
+              features: [],
+            },
+      );
     } catch {
-      useStore
-        .getState()
-        .setSiteContext({
-          source: "unavailable",
-          fetchedAt: new Date().toISOString(),
-          features: [],
-        });
+      useStore.getState().setSiteContext({
+        source: "unavailable",
+        fetchedAt: new Date().toISOString(),
+        features: [],
+      });
     } finally {
       setLoading(false);
     }

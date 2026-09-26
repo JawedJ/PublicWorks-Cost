@@ -58,7 +58,8 @@
       "label": "Vue",
       "plan2d": "Plan 2D",
       "map3d": "Carte 3D",
-      "colourByCost": "Couleur selon le coût"
+      "colourByCost": "Couleur selon le coût",
+      "site3d": "Site 3D"
     },
     "noCost": "Pas encore de coût",
     "site": {
@@ -249,6 +250,11 @@
         "storm": "Égout pluvial",
         "sanitary": "Égout sanitaire"
       }
+    },
+    "site": {
+      "label": "Scène 3D du site du projet",
+      "empty": "Dessinez ou générez des composantes pour les voir en 3D.",
+      "hint": "Glissez pour pivoter, clic droit pour déplacer, molette pour zoomer. Cliquez pour sélectionner."
     }
   }
 }

@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { useEffect } from "react";
 import { useStore } from "@/lib/store/store";
 import { EstimatePanel } from "@/components/estimate/estimate-panel";
+import { SiteScene } from "@/components/visuals/site-scene";
 import { ComponentLayers } from "./component-layers";
 import { ComponentInspector } from "./component-inspector";
 import { ComponentList } from "./component-list";
@@ -34,6 +35,7 @@ function useUnsavedWarning() {
 export function WorkspaceShell() {
   const t = useTranslations("map");
   useUnsavedWarning();
+  const viewMode = useStore((s) => s.viewMode);
   const tDesign = useTranslations("design");
 
   return (
@@ -53,7 +55,8 @@ export function WorkspaceShell() {
                 <Geocoder />
                 <DrawToolbar />
               </div>
-              <div className="absolute top-3 right-14 z-10">
+              {viewMode === "site3d" && <SiteScene />}
+              <div className="absolute top-3 right-14 z-30">
                 <ViewSwitcher />
               </div>
               <div className="absolute bottom-10 left-1/2 z-10 flex w-full -translate-x-1/2 justify-center">
