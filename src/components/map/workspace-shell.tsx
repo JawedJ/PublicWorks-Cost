@@ -53,7 +53,7 @@ export function WorkspaceShell() {
 
   return (
     <MapProvider>
-      <div className="flex min-h-0 flex-1 flex-col lg:h-[calc(100dvh-3.5rem)] lg:flex-row">
+      <div className="flex min-h-0 flex-1 flex-col lg:h-full lg:flex-none lg:flex-row">
         <div className="flex shrink-0 flex-col lg:min-h-0 lg:min-w-0 lg:flex-1 lg:flex-row">
           <section
             aria-label={t("viewLabel")}
@@ -85,7 +85,7 @@ export function WorkspaceShell() {
                 ? undefined
                 : ({ "--list-w": `${listWidth}px` } as CSSProperties)
             }
-            className={`relative max-h-72 border-t bg-card lg:order-1 lg:max-h-none lg:shrink-0 lg:border-t-0 lg:border-r ${
+            className={`relative max-h-72 overflow-y-auto border-t bg-card lg:order-1 lg:max-h-none lg:overflow-visible lg:shrink-0 lg:border-t-0 lg:border-r ${
               listWidth === null ? "lg:w-64 xl:w-72" : "lg:w-(--list-w)"
             }`}
           >
@@ -95,10 +95,9 @@ export function WorkspaceShell() {
               getWidth={() => listRef.current?.offsetWidth ?? 0}
               onResize={(w) => setListWidth(clamp(w, 200, 480))}
             />
-            <div className="flex h-full min-h-0 flex-col">
-              <div className="min-h-0 flex-1">
-                <ComponentList />
-              </div>
+            {/* On desktop the whole panel scrolls as one column when it doesn't fit. */}
+            <div className="flex flex-col lg:h-full lg:overflow-y-auto">
+              <ComponentList />
               <ComponentPalette />
               <ComponentInspector />
             </div>

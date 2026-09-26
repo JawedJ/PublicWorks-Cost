@@ -6,11 +6,11 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Current state
 
-- **Current task:** none in progress; all my Core and Stretch tasks through S4 are merged except P7.4
+- **Current task:** none in progress; all my Core and Stretch tasks through S4 are merged, plus P7.4
 - **Status:** at sync point   <!-- not started | in progress | blocked | at sync point -->
-- **Next action:** P7.4 creation flow once B's parse endpoint + build-list screen land (swap the landing keyword fallback for B's parse). Then polish after feature freeze: P10.2 accessibility, P10.3 mobile, P10.5 performance, P10.8 final deploy. Zoning map layer when B's Z.1 schema is on main.
+- **Next action:** Zoning map layer when B's Z.1 schema is on main. Mount B's Questions panel in the flow when P7.5 lands. Then polish after feature freeze: P10.2 accessibility, P10.3 mobile, P10.5 performance, P10.8 final deploy. Zoning map layer when B's Z.1 schema is on main.
 - **Blockers / needs from B:** see Requests below.
-- **Last updated:** 2026-09-26 (UI tweaks: resizable side panels, narrower estimate panel, Add-to-the-map palette, building names in 3D; P1.7–P1.18, P3.2–P3.4, P3.9a, P4.3, P4.5, P5.1, P6.1–P6.2, P9.1–P9.5 merged to `main`)
+- **Last updated:** 2026-09-26 (P7.4 creation flow with Gemini parse + review; P50/share in the component list; project file buttons in the top bar; language toggle removed; park features from the prompt placed with the park; workspace height fix; UI tweaks: resizable side panels, narrower estimate panel, Add-to-the-map palette, building names in 3D; P1.7–P1.18, P3.2–P3.4, P3.9a, P4.3, P4.5, P5.1, P6.1–P6.2, P9.1–P9.5 merged to `main`)
 
 ## Handoff notes
 
@@ -18,6 +18,12 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 - **Pace (per the human, 2026-09-26):** fast MVP. Batch tasks, verify main functionality only (checks + one smoke screenshot), log rough edges here instead of polishing.
 - Editing (P1.7): selected component's shapes are copied into Terra Draw select mode (`draw-controller.tsx`, ids `<componentId>|p|s|f`). Only outlines go to Terra Draw (it rejects holes); `withElementShape` puts holes back. Clicks on shapes are picked by `pickElement` (Terra Draw's own click selection is off). Move/rotate/scale of the whole component are MapLibre markers (`transform-handles.tsx`) with live preview (`previewComponentGeometry` + `endGeometryPreview` = one undo step). Known rough edges: rotated shapes scale in the axis-aligned frame; Terra Draw's grab distance is its 40 px default (grabs corners on small shapes); the Terra Draw overlay fill covers holes.
+- P7.4: landing `start()` → `requestParse` (spinner) → B's `<BuildListReview>` → `applyDraft` → `/workspace` with planned components; Generate layout / smart start place them. Questions step waits for B's P7.5. `keyword-parse.ts` is now only used by B's `fallbackDraft`.
+- Park features from the prompt: `applyDraft` stores them as a `plannedFeatures` param ("playground,splash_pad"); `withPlannedFeatures` (`src/lib/geo/generate.ts`) drops them as squares around the park centre in `placeSmart` (planned) and `generateLayout`, only while the park has no features. Not a catalog param, so the engine ignores it.
+- One-screen app (per the human): `body` is `h-dvh overflow-hidden`, `main` is `min-h-0 flex-1 overflow-y-auto` (long pages like the build-list review scroll inside it). The workspace row is `lg:h-full lg:flex-none` (without `flex-none` a long estimate stretched the page). Left panel scrolls as one column (sticky list header); estimate panel scrolls in its inner wrapper.
+- i18n: `request.ts` merges `fr.json` over `en.json`, so missing French keys fall back to English (the fr build broke on B's `projectFile` keys).
+- Top bar: `WorkspaceActions` shows B's Open/Download project file buttons on `/workspace`; the EN/FR toggle is gone (English only). Landing has Open project file next to the sample.
+- Gemini: `GEMINI_API_KEY` + `AI_PROVIDER=gemini` set in `.env.local` and in Vercel (by the human, 2026-09-26). The key was pasted in chat: rotate it after the hackathon.
 - UI tweaks (per the human): estimate panel defaults to 28% width; list and estimate panel resize by dragging their inner edges (`src/components/layout/resize-handle.tsx`, widths in `workspace-shell.tsx` state, not saved). "Add to the map" palette under the component list (`component-palette.tsx`): click a subtype to start drawing it (same as the Add menu), next map click begins the shape; the draw toolbar shows a palette-started target. 3D site shows building names as HTML tags projected each frame (`site-scene.tsx`).
 - Section split (P1.8) not implemented; merge unions all sections (tallest wins).
 - Plan rendering (P1.11–13): `src/lib/render/plan.ts` builds one GeoJSON with a `layer` property; `plan-layers.tsx` styles it under the interactive `pw-*` layers, which are transparent (`plan` property) unless Colour by cost is on. Metric widths use a zoom-exponential expression (must be the outermost expression; no `max()` around it).
@@ -32,7 +38,7 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 - i18n lives in `src/lib/i18n/` (`routing.ts`, `navigation.ts`, `request.ts`); use `Link`/`useRouter` from `@/lib/i18n/navigation`, not `next/link`. Messages are typed from `messages/en.json` (`src/global.d.ts`).
 - Dark mode follows the OS; a `.dark` / `.light` class on `<html>` forces it. Map colours are tokens: `water`, `park`, `pavement`, `building`, `warning`, `sample`. Use the `figures` utility for tabular numerals.
 - Store (P1.3): `designSlice` holds `components: Component[]` (full objects, params included) and `areaBoundary`, plus selection, undo/redo (`past`/`future` snapshots of `{components, areaBoundary}`, cap 100). Every design action goes through `commit()`, which records history and drops a selection that no longer exists. `addComponents` = one undo step (build list / generated layout). `setComponentGeometry(id, g, origin?)` marks drawn; default origin `user`, the generator passes `generated`. `duplicateComponent(id, name?)` offsets 25 m E/S, new section/feature ids, selects the copy; the UI passes the translated name. `loadDesign()` replaces everything and clears history (for project files).
-- Component list (P1.4): docked left of the map on desktop, under it on mobile. Row actions (zoom to, hide/show, ⋯ menu with rename/duplicate/delete) show on hover/focus, always on touch. Double-click a name to rename. Undo/redo buttons in the list header plus Ctrl/Cmd+Z, Ctrl/Cmd+Shift+Z, Ctrl+Y (ignored while typing). Key measurement and P50/share per row come later (P1.15 and B's P3.11).
+- Component list (P1.4): docked left of the map on desktop, under it on mobile. Row actions (zoom to, hide/show, ⋯ menu with rename/duplicate/delete) show on hover/focus, always on touch. Double-click a name to rename. Undo/redo buttons in the list header plus Ctrl/Cmd+Z, Ctrl/Cmd+Shift+Z, Ctrl+Y (ignored while typing). Rows show P50 and share of total from `useEstimate()` once drawn.
 - Temporary: the empty list has a "Load sample project (Northgate)" button that loads B's fixture into the store (design part only). Remove or move it once the landing page's demo cards (P4.5) exist.
 - `component-layers.tsx` is a plain placeholder rendering (fills, lines ~10 m wide at street zoom, circles for points, orange selection outline, dashed project area) and click-to-select. P1.11–P1.13 replace the styling; keep the `componentId` property and click handling. Layers are re-added on `style.load` after a basemap switch. MapLibre can't parse oklch, so map colours are hex in `src/lib/render/colors.ts`.
 - Radix menu gotcha: when a menu item opens an input, prevent `onCloseAutoFocus` and focus the input there (see rename in `component-list.tsx`). Focus lands after the menu's close animation.
@@ -51,7 +57,7 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 ## Requests to Person B
 
 - Swap `approxMeasureProject` for `measureProject` from `@/lib/geo/measure` in `useEstimate.ts` (it's on main, same contract, geodesic).
-- Replace the landing keyword fallback with your parse call when P7.2 lands (`src/components/landing/landing-start.tsx`, `start()`); keep the size-hint param ids above or tell me yours.
+- Done: landing uses your parse + review (P7.4). Park features: I added one line to your `applyDraft` (`plannedFeatures` param); see handoff notes.
 - Optional: keep the estimate in the store (or a context) so the map and the panel share one computation.
 - Custom elements have no pricing form yet: mount your `CustomPricingForm` wherever suits (e.g. inputs tab); the Add menu creates `custom` components/features with just a name.
 - `updateComponents(patches)` is on main (your P7.5 request).
@@ -96,7 +102,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 - [x] P3.3 Shared selection across views, component list, and line items; hover tooltips with cost (from `useEstimate`, fixture until live)
 - [x] P3.4 "Colour by cost" toggle on map views
 - [x] P3.9a Flag markers on the map (B owns the flags list)
-- [ ] P7.4 Creation flow navigation: Describe → Review build list (B's screen) → Locate → Draw each planned component (checklist) → Questions (B's panel) → Estimate
+- [x] P7.4 Creation flow navigation: Describe → Review build list (B's screen) → Locate → Draw each planned component (checklist) → Questions (B's panel) → Estimate
 - [x] P4.5 Landing page: prompt box (calls B's parse), blank map option, demo cards, open project file button (B's loader)
 - [x] P4.3 Unsaved-changes `beforeunload` warning; "New project" reset
 

@@ -1,4 +1,5 @@
 import { fallbackDraft } from "@/lib/ai/parse";
+import { PLANNED_FEATURES_PARAM } from "@/lib/geo/generate";
 import {
   type ParseResponse,
   ParseResponseSchema,
@@ -47,7 +48,10 @@ export function applyDraft(draft: ProjectDraft): string[] {
       type: c.type,
       subtype: c.subtype,
       name: c.name,
-      params: c.params,
+      // Park features from the prompt are placed with the park (A's withPlannedFeatures).
+      params: c.features?.length
+        ? { ...c.params, [PLANNED_FEATURES_PARAM]: c.features.join(",") }
+        : c.params,
       paramMeta: Object.fromEntries(
         Object.keys(c.params).map((k) => [
           k,

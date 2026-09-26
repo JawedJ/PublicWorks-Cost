@@ -38,7 +38,8 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale} className={`${publicSans.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col">
+      {/* One screen: the page never scrolls; panels and long page content scroll inside `main`. */}
+      <body className="flex h-dvh flex-col overflow-hidden">
         <NextIntlClientProvider>
           <a
             href="#main"
@@ -47,7 +48,10 @@ export default async function LocaleLayout({
             {t("skipToContent")}
           </a>
           <TopBar />
-          <main id="main" className="flex flex-1 flex-col">
+          <main
+            id="main"
+            className="flex min-h-0 flex-1 flex-col overflow-y-auto"
+          >
             {children}
           </main>
         </NextIntlClientProvider>

@@ -1,17 +1,20 @@
 "use client";
 
-import { ArrowRight, Map as MapIcon, Sparkles } from "lucide-react";
+import { ArrowRight, Loader2, Map as MapIcon, Sparkles } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
+import { applyDraft, requestParse } from "@/components/build-list/build-list";
+import { BuildListReview } from "@/components/build-list/build-list-review";
+import { OpenProjectButton } from "@/components/project-file/project-file-buttons";
 import { Button } from "@/components/ui/button";
-import { templates } from "@/engine/templates";
 import { northgateProject } from "@/lib/fixtures";
 import { useRouter } from "@/lib/i18n/navigation";
+import type { ParseResponse } from "@/lib/schemas";
 import { useStore } from "@/lib/store/store";
-import { keywordParse } from "./keyword-parse";
 
-// Landing (P4.5): describe the whole build, start from a blank map, or open the
-// sample project. The prompt uses a keyword fallback until B's AI parse (P7.2).
+// Landing (P4.5) and creation flow (P7.4): describe the whole build → review the
+// parsed build list → the workspace with every component planned, ready to place
+// (Generate layout or draw each). Or start from a blank map / the sample / a file.
 
 export function LandingStart() {
   const t = useTranslations("landing");
@@ -19,35 +22,31 @@ export function LandingStart() {
   const router = useRouter();
   const [prompt, setPrompt] = useState("");
   const [notice, setNotice] = useState<string | null>(null);
+  const [parsing, setParsing] = useState(false);
+  const [parsed, setParsed] = useState<ParseResponse | null>(null);
   const examples = [t("example1"), t("example2"), t("example3")];
 
-  function start() {
-    const planned = keywordParse(prompt);
-    if (!planned.length) return setNotice(t("nothingFound"));
-    const store = useStore.getState();
-    store.newProject({ name: prompt.slice(0, 60) });
-    const counts: Record<string, number> = {};
-    store.addComponents(
-      planned.map((p) => {
-        counts[p.subtype] = (counts[p.subtype] ?? 0) + 1;
-        const label =
-          templates[p.type].subtypes.find((s) => s.id === p.subtype)?.label[
-            locale
-          ] ?? p.subtype;
-        return {
-          ...p,
-          name: `${label} ${counts[p.subtype]}`,
-          paramMeta: Object.fromEntries(
-            Object.keys(p.params).map((k) => [
-              k,
-              { source: "ai_prompt" as const },
-            ]),
-          ),
-        };
-      }),
-    );
-    router.push("/workspace");
+  async function start() {
+    if (!prompt.trim() || parsing) return;
+    setParsing(true);
+    const r = await requestParse(prompt, locale);
+    setParsing(false);
+    if (!r.draft.components.length) return setNotice(t("nothingFound"));
+    setParsed(r);
   }
+
+  if (parsed)
+    return (
+      <BuildListReview
+        initial={parsed.draft}
+        source={parsed.source}
+        onConfirm={(d) => {
+          applyDraft(d);
+          router.push("/workspace");
+        }}
+        onBack={() => setParsed(null)}
+      />
+    );
 
   function blank() {
     useStore.getState().newProject({ name: t("untitled") });
@@ -103,8 +102,9 @@ export function LandingStart() {
           </p>
         )}
         <div className="flex flex-wrap gap-2 pt-2">
-          <Button type="submit" size="lg" disabled={!prompt.trim()}>
-            <Sparkles /> {t("startPrompt")}
+          <Button type="submit" size="lg" disabled={!prompt.trim() || parsing}>
+            {parsing ? <Loader2 className="animate-spin" /> : <Sparkles />}
+            {parsing ? t("parsing") : t("startPrompt")}
           </Button>
           <Button type="button" size="lg" variant="outline" onClick={blank}>
             <MapIcon /> {t("startBlank")}
@@ -114,9 +114,12 @@ export function LandingStart() {
       <div className="rounded-lg border p-4">
         <h2 className="font-medium">{t("sampleTitle")}</h2>
         <p className="mt-1 text-sm text-muted-foreground">{t("sampleBody")}</p>
-        <Button variant="link" className="mt-1 px-0" onClick={sample}>
-          {t("openSample")} <ArrowRight />
-        </Button>
+        <div className="mt-1 flex flex-wrap items-center gap-3">
+          <Button variant="link" className="px-0" onClick={sample}>
+            {t("openSample")} <ArrowRight />
+          </Button>
+          <OpenProjectButton />
+        </div>
       </div>
     </div>
   );

@@ -322,3 +322,54 @@ function spiral(rand: () => number): [number, number][] {
     }
   return spots;
 }
+
+// ---------- Park features from the prompt ----------
+
+/** Param holding park feature kinds from the prompt ("playground,splash_pad"), placed with the park. */
+export const PLANNED_FEATURES_PARAM = "plannedFeatures";
+
+/**
+ * Adds the park's planned features (from the prompt) as small squares in a grid around
+ * the park's centre, if the park has none placed yet. Other components pass through.
+ */
+export function withPlannedFeatures(
+  c: Pick<Component, "type" | "params">,
+  g: ComponentGeometry,
+): ComponentGeometry {
+  const raw = c.params[PLANNED_FEATURES_PARAM];
+  if (c.type !== "park" || typeof raw !== "string" || g.features.length)
+    return g;
+  if (g.primary.geometry.type !== "Polygon") return g;
+  const kinds = raw.split(",").filter(Boolean);
+  if (!kinds.length) return g;
+  const ring = g.primary.geometry.coordinates[0]!;
+  const centre: Position = [
+    ring.slice(0, -1).reduce((s, p) => s + p[0], 0) / (ring.length - 1),
+    ring.slice(0, -1).reduce((s, p) => s + p[1], 0) / (ring.length - 1),
+  ];
+  const { toLocal } = localFrame(centre);
+  const pts = ring.map(toLocal);
+  const w =
+    Math.max(...pts.map((p) => p[0])) - Math.min(...pts.map((p) => p[0]));
+  const h =
+    Math.max(...pts.map((p) => p[1])) - Math.min(...pts.map((p) => p[1]));
+  const cols = Math.ceil(Math.sqrt(kinds.length));
+  const rows = Math.ceil(kinds.length / cols);
+  // Squares fill about half of the park's inner box, capped at 25 m.
+  const side = Math.min(25, (0.5 * Math.min(w, h)) / Math.max(cols, rows));
+  const step = side * 1.4;
+  const { fromLocal } = localFrame(centre);
+  return {
+    ...g,
+    features: kinds.map((kind, i) => {
+      const x = ((i % cols) - (cols - 1) / 2) * step;
+      const y = (Math.floor(i / cols) - (rows - 1) / 2) * step;
+      return {
+        id: newId(),
+        kind,
+        geometry: rect(fromLocal([x, y]), side, side, 0),
+        params: {},
+      };
+    }),
+  };
+}

@@ -30,7 +30,8 @@
     "untitled": "Untitled project",
     "sampleTitle": "Sample project: Northgate (Waterloo)",
     "sampleBody": "Two roads, a park, a branch library, a fire station and a culvert, with an estimate. Sample data.",
-    "openSample": "Open the sample"
+    "openSample": "Open the sample",
+    "parsing": "Reading your description…"
   },
   "map": {
     "workspaceTitle": "Workspace",

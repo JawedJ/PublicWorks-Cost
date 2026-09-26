@@ -54,7 +54,7 @@ export function ComponentPalette() {
   return (
     <section
       aria-label={tPalette("title")}
-      className="max-h-[40%] shrink-0 overflow-y-auto border-t"
+      className="border-t"
     >
       <h3 className="px-3 pt-2 text-xs font-semibold">{tPalette("title")}</h3>
       <p className="px-3 pb-1 text-xs text-muted-foreground">

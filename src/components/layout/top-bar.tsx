@@ -1,9 +1,9 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/lib/i18n/navigation";
-import { LocaleSwitcher } from "./locale-switcher";
 import { SampleDataBadge } from "./sample-data-badge";
+import { WorkspaceActions } from "./workspace-actions";
 
-/** Persistent top bar: app name, sample-data badge, language toggle. */
+/** Persistent top bar: app name, sample-data badge, project file actions in the workspace. */
 export function TopBar({ children }: { children?: React.ReactNode }) {
   const t = useTranslations("common");
 
@@ -22,7 +22,7 @@ export function TopBar({ children }: { children?: React.ReactNode }) {
       <SampleDataBadge />
       <div className="flex flex-1 items-center justify-end gap-2">
         {children}
-        <LocaleSwitcher />
+        <WorkspaceActions />
       </div>
     </header>
   );

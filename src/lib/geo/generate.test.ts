@@ -1,7 +1,12 @@
 import { describe, expect, it } from "vitest";
 import type { Component, Position } from "@/lib/schemas";
 import { pointInRing } from "./edit";
-import { generateLayout, smartGeometry } from "./generate";
+import {
+  generateLayout,
+  PLANNED_FEATURES_PARAM,
+  smartGeometry,
+  withPlannedFeatures,
+} from "./generate";
 import { measureComponent } from "./measure";
 
 const make = (
@@ -64,5 +69,35 @@ describe("generate", () => {
     expect(strip(generateLayout(list, [-80.5, 43.45], 8))).not.toEqual(
       strip(a),
     );
+  });
+});
+
+describe("withPlannedFeatures", () => {
+  const centre: Position = [-80.5, 43.47];
+  const params = { [PLANNED_FEATURES_PARAM]: "playground,splash_pad,plaza" };
+
+  it("places the prompt's park features inside the park", () => {
+    const park = make("p", "park", "neighbourhood_park", params);
+    const g = withPlannedFeatures(park, smartGeometry(park, centre));
+    expect(g.features.map((f) => f.kind)).toEqual([
+      "playground",
+      "splash_pad",
+      "plaza",
+    ]);
+    const ring = (g.primary.geometry as { coordinates: Position[][] })
+      .coordinates[0]!;
+    for (const f of g.features)
+      for (const p of (f.geometry.geometry as { coordinates: Position[][] })
+        .coordinates[0]!)
+        expect(pointInRing(p, ring)).toBe(true);
+  });
+
+  it("leaves parks with placed features and other types alone", () => {
+    const park = make("p", "park", "neighbourhood_park", params);
+    const once = withPlannedFeatures(park, smartGeometry(park, centre));
+    expect(withPlannedFeatures(park, once)).toBe(once);
+    const road = make("r", "road", "road_reconstruction", params);
+    const g = smartGeometry(road, centre);
+    expect(withPlannedFeatures(road, g)).toBe(g);
   });
 });

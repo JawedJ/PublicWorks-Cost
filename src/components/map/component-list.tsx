@@ -20,8 +20,8 @@ import {
   Undo2,
   type LucideIcon,
 } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { useEffect, useRef, useState } from "react";
+import { useLocale, useTranslations } from "next-intl";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -30,8 +30,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useEstimate } from "@/lib/estimate/useEstimate";
 import { northgateProject } from "@/lib/fixtures";
 import { componentBounds, featureBounds } from "@/lib/geo/bounds";
+import { intlLocale, type Locale } from "@/lib/i18n/routing";
 import type { Component, ComponentType } from "@/lib/schemas";
 import { useStore } from "@/lib/store/store";
 import { cn } from "@/lib/utils";
@@ -109,6 +111,28 @@ export function ComponentList() {
   }
   const redo = useStore((s) => s.redo);
   useUndoShortcuts();
+  const { estimate } = useEstimate();
+  const locale = intlLocale[useLocale() as Locale];
+  const money = useMemo(
+    () =>
+      new Intl.NumberFormat(locale, {
+        style: "currency",
+        currency: "CAD",
+        notation: "compact",
+        maximumFractionDigits: 1,
+      }),
+    [locale],
+  );
+  const costs = useMemo(
+    () =>
+      new Map(
+        (estimate?.components ?? []).map((c) => [
+          c.componentId,
+          `${money.format(c.p50)} · ${Math.round(c.share * 100)}%`,
+        ]),
+      ),
+    [estimate, money],
+  );
 
   function loadSample() {
     const p = structuredClone(northgateProject);
@@ -126,8 +150,8 @@ export function ComponentList() {
   }
 
   return (
-    <div className="flex h-full min-h-0 flex-col">
-      <div className="flex items-center gap-1 border-b px-3 py-2">
+    <div className="flex flex-col">
+      <div className="sticky top-0 z-10 flex items-center gap-1 border-b bg-card px-3 py-2">
         <h2 className="flex-1 text-sm font-semibold">
           {t("title")}{" "}
           <span className="font-normal text-muted-foreground figures">
@@ -199,9 +223,9 @@ export function ComponentList() {
           </Button>
         </div>
       ) : (
-        <ul className="min-h-0 flex-1 overflow-y-auto py-1">
+        <ul className="py-1">
           {components.map((c) => (
-            <ComponentRow key={c.id} component={c} />
+            <ComponentRow key={c.id} component={c} cost={costs.get(c.id)} />
           ))}
         </ul>
       )}
@@ -209,7 +233,14 @@ export function ComponentList() {
   );
 }
 
-function ComponentRow({ component: c }: { component: Component }) {
+function ComponentRow({
+  component: c,
+  cost,
+}: {
+  component: Component;
+  /** P50 and share of the total, when the component is estimated. */
+  cost?: string;
+}) {
   const t = useTranslations("design.components");
   const map = useMap();
   const selected = useStore((s) => s.selectedComponentId === c.id);
@@ -270,6 +301,7 @@ function ComponentRow({ component: c }: { component: Component }) {
           <span className="text-xs text-muted-foreground">
             {t(`types.${c.type}`)}
             {c.status === "planned" && ` · ${t("planned")}`}
+            {cost && <span className="figures"> · {cost}</span>}
           </span>
         </button>
       )}

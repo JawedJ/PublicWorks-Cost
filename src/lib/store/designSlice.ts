@@ -31,6 +31,7 @@ import {
 } from "@/lib/geo/edit";
 import {
   generateLayout as generateLayoutFor,
+  withPlannedFeatures,
   smartGeometry,
 } from "@/lib/geo/generate";
 import { mirrorAbout, translateFeature } from "@/lib/geo/transform";
@@ -522,7 +523,10 @@ export const createDesignSlice: StateCreator<Store, [], [], DesignSlice> = (
       }
       const c = get().components.find((x) => x.id === target.componentId);
       if (!c) return null;
-      get().setComponentGeometry(c.id, smartGeometry(c, centre, bearingDeg));
+      get().setComponentGeometry(
+        c.id,
+        withPlannedFeatures(c, smartGeometry(c, centre, bearingDeg)),
+      );
       get().selectComponent(c.id);
       return c.id;
     },
@@ -539,7 +543,7 @@ export const createDesignSlice: StateCreator<Store, [], [], DesignSlice> = (
           placed[c.id]
             ? {
                 ...c,
-                geometry: placed[c.id],
+                geometry: withPlannedFeatures(c, placed[c.id]!),
                 status: "drawn",
                 origin: "generated",
               }
