@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { unitPrices } from "@/data";
+import { buildingCosts, parkFeatures, structures, unitPrices } from "@/data";
 
 describe("unit-prices.json", () => {
   it("is sample data with a price year", () => {
@@ -51,6 +51,95 @@ describe("unit-prices.json", () => {
       "site_furniture_allowance",
     ]) {
       expect(ids.has(id), id).toBe(true);
+    }
+  });
+});
+
+describe("building-costs.json", () => {
+  it("has every building subtype in SPEC 6.3", () => {
+    expect(Object.keys(buildingCosts.subtypes).sort()).toEqual(
+      [
+        "community_centre",
+        "library",
+        "fire_station",
+        "police_station",
+        "municipal_office",
+        "school",
+        "hospital",
+        "house",
+        "townhouse_block",
+        "low_rise_apartment",
+        "mid_rise_apartment",
+      ].sort(),
+    );
+  });
+
+  it("gives school and hospital a wider uncertainty band", () => {
+    expect(
+      buildingCosts.subtypes.school!.uncertaintyMultiplier,
+    ).toBeGreaterThan(1);
+    expect(
+      buildingCosts.subtypes.hospital!.uncertaintyMultiplier,
+    ).toBeGreaterThan(1);
+    expect(buildingCosts.subtypes.library!.uncertaintyMultiplier).toBe(1);
+  });
+
+  it("orders quality and sustainability factors sensibly", () => {
+    const q = buildingCosts.qualityFactors;
+    expect(q.basic).toBeLessThan(q.standard);
+    expect(q.standard).toBeLessThan(q.high);
+    const p = buildingCosts.sustainabilityPremiums;
+    expect(p.code_minimum).toBe(1);
+    expect(p.high_performance).toBeLessThan(p.net_zero_ready);
+  });
+});
+
+describe("park-features.json", () => {
+  it("prices every known feature kind in SPEC 6.2", () => {
+    for (const kind of [
+      "playground",
+      "splash_pad",
+      "sports_field",
+      "trail",
+      "parking",
+      "washroom",
+      "shade_structure",
+      "seating_area",
+      "tree_planting",
+      "plaza",
+    ]) {
+      expect(parkFeatures.features[kind], kind).toBeDefined();
+    }
+  });
+
+  it("has size tiers for playgrounds and splash pads", () => {
+    for (const kind of ["playground", "splash_pad"]) {
+      expect(Object.keys(parkFeatures.features[kind]!.tiers).sort()).toEqual([
+        "large",
+        "medium",
+        "small",
+      ]);
+    }
+  });
+});
+
+describe("structures.json", () => {
+  it("covers every structure subtype with unique ids", () => {
+    const subtypes = new Set(structures.items.map((i) => i.subtype));
+    expect([...subtypes].sort()).toEqual([
+      "culvert_replacement",
+      "pumping_station",
+      "small_bridge",
+    ]);
+    const ids = structures.items.map((i) => i.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+});
+
+describe("all seed files", () => {
+  it("are marked as 2025 sample data", () => {
+    for (const file of [unitPrices, buildingCosts, parkFeatures, structures]) {
+      expect(file.meta).toMatchObject({ sample: true, priceYear: 2025 });
     }
   });
 });

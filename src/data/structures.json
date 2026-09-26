@@ -1,0 +1,249 @@
+{
+  "meta": {
+    "sample": true,
+    "priceYear": 2025,
+    "notes": "Illustrative sample structure costs for Ontario, typical 2025 (CAD, excluding HST). Not real cost data. Structures carry wide bands because site conditions dominate their cost. Traffic control and in-water work come from unit-prices.json."
+  },
+  "items": [
+    {
+      "id": "culvert_cmp_1200",
+      "subtype": "culvert_replacement",
+      "description": {
+        "en": "Corrugated steel pipe culvert 1.2 m",
+        "fr": "Ponceau en tôle ondulée 1,2 m"
+      },
+      "unit": "m",
+      "price": {
+        "low": 3840,
+        "typical": 4800,
+        "high": 6720
+      },
+      "priceCategory": "steel"
+    },
+    {
+      "id": "culvert_concrete_pipe_1800",
+      "subtype": "culvert_replacement",
+      "description": {
+        "en": "Concrete pipe culvert 1.8 m",
+        "fr": "Ponceau en tuyau de béton 1,8 m"
+      },
+      "unit": "m",
+      "price": {
+        "low": 7600,
+        "typical": 9500,
+        "high": 13300
+      },
+      "priceCategory": "concrete"
+    },
+    {
+      "id": "culvert_box_2400",
+      "subtype": "culvert_replacement",
+      "description": {
+        "en": "Precast concrete box culvert 2.4 m span",
+        "fr": "Ponceau-caisson préfabriqué portée 2,4 m"
+      },
+      "unit": "m",
+      "price": {
+        "low": 13200,
+        "typical": 16500,
+        "high": 23100
+      },
+      "priceCategory": "concrete"
+    },
+    {
+      "id": "culvert_box_3000",
+      "subtype": "culvert_replacement",
+      "description": {
+        "en": "Precast concrete box culvert 3.0 m span",
+        "fr": "Ponceau-caisson préfabriqué portée 3,0 m"
+      },
+      "unit": "m",
+      "price": {
+        "low": 16800,
+        "typical": 21000,
+        "high": 29400
+      },
+      "priceCategory": "concrete"
+    },
+    {
+      "id": "culvert_box_4200",
+      "subtype": "culvert_replacement",
+      "description": {
+        "en": "Precast concrete box culvert 4.2 m span",
+        "fr": "Ponceau-caisson préfabriqué portée 4,2 m"
+      },
+      "unit": "m",
+      "price": {
+        "low": 24800,
+        "typical": 31000,
+        "high": 43400
+      },
+      "priceCategory": "concrete"
+    },
+    {
+      "id": "culvert_open_footing_6000",
+      "subtype": "culvert_replacement",
+      "description": {
+        "en": "Open-footing culvert 6.0 m span",
+        "fr": "Ponceau à semelles ouvertes portée 6,0 m"
+      },
+      "unit": "m",
+      "price": {
+        "low": 38400,
+        "typical": 48000,
+        "high": 67200
+      },
+      "priceCategory": "concrete"
+    },
+    {
+      "id": "culvert_headwalls",
+      "subtype": "culvert_replacement",
+      "description": {
+        "en": "Headwalls and wingwalls (pair)",
+        "fr": "Murs de tête et murs en aile (paire)"
+      },
+      "unit": "lump",
+      "price": {
+        "low": 76000,
+        "typical": 95000,
+        "high": 133000
+      },
+      "priceCategory": "concrete"
+    },
+    {
+      "id": "bridge_deck_concrete_girder",
+      "subtype": "small_bridge",
+      "description": {
+        "en": "Bridge, precast concrete girders (per m² of deck)",
+        "fr": "Pont, poutres préfabriquées en béton (par m² de tablier)"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 7600,
+        "typical": 9500,
+        "high": 13300
+      },
+      "priceCategory": "concrete"
+    },
+    {
+      "id": "bridge_deck_steel_girder",
+      "subtype": "small_bridge",
+      "description": {
+        "en": "Bridge, steel girders (per m² of deck)",
+        "fr": "Pont, poutres en acier (par m² de tablier)"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 8800,
+        "typical": 11000,
+        "high": 15400
+      },
+      "priceCategory": "steel"
+    },
+    {
+      "id": "bridge_deck_slab",
+      "subtype": "small_bridge",
+      "description": {
+        "en": "Bridge, cast-in-place slab (per m² of deck)",
+        "fr": "Pont, dalle coulée en place (par m² de tablier)"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 6560,
+        "typical": 8200,
+        "high": 11480
+      },
+      "priceCategory": "concrete"
+    },
+    {
+      "id": "bridge_pedestrian",
+      "subtype": "small_bridge",
+      "description": {
+        "en": "Pedestrian bridge, prefabricated (per m² of deck)",
+        "fr": "Passerelle piétonne préfabriquée (par m² de tablier)"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 5760,
+        "typical": 7200,
+        "high": 10080
+      },
+      "priceCategory": "steel"
+    },
+    {
+      "id": "bridge_approaches",
+      "subtype": "small_bridge",
+      "description": {
+        "en": "Bridge approaches and barriers",
+        "fr": "Approches et glissières du pont"
+      },
+      "unit": "lump",
+      "price": {
+        "low": 176000,
+        "typical": 220000,
+        "high": 308000
+      },
+      "priceCategory": "concrete"
+    },
+    {
+      "id": "pumping_station_small",
+      "subtype": "pumping_station",
+      "description": {
+        "en": "Pumping station, small (up to 50 L/s)",
+        "fr": "Station de pompage, petite (jusqu'à 50 L/s)"
+      },
+      "unit": "each",
+      "price": {
+        "low": 2100000,
+        "typical": 2800000,
+        "high": 4200000
+      },
+      "priceCategory": "general"
+    },
+    {
+      "id": "pumping_station_medium",
+      "subtype": "pumping_station",
+      "description": {
+        "en": "Pumping station, medium (50 to 200 L/s)",
+        "fr": "Station de pompage, moyenne (50 à 200 L/s)"
+      },
+      "unit": "each",
+      "price": {
+        "low": 5625000,
+        "typical": 7500000,
+        "high": 11250000
+      },
+      "priceCategory": "general"
+    },
+    {
+      "id": "pumping_station_large",
+      "subtype": "pumping_station",
+      "description": {
+        "en": "Pumping station, large (over 200 L/s)",
+        "fr": "Station de pompage, grande (plus de 200 L/s)"
+      },
+      "unit": "each",
+      "price": {
+        "low": 12000000,
+        "typical": 16000000,
+        "high": 24000000
+      },
+      "priceCategory": "general"
+    },
+    {
+      "id": "pumping_station_forcemain",
+      "subtype": "pumping_station",
+      "description": {
+        "en": "Forcemain (per m)",
+        "fr": "Conduite de refoulement (par m)"
+      },
+      "unit": "m",
+      "price": {
+        "low": 680,
+        "typical": 850,
+        "high": 1190
+      },
+      "priceCategory": "pipe"
+    }
+  ]
+}

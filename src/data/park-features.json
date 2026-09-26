@@ -1,0 +1,334 @@
+{
+  "meta": {
+    "sample": true,
+    "priceYear": 2025,
+    "notes": "Illustrative sample park feature costs for Ontario, typical 2025 (CAD, supply and install, excluding HST). Not real cost data. Tiers match the feature parameters in the park template."
+  },
+  "features": {
+    "playground": {
+      "label": {
+        "en": "Playground",
+        "fr": "Aire de jeux"
+      },
+      "unit": "each",
+      "priceCategory": "steel",
+      "tiers": {
+        "small": {
+          "low": 119000,
+          "typical": 140000,
+          "high": 175000
+        },
+        "medium": {
+          "low": 242250,
+          "typical": 285000,
+          "high": 356250
+        },
+        "large": {
+          "low": 442000,
+          "typical": 520000,
+          "high": 650000
+        }
+      }
+    },
+    "splash_pad": {
+      "label": {
+        "en": "Splash pad",
+        "fr": "Jeux d'eau"
+      },
+      "unit": "each",
+      "priceCategory": "concrete",
+      "tiers": {
+        "small": {
+          "low": 357000,
+          "typical": 420000,
+          "high": 525000
+        },
+        "medium": {
+          "low": 578000,
+          "typical": 680000,
+          "high": 850000
+        },
+        "large": {
+          "low": 892500,
+          "typical": 1050000,
+          "high": 1312500
+        }
+      }
+    },
+    "sports_field": {
+      "label": {
+        "en": "Sports field (per m²)",
+        "fr": "Terrain de sport (par m²)"
+      },
+      "unit": "m2",
+      "priceCategory": "general",
+      "tiers": {
+        "natural": {
+          "low": 38.25,
+          "typical": 45,
+          "high": 56.25
+        },
+        "artificial_turf": {
+          "low": 162,
+          "typical": 190,
+          "high": 247
+        }
+      }
+    },
+    "sports_field_lighting": {
+      "label": {
+        "en": "Sports field lighting (per m² of field)",
+        "fr": "Éclairage de terrain (par m² de terrain)"
+      },
+      "unit": "m2",
+      "priceCategory": "steel",
+      "tiers": {
+        "default": {
+          "low": 32.3,
+          "typical": 38,
+          "high": 49.4
+        }
+      }
+    },
+    "trail": {
+      "label": {
+        "en": "Trail (per m²)",
+        "fr": "Sentier (par m²)"
+      },
+      "unit": "m2",
+      "priceCategory": "asphalt",
+      "tiers": {
+        "granular": {
+          "low": 35.7,
+          "typical": 42,
+          "high": 52.5
+        },
+        "asphalt": {
+          "low": 72.25,
+          "typical": 85,
+          "high": 106
+        },
+        "boardwalk": {
+          "low": 880,
+          "typical": 1100,
+          "high": 1595
+        }
+      }
+    },
+    "trail_lighting": {
+      "label": {
+        "en": "Trail light pole (every 30 m)",
+        "fr": "Lampadaire de sentier (aux 30 m)"
+      },
+      "unit": "each",
+      "priceCategory": "steel",
+      "tiers": {
+        "default": {
+          "low": 5270,
+          "typical": 6200,
+          "high": 7750
+        }
+      }
+    },
+    "parking": {
+      "label": {
+        "en": "Parking area (per m²)",
+        "fr": "Aire de stationnement (par m²)"
+      },
+      "unit": "m2",
+      "priceCategory": "asphalt",
+      "tiers": {
+        "granular": {
+          "low": 46.75,
+          "typical": 55,
+          "high": 68.75
+        },
+        "asphalt": {
+          "low": 97.75,
+          "typical": 115,
+          "high": 144
+        },
+        "permeable": {
+          "low": 157,
+          "typical": 185,
+          "high": 231
+        }
+      }
+    },
+    "washroom": {
+      "label": {
+        "en": "Washroom building (per m²)",
+        "fr": "Bâtiment de toilettes (par m²)"
+      },
+      "unit": "m2",
+      "priceCategory": "general",
+      "tiers": {
+        "default": {
+          "low": 8075,
+          "typical": 9500,
+          "high": 12825
+        }
+      }
+    },
+    "shade_structure": {
+      "label": {
+        "en": "Shade structure",
+        "fr": "Structure d'ombrage"
+      },
+      "unit": "each",
+      "priceCategory": "steel",
+      "tiers": {
+        "small": {
+          "low": 38250,
+          "typical": 45000,
+          "high": 56250
+        },
+        "large": {
+          "low": 102000,
+          "typical": 120000,
+          "high": 150000
+        }
+      }
+    },
+    "seating_area": {
+      "label": {
+        "en": "Seating area",
+        "fr": "Aire de repos"
+      },
+      "unit": "each",
+      "priceCategory": "general",
+      "tiers": {
+        "default": {
+          "low": 21250,
+          "typical": 25000,
+          "high": 31250
+        }
+      }
+    },
+    "tree_planting": {
+      "label": {
+        "en": "Tree planting area (per m², by density)",
+        "fr": "Plantation d'arbres (par m², selon la densité)"
+      },
+      "unit": "m2",
+      "priceCategory": "general",
+      "tiers": {
+        "low": {
+          "low": 3.4,
+          "typical": 4,
+          "high": 5.0
+        },
+        "medium": {
+          "low": 6.8,
+          "typical": 8,
+          "high": 10.0
+        },
+        "high": {
+          "low": 11.9,
+          "typical": 14,
+          "high": 17.5
+        }
+      }
+    },
+    "plaza": {
+      "label": {
+        "en": "Plaza hardscape (per m²)",
+        "fr": "Place minéralisée (par m²)"
+      },
+      "unit": "m2",
+      "priceCategory": "concrete",
+      "tiers": {
+        "concrete": {
+          "low": 128,
+          "typical": 150,
+          "high": 188
+        },
+        "unit_pavers": {
+          "low": 178,
+          "typical": 210,
+          "high": 262
+        },
+        "stone": {
+          "low": 323,
+          "typical": 380,
+          "high": 513
+        }
+      }
+    },
+    "skate_park": {
+      "label": {
+        "en": "Skate park (per m²)",
+        "fr": "Planchodrome (par m²)"
+      },
+      "unit": "m2",
+      "priceCategory": "concrete",
+      "tiers": {
+        "default": {
+          "low": 520,
+          "typical": 650,
+          "high": 910
+        }
+      }
+    },
+    "dog_park": {
+      "label": {
+        "en": "Off-leash dog area (per m²)",
+        "fr": "Aire canine (par m²)"
+      },
+      "unit": "m2",
+      "priceCategory": "general",
+      "tiers": {
+        "default": {
+          "low": 28.0,
+          "typical": 35,
+          "high": 49.0
+        }
+      }
+    },
+    "community_garden": {
+      "label": {
+        "en": "Community garden (per m²)",
+        "fr": "Jardin communautaire (par m²)"
+      },
+      "unit": "m2",
+      "priceCategory": "general",
+      "tiers": {
+        "default": {
+          "low": 44.0,
+          "typical": 55,
+          "high": 77.0
+        }
+      }
+    },
+    "outdoor_rink": {
+      "label": {
+        "en": "Outdoor rink, refrigerated (per m²)",
+        "fr": "Patinoire extérieure réfrigérée (par m²)"
+      },
+      "unit": "m2",
+      "priceCategory": "steel",
+      "tiers": {
+        "default": {
+          "low": 1120,
+          "typical": 1400,
+          "high": 1960
+        }
+      }
+    },
+    "sports_court": {
+      "label": {
+        "en": "Sports court, hard surface (per m²)",
+        "fr": "Terrain de sport à surface dure (par m²)"
+      },
+      "unit": "m2",
+      "priceCategory": "asphalt",
+      "tiers": {
+        "default": {
+          "low": 136,
+          "typical": 160,
+          "high": 200
+        }
+      }
+    }
+  }
+}

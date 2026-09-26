@@ -1,0 +1,273 @@
+{
+  "meta": {
+    "sample": true,
+    "priceYear": 2025,
+    "notes": "Illustrative sample building costs for Ontario, typical 2025 (CAD per m² of gross floor area, excluding HST, soft costs, FF&E, and site works). Not real cost data. School and hospital are rough: their cost depends mostly on the internal program."
+  },
+  "subtypes": {
+    "community_centre": {
+      "label": {
+        "en": "Community centre",
+        "fr": "Centre communautaire"
+      },
+      "perM2": {
+        "low": 4420,
+        "typical": 5200,
+        "high": 6500
+      },
+      "uncertaintyMultiplier": 1
+    },
+    "library": {
+      "label": {
+        "en": "Library",
+        "fr": "Bibliothèque"
+      },
+      "perM2": {
+        "low": 4590,
+        "typical": 5400,
+        "high": 6750
+      },
+      "uncertaintyMultiplier": 1
+    },
+    "fire_station": {
+      "label": {
+        "en": "Fire station",
+        "fr": "Caserne de pompiers"
+      },
+      "perM2": {
+        "low": 5015,
+        "typical": 5900,
+        "high": 7375
+      },
+      "uncertaintyMultiplier": 1
+    },
+    "police_station": {
+      "label": {
+        "en": "Police station",
+        "fr": "Poste de police"
+      },
+      "perM2": {
+        "low": 5355,
+        "typical": 6300,
+        "high": 7875
+      },
+      "uncertaintyMultiplier": 1
+    },
+    "municipal_office": {
+      "label": {
+        "en": "Municipal office",
+        "fr": "Bureau municipal"
+      },
+      "perM2": {
+        "low": 3995,
+        "typical": 4700,
+        "high": 5875
+      },
+      "uncertaintyMultiplier": 1
+    },
+    "school": {
+      "label": {
+        "en": "School (rough)",
+        "fr": "École (approximatif)"
+      },
+      "perM2": {
+        "low": 3655,
+        "typical": 4300,
+        "high": 5375
+      },
+      "uncertaintyMultiplier": 1.5
+    },
+    "hospital": {
+      "label": {
+        "en": "Hospital (rough)",
+        "fr": "Hôpital (approximatif)"
+      },
+      "perM2": {
+        "low": 8330,
+        "typical": 9800,
+        "high": 12250
+      },
+      "uncertaintyMultiplier": 1.8
+    },
+    "house": {
+      "label": {
+        "en": "Single-detached house",
+        "fr": "Maison individuelle"
+      },
+      "perM2": {
+        "low": 2805,
+        "typical": 3300,
+        "high": 4125
+      },
+      "uncertaintyMultiplier": 1
+    },
+    "townhouse_block": {
+      "label": {
+        "en": "Townhouse block",
+        "fr": "Rangée de maisons en bande"
+      },
+      "perM2": {
+        "low": 3060,
+        "typical": 3600,
+        "high": 4500
+      },
+      "uncertaintyMultiplier": 1
+    },
+    "low_rise_apartment": {
+      "label": {
+        "en": "Low-rise apartment (up to 4 storeys)",
+        "fr": "Immeuble de faible hauteur (jusqu'à 4 étages)"
+      },
+      "perM2": {
+        "low": 3485,
+        "typical": 4100,
+        "high": 5125
+      },
+      "uncertaintyMultiplier": 1
+    },
+    "mid_rise_apartment": {
+      "label": {
+        "en": "Mid-rise apartment (5 to 12 storeys)",
+        "fr": "Immeuble de hauteur moyenne (5 à 12 étages)"
+      },
+      "perM2": {
+        "low": 3995,
+        "typical": 4700,
+        "high": 5875
+      },
+      "uncertaintyMultiplier": 1
+    }
+  },
+  "qualityFactors": {
+    "basic": 0.88,
+    "standard": 1.0,
+    "high": 1.18
+  },
+  "sustainabilityPremiums": {
+    "code_minimum": 1.0,
+    "high_performance": 1.05,
+    "net_zero_ready": 1.1
+  },
+  "roofPremiums": {
+    "pitched": {
+      "low": 119,
+      "typical": 140,
+      "high": 182
+    },
+    "green": {
+      "low": 221,
+      "typical": 260,
+      "high": 338
+    }
+  },
+  "specialSpaces": {
+    "gymnasium": {
+      "label": {
+        "en": "Gymnasium",
+        "fr": "Gymnase"
+      },
+      "unit": "lump",
+      "price": {
+        "low": 1020000,
+        "typical": 1200000,
+        "high": 1560000
+      }
+    },
+    "indoor_pool": {
+      "label": {
+        "en": "Indoor pool (25 m, 6 lanes)",
+        "fr": "Piscine intérieure (25 m, 6 couloirs)"
+      },
+      "unit": "lump",
+      "price": {
+        "low": 7600000,
+        "typical": 9500000,
+        "high": 13300000
+      }
+    },
+    "ice_rink": {
+      "label": {
+        "en": "Indoor ice rink",
+        "fr": "Aréna intérieur"
+      },
+      "unit": "lump",
+      "price": {
+        "low": 11200000,
+        "typical": 14000000,
+        "high": 19600000
+      }
+    },
+    "apparatus_bay": {
+      "label": {
+        "en": "Fire apparatus bay (premium)",
+        "fr": "Baie pour véhicules d'incendie (supplément)"
+      },
+      "unit": "each",
+      "price": {
+        "low": 68000,
+        "typical": 80000,
+        "high": 104000
+      }
+    },
+    "sally_port_cells": {
+      "label": {
+        "en": "Sally port and holding cells",
+        "fr": "Sas véhiculaire et cellules"
+      },
+      "unit": "lump",
+      "price": {
+        "low": 1530000,
+        "typical": 1800000,
+        "high": 2430000
+      }
+    },
+    "council_chamber": {
+      "label": {
+        "en": "Council chamber",
+        "fr": "Salle du conseil"
+      },
+      "unit": "lump",
+      "price": {
+        "low": 765000,
+        "typical": 900000,
+        "high": 1170000
+      }
+    },
+    "commercial_kitchen": {
+      "label": {
+        "en": "Commercial kitchen",
+        "fr": "Cuisine commerciale"
+      },
+      "unit": "lump",
+      "price": {
+        "low": 382500,
+        "typical": 450000,
+        "high": 585000
+      }
+    },
+    "underground_parking": {
+      "label": {
+        "en": "Underground parking (per m²)",
+        "fr": "Stationnement souterrain (par m²)"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 2210,
+        "typical": 2600,
+        "high": 3380
+      }
+    },
+    "elevator": {
+      "label": {
+        "en": "Additional elevator",
+        "fr": "Ascenseur supplémentaire"
+      },
+      "unit": "each",
+      "price": {
+        "low": 187000,
+        "typical": 220000,
+        "high": 275000
+      }
+    }
+  }
+}
