@@ -205,7 +205,8 @@ Measurements {
   grossFloorAreaM2?: number
   features: Record<featureId, { lengthM?: number, areaM2?: number }>
 }
-ProjectMeasurements = Record<componentId, Measurements> & { totals: { roadLengthM, parkAreaM2, buildingGfaM2, areaBoundaryM2? } }
+ProjectMeasurements { components: Record<componentId, Measurements>, totals: { roadLengthM, parkAreaM2, buildingGfaM2, areaBoundaryM2? } }
+// Measurements also carries sections?: Record<sectionId, { footprintM2, perimeterM, grossFloorAreaM2 }> for buildings
 ```
 
 ### Scenario
@@ -351,9 +352,9 @@ Estimate {
   computedAt: string
 }
 LineItem {
-  id, componentId, category, description, quantity, unit, quantitySource,
+  id, componentId (null for project-level items), elementRef?: { sectionId?, featureId? }, category, description, quantity, unit, quantitySource,
   unitPrice: { low, typical, high }, unitPriceSource, priceCategory (asphalt|concrete|steel|pipe|lumber|labour|general),
-  total, isQuantityOverridden, isPriceOverridden
+  total, isQuantityOverridden, isPriceOverridden, lowConfidence
 }
 ```
 
@@ -730,3 +731,8 @@ One line per change to this spec: `YYYY-MM-DD P#.#: what changed and why`. Newes
 - 2026-09-25 (pre-build): Merged estimate and visuals into one "Estimate & visualize" step with a linked view switcher (2D plan / 3D map / 3D site). Added a tile palette of real-size buildings, park features, and structures with recognizable 2D plan rendering; added housing building subtypes; added `tiles.json`.
 - 2026-09-25 (pre-build): Replaced the fixed tile palette with unlimited freeform design (any shape, multi-section buildings with per-section heights, custom elements priced by match or own rate), procedurally generated smart-start shapes and starting layouts, and procedurally generated 2D/3D rendering from actual shapes. `tiles.json` replaced by `typologies.json`.
 - 2026-09-25 (pre-build): Added real public data: Statistics Canada BCPI (table 18-10-0289-01) for escalation and price trends, and CanadaBuys award notices as market evidence, both via build-time scripts into committed JSON; added the Market evidence card (sections 7.1, 8.1, 8.2).
+- 2026-09-26 P2.1 [B]: `ProjectMeasurements` is now `{ components: Record<componentId, Measurements>, totals }` (the old intersection type can't be typed cleanly); `Measurements.sections` adds per-section footprint/perimeter/GFA for shape complexity.
+- 2026-09-26 P2.1 [B]: `LineItem` gets `elementRef?: { sectionId?, featureId? }` (clickable visuals, TEAM.md 3.1), `componentId: null` for project-level items like mobilization, and `lowConfidence` for custom elements.
+- 2026-09-26 P2.1 [B]: Custom pricing (6.5) is stored as `customPricing` on custom `Component`s and custom `PlacedFeature`s: `{ mode: 'matched', basisId, unit }` or `{ mode: 'own_rate', unit, rate, low?, high? }`.
+- 2026-09-26 P2.1 [B]: Engine-produced text (line item descriptions and sources, flags, drivers, hints) is `{ en, fr }` so the pure engine stays locale-free and exports can pick a language. Flags also get a stable `code` and optional map `location`; component estimates carry `improvementHints`; `Estimate` adds `escalationDetail` (BCPI factor, proxy label, rate source) and `seed`.
+- 2026-09-26 P2.1 [B]: `SiteContext` defined as `{ source: 'overpass' | 'demo_snapshot' | 'unavailable', fetchedAt, features: { id, kind: school | hospital | waterway | rail | road | floodplain, name?, geometry, tags? }[] }`.

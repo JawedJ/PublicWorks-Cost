@@ -6,21 +6,23 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Current state
 
-- **Current task:** P2.1
-- **Status:** not started   <!-- not started | in progress | blocked | at sync point -->
-- **Next action:** Write the zod schemas while A scaffolds; commit as soon as A's scaffold is on `main`.
-- **Blockers / needs from A:** none
-- **Last updated:** —
+- **Current task:** B.1 (fixtures)
+- **Status:** in progress   <!-- not started | in progress | blocked | at sync point -->
+- **Next action:** Write `src/lib/fixtures/northgate.project.json` and `northgate.estimate.json` against the P2.1 schemas.
+- **Blockers / needs from A:** scaffold on `main` (with `zod` installed) before `b/P2.1-schemas` can merge.
+- **Last updated:** 2026-09-26
 
 ## Handoff notes
 
 > Where an unfinished task stopped, gotchas, things to verify. Replace each session.
 
-- _(none yet)_
+- P2.1 schemas are on branch `b/P2.1-schemas`, not yet merged. They were type-checked and tested (11 Vitest tests) in a temporary harness because the repo has no `package.json` yet. After A's scaffold lands: rebase, add `zod` + `@types/geojson` if A didn't, run `pnpm typecheck && pnpm test`, merge.
+- Contract changes are in the SPEC Change log, tagged P2.1 [B]. The one that affects A: `ProjectMeasurements` is `{ components, totals }`, not an intersection type.
 
 ## Requests to Person A
 
-- _(none yet)_
+- `measureProject` should return `ProjectMeasurements` as `{ components: Record<componentId, Measurements>, totals }`, and include `Measurements.sections` (per-section footprintM2, perimeterM, grossFloorAreaM2) for buildings. See `src/lib/schemas/measurements.ts`.
+- Please add `zod` and `@types/geojson` in the scaffold (or tell me and I'll add them in their own commit).
 
 ---
 
@@ -30,7 +32,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 
 ### Before S1 (first hour) — Contracts · Core
 While A scaffolds, draft these locally; commit right after A's scaffold lands on `main`.
-- [ ] P2.1 Zod schemas: Project, Component, Geometry, BuildingSection, PlacedFeature, Measurements, Scenario, Estimate, LineItem (with `elementRef`, log it in the SPEC Change log), Flag, reference data
+- [x] P2.1 Zod schemas: Project, Component, Geometry, BuildingSection, PlacedFeature, Measurements, Scenario, Estimate, LineItem (with `elementRef`, log it in the SPEC Change log), Flag, reference data
 - [ ] B.1 Fixtures: `src/lib/fixtures/northgate.project.json` and `northgate.estimate.json` (valid against the schemas; hand-written numbers are fine)
 - [ ] P0.5 Stateless API route conventions (zod validation helper, error format, in-memory rate limiter)
 - [ ] B.2 `projectSlice.ts` (params, paramMeta, overrides, settings, scenarios) plugged into A's `store.ts`
@@ -107,4 +109,4 @@ While A scaffolds, draft these locally; commit right after A's scaffold lands on
 
 | Feature | Key files | Notes |
 | --- | --- | --- |
-| _(fill in as you build)_ | | |
+| Schemas (Project, Component, Geometry, Scenario, Measurements, Estimate, LineItem, Flag, reference data) | `src/lib/schemas/*.ts`, tests in `src/lib/schemas/__tests__/` | Import from `@/lib/schemas` (index re-exports all) |
