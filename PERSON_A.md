@@ -34,6 +34,8 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 - Commits: plain `P1.3 [A]: …` messages under the user's name, **no Co-Authored-By trailer**.
 - Visual checks: no Chrome on this Mac. Use Playwright Chromium (already downloaded to `~/Library/Caches/ms-playwright`): in a scratch folder `pnpm add playwright`, then a script that opens `http://localhost:3123/en/workspace` (after `pnpm build && pnpm start -p 3123`) with launch args `--use-angle=swiftshader --enable-unsafe-swiftshader` and takes a screenshot.
 - `TopBar` accepts `children` for workspace actions (New project, Download project file) to be added later.
+- Browser test tips: `pnpm dev -p 3123` is fine for quick checks. At a 1440 px window the map canvas is only ~560 px wide (list + estimate panel take the rest), so keep test clicks inside it. After choosing a menu item that opens an input, wait for the input to have focus before typing. Past test scripts are in the session scratchpad only, not the repo.
+- Open requests from B (see `PERSON_B.md`, both "not needed before S3"): `updateComponents(patches)` as one undo step in `designSlice`, and a toggleable zoning map layer from `project.zoningContext` (schema coming in B's Z.1). B's `projectSlice` (B.2) is now on `main`.
 
 ## Requests to Person B
 
