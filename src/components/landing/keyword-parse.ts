@@ -1,8 +1,9 @@
 import type { ComponentType, ParamValue } from "@/lib/schemas";
 
-// TEMPORARY keyword fallback for the landing prompt (P4.5) until Person B's
-// /api/ai/parse (P7.2) exists. Finds known component types, counts and simple size
-// hints ("2,400 m²", "two-storey", "400 m") in the prompt. No costs here.
+// Keyword fallback for the landing prompt (used by B's parse when the AI is
+// unavailable). Finds known component types, counts, simple size hints ("2,400 m²",
+// "two-storey", "400 m") and building amenities ("with a pool", "parking for 40
+// cars"), which go on the building they follow. No costs here.
 
 export type PlannedInput = {
   type: ComponentType;
@@ -59,6 +60,33 @@ const RULES: { re: RegExp; type: ComponentType; subtype: string }[] = [
   { re: /pump(ing)? station/, type: "structure", subtype: "pumping_station" },
 ];
 
+/** Building amenities → catalog params. A number capture sets a count param. */
+const AMENITIES: { re: RegExp; param: string; count?: boolean }[] = [
+  { re: /\b(indoor )?(swimming )?pool\b|aquatic/, param: "indoorPool" },
+  { re: /\bgym(nasium)?s?\b/, param: "gymnasium" },
+  { re: /\b(ice )?rinks?\b|\barena\b/, param: "iceRink" },
+  { re: /\b(commercial )?kitchen\b/, param: "commercialKitchen" },
+  { re: /\bbasement\b|underground parking/, param: "basement" },
+  { re: /sally ?port/, param: "sallyPort" },
+  { re: /council chamber/, param: "councilChamber" },
+  { re: /furnish|ff&e|furniture/, param: "ffeIncluded" },
+  {
+    re: /(\d+|[a-z]+)\s+(?:parking\s+)?(?:stalls|spaces|cars)\b/,
+    param: "parkingStalls",
+    count: true,
+  },
+  {
+    re: /(\d+|[a-z]+)\s+(?:apparatus\s+|truck\s+)?bays\b/,
+    param: "apparatusBays",
+    count: true,
+  },
+  {
+    re: /(\d+|[a-z]+)\s+(?:extra\s+|additional\s+)?elevators\b/,
+    param: "extraElevators",
+    count: true,
+  },
+];
+
 const WORDS: Record<string, number> = {
   a: 1,
   an: 1,
@@ -94,9 +122,22 @@ export function keywordParse(prompt: string): PlannedInput[] {
     .toLowerCase()
     .replace(/(\d),(\d{3})/g, "$1$2")
     .split(/,|;|\band\b|\bplus\b|\bwith\b|\bet\b|\+/);
+  // Amenities attach to the most recent building ("a library with a pool").
+  let lastBuilding: PlannedInput[] = [];
+  const amenities = (clause: string, target: PlannedInput[]) => {
+    for (const a of AMENITIES) {
+      const m = clause.match(a.re);
+      if (!m) continue;
+      const value = a.count ? Number(m[1]) || WORDS[m[1]!] : true;
+      if (value) for (const b of target) b.params[a.param] = value;
+    }
+  };
   for (const clause of clauses) {
     const rule = RULES.find((r) => r.re.test(clause));
-    if (!rule) continue;
+    if (!rule) {
+      amenities(clause, lastBuilding);
+      continue;
+    }
     // Size phrases ("1.5 ha", "400 m", "two-storey") aren't counts.
     const bare = clause.replace(
       /\d+(\.\d+)?\s*(m2|m²|sq ?m|square met\w*|ha|hectares?|km|m)\b|[a-z0-9]+[- ](storey|story|floor)s?/g,
@@ -121,12 +162,18 @@ export function keywordParse(prompt: string): PlannedInput[] {
     }
     if (rule.type === "road" && length)
       params.lengthM = Number(length[1]) * (length[2] === "km" ? 1000 : 1);
+    const added: PlannedInput[] = [];
     for (let i = 0; i < count; i++)
-      out.push({
+      added.push({
         type: rule.type,
         subtype: rule.subtype,
         params: { ...params },
       });
+    out.push(...added);
+    if (rule.type === "building") {
+      lastBuilding = added;
+      amenities(clause.replace(rule.re, " "), added);
+    } else lastBuilding = [];
   }
   return out;
 }

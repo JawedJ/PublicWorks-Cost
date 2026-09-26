@@ -1,8 +1,6 @@
 "use client";
 
-import { RotateCcw } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect } from "react";
 import { resolveParams } from "@/engine/params";
 import { templates } from "@/engine/templates";
 import type {
@@ -33,34 +31,10 @@ type Props = {
   components: Component[];
   /** Scope: one component, or null for all. */
   componentId: string | null;
-  /** A field to scroll to and focus once. */
-  focus?: { componentId: string; paramId: string } | null;
-  onFocused?: () => void;
 };
 
-export function InputsTab({
-  components: all,
-  componentId,
-  focus,
-  onFocused,
-}: Props) {
+export function InputsTab({ components: all, componentId }: Props) {
   const t = useTranslations("inputs");
-  // Scroll to, focus and briefly highlight a field (from an improvement hint).
-  useEffect(() => {
-    if (!focus) return;
-    const row = document.getElementById(
-      `param-${focus.componentId}-${focus.paramId}`,
-    );
-    if (row) {
-      row.scrollIntoView({ block: "center", behavior: "smooth" });
-      row.querySelector<HTMLElement>("input, select")?.focus({
-        preventScroll: true,
-      });
-      row.dataset.highlight = "true";
-      setTimeout(() => delete row.dataset.highlight, 2000);
-    }
-    onFocused?.();
-  }, [focus, onFocused]);
   const components = componentId
     ? all.filter((c) => c.id === componentId)
     : all;
@@ -154,7 +128,6 @@ function ParamRow({
 }) {
   const t = useTranslations("inputs");
   const setParam = useStore((s) => s.setComponentParam);
-  const clearParam = useStore((s) => s.clearComponentParam);
   const meta = c.paramMeta[d.id];
   const source: ParamSource =
     meta?.source ?? (d.id in c.params ? "user" : "default");
@@ -162,10 +135,7 @@ function ParamRow({
   const label = d.label.en;
 
   return (
-    <li
-      id={`param-${c.id}-${d.id}`}
-      className="-mx-2 flex flex-col gap-1 rounded-md px-2 py-2 text-sm transition-colors duration-700 data-[highlight=true]:bg-primary/15"
-    >
+    <li className="flex flex-col gap-1 py-2 text-sm">
       <div className="flex items-center justify-between gap-2">
         <span title={d.why.en}>{label}</span>
         <span className="flex w-40 shrink-0 items-center gap-1">
@@ -222,15 +192,6 @@ function ParamRow({
           <span className="truncate text-muted-foreground">
             “{meta.evidence}”
           </span>
-        )}
-        {source !== "default" && (
-          <button
-            type="button"
-            className="ml-auto inline-flex items-center gap-1 text-primary underline-offset-2 hover:underline"
-            onClick={() => clearParam(c.id, d.id)}
-          >
-            <RotateCcw className="size-3" /> {t("reset")}
-          </button>
         )}
       </div>
     </li>

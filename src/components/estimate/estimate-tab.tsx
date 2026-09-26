@@ -14,7 +14,7 @@ import {
 import { FlagsList } from "./flags-list";
 import { MarketEvidenceCard } from "./market-evidence-card";
 
-// P3.6: Estimate tab. Headline range, class badge with improvement hints,
+// P3.6: Estimate tab. Headline range, class badge,
 // contingency and overrun risk (whole project), per-component list, flags.
 
 const money = new Intl.NumberFormat("en-CA", {
@@ -32,17 +32,9 @@ type Props = {
   components: Component[];
   /** Project region key (for the StatCan trend). */
   region: string;
-  /** Opens the input for an improvement hint (Inputs tab, that field). */
-  onAnswer?: (componentId: string, paramId: string) => void;
 };
 
-export function EstimateTab({
-  estimate,
-  scoped,
-  components,
-  region,
-  onAnswer,
-}: Props) {
+export function EstimateTab({ estimate, scoped, components, region }: Props) {
   const t = useTranslations("estimate");
   const names = new Map(
     estimate.components.map((c) => [c.componentId, c.name]),
@@ -71,30 +63,6 @@ export function EstimateTab({
             </p>
           </div>
         </div>
-        {scoped.hints.length > 0 && (
-          <div className="mt-3 text-sm">
-            <p className="mb-1 text-muted-foreground">{t("improveHeading")}</p>
-            <ul className="flex flex-col gap-1">
-              {scoped.hints.slice(0, 5).map((h) => (
-                <li key={`${h.componentId}:${h.paramId}`}>
-                  <button
-                    type="button"
-                    className="text-left text-primary underline-offset-2 hover:underline"
-                    onClick={() => onAnswer?.(h.componentId, h.paramId)}
-                  >
-                    {h.label.en} →
-                    {whole && (
-                      <span className="text-muted-foreground">
-                        {" "}
-                        · {names.get(h.componentId)}
-                      </span>
-                    )}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
       </Card>
 
       {whole ? (

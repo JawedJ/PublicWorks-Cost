@@ -104,6 +104,7 @@ Rules:
 - count = how many identical components ("two fire stations" → 2). Otherwise 1.
 - Only set a param when the prompt clearly states it; value as text (e.g. "3", "poor", "true"); evidence = the exact phrase.
 - Sizes: building floor area → gfaOverrideM2, storeys → storeys, park area → areaM2 (1 ha = 10000), road length → lengthM.
+- Building amenities are params of that building, not components: pool → indoorPool, gym → gymnasium, rink → iceRink, kitchen → commercialKitchen, basement or underground parking → basement, "parking for 40 cars" → parkingStalls 40, bays → apparatusBays, elevators → extraElevators. Set every one the prompt mentions.
 - Park amenities are features of their park, not components: put their ids in that park's features. If no park is mentioned, add one for them. Other types: features = [].
 - Anything not in the catalog → type "custom", subtype "custom", keeping its name.
 - Never output costs or prices.

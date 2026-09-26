@@ -25,11 +25,6 @@ export function EstimatePanel() {
   const components = useStore((s) => s.components);
   const region = useStore((s) => s.project.region);
   const [tab, setTab] = useState<Tab>("estimate");
-  // An improvement hint was clicked: the Inputs tab scrolls to and focuses that field.
-  const [focusParam, setFocusParam] = useState<{
-    componentId: string;
-    paramId: string;
-  } | null>(null);
   // Creation flow (P7.4, A): once the last planned component is placed, go to Questions.
   const planned = components.filter((c) => c.status === "planned").length;
   const [prevPlanned, setPrevPlanned] = useState(planned);
@@ -96,11 +91,6 @@ export function EstimatePanel() {
             scoped={scoped}
             components={components}
             region={region}
-            onAnswer={(componentId, paramId) => {
-              selectComponent(componentId);
-              setFocusParam({ componentId, paramId });
-              setTab("inputs");
-            }}
           />
         )}
         {tab === "questions" && (
@@ -117,8 +107,6 @@ export function EstimatePanel() {
           <InputsTab
             components={components}
             componentId={scoped.component?.componentId ?? null}
-            focus={focusParam}
-            onFocused={() => setFocusParam(null)}
           />
         )}
       </div>
