@@ -63,13 +63,7 @@ export function zoningFlags(
         L(" under the ", " selon le "),
         where,
         ".",
-        z.siteSpecific
-          ? t(
-              L(" Site-specific provision ", " Disposition particulière "),
-              z.siteSpecific,
-              L(" applies.", " applicable."),
-            )
-          : "",
+        z.siteSpecific ? t(" ", z.siteSpecific, ".") : "",
         L(
           " Check this zone's height, coverage, setback and use limits before design. Advisory only.",
           " Vérifiez les limites de hauteur, d'emprise, de marges et d'usage de la zone. À titre indicatif.",
@@ -110,8 +104,8 @@ export function zoningFlags(
       severity: "info",
       title: L("Zoning not checked", "Zonage non vérifié"),
       explanation: L(
-        "No public zoning data for this location (zoning lookup covers Ottawa and Cambridge). Check the municipality's zoning by-law.",
-        "Aucune donnée de zonage publique ici (Ottawa et Cambridge seulement). Consultez le règlement de zonage municipal.",
+        "No public zoning data for this location (zoning lookup covers Waterloo, Cambridge and Ottawa). Check the municipality's zoning by-law.",
+        "Aucune donnée de zonage publique ici (Waterloo, Cambridge et Ottawa seulement). Consultez le règlement de zonage municipal.",
       ),
       componentIds: unchecked,
     });

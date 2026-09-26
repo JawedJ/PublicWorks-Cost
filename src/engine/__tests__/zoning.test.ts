@@ -47,7 +47,7 @@ describe("zoning flags (SPEC 8.3 MVP)", () => {
           bylaw: "150-85",
           code: "R4",
           name: "Low density residential",
-          siteSpecific: "S.4.2.8.2",
+          siteSpecific: "Site-specific provision S.4.2.8.2 applies",
         },
       }),
     );

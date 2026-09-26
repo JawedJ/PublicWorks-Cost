@@ -1,8 +1,9 @@
 import type { ZoneResult } from "@/lib/schemas";
 
 // SPEC 8.3 (MVP): cities with a public zoning map service (ArcGIS REST point
-// query). Adding a city = one entry. Waterloo and Kitchener publish no public
-// zoning service, so they come back "no_data" ("zoning not checked").
+// query). Adding a city = one entry. Waterloo's layer isn't on its open data
+// portal; it's the service behind the city's public map viewer (maps.waterloo.ca).
+// Kitchener publishes none, so it comes back "no_data" ("zoning not checked").
 
 type Attrs = Record<string, unknown>;
 
@@ -26,6 +27,31 @@ const str = (v: unknown) =>
   typeof v === "string" && v.trim() ? v.trim() : undefined;
 
 export const ZONING_SOURCES: ZoningSource[] = [
+  {
+    city: "Waterloo",
+    bylaw: "2018-050",
+    bbox: [-80.62, 43.42, -80.46, 43.53],
+    url: "https://gis.waterloo.ca/maps/rest/services/Public/Public_Operations/MapServer/49",
+    outFields: ["ZONE_CODE", "ZONE_LABEL", "ZONE_LEGEND"],
+    read: (a) => {
+      const code = str(a.ZONE_CODE);
+      if (!code) return null;
+      const label = str(a.ZONE_LABEL);
+      const legend = str(a.ZONE_LEGEND);
+      return {
+        code,
+        // e.g. "(Holding) Uptown Commercial Core - 16 (Uptown)"
+        name:
+          [label, legend && `(${legend})`].filter(Boolean).join(" ") ||
+          undefined,
+        ...(code.startsWith("(H)") && {
+          siteSpecific:
+            "Holding provision (H): development waits until the hold is lifted",
+        }),
+        link: "https://www.waterloo.ca/media/ybpnbhdm/zoning-by-law-2018-050.pdf",
+      };
+    },
+  },
   {
     city: "Ottawa",
     bylaw: "2008-250",
@@ -53,10 +79,13 @@ export const ZONING_SOURCES: ZoningSource[] = [
       const code = str(a.ZONING_CODE);
       if (!code) return null;
       const type = str(a.ZONING_TYPE);
+      const special = str(a.SITE_SPECIFIC1);
       return {
         code,
         name: type && type[0] + type.slice(1).toLowerCase(),
-        siteSpecific: str(a.SITE_SPECIFIC1),
+        ...(special && {
+          siteSpecific: `Site-specific provision ${special} applies`,
+        }),
       };
     },
   },
