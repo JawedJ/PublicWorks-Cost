@@ -3,6 +3,24 @@
 import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { refData } from "@/data";
 import { customBases, suggestBasis } from "@/engine/templates/custom";
 import type { CustomPricing } from "@/lib/schemas";
@@ -18,8 +36,6 @@ const money = new Intl.NumberFormat("en-CA", {
   currency: "CAD",
   maximumFractionDigits: 0,
 });
-const input =
-  "w-full rounded border bg-background px-1.5 py-1 text-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none";
 
 type Props = {
   /** Element name, used for the suggestion. */
@@ -65,67 +81,66 @@ export function CustomPricingForm({ name, pricing, onChange }: Props) {
   }
 
   return (
-    <div className="flex flex-col gap-2 rounded-2xl border bg-card p-3 text-sm">
-      <div role="radiogroup" aria-label={t("mode")} className="flex gap-3">
-        {(["matched", "own_rate"] as const).map((m) => (
-          <label key={m} className="flex items-center gap-1">
-            <input
-              type="radio"
-              name={`mode-${name}`}
-              checked={mode === m}
-              onChange={() => setMode(m)}
-            />
-            {t(`modes.${m}`)}
-          </label>
-        ))}
-      </div>
+    <div className="flex flex-col gap-3">
+      <ToggleGroup
+        type="single"
+        variant="outline"
+        size="sm"
+        aria-label={t("mode")}
+        value={mode}
+        onValueChange={(v) => v && setMode(v as CustomPricing["mode"])}
+      >
+        <ToggleGroupItem value="matched">{t("modes.matched")}</ToggleGroupItem>
+        <ToggleGroupItem value="own_rate">
+          {t("modes.own_rate")}
+        </ToggleGroupItem>
+      </ToggleGroup>
 
       {mode === "matched" ? (
-        <>
-          <select
-            aria-label={t("basis")}
-            className={input}
-            value={matchedId}
-            onChange={(e) => pick(e.target.value)}
-          >
-            <option value="" disabled>
-              {t("chooseBasis")}
-            </option>
-            {GROUPS.map((g) => (
-              <optgroup key={g} label={t(`groups.${g}`)}>
-                {bases
-                  .filter((b) => b.group === g)
-                  .map((b) => (
-                    <option key={b.id} value={b.id}>
-                      {b.label.en} · {money.format(b.typical)}/
-                      {unitLabel(b.unit)}
-                    </option>
-                  ))}
-              </optgroup>
-            ))}
-          </select>
+        <Field>
+          <FieldLabel>{t("basis")}</FieldLabel>
+          <Select value={matchedId || undefined} onValueChange={pick}>
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder={t("chooseBasis")} />
+            </SelectTrigger>
+            <SelectContent>
+              {GROUPS.map((g) => (
+                <SelectGroup key={g}>
+                  <SelectLabel>{t(`groups.${g}`)}</SelectLabel>
+                  {bases
+                    .filter((b) => b.group === g)
+                    .map((b) => (
+                      <SelectItem key={b.id} value={b.id}>
+                        {b.label.en} · {money.format(b.typical)}/
+                        {unitLabel(b.unit)}
+                      </SelectItem>
+                    ))}
+                </SelectGroup>
+              ))}
+            </SelectContent>
+          </Select>
           {suggestion && suggestion.id !== matchedId && (
-            <p className="text-xs">
+            <FieldDescription>
               {t("suggested")}{" "}
-              <button
-                type="button"
-                className="text-primary underline-offset-2 hover:underline"
+              <Button
+                variant="link"
+                size="xs"
+                className="h-auto px-0"
                 onClick={() => pick(suggestion.id)}
               >
                 {suggestion.label.en}
-              </button>
-            </p>
+              </Button>
+            </FieldDescription>
           )}
           {current && (
-            <p className="text-xs text-muted-foreground">
+            <FieldDescription>
               {t("matchedNote", { unit: unitLabel(current.unit) })}
               {current.source && ` ${current.source.en}.`}
-            </p>
+            </FieldDescription>
           )}
-        </>
+        </Field>
       ) : (
         <form
-          className="flex flex-col gap-2"
           onSubmit={(e) => {
             e.preventDefault();
             if (!rateValid || !bandValid) return;
@@ -138,70 +153,76 @@ export function CustomPricingForm({ name, pricing, onChange }: Props) {
             });
           }}
         >
-          <div className="grid grid-cols-2 gap-2">
-            <label className="flex flex-col gap-0.5">
-              <span className="text-xs text-muted-foreground">{t("rate")}</span>
-              <input
-                type="number"
-                min={0}
-                step="any"
-                required
-                className={input}
-                value={rate}
-                onChange={(e) => setRate(e.target.value)}
-              />
-            </label>
-            <label className="flex flex-col gap-0.5">
-              <span className="text-xs text-muted-foreground">{t("unit")}</span>
-              <select
-                className={input}
-                value={unit}
-                onChange={(e) => setUnit(e.target.value as typeof unit)}
-              >
-                {(["m2", "m", "each", "lump"] as const).map((u) => (
-                  <option key={u} value={u}>
-                    {t(`perUnit.${u}`)}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label className="flex flex-col gap-0.5">
-              <span className="text-xs text-muted-foreground">{t("low")}</span>
-              <input
-                type="number"
-                min={0}
-                step="any"
-                className={input}
-                value={low}
-                onChange={(e) => setLow(e.target.value)}
-              />
-            </label>
-            <label className="flex flex-col gap-0.5">
-              <span className="text-xs text-muted-foreground">{t("high")}</span>
-              <input
-                type="number"
-                min={0}
-                step="any"
-                className={input}
-                value={high}
-                onChange={(e) => setHigh(e.target.value)}
-              />
-            </label>
-          </div>
-          {!bandValid && (
-            <p role="alert" className="text-xs text-destructive">
-              {t("bandError")}
-            </p>
-          )}
-          <p className="text-xs text-muted-foreground">{t("ownNote")}</p>
-          <Button
-            type="submit"
-            size="sm"
-            className="self-end"
-            disabled={!rateValid || !bandValid}
-          >
-            {t("apply")}
-          </Button>
+          <FieldGroup>
+            <div className="grid grid-cols-2 gap-3">
+              <Field>
+                <FieldLabel htmlFor={`${name}-rate`}>{t("rate")}</FieldLabel>
+                <Input
+                  id={`${name}-rate`}
+                  type="number"
+                  min={0}
+                  step="any"
+                  required
+                  value={rate}
+                  onChange={(e) => setRate(e.target.value)}
+                />
+              </Field>
+              <Field>
+                <FieldLabel>{t("unit")}</FieldLabel>
+                <Select
+                  value={unit}
+                  onValueChange={(v) => setUnit(v as typeof unit)}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {(["m2", "m", "each", "lump"] as const).map((u) => (
+                        <SelectItem key={u} value={u}>
+                          {t(`perUnit.${u}`)}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </Field>
+              <Field data-invalid={!bandValid || undefined}>
+                <FieldLabel htmlFor={`${name}-low`}>{t("low")}</FieldLabel>
+                <Input
+                  id={`${name}-low`}
+                  type="number"
+                  min={0}
+                  step="any"
+                  aria-invalid={!bandValid || undefined}
+                  value={low}
+                  onChange={(e) => setLow(e.target.value)}
+                />
+              </Field>
+              <Field data-invalid={!bandValid || undefined}>
+                <FieldLabel htmlFor={`${name}-high`}>{t("high")}</FieldLabel>
+                <Input
+                  id={`${name}-high`}
+                  type="number"
+                  min={0}
+                  step="any"
+                  aria-invalid={!bandValid || undefined}
+                  value={high}
+                  onChange={(e) => setHigh(e.target.value)}
+                />
+              </Field>
+            </div>
+            {!bandValid && <FieldError>{t("bandError")}</FieldError>}
+            <FieldDescription>{t("ownNote")}</FieldDescription>
+            <Button
+              type="submit"
+              size="sm"
+              className="self-end"
+              disabled={!rateValid || !bandValid}
+            >
+              {t("apply")}
+            </Button>
+          </FieldGroup>
         </form>
       )}
     </div>

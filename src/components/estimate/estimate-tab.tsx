@@ -1,7 +1,16 @@
 "use client";
 
-import { ChartPie, Gauge, ShieldCheck, TrendingUp, Wallet } from "lucide-react";
+import { ShieldCheck, TrendingUp } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { CLASS_RANGE } from "@/engine";
 import type { ScopedEstimate } from "@/lib/estimate/scope";
 import type { Component, Estimate } from "@/lib/schemas";
@@ -13,10 +22,9 @@ import {
 } from "./charts";
 import { FlagsList } from "./flags-list";
 import { MarketEvidenceCard } from "./market-evidence-card";
-import { PanelCard, StatChip } from "./panel-ui";
 
-// P3.6: Estimate tab. Headline range, class badge,
-// contingency and overrun risk (whole project), per-component list, flags.
+// P3.6: Estimate tab. Headline range with class, contingency and overrun risk,
+// breakdowns and charts, market evidence, flags. Built from shadcn Card/Badge.
 
 const money = new Intl.NumberFormat("en-CA", {
   style: "currency",
@@ -44,79 +52,78 @@ export function EstimateTab({ estimate, scoped, components, region }: Props) {
   const whole = !scoped.component;
 
   return (
-    <div className="flex flex-col gap-3">
-      <PanelCard
-        icon={Wallet}
-        title={t("title")}
-        subtitle={scoped.component ? scoped.component.name : t("wholeProject")}
-      >
-        <RangeDisplay p10={scoped.p10} p50={scoped.p50} p90={scoped.p90} />
-        <div className="flex flex-wrap gap-1.5">
-          <StatChip
-            icon={Gauge}
-            label={t("classChip")}
-            value={`${scoped.estimateClass} (−${Math.abs(range.lowPct)}% / +${range.highPct}%)`}
-          />
-          {whole ? (
-            <>
-              <StatChip
-                icon={ShieldCheck}
-                label={t("contingencyChip")}
-                value={`${pct(estimate.recommendedContingency.pct)}%`}
-              />
-              <StatChip
-                icon={TrendingUp}
-                label={t("overrunChip")}
-                value={`${pct(estimate.overrunRisk.probabilityOfOverrun * 100)}%`}
-              />
-            </>
-          ) : (
-            <StatChip
-              icon={ChartPie}
-              label={t("shareChip")}
-              value={`${pct(scoped.component!.share * 100)}%`}
-            />
+    <div className="flex flex-col gap-4">
+      <Card>
+        <CardHeader>
+          <CardDescription>{t("title")}</CardDescription>
+          <CardTitle className="text-4xl tabular-nums">
+            {money.format(scoped.p50)}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-2">
+          <RangeBar p10={scoped.p10} p50={scoped.p50} p90={scoped.p90} />
+          <div className="flex justify-between text-xs text-muted-foreground tabular-nums">
+            <span>P10 {money.format(scoped.p10)}</span>
+            <span>P90 {money.format(scoped.p90)}</span>
+          </div>
+        </CardContent>
+        <CardFooter className="flex flex-wrap gap-2">
+          <Badge>{t("class", { cls: scoped.estimateClass })}</Badge>
+          <Badge variant="secondary">
+            {t("classAccuracy", {
+              low: range.lowPct,
+              high: range.highPct,
+            })}
+          </Badge>
+          {!whole && (
+            <Badge variant="outline">
+              {t("shareOfProject", {
+                pct: pct(scoped.component!.share * 100),
+              })}
+            </Badge>
           )}
-        </div>
-      </PanelCard>
+        </CardFooter>
+      </Card>
 
       {whole && (
-        <div className="grid gap-3 sm:grid-cols-2">
-          <PanelCard icon={ShieldCheck} title={t("contingencyHeading")}>
-            <div>
-              <p className="text-2xl font-semibold figures">
+        <div className="grid grid-cols-2 gap-4">
+          <Card size="sm">
+            <CardHeader>
+              <CardDescription className="flex items-center gap-2">
+                <ShieldCheck />
+                {t("contingencyHeading")}
+              </CardDescription>
+              <CardTitle className="text-2xl tabular-nums">
                 {money.format(estimate.recommendedContingency.amount)}
-              </p>
-              <p className="text-xs text-muted-foreground figures">
-                {t("contingencyPct", {
-                  pct: pct(estimate.recommendedContingency.pct),
-                  base: money.format(estimate.baseEstimate),
-                })}
-              </p>
-            </div>
-          </PanelCard>
-          <PanelCard icon={TrendingUp} title={t("overrunHeading")}>
-            <div>
-              <p className="text-2xl font-semibold figures">
-                {t("overrunChance", {
-                  pct: pct(estimate.overrunRisk.probabilityOfOverrun * 100),
-                })}
-              </p>
-              <p className="text-xs text-muted-foreground figures">
-                {t("overrunTypical", {
-                  pct: pct(estimate.overrunRisk.typicalOverrunPct),
-                })}
-              </p>
-              <p className="mt-2 text-xs text-muted-foreground">
-                {estimate.overrunRisk.referenceNote.en}
-              </p>
-            </div>
-          </PanelCard>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm text-muted-foreground">
+              {t("contingencyPct", {
+                pct: pct(estimate.recommendedContingency.pct),
+                base: money.format(estimate.baseEstimate),
+              })}
+            </CardContent>
+          </Card>
+          <Card size="sm">
+            <CardHeader>
+              <CardDescription className="flex items-center gap-2">
+                <TrendingUp />
+                {t("overrunHeading")}
+              </CardDescription>
+              <CardTitle className="text-2xl tabular-nums">
+                {pct(estimate.overrunRisk.probabilityOfOverrun * 100)}%
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-sm text-muted-foreground">
+              {t("overrunTypical", {
+                pct: pct(estimate.overrunRisk.typicalOverrunPct),
+              })}
+            </CardContent>
+          </Card>
         </div>
       )}
 
       {whole && <ComponentBreakdown estimate={estimate} />}
-
       {whole && <DistributionChart distribution={estimate.distribution} />}
       <CategoryBreakdown lineItems={scoped.lineItems} />
 
@@ -139,7 +146,7 @@ export function EstimateTab({ estimate, scoped, components, region }: Props) {
 }
 
 /** P10–P90 bar with the P50 marked. */
-function RangeDisplay({
+function RangeBar({
   p10,
   p50,
   p90,
@@ -151,28 +158,22 @@ function RangeDisplay({
   const t = useTranslations("estimate");
   const at = p90 > p10 ? ((p50 - p10) / (p90 - p10)) * 100 : 50;
   return (
-    <div>
-      <p className="text-4xl font-semibold tracking-tight figures">
-        {money.format(p50)}
-      </p>
-      <p className="text-xs text-muted-foreground">{t("p50Note")}</p>
-      <div
-        role="img"
-        aria-label={t("range", {
-          p10: money.format(p10),
-          p90: money.format(p90),
-        })}
-        className="relative mt-4 h-2 rounded-full bg-linear-to-r from-chart-1/40 via-chart-3/60 to-chart-5/50"
-      >
-        <span
-          className="absolute -top-1.5 size-5 -translate-x-1/2 rounded-full border-4 border-card bg-primary"
-          style={{ left: `${at}%` }}
-        />
-      </div>
-      <div className="mt-2 flex justify-between text-xs text-muted-foreground figures">
-        <span>P10 {money.format(p10)}</span>
-        <span>P90 {money.format(p90)}</span>
-      </div>
+    <div
+      role="img"
+      aria-label={t("range", {
+        p10: money.format(p10),
+        p90: money.format(p90),
+      })}
+      className="relative h-2 rounded-full bg-muted"
+    >
+      <span
+        className="absolute inset-y-0 left-0 rounded-full bg-primary/40"
+        style={{ width: `${at}%` }}
+      />
+      <span
+        className="absolute top-1/2 size-4 -translate-1/2 rounded-full border-2 border-background bg-primary"
+        style={{ left: `${at}%` }}
+      />
     </div>
   );
 }

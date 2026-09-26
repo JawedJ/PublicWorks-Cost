@@ -42,7 +42,7 @@ describe("estimate panel tabs", () => {
         />,
       );
       expect(errors).toEqual([]);
-      expect(html).toContain(`${scoped.estimateClass} (−`); // class chip
+      expect(html).toContain(`Class ${scoped.estimateClass} estimate`);
       expect(html).toContain("Market evidence");
       expect(html).toContain("Where the money goes");
       if (!id) {

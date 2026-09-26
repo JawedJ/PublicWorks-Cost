@@ -267,7 +267,9 @@
     "contingencyChip": "Contingency",
     "overrunChip": "Overrun risk",
     "shareChip": "Share",
-    "p50Note": "P50: as likely to come in under as over"
+    "p50Note": "P50: as likely to come in under as over",
+    "components": "Components",
+    "emptyTitle": "No estimate yet"
   },
   "visuals": {
     "crossSection": {
@@ -423,7 +425,7 @@
   },
   "charts": {
     "byComponent": "By component (P50)",
-    "byComponentLabel": "Share of the project P50 by component",
+    "byComponentLabel": "P50 by component. Select one to see its own estimate.",
     "distribution": "Range of outcomes",
     "distributionLabel": "Simulated project cost: P10 {p10}, P50 {p50}, P90 {p90}",
     "distributionNote": "5,000 simulated outcomes. The shaded middle is the likely range (P10–P90).",
@@ -434,7 +436,9 @@
       "perM": "per m of road",
       "perM2": "per m² of park",
       "perM2GFA": "per m² of building floor"
-    }
+    },
+    "outcomes": "Outcomes",
+    "cost": "Cost"
   },
   "evidence": {
     "title": "Market evidence",
@@ -452,7 +456,8 @@
     "trendFlat": "Statistics Canada: prices for {type} in {geo} were flat over the last 4 quarters.",
     "statcan": "BCPI, {quarter}",
     "awardsHeading": "Recent federal contracts in Ontario (CanadaBuys):",
-    "footnote": "Sources: Altus Group 2026 Canadian Cost Guide (retrieved {altusDate}), Statistics Canada table 18-10-0289-01 (released {statcanDate}), CanadaBuys award notices (retrieved {canadabuysDate}). Evidence informs judgement; it doesn't change the estimate."
+    "footnote": "Sources: Altus Group 2026 Canadian Cost Guide (retrieved {altusDate}), Statistics Canada table 18-10-0289-01 (released {statcanDate}), CanadaBuys award notices (retrieved {canadabuysDate}). Evidence informs judgement; it doesn't change the estimate.",
+    "badge": "Real public data"
   },
   "questions": {
     "intro": "A few answers that would tighten this estimate most, biggest costs first.",
@@ -470,6 +475,7 @@
     "notices": {
       "ai_busy": "AI assistant busy, used standard questions.",
       "ai_unavailable": "AI assistant unavailable, used standard questions."
-    }
+    },
+    "allAnsweredTitle": "All caught up"
   }
 }

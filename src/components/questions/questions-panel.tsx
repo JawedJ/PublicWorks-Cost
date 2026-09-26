@@ -1,9 +1,38 @@
 "use client";
 
-import { RefreshCw } from "lucide-react";
+import { CircleCheck, RefreshCw, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Spinner } from "@/components/ui/spinner";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { templates } from "@/engine/templates";
 import type {
   Component,
@@ -70,34 +99,48 @@ export function QuestionsPanel({ estimate, components, componentId }: Props) {
   });
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-4">
       <div className="flex items-start justify-between gap-2">
         <p className="text-sm text-muted-foreground">{t("intro")}</p>
         <Button
-          type="button"
-          variant="ghost"
+          variant="outline"
           size="sm"
           disabled={loading}
           onClick={() => void ask()}
         >
-          <RefreshCw className={loading ? "animate-spin" : undefined} />
+          {loading ? (
+            <Spinner data-icon="inline-start" />
+          ) : (
+            <RefreshCw data-icon="inline-start" />
+          )}
           {t("askAgain")}
         </Button>
       </div>
       {res?.notice && (
-        <p role="status" className="text-xs text-muted-foreground">
-          {t(`notices.${res.notice}`)}
-        </p>
+        <Alert>
+          <Sparkles />
+          <AlertDescription>{t(`notices.${res.notice}`)}</AlertDescription>
+        </Alert>
       )}
       {!res && (
-        <p aria-live="polite" className="text-sm text-muted-foreground">
-          {t("loading")}
-        </p>
+        <div aria-live="polite" className="flex flex-col gap-4">
+          <span className="sr-only">{t("loading")}</span>
+          <Skeleton className="h-40 w-full rounded-xl" />
+          <Skeleton className="h-40 w-full rounded-xl" />
+        </div>
       )}
       {res && open.length === 0 && (
-        <p className="text-sm text-muted-foreground">{t("allAnswered")}</p>
+        <Empty>
+          <EmptyHeader>
+            <EmptyMedia variant="icon">
+              <CircleCheck />
+            </EmptyMedia>
+            <EmptyTitle>{t("allAnsweredTitle")}</EmptyTitle>
+            <EmptyDescription>{t("allAnswered")}</EmptyDescription>
+          </EmptyHeader>
+        </Empty>
       )}
-      <ol className="flex flex-col gap-3">
+      <ol className="flex flex-col gap-4">
         {open.map((q) => {
           const c = byId.get(q.componentId)!;
           const def = templates[c.type].paramCatalog.find(
@@ -105,16 +148,17 @@ export function QuestionsPanel({ estimate, components, componentId }: Props) {
           );
           if (!def) return null;
           return (
-            <QuestionCard
-              key={q.id}
-              question={q}
-              component={c}
-              def={def}
-              others={q.alsoApplies
-                .map((id) => byId.get(id))
-                .filter((x): x is Component => !!x)}
-              onSkip={() => setSkipped(new Set([...skipped, q.id]))}
-            />
+            <li key={q.id}>
+              <QuestionCard
+                question={q}
+                component={c}
+                def={def}
+                others={q.alsoApplies
+                  .map((id) => byId.get(id))
+                  .filter((x): x is Component => !!x)}
+                onSkip={() => setSkipped(new Set([...skipped, q.id]))}
+              />
+            </li>
           );
         })}
       </ol>
@@ -124,9 +168,6 @@ export function QuestionsPanel({ estimate, components, componentId }: Props) {
     </div>
   );
 }
-
-const input =
-  "rounded border bg-background px-1.5 py-1 text-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none";
 
 function QuestionCard({
   question: q,
@@ -151,78 +192,81 @@ function QuestionCard({
       Number(value) <= (def.max ?? Infinity));
   const save = (ids: string[]) =>
     answerQuestion(ids, def.id, def.type === "number" ? Number(value) : value);
+  const id = `q-${q.id}`;
 
   return (
-    <li className="flex flex-col gap-2 rounded-2xl border bg-card p-4 text-sm">
-      <div>
-        <p className="font-medium">{label}</p>
-        <p className="text-xs text-muted-foreground">
+    <Card size="sm">
+      <CardHeader>
+        <CardTitle>{label}</CardTitle>
+        <CardDescription>
           {c.name}
           {others.length > 0 && ` ${t("andOthers", { count: others.length })}`}
-        </p>
-      </div>
-      <p>{q.reason}</p>
-      <div className="flex items-center gap-2">
-        {def.type === "enum" && (
-          <select
-            aria-label={label}
-            className={`${input} w-full`}
-            value={String(value)}
-            onChange={(e) => setValue(e.target.value)}
-          >
-            {def.options?.map((o) => (
-              <option key={o.value} value={o.value}>
-                {o.label.en}
-                {o.value === q.suggested ? ` (${t("suggested")})` : ""}
-              </option>
-            ))}
-          </select>
-        )}
-        {def.type === "number" && (
-          <>
-            <input
-              type="number"
-              aria-label={label}
-              className={`${input} w-28 text-right figures`}
-              min={def.min}
-              max={def.max}
-              step="any"
-              value={String(value)}
-              onChange={(e) => setValue(e.target.value)}
-            />
-            {def.unit && (
-              <span className="text-muted-foreground">{def.unit}</span>
-            )}
-          </>
-        )}
-        {def.type === "boolean" && (
-          <div role="radiogroup" aria-label={label} className="flex gap-3">
-            {[true, false].map((v) => (
-              <label key={String(v)} className="flex items-center gap-1">
-                <input
-                  type="radio"
-                  name={q.id}
-                  checked={value === v}
-                  onChange={() => setValue(v)}
-                />
-                {t(v ? "yes" : "no")}
-              </label>
-            ))}
-          </div>
-        )}
-      </div>
-      <div className="flex flex-wrap gap-2">
-        <Button
-          type="button"
-          size="sm"
-          disabled={!numOk}
-          onClick={() => save([c.id])}
-        >
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Field data-invalid={!numOk || undefined}>
+          <FieldDescription>{q.reason}</FieldDescription>
+          <FieldLabel htmlFor={id} className="sr-only">
+            {label}
+          </FieldLabel>
+          {def.type === "enum" && (
+            <Select value={String(value)} onValueChange={setValue}>
+              <SelectTrigger id={id} className="w-full">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {def.options?.map((o) => (
+                    <SelectItem key={o.value} value={o.value}>
+                      {o.label.en}
+                      {o.value === q.suggested ? ` (${t("suggested")})` : ""}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          )}
+          {def.type === "number" && (
+            <div className="flex items-center gap-2">
+              <Input
+                id={id}
+                type="number"
+                className="w-32 text-right tabular-nums"
+                min={def.min}
+                max={def.max}
+                step="any"
+                aria-invalid={!numOk || undefined}
+                value={String(value)}
+                onChange={(e) => setValue(e.target.value)}
+              />
+              {def.unit && (
+                <span className="text-sm text-muted-foreground">
+                  {def.unit}
+                </span>
+              )}
+            </div>
+          )}
+          {def.type === "boolean" && (
+            <ToggleGroup
+              id={id}
+              type="single"
+              variant="outline"
+              size="sm"
+              value={value ? "yes" : "no"}
+              onValueChange={(v) => v && setValue(v === "yes")}
+            >
+              <ToggleGroupItem value="yes">{t("yes")}</ToggleGroupItem>
+              <ToggleGroupItem value="no">{t("no")}</ToggleGroupItem>
+            </ToggleGroup>
+          )}
+        </Field>
+      </CardContent>
+      <CardFooter className="flex flex-wrap gap-2">
+        <Button size="sm" disabled={!numOk} onClick={() => save([c.id])}>
           {t("save")}
         </Button>
         {others.length > 0 && (
           <Button
-            type="button"
             size="sm"
             variant="outline"
             disabled={!numOk}
@@ -231,10 +275,10 @@ function QuestionCard({
             {t("applyAll", { count: others.length + 1 })}
           </Button>
         )}
-        <Button type="button" size="sm" variant="ghost" onClick={onSkip}>
+        <Button size="sm" variant="ghost" onClick={onSkip}>
           {t("skip")}
         </Button>
-      </div>
-    </li>
+      </CardFooter>
+    </Card>
   );
 }

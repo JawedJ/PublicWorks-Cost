@@ -1,15 +1,34 @@
 "use client";
 
-import { ChartArea, ChartColumn, Layers, Ruler } from "lucide-react";
 import { useTranslations } from "next-intl";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  ReferenceLine,
+  XAxis,
+  YAxis,
+} from "recharts";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  type ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
 import type { Estimate, LineItem } from "@/lib/schemas";
 import { useStore } from "@/lib/store/store";
-import { cn } from "@/lib/utils";
-import { PanelCard } from "./panel-ui";
 
-// P3.8: estimate visuals, drawn with plain divs (no chart library).
-// Per-component breakdown, cost distribution, category breakdown and
-// per-unit metrics.
+// P3.8: estimate visuals with shadcn Chart (Recharts): per-component breakdown,
+// cost distribution, category breakdown, per-unit metrics.
 
 const compact = new Intl.NumberFormat("en-CA", {
   style: "currency",
@@ -23,71 +42,92 @@ const money = new Intl.NumberFormat("en-CA", {
   maximumFractionDigits: 0,
 });
 
-/** Component colours, in estimate order. */
-export const PALETTE = [
-  "bg-chart-1",
-  "bg-chart-2",
-  "bg-chart-3",
-  "bg-chart-4",
-  "bg-chart-5",
-  "bg-chart-1/55",
-  "bg-chart-2/55",
-  "bg-chart-4/55",
-];
+/** Component colour by position: the five chart tokens, repeating. */
+const chartColor = (i: number) => `var(--chart-${(i % 5) + 1})`;
 
-/** Stacked bar of component P50 shares, plus a clickable table. */
+const formatMoney = (v: unknown) => compact.format(Number(v));
+
+/** Horizontal bars of component P50, plus a list that scopes the panel on click. */
 export function ComponentBreakdown({ estimate }: { estimate: Estimate }) {
   const t = useTranslations("charts");
   const tEst = useTranslations("estimate");
   const selectComponent = useStore((s) => s.selectComponent);
-  const comps = estimate.components;
+  const data = estimate.components.map((c) => ({
+    name: c.name,
+    p50: c.p50,
+  }));
+  const config = { p50: { label: "P50" } } satisfies ChartConfig;
+
   return (
-    <PanelCard icon={Layers} title={t("byComponent")}>
-      <div
-        role="img"
-        aria-label={t("byComponentLabel")}
-        className="flex h-3 gap-0.5 overflow-hidden rounded-full"
-      >
-        {comps.map((c, i) => (
-          <span
-            key={c.componentId}
-            className={PALETTE[i % PALETTE.length]}
-            style={{ width: `${c.share * 100}%` }}
-            title={`${c.name}: ${Math.round(c.share * 100)}%`}
-          />
-        ))}
-      </div>
-      <ul className="flex flex-col text-sm">
-        {comps.map((c, i) => (
-          <li key={c.componentId}>
-            <button
-              type="button"
-              className="flex w-full items-center justify-between gap-2 rounded-lg px-1 py-2 text-left hover:bg-secondary"
-              onClick={() => selectComponent(c.componentId)}
-            >
-              <span className="flex items-center gap-2">
-                <span
-                  aria-hidden
-                  className={cn(
-                    "size-2.5 shrink-0 rounded-full",
-                    PALETTE[i % PALETTE.length],
-                  )}
-                />
-                {c.name}
-              </span>
-              <span className="figures">
-                {compact.format(c.p50)} · {Math.round(c.share * 100)}%
-              </span>
-            </button>
-          </li>
-        ))}
-      </ul>
-      {estimate.undrawnComponents > 0 && (
-        <p className="mt-1 text-sm text-muted-foreground">
-          {tEst("undrawn", { count: estimate.undrawnComponents })}
-        </p>
-      )}
-    </PanelCard>
+    <Card>
+      <CardHeader>
+        <CardTitle>{t("byComponent")}</CardTitle>
+        <CardDescription>{t("byComponentLabel")}</CardDescription>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-2">
+        <ChartContainer
+          config={config}
+          className="w-full"
+          style={{ height: Math.max(120, data.length * 36) }}
+        >
+          <BarChart
+            accessibilityLayer
+            data={data}
+            layout="vertical"
+            margin={{ left: 0, right: 8 }}
+          >
+            <XAxis type="number" hide />
+            <YAxis
+              type="category"
+              dataKey="name"
+              width={120}
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(v: string) =>
+                v.length > 16 ? `${v.slice(0, 15)}…` : v
+              }
+            />
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent formatter={formatMoney} />}
+            />
+            <Bar dataKey="p50" radius={6}>
+              {data.map((d, i) => (
+                <Cell key={d.name} fill={chartColor(i)} />
+              ))}
+            </Bar>
+          </BarChart>
+        </ChartContainer>
+        <ul className="flex flex-col">
+          {estimate.components.map((c, i) => (
+            <li key={c.componentId}>
+              <Button
+                variant="ghost"
+                className="w-full justify-between"
+                onClick={() => selectComponent(c.componentId)}
+              >
+                <span className="flex min-w-0 items-center gap-2">
+                  <span
+                    aria-hidden
+                    className="size-2 shrink-0 rounded-full"
+                    style={{ background: chartColor(i) }}
+                  />
+                  <span className="truncate">{c.name}</span>
+                </span>
+                <span className="text-muted-foreground tabular-nums">
+                  {compact.format(c.p50)} · {Math.round(c.share * 100)}%
+                </span>
+              </Button>
+            </li>
+          ))}
+        </ul>
+        {estimate.undrawnComponents > 0 && (
+          <p className="text-sm text-muted-foreground">
+            {tEst("undrawn", { count: estimate.undrawnComponents })}
+          </p>
+        )}
+      </CardContent>
+    </Card>
   );
 }
 
@@ -100,63 +140,76 @@ export function DistributionChart({
   const t = useTranslations("charts");
   const bins = d.histogram;
   if (bins.length < 2) return null;
-  const max = Math.max(...bins.map((b) => b.count)) || 1;
-  const lo = bins[0]!.bin;
-  const width = bins[1]!.bin - lo;
-  const hi = bins.at(-1)!.bin + width;
-  const at = (v: number) => ((v - lo) / (hi - lo)) * 100;
-  const marks = [
-    { id: "P10", v: d.p10 },
-    { id: "P50", v: d.p50 },
-    { id: "P90", v: d.p90 },
-  ];
+  const width = bins[1]!.bin - bins[0]!.bin;
+  const data = bins.map((b) => ({ x: b.bin + width / 2, count: b.count }));
+  const config = {
+    count: { label: t("outcomes"), color: "var(--chart-2)" },
+  } satisfies ChartConfig;
+
   return (
-    <PanelCard icon={ChartArea} title={t("distribution")}>
-      <div
-        role="img"
-        aria-label={t("distributionLabel", {
-          p10: compact.format(d.p10),
-          p50: compact.format(d.p50),
-          p90: compact.format(d.p90),
-        })}
-        className="relative flex h-24 items-end gap-px"
-      >
-        {bins.map((b) => (
-          <span
-            key={b.bin}
-            className={cn(
-              "flex-1 rounded-t-sm",
-              b.bin + width < d.p10 || b.bin > d.p90
-                ? "bg-chart-2/30"
-                : "bg-chart-2",
-            )}
-            style={{ height: `${(b.count / max) * 100}%` }}
-          />
-        ))}
-        {marks.map((m) => (
-          <span
-            key={m.id}
-            className={cn(
-              "absolute inset-y-0 w-px",
-              m.id === "P50" ? "w-0.5 bg-primary" : "bg-foreground/40",
-            )}
-            style={{ left: `${at(m.v)}%` }}
-          />
-        ))}
-      </div>
-      <div className="relative mt-1 h-4 text-xs text-muted-foreground figures">
-        {marks.map((m) => (
-          <span
-            key={m.id}
-            className="absolute -translate-x-1/2 whitespace-nowrap"
-            style={{ left: `${Math.min(92, Math.max(8, at(m.v)))}%` }}
-          >
-            {m.id}
-          </span>
-        ))}
-      </div>
-      <p className="text-xs text-muted-foreground">{t("distributionNote")}</p>
-    </PanelCard>
+    <Card>
+      <CardHeader>
+        <CardTitle>{t("distribution")}</CardTitle>
+        <CardDescription>{t("distributionNote")}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ChartContainer
+          config={config}
+          className="aspect-[2/1] w-full"
+          aria-label={t("distributionLabel", {
+            p10: compact.format(d.p10),
+            p50: compact.format(d.p50),
+            p90: compact.format(d.p90),
+          })}
+        >
+          <BarChart accessibilityLayer data={data} barCategoryGap={1}>
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="x"
+              type="number"
+              domain={["dataMin", "dataMax"]}
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={formatMoney}
+              tickCount={4}
+            />
+            <ChartTooltip
+              cursor={false}
+              content={
+                <ChartTooltipContent
+                  labelFormatter={(_, p) =>
+                    compact.format(Number(p?.[0]?.payload?.x ?? 0))
+                  }
+                />
+              }
+            />
+            <Bar dataKey="count" fill="var(--color-count)" radius={2} />
+            {(
+              [
+                ["P10", d.p10],
+                ["P50", d.p50],
+                ["P90", d.p90],
+              ] as const
+            ).map(([label, v]) => (
+              <ReferenceLine
+                key={label}
+                x={v}
+                stroke={
+                  label === "P50" ? "var(--primary)" : "var(--muted-foreground)"
+                }
+                strokeDasharray={label === "P50" ? undefined : "4 4"}
+                label={{
+                  value: label,
+                  position: "top",
+                  fill: "var(--muted-foreground)",
+                  fontSize: 11,
+                }}
+              />
+            ))}
+          </BarChart>
+        </ChartContainer>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -167,35 +220,51 @@ export function CategoryBreakdown({ lineItems }: { lineItems: LineItem[] }) {
   const totals = new Map<LineItem["category"], number>();
   for (const l of lineItems)
     totals.set(l.category, (totals.get(l.category) ?? 0) + l.total);
-  const rows = [...totals].filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]);
-  if (rows.length === 0) return null;
-  const max = rows[0]![1];
-  const sum = rows.reduce((s, [, v]) => s + v, 0);
+  const data = [...totals]
+    .filter(([, v]) => v > 0)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 8)
+    .map(([cat, total]) => ({ name: tCat(cat), total }));
+  if (data.length === 0) return null;
+  const config = {
+    total: { label: t("cost"), color: "var(--chart-1)" },
+  } satisfies ChartConfig;
+
   return (
-    <PanelCard icon={ChartColumn} title={t("byCategory")}>
-      <ul className="flex flex-col gap-1.5 text-sm">
-        {rows.map(([cat, v]) => (
-          <li
-            key={cat}
-            className="grid grid-cols-[7rem_1fr_auto] items-center gap-2"
+    <Card>
+      <CardHeader>
+        <CardTitle>{t("byCategory")}</CardTitle>
+        <CardDescription>{t("byCategoryNote")}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ChartContainer
+          config={config}
+          className="w-full"
+          style={{ height: Math.max(120, data.length * 32) }}
+        >
+          <BarChart
+            accessibilityLayer
+            data={data}
+            layout="vertical"
+            margin={{ left: 0, right: 8 }}
           >
-            <span className="truncate">{tCat(cat)}</span>
-            <span className="h-2 rounded-full bg-secondary">
-              <span
-                className="block h-full rounded-full bg-chart-1"
-                style={{ width: `${(v / max) * 100}%` }}
-              />
-            </span>
-            <span className="w-24 text-right text-xs figures">
-              {compact.format(v)} · {Math.round((v / sum) * 100)}%
-            </span>
-          </li>
-        ))}
-      </ul>
-      <p className="mt-1 text-xs text-muted-foreground">
-        {t("byCategoryNote")}
-      </p>
-    </PanelCard>
+            <XAxis type="number" hide />
+            <YAxis
+              type="category"
+              dataKey="name"
+              width={110}
+              tickLine={false}
+              axisLine={false}
+            />
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent formatter={formatMoney} />}
+            />
+            <Bar dataKey="total" fill="var(--color-total)" radius={6} />
+          </BarChart>
+        </ChartContainer>
+      </CardContent>
+    </Card>
   );
 }
 
@@ -206,27 +275,31 @@ export function PerUnitMetrics({
   metrics: Estimate["perUnitMetrics"];
 }) {
   const t = useTranslations("charts");
-  const rows = [
-    { id: "perM", v: metrics.perM },
-    { id: "perM2", v: metrics.perM2 },
-    { id: "perM2GFA", v: metrics.perM2GFA },
-  ] as const;
-  const shown = rows.filter((r) => r.v !== undefined);
-  if (shown.length === 0) return null;
+  const rows = (
+    [
+      ["perM", metrics.perM],
+      ["perM2", metrics.perM2],
+      ["perM2GFA", metrics.perM2GFA],
+    ] as const
+  ).filter(([, v]) => v !== undefined);
+  if (rows.length === 0) return null;
   return (
-    <PanelCard icon={Ruler} title={t("perUnit")}>
-      <dl className="grid grid-cols-3 gap-2 text-sm">
-        {shown.map((r) => (
-          <div key={r.id} className="rounded-xl bg-secondary p-3">
-            <dt className="text-xs text-muted-foreground">
-              {t(`units.${r.id}`)}
-            </dt>
-            <dd className="text-lg font-semibold figures">
-              {money.format(r.v!)}
-            </dd>
+    <Card>
+      <CardHeader>
+        <CardTitle>{t("perUnit")}</CardTitle>
+      </CardHeader>
+      <CardContent className="grid grid-cols-3 gap-4">
+        {rows.map(([id, v]) => (
+          <div key={id} className="flex flex-col gap-1">
+            <span className="text-xs text-muted-foreground">
+              {t(`units.${id}`)}
+            </span>
+            <span className="text-lg font-semibold tabular-nums">
+              {money.format(v!)}
+            </span>
           </div>
         ))}
-      </dl>
-    </PanelCard>
+      </CardContent>
+    </Card>
   );
 }

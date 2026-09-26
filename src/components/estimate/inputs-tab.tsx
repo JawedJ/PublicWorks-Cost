@@ -1,6 +1,33 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { Badge } from "@/components/ui/badge";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Empty, EmptyHeader, EmptyTitle } from "@/components/ui/empty";
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+  FieldLegend,
+  FieldSet,
+} from "@/components/ui/field";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 import { resolveParams } from "@/engine/params";
 import { templates } from "@/engine/templates";
 import type {
@@ -18,14 +45,6 @@ import { NumberInput } from "./number-input";
 // component, or all components grouped. Reset returns a value to the default.
 // Highest cost impact first.
 
-const BADGE: Record<ParamSource, string> = {
-  default: "bg-secondary text-muted-foreground",
-  user: "bg-primary/15 text-primary",
-  ai_prompt: "bg-chart-1/15 text-chart-1",
-  ai_document: "bg-chart-2/25 text-foreground",
-  site_context: "bg-chart-4/15 text-chart-4",
-};
-
 type Props = {
   /** All design components (from the store). */
   components: Component[];
@@ -40,10 +59,16 @@ export function InputsTab({ components: all, componentId }: Props) {
     : all;
 
   if (components.length === 0)
-    return <p className="text-sm text-muted-foreground">{t("empty")}</p>;
+    return (
+      <Empty>
+        <EmptyHeader>
+          <EmptyTitle>{t("empty")}</EmptyTitle>
+        </EmptyHeader>
+      </Empty>
+    );
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4">
       {components.map((c) => (
         <ComponentInputs key={c.id} component={c} showName={!componentId} />
       ))}
@@ -71,49 +96,58 @@ function ComponentInputs({
     c.geometry?.features.filter((f) => f.kind === "custom") ?? [];
 
   return (
-    <section className="flex flex-col gap-2 rounded-2xl border bg-card p-4">
-      <header>
-        {showName && <h3 className="font-medium">{c.name}</h3>}
-        {subtype && <p className="text-xs text-muted-foreground">{subtype}</p>}
-      </header>
-      {c.type === "custom" ? (
-        <CustomPricingForm
-          name={c.name}
-          pricing={c.customPricing}
-          onChange={(customPricing) => updateComponent(c.id, { customPricing })}
-        />
-      ) : defs.length === 0 ? (
-        <p className="text-sm text-muted-foreground">{t("none")}</p>
-      ) : (
-        <ul className="flex flex-col divide-y">
-          {defs.map((d) => (
-            <ParamRow key={d.id} component={c} def={d} value={values[d.id]!} />
-          ))}
-        </ul>
-      )}
-      {customFeatures.map((f) => (
-        <div key={f.id} className="flex flex-col gap-1">
-          <p className="text-sm font-medium">
-            {f.customLabel ?? t("customFeature")}
-          </p>
+    <Card size="sm">
+      <CardHeader>
+        {showName && <CardTitle>{c.name}</CardTitle>}
+        {subtype && <CardDescription>{subtype}</CardDescription>}
+      </CardHeader>
+      <CardContent className="flex flex-col gap-4">
+        {c.type === "custom" ? (
           <CustomPricingForm
-            name={f.customLabel ?? ""}
-            pricing={f.customPricing}
+            name={c.name}
+            pricing={c.customPricing}
             onChange={(customPricing) =>
-              c.geometry &&
-              updateComponent(c.id, {
-                geometry: {
-                  ...c.geometry,
-                  features: c.geometry.features.map((x) =>
-                    x.id === f.id ? { ...x, customPricing } : x,
-                  ),
-                },
-              })
+              updateComponent(c.id, { customPricing })
             }
           />
-        </div>
-      ))}
-    </section>
+        ) : defs.length === 0 ? (
+          <p className="text-sm text-muted-foreground">{t("none")}</p>
+        ) : (
+          <FieldGroup>
+            {defs.map((d) => (
+              <ParamRow
+                key={d.id}
+                component={c}
+                def={d}
+                value={values[d.id]!}
+              />
+            ))}
+          </FieldGroup>
+        )}
+        {customFeatures.map((f) => (
+          <FieldSet key={f.id}>
+            <FieldLegend variant="label">
+              {f.customLabel ?? t("customFeature")}
+            </FieldLegend>
+            <CustomPricingForm
+              name={f.customLabel ?? ""}
+              pricing={f.customPricing}
+              onChange={(customPricing) =>
+                c.geometry &&
+                updateComponent(c.id, {
+                  geometry: {
+                    ...c.geometry,
+                    features: c.geometry.features.map((x) =>
+                      x.id === f.id ? { ...x, customPricing } : x,
+                    ),
+                  },
+                })
+              }
+            />
+          </FieldSet>
+        ))}
+      </CardContent>
+    </Card>
   );
 }
 
@@ -134,66 +168,65 @@ function ParamRow({
   const set = (v: ParamValue) => setParam(c.id, d.id, v);
   const label = d.label.en;
 
+  const id = `${c.id}-${d.id}`;
+  const shown = source !== "default" && source !== "user";
+
   return (
-    <li className="flex flex-col gap-1 py-2 text-sm">
-      <div className="flex items-center justify-between gap-2">
-        <span title={d.why.en}>{label}</span>
-        <span className="flex w-40 shrink-0 items-center gap-1">
-          {d.type === "number" && (
-            <>
-              <NumberInput
-                label={label}
-                value={Number(value)}
-                min={d.min ?? 0}
-                max={d.max}
-                onCommit={set}
-              />
-              {d.unit && (
-                <span className="text-xs text-muted-foreground">{d.unit}</span>
-              )}
-            </>
-          )}
-          {d.type === "enum" && (
-            <select
-              aria-label={label}
-              className="w-full rounded border bg-background px-1 py-0.5"
-              value={String(value)}
-              onChange={(e) => set(e.target.value)}
-            >
-              {d.options?.map((o) => (
-                <option key={o.value} value={o.value}>
-                  {o.label.en}
-                </option>
-              ))}
-            </select>
-          )}
-          {d.type === "boolean" && (
-            <input
-              type="checkbox"
-              aria-label={label}
-              className="ml-auto size-4"
-              checked={Boolean(value)}
-              onChange={(e) => set(e.target.checked)}
+    <Field orientation="horizontal">
+      <FieldContent>
+        <FieldLabel htmlFor={id}>{label}</FieldLabel>
+        {(shown || meta?.evidence) && (
+          <FieldDescription className="flex flex-wrap items-center gap-1.5">
+            {/* Only non-obvious sources get a badge (not the default or your own edit). */}
+            {shown && (
+              <Badge variant="secondary">{t(`sources.${source}`)}</Badge>
+            )}
+            {meta?.evidence && (
+              <span className="truncate">“{meta.evidence}”</span>
+            )}
+          </FieldDescription>
+        )}
+      </FieldContent>
+      <div className="flex w-40 shrink-0 items-center justify-end gap-1.5">
+        {d.type === "number" && (
+          <>
+            <NumberInput
+              id={id}
+              label={label}
+              value={Number(value)}
+              min={d.min ?? 0}
+              max={d.max}
+              onCommit={set}
             />
-          )}
-        </span>
-      </div>
-      <div className="flex items-center gap-2 text-xs">
-        {/* Only non-obvious sources get a badge (not the default or your own edit). */}
-        {source !== "default" && source !== "user" && (
-          <span
-            className={`rounded px-1.5 py-0.5 ${BADGE[source]}`}
-            title={meta?.evidence}
-          >
-            {t(`sources.${source}`)}
-          </span>
+            {d.unit && (
+              <span className="text-xs text-muted-foreground">{d.unit}</span>
+            )}
+          </>
         )}
-        {meta?.evidence && (
-          <span className="truncate text-muted-foreground">
-            “{meta.evidence}”
-          </span>
+        {d.type === "enum" && (
+          <Select value={String(value)} onValueChange={set}>
+            <SelectTrigger id={id} size="sm" className="w-full">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                {d.options?.map((o) => (
+                  <SelectItem key={o.value} value={o.value}>
+                    {o.label.en}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        )}
+        {d.type === "boolean" && (
+          <Switch
+            id={id}
+            checked={Boolean(value)}
+            onCheckedChange={(v) => set(v)}
+          />
         )}
       </div>
-    </li>
+    </Field>
   );
 }

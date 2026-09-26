@@ -1,10 +1,13 @@
 "use client";
 
+import { Input } from "@/components/ui/input";
+
 /**
  * Number that edits in place: commits on blur or Enter, Escape cancels.
  * Invalid or out-of-range entries snap back to the current value.
  */
 export function NumberInput({
+  id,
   label,
   value,
   min = 0,
@@ -12,6 +15,7 @@ export function NumberInput({
   highlighted,
   onCommit,
 }: {
+  id?: string;
   label: string;
   value: number;
   min?: number;
@@ -20,7 +24,8 @@ export function NumberInput({
   onCommit: (v: number) => void;
 }) {
   return (
-    <input
+    <Input
+      id={id}
       key={value}
       type="number"
       min={min}
@@ -28,9 +33,8 @@ export function NumberInput({
       step="any"
       aria-label={label}
       defaultValue={value}
-      className={`w-full rounded border bg-background px-1 py-0.5 text-right figures ${
-        highlighted ? "border-primary bg-primary/5 font-medium" : ""
-      }`}
+      data-overridden={highlighted || undefined}
+      className="h-8 text-right tabular-nums data-overridden:border-primary data-overridden:font-medium"
       onKeyDown={(e) => {
         if (e.key === "Enter") e.currentTarget.blur();
         if (e.key === "Escape") {

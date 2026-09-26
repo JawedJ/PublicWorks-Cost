@@ -2,7 +2,25 @@
 
 import { RotateCcw } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Empty, EmptyHeader, EmptyTitle } from "@/components/ui/empty";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import type { ScopedEstimate } from "@/lib/estimate/scope";
 import {
   type Estimate,
@@ -50,10 +68,16 @@ export function LineItemsTab({ estimate, scoped }: Props) {
   ];
 
   if (order.length === 0)
-    return <p className="text-sm text-muted-foreground">{t("empty")}</p>;
+    return (
+      <Empty>
+        <EmptyHeader>
+          <EmptyTitle>{t("empty")}</EmptyTitle>
+        </EmptyHeader>
+      </Empty>
+    );
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4">
       <p className="text-xs text-muted-foreground">{t("note")}</p>
       {order.map((id) => {
         const items = groups.get(id)!;
@@ -61,45 +85,54 @@ export function LineItemsTab({ estimate, scoped }: Props) {
           (l) => l.isQuantityOverridden || l.isPriceOverridden,
         );
         return (
-          <section
-            key={id ?? "project"}
-            className="flex flex-col gap-2 rounded-2xl border bg-card p-4"
-          >
-            <header className="flex items-center justify-between gap-2">
-              <h3 className="font-medium">
-                {id ? names.get(id) : t("projectLevel")}
-              </h3>
-              <span className="flex items-center gap-2 text-sm figures">
+          <Card key={id ?? "project"} size="sm">
+            <CardHeader>
+              <CardTitle>{id ? names.get(id) : t("projectLevel")}</CardTitle>
+              <CardDescription className="tabular-nums">
                 {money.format(items.reduce((s, l) => s + l.total, 0))}
-                {id && overridden && (
+              </CardDescription>
+              {id && overridden && (
+                <CardAction>
                   <Button
-                    type="button"
                     variant="ghost"
                     size="sm"
                     onClick={() => resetOverrides(id)}
                   >
-                    <RotateCcw /> {t("resetAll")}
+                    <RotateCcw data-icon="inline-start" />
+                    {t("resetAll")}
                   </Button>
-                )}
-              </span>
-            </header>
-            {LineItemCategorySchema.options
-              .filter((cat) => items.some((l) => l.category === cat))
-              .map((cat) => (
-                <CategoryTable
-                  key={cat}
-                  category={cat}
-                  items={items.filter((l) => l.category === cat)}
-                />
-              ))}
-          </section>
+                </CardAction>
+              )}
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader className="sr-only">
+                  <TableRow>
+                    <TableHead>{t("item")}</TableHead>
+                    <TableHead>{t("total")}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {LineItemCategorySchema.options
+                    .filter((cat) => items.some((l) => l.category === cat))
+                    .map((cat) => (
+                      <CategoryRows
+                        key={cat}
+                        category={cat}
+                        items={items.filter((l) => l.category === cat)}
+                      />
+                    ))}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
         );
       })}
     </div>
   );
 }
 
-function CategoryTable({
+function CategoryRows({
   category,
   items,
 }: {
@@ -108,24 +141,19 @@ function CategoryTable({
 }) {
   const t = useTranslations("lineItems");
   return (
-    <table className="w-full text-sm">
-      <caption className="pb-1 text-left text-xs font-medium tracking-wide text-muted-foreground uppercase">
-        {t(`categories.${category}`)}
-      </caption>
-      <thead className="sr-only">
-        <tr>
-          <th>{t("item")}</th>
-          <th>{t("quantity")}</th>
-          <th>{t("unitPrice")}</th>
-          <th>{t("total")}</th>
-        </tr>
-      </thead>
-      <tbody className="divide-y">
-        {items.map((l) => (
-          <Row key={l.id} item={l} />
-        ))}
-      </tbody>
-    </table>
+    <>
+      <TableRow className="hover:bg-transparent">
+        <TableCell
+          colSpan={2}
+          className="pt-4 text-xs font-medium text-muted-foreground uppercase"
+        >
+          {t(`categories.${category}`)}
+        </TableCell>
+      </TableRow>
+      {items.map((l) => (
+        <Row key={l.id} item={l} />
+      ))}
+    </>
   );
 }
 
@@ -143,27 +171,19 @@ function Row({ item: l }: { item: LineItem }) {
   const unit = t(`units.${l.unit}`);
 
   return (
-    <tr className="align-top">
-      {/* One cell so the description gets the full width; quantity and price sit underneath. */}
-      <td colSpan={4} className="py-1.5">
-        <div className="flex items-baseline justify-between gap-3">
-          <p className="min-w-0 [overflow-wrap:anywhere]">
+    <TableRow className="align-top">
+      <TableCell className="whitespace-normal">
+        <div className="flex flex-col gap-1">
+          <p className="flex flex-wrap items-center gap-2 font-medium">
             {l.description.en}
             {l.lowConfidence && (
-              <span className="ml-1 rounded bg-warning/20 px-1 text-xs">
-                {t("lowConfidence")}
-              </span>
+              <Badge variant="secondary">{t("lowConfidence")}</Badge>
             )}
           </p>
-          <span className="shrink-0 font-medium figures">
-            {money.format(l.total)}
-          </span>
-        </div>
-        <p className="text-xs text-muted-foreground">
-          {l.quantitySource.en} · {l.unitPriceSource.en}
-        </p>
-        <div className="mt-1 flex gap-2">
-          <div className="w-28">
+          <p className="text-xs text-muted-foreground">
+            {l.quantitySource.en} · {l.unitPriceSource.en}
+          </p>
+          <div className="flex gap-2">
             <Cell
               label={t("editQuantity", { item: l.description.en })}
               value={l.quantity}
@@ -171,8 +191,6 @@ function Row({ item: l }: { item: LineItem }) {
               overridden={l.isQuantityOverridden}
               onChange={edit?.("quantities")}
             />
-          </div>
-          <div className="w-28">
             <Cell
               label={t("editUnitPrice", { item: l.description.en })}
               value={round2(l.unitPrice.typical)}
@@ -182,8 +200,11 @@ function Row({ item: l }: { item: LineItem }) {
             />
           </div>
         </div>
-      </td>
-    </tr>
+      </TableCell>
+      <TableCell className="text-right font-medium tabular-nums">
+        {money.format(l.total)}
+      </TableCell>
+    </TableRow>
   );
 }
 
@@ -203,24 +224,27 @@ function Cell({
   onChange?: (v: number | null) => void;
 }) {
   const t = useTranslations("lineItems");
-  if (!onChange) return <span className="figures">{display}</span>;
+  if (!onChange) return <span className="text-sm tabular-nums">{display}</span>;
   return (
-    <span className="flex flex-col items-start gap-0.5">
+    <span className="flex w-28 flex-col items-start gap-0.5">
       <NumberInput
         label={label}
         value={value}
         highlighted={overridden}
         onCommit={onChange}
       />
-      <span className="text-xs text-muted-foreground figures">{display}</span>
+      <span className="text-xs text-muted-foreground tabular-nums">
+        {display}
+      </span>
       {overridden && (
-        <button
-          type="button"
-          className="text-xs text-primary underline-offset-2 hover:underline"
+        <Button
+          variant="link"
+          size="xs"
+          className="h-auto px-0"
           onClick={() => onChange(null)}
         >
           {t("reset")}
-        </button>
+        </Button>
       )}
     </span>
   );

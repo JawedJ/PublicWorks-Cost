@@ -1,7 +1,15 @@
 "use client";
 
-import { ChevronRight, ExternalLink, Landmark } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { useTranslations } from "next-intl";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import { altusBenchmarks, canadabuysAwards, statcanBcpi } from "@/data";
 import {
   benchmarks,
@@ -57,109 +65,122 @@ export function MarketEvidenceCard({
   const awards = comparableAwards(types);
 
   return (
-    <details className="group rounded-2xl border bg-card text-sm">
-      <summary className="flex cursor-pointer list-none items-center gap-2 p-4 font-medium [&::-webkit-details-marker]:hidden">
-        <Landmark aria-hidden className="size-4 opacity-80" />
-        {t("title")}
-        <ChevronRight className="ml-auto size-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-90" />
-      </summary>
-      <div className="flex flex-col gap-3 px-4 pb-4">
-        {bench.length > 0 && (
-          <div className="flex flex-col gap-3">
-            {bench.map((b) => {
-              const unit = b.kind === "building" ? t("perSqft") : t("perM");
-              return (
-                <div key={b.componentId} className="flex flex-col gap-1">
-                  <p className="flex justify-between gap-2">
-                    <span>{b.name}</span>
-                    <span className="font-medium figures">
-                      {money.format(b.ours)}
-                      {unit}
-                    </span>
-                  </p>
-                  <RangeBar value={b.ours} range={b.range} />
-                  <p className="text-xs text-muted-foreground figures">
-                    {t("altusRange", {
-                      basis: b.basis,
-                      low: money.format(b.range[0]),
-                      high: money.format(b.range[1]),
-                      unit,
-                    })}{" "}
-                    ·{" "}
-                    <span className="text-foreground">
-                      {t(`position.${b.position}`)}
-                    </span>
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {b.kind === "building"
-                      ? t("buildingNote", {
-                          allIn: money.format(b.allIn ?? 0),
-                        })
-                      : t("roadNote")}
-                  </p>
+    <Card size="sm">
+      <CardContent>
+        <Accordion type="single" collapsible>
+          <AccordionItem value="evidence" className="border-none">
+            <AccordionTrigger className="py-0">
+              <span className="flex items-center gap-2">
+                {t("title")}
+                <Badge variant="outline">{t("badge")}</Badge>
+              </span>
+            </AccordionTrigger>
+            <AccordionContent className="flex flex-col gap-4 pt-3">
+              {bench.length > 0 && (
+                <div className="flex flex-col gap-3">
+                  {bench.map((b) => {
+                    const unit =
+                      b.kind === "building" ? t("perSqft") : t("perM");
+                    return (
+                      <div key={b.componentId} className="flex flex-col gap-1">
+                        <p className="flex justify-between gap-2">
+                          <span>{b.name}</span>
+                          <span className="font-medium figures">
+                            {money.format(b.ours)}
+                            {unit}
+                          </span>
+                        </p>
+                        <RangeBar value={b.ours} range={b.range} />
+                        <p className="text-xs text-muted-foreground figures">
+                          {t("altusRange", {
+                            basis: b.basis,
+                            low: money.format(b.range[0]),
+                            high: money.format(b.range[1]),
+                            unit,
+                          })}{" "}
+                          ·{" "}
+                          <span className="text-foreground">
+                            {t(`position.${b.position}`)}
+                          </span>
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {b.kind === "building"
+                            ? t("buildingNote", {
+                                allIn: money.format(b.allIn ?? 0),
+                              })
+                            : t("roadNote")}
+                        </p>
+                      </div>
+                    );
+                  })}
                 </div>
-              );
-            })}
-          </div>
-        )}
+              )}
 
-        {trend && (
-          <p>
-            {Math.abs(trend.change) < 0.0005
-              ? t("trendFlat", {
-                  type: trend.type.toLowerCase(),
-                  geo: trend.geo,
-                })
-              : t("trend", {
-                  type: trend.type.toLowerCase(),
-                  geo: trend.geo,
-                  change: pct.format(trend.change),
-                })}{" "}
-            <span className="text-muted-foreground">
-              ({t("statcan", { quarter: trend.latest })})
-            </span>
-          </p>
-        )}
+              {trend && (
+                <p>
+                  {Math.abs(trend.change) < 0.0005
+                    ? t("trendFlat", {
+                        type: trend.type.toLowerCase(),
+                        geo: trend.geo,
+                      })
+                    : t("trend", {
+                        type: trend.type.toLowerCase(),
+                        geo: trend.geo,
+                        change: pct.format(trend.change),
+                      })}{" "}
+                  <span className="text-muted-foreground">
+                    ({t("statcan", { quarter: trend.latest })})
+                  </span>
+                </p>
+              )}
 
-        {awards.length > 0 && (
-          <div>
-            <p className="mb-1 text-muted-foreground">{t("awardsHeading")}</p>
-            <ul className="flex flex-col gap-1.5">
-              {awards.map((a) => (
-                <li key={a.id}>
-                  <a
-                    href={a.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-start gap-1 underline-offset-2 hover:underline"
-                  >
-                    {a.title.en}
-                    <ExternalLink className="mt-0.5 size-3 shrink-0" />
-                  </a>
-                  <p className="text-xs text-muted-foreground figures">
-                    {[
-                      a.buyer,
-                      compact.format(a.valueCad),
-                      a.awardDate?.slice(0, 7),
-                    ]
-                      .filter(Boolean)
-                      .join(" · ")}
+              {awards.length > 0 && (
+                <div>
+                  <p className="mb-1 text-muted-foreground">
+                    {t("awardsHeading")}
                   </p>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+                  <ul className="flex flex-col gap-1.5">
+                    {awards.map((a) => (
+                      <li key={a.id}>
+                        <a
+                          href={a.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-start gap-1 font-medium underline-offset-4 hover:underline"
+                        >
+                          {a.title.en}
+                          <ExternalLink className="mt-1 size-3 shrink-0" />
+                        </a>
+                        <p className="text-xs text-muted-foreground figures">
+                          {[
+                            a.buyer,
+                            compact.format(a.valueCad),
+                            a.awardDate?.slice(0, 7),
+                          ]
+                            .filter(Boolean)
+                            .join(" · ")}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
-        <p className="text-xs text-muted-foreground">
-          {t("footnote", {
-            altusDate: altusBenchmarks.meta.retrievedAt,
-            statcanDate: statcanBcpi.source.releaseTime.slice(0, 10),
-            canadabuysDate: canadabuysAwards.source.retrievedAt.slice(0, 10),
-          })}
-        </p>
-      </div>
-    </details>
+              <p className="text-xs text-muted-foreground">
+                {t("footnote", {
+                  altusDate: altusBenchmarks.meta.retrievedAt,
+                  statcanDate: statcanBcpi.source.releaseTime.slice(0, 10),
+                  canadabuysDate: canadabuysAwards.source.retrievedAt.slice(
+                    0,
+                    10,
+                  ),
+                })}
+              </p>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </CardContent>
+    </Card>
   );
 }
 
