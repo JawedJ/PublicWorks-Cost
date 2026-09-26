@@ -13,6 +13,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "data:bcpi": "node scripts/fetch-statcan-bcpi.ts",
+    "data:canadabuys": "node scripts/fetch-canadabuys.ts",
+    "data:refresh": "pnpm data:bcpi && pnpm data:canadabuys",
     "copy:maplibre": "mkdir -p public/maplibre && cp node_modules/maplibre-gl/dist/maplibre-gl-worker.mjs node_modules/maplibre-gl/dist/maplibre-gl-shared.mjs public/maplibre/"
   },
   "dependencies": {

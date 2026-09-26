@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { regionalFactors, statcanBcpi } from "@/data";
+import { canadabuysAwards, regionalFactors, statcanBcpi } from "@/data";
 
 const find = (geo: string, type: string, division: string) =>
   statcanBcpi.series.find(
@@ -61,5 +61,33 @@ describe("statcan-bcpi.json", () => {
         true,
       );
     }
+  });
+});
+
+describe("canadabuys-awards.json", () => {
+  const { source, awards } = canadabuysAwards;
+
+  it("records its source, licence, limits, and retrieval date", () => {
+    expect(source.licence).toBe("Open Government Licence - Canada");
+    expect(source.limits).toMatch(/federal/i);
+    expect(source.limits).toMatch(/never used in the estimate/i);
+    expect(Date.parse(source.retrievedAt)).not.toBeNaN();
+  });
+
+  it("has Ontario awards with unique ids, newest first", () => {
+    expect(awards.length).toBeGreaterThan(0);
+    expect(new Set(awards.map((a) => a.id)).size).toBe(awards.length);
+    const dates = awards.map((a) => a.awardDate ?? "");
+    expect(dates).toEqual([...dates].sort().reverse());
+    for (const a of awards) {
+      expect(a.regions.join(" "), a.id).toMatch(
+        /Ontario|Ottawa|National Capital Region/,
+      );
+    }
+  });
+
+  it("has awards comparable to roads and buildings for the evidence card", () => {
+    expect(awards.some((a) => a.tags.includes("road"))).toBe(true);
+    expect(awards.some((a) => a.tags.includes("building"))).toBe(true);
   });
 });

@@ -1,0 +1,1780 @@
+{
+ "source": {
+  "title": "CanadaBuys award notices",
+  "publisher": "Public Services and Procurement Canada",
+  "url": "https://open.canada.ca/data/en/dataset/a1acb126-9ce8-40a9-b889-5da2b1dd20cb",
+  "files": [
+   "https://canadabuys.canada.ca/opendata/pub/2026-2027-awardNotice-avisAttribution.csv",
+   "https://canadabuys.canada.ca/opendata/pub/2025-2026-awardNotice-avisAttribution.csv"
+  ],
+  "licence": "Open Government Licence - Canada",
+  "licenceUrl": "https://open.canada.ca/en/open-government-licence-canada",
+  "retrievedAt": "2026-09-26T17:20:19.593Z",
+  "filter": "Procurement category Construction (CNST), delivered in Ontario (incl. Ottawa and the Ontario side of the National Capital Region), CAD, latest amendment per award. Values include taxes. Tags come from title and GSIN/UNSPSC keywords.",
+  "limits": "Federal contracts only, not municipal. Contract totals, not unit prices. Evidence only; never used in the estimate."
+ },
+ "awards": [
+  {
+   "id": "CW2460670",
+   "title": {
+    "en": "Blackburn - Roof Resurfacing",
+    "fr": "Blackburn – Resurfaçage de la toiture"
+   },
+   "buyer": "Department of Public Works and Government Services (PSPC)",
+   "supplier": "Bird Construction Group",
+   "awardDate": "2026-09-23",
+   "valueCad": 233542.75,
+   "regions": [
+    "National Capital Region (NCR)"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=WS5769605672"
+  },
+  {
+   "id": "cb-486-87132169",
+   "title": {
+    "en": "Boiler Replacement Project at the Harrow Research and Development Centre",
+    "fr": "Projet de remplacement de la chaudière au centre de recherche et de développement de Harrow."
+   },
+   "buyer": "Department of Agriculture and Agri-Food (AAFC)",
+   "supplier": "Lekter industrial Services Inc.",
+   "awardDate": "2026-09-10",
+   "valueCad": 98772,
+   "regions": [
+    "Ontario (except NCR)"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=ESC-2627-063"
+  },
+  {
+   "id": "CW2456624",
+   "title": {
+    "en": "EQ754-261618 - Long Lake Dam and Little Brother Lake Dam Replacement, Haliburton Ontario",
+    "fr": "Remplacement du barrage de Long Lake et du barrage de Little Brother Lake, Haliburton, Ontario"
+   },
+   "buyer": "Department of Public Works and Government Services (PSPC)",
+   "supplier": "1014968-GDB CONSTRUCTEURS",
+   "awardDate": "2026-09-04",
+   "valueCad": 9857035.2,
+   "regions": [
+    "Ontario (except NCR)"
+   ],
+   "tags": [
+    "road"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=WS5742179565"
+  },
+  {
+   "id": "CW2460999",
+   "title": {
+    "en": "Vehicle Scanning Facility and South Drive – Asphalt Repair",
+    "fr": "Poste de contrôle des véhicules et Voie d’accès Sud - Travaux d’Asphaltage"
+   },
+   "buyer": "Department of Public Works and Government Services (PSPC)",
+   "supplier": "JP Gravel Construction Inc.",
+   "awardDate": "2026-09-03",
+   "valueCad": 279110,
+   "regions": [
+    "National Capital Region (NCR)"
+   ],
+   "tags": [
+    "road",
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=WS5799436016"
+  },
+  {
+   "id": "cb-479-77916701",
+   "title": {
+    "en": "Port Maitland Breakwater Repairs",
+    "fr": "Réparations du brise-lames de Port Maitland"
+   },
+   "buyer": "Department of Fisheries and Oceans (DFO)",
+   "supplier": "Strong Bros General Contracting Ltd",
+   "awardDate": "2026-08-27",
+   "valueCad": 440000,
+   "regions": [
+    "Ontario (except NCR)"
+   ],
+   "tags": [],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=30008063"
+  },
+  {
+   "id": "CW2449524",
+   "title": {
+    "en": "F521A-260874 - Canada Coast Guard Amherstburg Electrical and Exterior Lighting Upgrades",
+    "fr": "F521A-260874 - Modernisation du système électrique et de l’éclairage extérieur à la Base de la Garde côtière canadienne à Amherstburg"
+   },
+   "buyer": "Department of Public Works and Government Services (PSPC)",
+   "supplier": "FM Sylvan Canada Ltd.",
+   "awardDate": "2026-08-27",
+   "valueCad": 494340.54,
+   "regions": [
+    "Ontario (except NCR)"
+   ],
+   "tags": [],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=WS5648216440"
+  },
+  {
+   "id": "CW2464303",
+   "title": {
+    "en": "HVAC Filters Standing Offer",
+    "fr": "Offre à Commande pour filtres CVC"
+   },
+   "buyer": "Department of Public Works and Government Services (PSPC)",
+   "supplier": "ZENTEK LTD",
+   "awardDate": "2026-08-19",
+   "valueCad": 348666.84,
+   "regions": [
+    "National Capital Region (NCR)"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=WS5741166353"
+  },
+  {
+   "id": "CW2457768",
+   "title": {
+    "en": "LEL Interior Systems Reinstatement",
+    "fr": "Rétablissement des systèmes intérieurs de LEL"
+   },
+   "buyer": "Department of Public Works and Government Services (PSPC)",
+   "supplier": "168012 Canada Inc.",
+   "awardDate": "2026-08-10",
+   "valueCad": 469876.18,
+   "regions": [
+    "National Capital Region (NCR)"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=WS5752479847"
+  },
+  {
+   "id": "cb-130-54760517",
+   "title": {
+    "en": "S77 Washroom Renovations Project",
+    "fr": "Projet de rénovation des salles de bains S77"
+   },
+   "buyer": "National Research Council of Canada (NRC)",
+   "supplier": "Serge Zimola Construction Inc.",
+   "awardDate": "2026-07-29",
+   "valueCad": 155180,
+   "regions": [
+    "National Capital Region (NCR)",
+    "Canada",
+    "Ottawa"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=26-58043"
+  },
+  {
+   "id": "CW2448254",
+   "title": {
+    "en": "RE-TENDER EQ754-260717 Beavercreek CCTV System Upgrades",
+    "fr": "NOUVEL APPEL D’OFFRES EQ754-260717 Mises à niveau du système de télévision en circuit fermé de Beavercreek"
+   },
+   "buyer": "Department of Public Works and Government Services (PSPC)",
+   "supplier": "Paladin Technologies Inc.",
+   "awardDate": "2026-07-24",
+   "valueCad": 5990368.89,
+   "regions": [
+    "Ontario (except NCR)"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=WS5636048219"
+  },
+  {
+   "id": "cb-670-55085356",
+   "title": {
+    "en": "Rideau Canal Lighting Rehabilitation Project.",
+    "fr": "Rénovation du système d'éclairage du canal Rideau - Chaussées et sentiers"
+   },
+   "buyer": "National Capital Commission (NCC)",
+   "supplier": "DW RESTORATION SERVICES INC",
+   "awardDate": "2026-07-22",
+   "valueCad": 760290.39,
+   "regions": [
+    "Canada",
+    "National Capital Region (NCR)"
+   ],
+   "tags": [],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=NCC-DC-039926-RFQ"
+  },
+  {
+   "id": "CW2453736",
+   "title": {
+    "en": "Place du Portage I and II Envelope Rehabilitation",
+    "fr": "Place du Portage I et II – Réhabilitation de l’enveloppe"
+   },
+   "buyer": "Department of Public Works and Government Services (PSPC)",
+   "supplier": "Raymond Roofing & Associates Inc",
+   "awardDate": "2026-07-22",
+   "valueCad": 3325924.94,
+   "regions": [
+    "National Capital Region (NCR)"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=WS5705606463"
+  },
+  {
+   "id": "cb-604-13944966",
+   "title": {
+    "en": "Stage 2 – Electrical Service upgrade for an operations compound - Thousand Islands National Park",
+    "fr": "Phase 2 – Mise à niveau du service électrique pour un complexe opérationnel - Parc national des Mille-Îles"
+   },
+   "buyer": "Parks Canada Agency (PC)",
+   "supplier": "Brass Inc.",
+   "awardDate": "2026-07-20",
+   "valueCad": 408418.74,
+   "regions": [
+    "Canada",
+    "Ontario (except NCR)"
+   ],
+   "tags": [
+    "park"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=5P468-26-0027%2FA-001"
+  },
+  {
+   "id": "cb-307-41292076",
+   "title": {
+    "en": "EV Charging Stations Installation Project",
+    "fr": "Projet d'installation de bornes de recharge pour véhicules électriques"
+   },
+   "buyer": "National Research Council of Canada (NRC)",
+   "supplier": "JWK Utilities & Site Services Ltd.",
+   "awardDate": "2026-07-16",
+   "valueCad": 565000,
+   "regions": [
+    "Ottawa"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=25-58282"
+  },
+  {
+   "id": "cb-89-33224880",
+   "title": {
+    "en": "East Bridge deck and wearing surface replacement, Fort Henry National Historic Site",
+    "fr": "Remplacement du tablier et de la surface de roulement du pont Est, Lieu historique national du Fort-Henry"
+   },
+   "buyer": "Parks Canada Agency (PC)",
+   "supplier": "Clearwater Inu Construction Management",
+   "awardDate": "2026-07-16",
+   "valueCad": 195078.68,
+   "regions": [
+    "Canada",
+    "Ontario (except NCR)"
+   ],
+   "tags": [
+    "structure"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=5P468-26-0034%2FA"
+  },
+  {
+   "id": "cb-53-24029677",
+   "title": {
+    "en": "Surface Preparation and Painting Work, First-Class Hotel - National Historic Site of Grosse-Ile-and-the-Irish-Memorial",
+    "fr": "Travaux de préparation de surface et de peinture Hôtel de première classe – Lieu historique national de la Grosse-île-et-le-Mémorial-des-Irlandais"
+   },
+   "buyer": "Parks Canada Agency (PC)",
+   "supplier": "9380-1645 Québec inc.",
+   "awardDate": "2026-07-16",
+   "valueCad": 539232.75,
+   "regions": [
+    "National Capital Region (NCR)",
+    "Canada"
+   ],
+   "tags": [],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=5P468-26-0071%2FA"
+  },
+  {
+   "id": "cb-968-69135005",
+   "title": {
+    "en": "Surface Preparation and Painting Work, First-Class Hotel - National Historic Site of Grosse-Ile-and-the-Irish-Memorial",
+    "fr": "Travaux de préparation de surface et de peinture Hôtel de première classe – Lieu historique national de la Grosse-île-et-le-Mémorial-des-Irlandais"
+   },
+   "buyer": "Parks Canada Agency (PC)",
+   "supplier": "9380-1645 Québec inc.",
+   "awardDate": "2026-07-16",
+   "valueCad": 539232.75,
+   "regions": [
+    "Canada",
+    "National Capital Region (NCR)"
+   ],
+   "tags": [],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=5P468-26-0071%2FA"
+  },
+  {
+   "id": "CW2454627",
+   "title": {
+    "en": "EP916-261658 Switchgear Switchboard 2-5 Replacement",
+    "fr": "EP916-261658 Remplacement des appareils de commutation 2-5"
+   },
+   "buyer": "Department of Public Works and Government Services (PSPC)",
+   "supplier": "Modern Niagara Ottawa Inc.",
+   "awardDate": "2026-07-16",
+   "valueCad": 4254450,
+   "regions": [
+    "National Capital Region (NCR)"
+   ],
+   "tags": [],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=WS5715005943"
+  },
+  {
+   "id": "cb-230-28393264",
+   "title": {
+    "en": "Construction Manager – Building Adaptation Project",
+    "fr": "Gérant de construction – Projet d'adaptation de bâtiments"
+   },
+   "buyer": "National Capital Commission (NCC)",
+   "supplier": "EllisDon Corporation",
+   "awardDate": "2026-07-06",
+   "valueCad": 1000000,
+   "regions": [
+    "Canada",
+    "National Capital Region (NCR)"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=NCC-DC-040047-NRFP"
+  },
+  {
+   "id": "cb-546-95651697",
+   "title": {
+    "en": "FRP402 - U66 Trisonic Wind Tunnel - Construction Management Services",
+    "fr": "FRP402 - Soufflerie trisonique à rafales U66 - services de gérance de la construction"
+   },
+   "buyer": "National Research Council of Canada (NRC)",
+   "supplier": "JSCM CO.",
+   "awardDate": "2026-06-30",
+   "valueCad": 15517380.35,
+   "regions": [
+    "Ottawa"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=25-58290"
+  },
+  {
+   "id": "cb-386-71551781",
+   "title": {
+    "en": "Welding Services",
+    "fr": "Services de soudage"
+   },
+   "buyer": "Department of Natural Resources (NRCan)",
+   "supplier": "Black & McDonald Limited",
+   "awardDate": "2026-06-22",
+   "valueCad": 102039,
+   "regions": [
+    "Canada",
+    "Ontario (except NCR)"
+   ],
+   "tags": [],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=NRCan-5000094712"
+  },
+  {
+   "id": "cb-829-68256767",
+   "title": {
+    "en": "Stop Log Restoration – Sault Ste Marie Canal National Historic Site",
+    "fr": "Remise en état des poutres d’arrêt en acier – Lieu historique national du Canal-de-Sault Ste. Marie"
+   },
+   "buyer": "Parks Canada Agency (PC)",
+   "supplier": "Soo Foundry & Machine (1980) ltd",
+   "awardDate": "2026-06-09",
+   "valueCad": 447842.73,
+   "regions": [
+    "Ontario (except NCR)"
+   ],
+   "tags": [],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=5P468-25-0167%2FA%20"
+  },
+  {
+   "id": "cb-367-68383488",
+   "title": {
+    "en": "NCC-RFP-039822- Canada Pacific Railway (CPR) Overhead Bridge Rehabilitation",
+    "fr": "NCC-RFP-039822 - Réfection du pont d’étagement du chemin de fer Canadien Pacifique (CFCP)\""
+   },
+   "buyer": "National Capital Commission (NCC)",
+   "supplier": "CLEAR WATER STRUCTURES INC",
+   "awardDate": "2026-06-04",
+   "valueCad": 3389779.2,
+   "regions": [
+    "National Capital Region (NCR)"
+   ],
+   "tags": [
+    "road",
+    "building",
+    "structure"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=NCC-RFP-039822"
+  },
+  {
+   "id": "CW2449010",
+   "title": {
+    "en": "SSC ATS Replacement",
+    "fr": "SPC CTA Remplacement"
+   },
+   "buyer": "Department of Public Works and Government Services (PSPC)",
+   "supplier": "BLACK & MCDONALD LIMITED",
+   "awardDate": "2026-05-15",
+   "valueCad": 179648.44,
+   "regions": [
+    "National Capital Region (NCR)"
+   ],
+   "tags": [],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=WS5562711774"
+  },
+  {
+   "id": "cb-884-15342768",
+   "title": {
+    "en": "REQUEST FOR PREQUALIFICATION FOR GENERAL CONTRACTOR FOR THE NATIONAL MONUMENT TO CANADA’S MISSION IN AFGHANISTAN",
+    "fr": "DEMANDE DE PRÉQUALIFICATION POUR - LE MONUMENT NATIONAL À LA MISSION DU CANADA EN AFGHANISTAN"
+   },
+   "buyer": "National Capital Commission (NCC)",
+   "supplier": "Pine Valley Corporation",
+   "awardDate": "2026-05-14",
+   "valueCad": 3456796.56,
+   "regions": [
+    "National Capital Region (NCR)"
+   ],
+   "tags": [
+    "road",
+    "park",
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=NCC-DC-PST-001139-RFPQ"
+  },
+  {
+   "id": "CW2445917",
+   "title": {
+    "en": "Splash Barrier Project",
+    "fr": "Barrière anti-éclaboussures du barrage de Témiscamingue de l’Ontario"
+   },
+   "buyer": "Department of Public Works and Government Services (PSPC)",
+   "supplier": "INJAZ CONSTRUCTION LTD.",
+   "awardDate": "2026-05-05",
+   "valueCad": 388337.98,
+   "regions": [
+    "National Capital Region (NCR)"
+   ],
+   "tags": [
+    "structure"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=WS5612246059"
+  },
+  {
+   "id": "cb-650-69312984",
+   "title": {
+    "en": "Roofing and HVAC replacement - Visitor Center Bethune Memorial House National Historic Site",
+    "fr": "Remplacement de la toiture et du CVC – Centre d’accueil Lieu national Maison-Commémorative Bethune."
+   },
+   "buyer": "Parks Canada Agency (PC)",
+   "supplier": "General Building Services Inc.",
+   "awardDate": "2026-04-30",
+   "valueCad": 169782.5,
+   "regions": [
+    "Canada",
+    "Ontario (except NCR)"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=5P468-25-0307%2FA-001"
+  },
+  {
+   "id": "CW2445907",
+   "title": {
+    "en": "NHQ Plaza Roofs Replacement",
+    "fr": "Remplacement des toits de l’esplanade NHQ"
+   },
+   "buyer": "Department of Public Works and Government Services (PSPC)",
+   "supplier": "Brawn Construction Ltd",
+   "awardDate": "2026-04-30",
+   "valueCad": 8278260.25,
+   "regions": [
+    "National Capital Region (NCR)"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=WS5591661263"
+  },
+  {
+   "id": "cb-941-1096192",
+   "title": {
+    "en": "M-55 Office Accommodations Project",
+    "fr": "Projet d’aménagement de bureaux dans l’immeuble M-55"
+   },
+   "buyer": "National Research Council of Canada (NRC)",
+   "supplier": "Ledcor Construction Limited",
+   "awardDate": "2026-04-28",
+   "valueCad": 30144903.78,
+   "regions": [
+    "Canada",
+    "National Capital Region (NCR)"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=25-58108"
+  },
+  {
+   "id": "cb-704-92939269",
+   "title": {
+    "en": "M6 Catwalk Repairs",
+    "fr": "M6 Réparations de la passerrelle"
+   },
+   "buyer": "National Research Council of Canada (NRC)",
+   "supplier": "ABD Ironworld Inc.",
+   "awardDate": "2026-03-06",
+   "valueCad": 117000,
+   "regions": [
+    "National Capital Region (NCR)",
+    "Ottawa"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=25-58241"
+  },
+  {
+   "id": "CW2433694",
+   "title": {
+    "en": "Justice Flat Roof Delivery",
+    "fr": "Livraison sur toit plat Justice"
+   },
+   "buyer": "Department of Public Works and Government Services (PSPC)",
+   "supplier": "COUVREUR ROLLAND BOUDREAULT",
+   "awardDate": "2026-02-19",
+   "valueCad": 1032693.74,
+   "regions": [
+    "National Capital Region (NCR)"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=WS5490497313"
+  },
+  {
+   "id": "cb-306-75275070",
+   "title": {
+    "en": "Ottawa B20 Summer Boiler Replacement",
+    "fr": "Remplacement de la chaudière d'été Ottawa B20"
+   },
+   "buyer": "Department of Agriculture and Agri-Food (AAFC)",
+   "supplier": "Shawn Robinson Refrigeration Ltd.",
+   "awardDate": "2026-02-05",
+   "valueCad": 138850,
+   "regions": [
+    "National Capital Region (NCR)"
+   ],
+   "tags": [],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=CSE-2025-26-098"
+  },
+  {
+   "id": "cb-937-73172913",
+   "title": {
+    "en": "Fabrication of Signage at Prince Edward Point National Wildlife Area",
+    "fr": "Fabrication de panneaux de signalisation pour la réserve nationale de faune de la Pointe-du-Prince-Édouard"
+   },
+   "buyer": "Department of the Environment (ECCC )",
+   "supplier": "Twilight Signs & Neon Inc",
+   "awardDate": "2026-01-29",
+   "valueCad": 161495.08,
+   "regions": [
+    "Ontario (except NCR)"
+   ],
+   "tags": [
+    "road"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=5000088855R"
+  },
+  {
+   "id": "cb-894-90336360",
+   "title": {
+    "en": "Brass Point Bridges Reconstruction, Rideau Canal Historic Site",
+    "fr": "Reconstruction des ponts de Brass Point – Lieu historique national du Canada du Canal-Rideau"
+   },
+   "buyer": "Parks Canada Agency (PC)",
+   "supplier": "R.W. Tomlinson",
+   "awardDate": "2026-01-26",
+   "valueCad": 13400558.41,
+   "regions": [
+    "Ontario (except NCR)"
+   ],
+   "tags": [
+    "structure"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=5P468-25-0050%2FA"
+  },
+  {
+   "id": "cb-790-97463002",
+   "title": {
+    "en": "AC Replacement",
+    "fr": "Remplacement de la climatisation"
+   },
+   "buyer": "Correctional Service of Canada (CSC)",
+   "supplier": "Carmichael Engineering Ltd.",
+   "awardDate": "2026-01-20",
+   "valueCad": 293791.98,
+   "regions": [
+    "Canada",
+    "Ontario (except NCR)",
+    "Belleville"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=21460-26-5231602"
+  },
+  {
+   "id": "cb-904-53506471",
+   "title": {
+    "en": "M-55 Ground Floor Interim Fit-up",
+    "fr": "M-55 Aménagement provisoire du rez-de-chaussée"
+   },
+   "buyer": "National Research Council of Canada (NRC)",
+   "supplier": "2449214 Ontario Inc / Premium Construction",
+   "awardDate": "2026-01-20",
+   "valueCad": 596890,
+   "regions": [
+    "Ottawa"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=25-58165"
+  },
+  {
+   "id": "CW2426291",
+   "title": {
+    "en": "EP776-260965 - Hope Chambers Elevator Repair",
+    "fr": "EP776-260965 - Réparation d’ascenseurs de l’Édifice Hope Chambers"
+   },
+   "buyer": "Department of Public Works and Government Services (PSPC)",
+   "supplier": "BLACK & MCDONALD LIMITED",
+   "awardDate": "2026-01-15",
+   "valueCad": 484047.46,
+   "regions": [
+    "National Capital Region (NCR)"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=WS5419529428"
+  },
+  {
+   "id": "CW2430806",
+   "title": {
+    "en": "Universal Accessibility – Tactile Attention Indicators",
+    "fr": "Accessibilité universelle – Indicateurs d’attention tactiles"
+   },
+   "buyer": "Department of Public Works and Government Services (PSPC)",
+   "supplier": "BLACK & MCDONALD LIMITED",
+   "awardDate": "2026-01-12",
+   "valueCad": 1080067.56,
+   "regions": [
+    "National Capital Region (NCR)"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=WS5465965089"
+  },
+  {
+   "id": "CW2427651",
+   "title": {
+    "en": "ISED - EVSE Equipment Lab",
+    "fr": "ISDE - Laboratoire d'équipements EAVE"
+   },
+   "buyer": "Department of Public Works and Government Services (PSPC)",
+   "supplier": "Terlin Construction LTD",
+   "awardDate": "2025-12-15",
+   "valueCad": 786606.72,
+   "regions": [
+    "National Capital Region (NCR)"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=WS5408705732"
+  },
+  {
+   "id": "CW2426019",
+   "title": {
+    "en": "30 Metcalfe – Overhead Protection and Scaffolding Installation",
+    "fr": "30 Metcalfe – Protection en hauteur et installation d’échafaudage"
+   },
+   "buyer": "Department of Public Works and Government Services (PSPC)",
+   "supplier": "BLACK & MCDONALD LIMITED",
+   "awardDate": "2025-11-24",
+   "valueCad": 353949.73,
+   "regions": [
+    "National Capital Region (NCR)"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=WS5417808407"
+  },
+  {
+   "id": "cb-112-20708856",
+   "title": {
+    "en": "Renovation of Stairs and Railings at Building S-77",
+    "fr": "Rénovation d'escaliers et rampes à l'édifice S-77"
+   },
+   "buyer": "National Research Council of Canada (NRC)",
+   "supplier": "Arrow Property Service",
+   "awardDate": "2025-11-19",
+   "valueCad": 69953.78,
+   "regions": [
+    "Ottawa"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=25-58140"
+  },
+  {
+   "id": "cb-143-9268819",
+   "title": {
+    "en": "S77 Chiller Enclosure",
+    "fr": "S77 Enceinte de refroidisseur"
+   },
+   "buyer": "National Research Council of Canada (NRC)",
+   "supplier": "2355335 Ontario Ltd. operating as “Arrow\"",
+   "awardDate": "2025-11-10",
+   "valueCad": 103303.47,
+   "regions": [
+    "National Capital Region (NCR)"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=25-58035"
+  },
+  {
+   "id": "CW2412616",
+   "title": {
+    "en": "Rideau Falls Remedial Excavation",
+    "fr": "Excavation de réhabilitation à Rideau Falls"
+   },
+   "buyer": "Department of Public Works and Government Services (PSPC)",
+   "supplier": "Green Infrastructure Partners Inc.",
+   "awardDate": "2025-11-10",
+   "valueCad": 447226.08,
+   "regions": [
+    "National Capital Region (NCR)"
+   ],
+   "tags": [],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=WS5298621868"
+  },
+  {
+   "id": "cb-778-96514467",
+   "title": {
+    "en": "Construction: Technical Protective Operations Facility (TPOF) Code Deficiency Upgrades, Ottawa Ontario",
+    "fr": "Construction : Améliorations des Installations des opérations techniques et des missions de protection (IOTMP) pour combler les lacunes par rapport aux codes, à Ottawa (Ontario)"
+   },
+   "buyer": "Royal Canadian Mounted Police (RCMP)",
+   "supplier": "2449214 ONTARIO INC O/A PREMIUM CONSTRUCTION",
+   "awardDate": "2025-11-04",
+   "valueCad": 2100000,
+   "regions": [
+    "Ottawa"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=202502519"
+  },
+  {
+   "id": "cb-33-73122688",
+   "title": {
+    "en": "Electrical Work at Commercial Fishing Harbour , Wheatley, Ontario",
+    "fr": "Travaux électriques au port de pêche commerciale, Wheatley, Ontario"
+   },
+   "buyer": "Department of Fisheries and Oceans (DFO)",
+   "supplier": "Carmichael Engineering Ltd.",
+   "awardDate": "2025-11-03",
+   "valueCad": 420914.83,
+   "regions": [
+    "Ontario (except NCR)"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=30007140A"
+  },
+  {
+   "id": "cb-105-52277377",
+   "title": {
+    "en": "Stage 2 - Boundary Road Site Restoration – Trent-Severn Waterway National Historic Site",
+    "fr": "Phase 2 - Restauration du site de Boundary Road, Lieu historique national de la Voie-Navigable-Trent-Severn"
+   },
+   "buyer": "Parks Canada Agency (PC)",
+   "supplier": "Kehoe Marine Construction Ltd.",
+   "awardDate": "2025-10-29",
+   "valueCad": 1195655,
+   "regions": [
+    "Canada",
+    "Ontario (except NCR)"
+   ],
+   "tags": [
+    "road",
+    "park"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=5P468-25-0066%2FA"
+  },
+  {
+   "id": "cb-670-3833853",
+   "title": {
+    "en": "Fire Safety System Modernization",
+    "fr": "Modernisation du système de sécurité incendie"
+   },
+   "buyer": "Correctional Service of Canada (CSC)",
+   "supplier": "Siemens Canada Limited",
+   "awardDate": "2025-10-20",
+   "valueCad": 290434.65,
+   "regions": [
+    "Kingston",
+    "Ontario (except NCR)"
+   ],
+   "tags": [],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=21450-25-5174605"
+  },
+  {
+   "id": "cb-499-37751127",
+   "title": {
+    "en": "Liquid Nitrogen Filling Station Project",
+    "fr": "Projet de station de remplissage d'azote liquide"
+   },
+   "buyer": "National Research Council of Canada (NRC)",
+   "supplier": "Black & McDonald Limited",
+   "awardDate": "2025-10-15",
+   "valueCad": 119461.34,
+   "regions": [
+    "Ottawa"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=25-58092"
+  },
+  {
+   "id": "CW2414866",
+   "title": {
+    "en": "Storm Drainage System Reconstruction",
+    "fr": "Reconstruction du système de drainage pluvial"
+   },
+   "buyer": "Department of Public Works and Government Services (PSPC)",
+   "supplier": "Taggart Construction Limited",
+   "awardDate": "2025-10-09",
+   "valueCad": 3811719.02,
+   "regions": [
+    "National Capital Region (NCR)"
+   ],
+   "tags": [
+    "utilities"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=WS5317514932"
+  },
+  {
+   "id": "cb-352-18981424",
+   "title": {
+    "en": "Rm 193 H/M Lab Retrofit",
+    "fr": "Salle 193 Rénovation du Laboratoire H/M"
+   },
+   "buyer": "National Research Council of Canada (NRC)",
+   "supplier": "J.P Gravel Construction Inc.",
+   "awardDate": "2025-10-08",
+   "valueCad": 214700,
+   "regions": [
+    "National Capital Region (NCR)",
+    "Canada"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=25-58129"
+  },
+  {
+   "id": "cb-787-74940569",
+   "title": {
+    "en": "Roof Replacement Project at Building U-70",
+    "fr": "Projet de remplacement de toiture à l'édifice U-70"
+   },
+   "buyer": "National Research Council of Canada (NRC)",
+   "supplier": "Morin Insulation & Roofing Ltd.",
+   "awardDate": "2025-10-07",
+   "valueCad": 257933.8,
+   "regions": [
+    "Ottawa"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=25-58130"
+  },
+  {
+   "id": "cb-932-76369447",
+   "title": {
+    "en": "M35 Section 4 - 7 Roof Replacement",
+    "fr": "M35 Section 4 – 7 Remplacement du toit"
+   },
+   "buyer": "National Research Council of Canada (NRC)",
+   "supplier": "Flynn Canada Ltd.",
+   "awardDate": "2025-10-06",
+   "valueCad": 418090.96,
+   "regions": [
+    "National Capital Region (NCR)",
+    "Ottawa"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=25-58119"
+  },
+  {
+   "id": "cb-524-29395211",
+   "title": {
+    "en": "NCC-DC- 37901-RFP-Colonel By Drive Retaining Wall Phase 2",
+    "fr": "NCC-DC-37901-RFP-Mur de soutènement – Promenade Colonel By – Phase 2"
+   },
+   "buyer": "National Capital Commission (NCC)",
+   "supplier": "Goldie Mohr LTD",
+   "awardDate": "2025-10-03",
+   "valueCad": 2096150,
+   "regions": [
+    "National Capital Region (NCR)",
+    "Canada"
+   ],
+   "tags": [
+    "building",
+    "structure"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=NCC-DC-%2037901-RFP"
+  },
+  {
+   "id": "cb-785-78827393",
+   "title": {
+    "en": "Electrical Services",
+    "fr": "Services électriques"
+   },
+   "buyer": "Department of Natural Resources (NRCan)",
+   "supplier": "Lamarche Electric Inc.",
+   "awardDate": "2025-10-02",
+   "valueCad": 203207.34,
+   "regions": [
+    "Canada",
+    "Ontario (except NCR)"
+   ],
+   "tags": [],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=NRCan-5000089859"
+  },
+  {
+   "id": "cb-727-77040562",
+   "title": {
+    "en": "Breakwater Repairs, Sturgeon Creek, ON",
+    "fr": "Réparation de brise-lames, Sturgeon Creek, ON"
+   },
+   "buyer": "Department of Fisheries and Oceans (DFO)",
+   "supplier": "Cobby Marine (1985) Inc.",
+   "awardDate": "2025-10-02",
+   "valueCad": 66896,
+   "regions": [
+    "Ontario (except NCR)"
+   ],
+   "tags": [],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=30007004"
+  },
+  {
+   "id": "CW2412721",
+   "title": {
+    "en": "EQ447-260487 Permeable Reactive Barrier Installation, Groundwater Remediation",
+    "fr": "EQ447-260487 Installation d’une barrière perméable réactive, assainissement des eaux souterraines"
+   },
+   "buyer": "Department of Public Works and Government Services (PSPC)",
+   "supplier": "Decontie Milestone Inc.",
+   "awardDate": "2025-10-02",
+   "valueCad": 4934626.15,
+   "regions": [
+    "Ontario (except NCR)"
+   ],
+   "tags": [],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=WS5298721345"
+  },
+  {
+   "id": "CW2414855",
+   "title": {
+    "en": "C.D. HOWE - OAG LEVEL 9, 10 AND PART 11 FIT-UP",
+    "fr": "C.D. HOWE – BVG AMÉNAGEMENT NIV. 9 ET 10, NIV. 11 PARTIEL"
+   },
+   "buyer": "Department of Public Works and Government Services (PSPC)",
+   "supplier": "Brawn Construction Ltd",
+   "awardDate": "2025-10-02",
+   "valueCad": 6954734.4,
+   "regions": [
+    "National Capital Region (NCR)"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=WS5310704914"
+  },
+  {
+   "id": "cb-405-57815456",
+   "title": {
+    "en": "Curran Cabin Renovation at Long Point National Wildlife Area, Port Rowan, Ontario",
+    "fr": "Rénovation du chalet Curran dans la réserve nationale de faune de Long Point à Port Rowan (Ontario)"
+   },
+   "buyer": "Department of the Environment (ECCC )",
+   "supplier": "Jack Matthews Marine Service LTD",
+   "awardDate": "2025-09-25",
+   "valueCad": 109949,
+   "regions": [
+    "Ontario (except NCR)"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=5000088536"
+  },
+  {
+   "id": "cb-254-78955134",
+   "title": {
+    "en": "Replacement of Window and Masonry Repair Work, National Training Academy (NTA)",
+    "fr": "Remplacement de fenêtres et travaux de réparation de la maçonnerie – Académie nationale de formation (ANF)"
+   },
+   "buyer": "Correctional Service of Canada (CSC)",
+   "supplier": "Roof Tile Management Inc.",
+   "awardDate": "2025-09-22",
+   "valueCad": 147953.16,
+   "regions": [
+    "Ontario (except NCR)"
+   ],
+   "tags": [],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=21401-26-5124742"
+  },
+  {
+   "id": "cb-806-2212036",
+   "title": {
+    "en": "Lighthouse Stabilization at Mohawk Island National Wildlife Area",
+    "fr": "Stabilisation d’un phare dans la Réserve nationale de faune de l’Île-Mohawk"
+   },
+   "buyer": "Department of the Environment (ECCC )",
+   "supplier": "Roof Tile Management Inc.",
+   "awardDate": "2025-09-22",
+   "valueCad": 202046.33,
+   "regions": [
+    "Ontario (except NCR)"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=5000088225"
+  },
+  {
+   "id": "cb-756-36422653",
+   "title": {
+    "en": "M-58 Section 03 Roof Replacement",
+    "fr": "M-58 Section 03 Remplacement du toitM-58 Section 03 Remplacement du toit"
+   },
+   "buyer": "National Research Council of Canada (NRC)",
+   "supplier": "2413-2276 Quebec Inc.",
+   "awardDate": "2025-09-19",
+   "valueCad": 108028,
+   "regions": [
+    "National Capital Region (NCR)",
+    "Ottawa"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=25-58111"
+  },
+  {
+   "id": "cb-71-94344680",
+   "title": {
+    "en": "Trail and Parking Lot Construction at Prince Edward Point, National Wildlife Area in Milford, Ontario",
+    "fr": "Construction d'un sentier et d'un stationnement dans la réserve nationale de faune de Prince Edward Point, à Milford, en Ontario"
+   },
+   "buyer": "Department of the Environment (ECCC )",
+   "supplier": "2019849 Ontario Inc O/A Schoonhoven",
+   "awardDate": "2025-09-19",
+   "valueCad": 340585.5,
+   "regions": [
+    "Ontario (except NCR)"
+   ],
+   "tags": [
+    "road",
+    "park",
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=5000088559"
+  },
+  {
+   "id": "CW2411335",
+   "title": {
+    "en": "RCR ELECTROMECHANICAL UPGRADE",
+    "fr": "REMISE EN SERVICE ÉLECTROMÉCANIQUE SCR"
+   },
+   "buyer": "Department of Public Works and Government Services (PSPC)",
+   "supplier": "BLACK & MCDONALD LIMITED",
+   "awardDate": "2025-09-16",
+   "valueCad": 312953.94,
+   "regions": [
+    "National Capital Region (NCR)"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=WS5282161446"
+  },
+  {
+   "id": "cb-640-78412221",
+   "title": {
+    "en": "Stage 2 - Rouge Beach Improvements - Rouge National Urban Park",
+    "fr": "Phase 2 - Amélioration de la plage de la Rouge, Parc urbain national de la Rouge"
+   },
+   "buyer": "Parks Canada Agency (PC)",
+   "supplier": "Greenspace Construction Inc.",
+   "awardDate": "2025-09-12",
+   "valueCad": 10696230.89,
+   "regions": [
+    "Canada",
+    "Ontario (except NCR)"
+   ],
+   "tags": [
+    "road",
+    "park",
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=5P468-24-0188%2FA-001"
+  },
+  {
+   "id": "cb-923-7250340",
+   "title": {
+    "en": "Locksmith Service in The National Capital Region (NCR)",
+    "fr": "Services de serrurerie dans la région de la capitale nationale (RCN)"
+   },
+   "buyer": "Department of Natural Resources (NRCan)",
+   "supplier": "Canadian Lock and Supply Ltd.",
+   "awardDate": "2025-09-05",
+   "valueCad": 47968.5,
+   "regions": [
+    "National Capital Region (NCR)"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=NRCan-5000089924"
+  },
+  {
+   "id": "cb-190-61343957",
+   "title": {
+    "en": "Victoria Island Remediation Phase 3a, part 2",
+    "fr": "Prestation de Services d’Assainissement de l’Environnement Île Victoria Phase 3a, partie 2"
+   },
+   "buyer": "National Capital Commission (NCC)",
+   "supplier": "Decontie Milestone Inc.",
+   "awardDate": "2025-09-02",
+   "valueCad": 1399300,
+   "regions": [
+    "Canada",
+    "National Capital Region (NCR)"
+   ],
+   "tags": [],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=NCC-CP-37015-RFP"
+  },
+  {
+   "id": "cb-482-5596966",
+   "title": {
+    "en": "Replacement of the high voltage switchgear and transformer",
+    "fr": "Remplacement du commutateur et du transformateur à haute tension"
+   },
+   "buyer": "National Research Council of Canada (NRC)",
+   "supplier": "SEGUIN MORRIS INC",
+   "awardDate": "2025-08-25",
+   "valueCad": 656638.51,
+   "regions": [
+    "Ottawa"
+   ],
+   "tags": [],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=25-58013"
+  },
+  {
+   "id": "cb-635-256082",
+   "title": {
+    "en": "HVAC Cooling U-61",
+    "fr": "Refroidissement CVC U-61"
+   },
+   "buyer": "National Research Council of Canada (NRC)",
+   "supplier": "3V Mechanical Inc",
+   "awardDate": "2025-08-12",
+   "valueCad": 266244.95,
+   "regions": [
+    "Canada",
+    "Ontario (except NCR)"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=25-58032"
+  },
+  {
+   "id": "cb-908-4354037",
+   "title": {
+    "en": "Stage 2 - Brock's Monument Rehabilitation Project, Niagara-on-the-Lakes, Parks Canada",
+    "fr": "Phase 2 - Projet de réhabilitation du monument de Brock, Niagara-on-the-Lakes, Parcs Canada"
+   },
+   "buyer": "Parks Canada Agency (PC)",
+   "supplier": "Clifford Restoration Limited",
+   "awardDate": "2025-08-07",
+   "valueCad": 1158707.65,
+   "regions": [
+    "Canada",
+    "Ontario (except NCR)"
+   ],
+   "tags": [
+    "park",
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=5P468-25-0017%2FA-001"
+  },
+  {
+   "id": "cb-619-31539209",
+   "title": {
+    "en": "Pier Head Encapsulation, Port Burwell, ON",
+    "fr": "L’encapsulation du musoir, Port de Burwell, ON"
+   },
+   "buyer": "Department of Fisheries and Oceans (DFO)",
+   "supplier": "Bronte Construction",
+   "awardDate": "2025-08-07",
+   "valueCad": 496103.09,
+   "regions": [
+    "Ontario (except NCR)"
+   ],
+   "tags": [],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=30007021"
+  },
+  {
+   "id": "cb-733-25299599",
+   "title": {
+    "en": "Foundation Design Build – Stribling Point Range",
+    "fr": "Conception-construction de la Fondation - Stribling Point Range"
+   },
+   "buyer": "Department of Fisheries and Oceans (DFO)",
+   "supplier": "Thomas Young Builders Ltd.",
+   "awardDate": "2025-08-07",
+   "valueCad": 355225.67,
+   "regions": [
+    "Ontario (except NCR)"
+   ],
+   "tags": [],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=30006908"
+  },
+  {
+   "id": "cb-303-92996056",
+   "title": {
+    "en": "Uplands Campus Pedestrian Pathway Phase 2",
+    "fr": "Sentier piétonnier du campus Uplands Phase #2"
+   },
+   "buyer": "National Research Council of Canada (NRC)",
+   "supplier": "Prestige Design and Construction (Ottawa) Ltd.",
+   "awardDate": "2025-08-06",
+   "valueCad": 962347.55,
+   "regions": [
+    "Ottawa"
+   ],
+   "tags": [
+    "road"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=25-58065"
+  },
+  {
+   "id": "cb-414-85171359",
+   "title": {
+    "en": "Parking Lot Asphalt Pavement",
+    "fr": "ASPHALTE A Le STATIONNEMENT PAVEMENT"
+   },
+   "buyer": "Department of Health (HC)",
+   "supplier": "R.W. Tomlinson Ltd.",
+   "awardDate": "2025-07-28",
+   "valueCad": 173484,
+   "regions": [
+    "National Capital Region (NCR)"
+   ],
+   "tags": [
+    "road",
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=1000261065"
+  },
+  {
+   "id": "cb-775-61128513",
+   "title": {
+    "en": "Renovation of Rooms 252A and 230 of Building U-66",
+    "fr": "Rénovation de salles 252A et 230 de l’édifice U-66"
+   },
+   "buyer": "National Research Council of Canada (NRC)",
+   "supplier": "Laplante Builders Ltd.",
+   "awardDate": "2025-07-14",
+   "valueCad": 180687,
+   "regions": [
+    "Ottawa"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=24-58355"
+  },
+  {
+   "id": "cb-227-26929010",
+   "title": {
+    "en": "Renovation of Washrooms at Building U-70",
+    "fr": "Rénovation des toilettes à l'édifice U-70"
+   },
+   "buyer": "National Research Council of Canada (NRC)",
+   "supplier": "Defran Inc.",
+   "awardDate": "2025-07-03",
+   "valueCad": 134422,
+   "regions": [
+    "Ottawa"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=25-58023"
+  },
+  {
+   "id": "cb-53-87340046",
+   "title": {
+    "en": "Carbide Willson Ruins Structural Stabilization and Site Development",
+    "fr": "Stabilisation structurelle des Ruines de Carbide Willson et développement du site"
+   },
+   "buyer": "National Capital Commission (NCC)",
+   "supplier": "Groupe de Construction Depiedmont Inc.",
+   "awardDate": "2025-07-02",
+   "valueCad": 611847.69,
+   "regions": [
+    "National Capital Region (NCR)",
+    "Canada"
+   ],
+   "tags": [
+    "park",
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=NCC-RFP-DC-2025-26-021"
+  },
+  {
+   "id": "CW2403459",
+   "title": {
+    "en": "OPMPC Elevator",
+    "fr": "Ascenseur BPMCP"
+   },
+   "buyer": "Department of Public Works and Government Services (PSPC)",
+   "supplier": "C&L Construction Ottawa Limited",
+   "awardDate": "2025-06-30",
+   "valueCad": 2444346.71,
+   "regions": [
+    "National Capital Region (NCR)"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=WS5178565296"
+  },
+  {
+   "id": "CW2392726",
+   "title": {
+    "en": "EQ754-240888 - Construction Management Services - Government of Canada Building (GOCB) Project",
+    "fr": "EQ754-240888 - Projet de construction d’un nouvel immeuble du gouvernement du Canada - Services de gestion de la construction"
+   },
+   "buyer": "Department of Public Works and Government Services (PSPC)",
+   "supplier": "EBCinc",
+   "awardDate": "2025-06-25",
+   "valueCad": 489617091.63,
+   "regions": [
+    "Ontario (except NCR)"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=WS4350954867"
+  },
+  {
+   "id": "cb-506-7863518",
+   "title": {
+    "en": "Sanitary System Installation, Butler’s Barracks National Historic Site of Canada",
+    "fr": "Installation d’un système sanitaire, lieu historique national des Casernes-de-Butler"
+   },
+   "buyer": "Parks Canada Agency (PC)",
+   "supplier": "AVERTEX Utility Solutions Inc.",
+   "awardDate": "2025-06-13",
+   "valueCad": 94755.02,
+   "regions": [
+    "Canada",
+    "Ontario (except NCR)"
+   ],
+   "tags": [
+    "utilities"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=5P468-25-0007%2FA"
+  },
+  {
+   "id": "cb-588-22108594",
+   "title": {
+    "en": "Re-roofing at Building S-77",
+    "fr": "Réfection de toiture à l'édifice S-77"
+   },
+   "buyer": "National Research Council of Canada (NRC)",
+   "supplier": "Flynn Canada Ltd.",
+   "awardDate": "2025-06-05",
+   "valueCad": 338708.46,
+   "regions": [
+    "Ottawa"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=25-58002"
+  },
+  {
+   "id": "cb-150-77703928",
+   "title": {
+    "en": "Reverse Ossmosis and Water Softener Systems Maintenance",
+    "fr": "Entretien des systèmes de l’osmose inverse et des adoucisseurs de l’eau"
+   },
+   "buyer": "Department of Health (HC)",
+   "supplier": "1605954 Ontario Inc",
+   "awardDate": "2025-06-01",
+   "valueCad": 200910.7,
+   "regions": [
+    "National Capital Region (NCR)"
+   ],
+   "tags": [],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=1000259274"
+  },
+  {
+   "id": "cb-222-98507639",
+   "title": {
+    "en": "Wheatley Maintenance Dredging, ON",
+    "fr": "Dragage du Port – Wheatley, Ontario"
+   },
+   "buyer": "Department of Fisheries and Oceans (DFO)",
+   "supplier": "Cobby Marine (1985) Inc.",
+   "awardDate": "2025-05-28",
+   "valueCad": 237865,
+   "regions": [
+    "Ontario (except NCR)"
+   ],
+   "tags": [],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=30006755"
+  },
+  {
+   "id": "cb-117-62147801",
+   "title": {
+    "en": "Trail 70 Pedestrian Bridge Replacement ,Gatineau Park",
+    "fr": "Replacement du pont pédestre, Sentier 70, Le parc de la Gatineau"
+   },
+   "buyer": "National Capital Commission (NCC)",
+   "supplier": "Moderne Vision Inc",
+   "awardDate": "2025-05-13",
+   "valueCad": 162676.5,
+   "regions": [
+    "National Capital Region (NCR)",
+    "Canada"
+   ],
+   "tags": [
+    "park",
+    "structure"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=NCC-RFP-DC-2025-26-014%20"
+  },
+  {
+   "id": "cb-637-50358303",
+   "title": {
+    "en": "M19 Corridor 102",
+    "fr": "Couloir 102 de la M19"
+   },
+   "buyer": "National Research Council of Canada (NRC)",
+   "supplier": "6739741 Canada Inc. / DMJ Management",
+   "awardDate": "2025-05-05",
+   "valueCad": 117808.15,
+   "regions": [
+    "Ottawa"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=24-58354"
+  },
+  {
+   "id": "cb-140-28746321",
+   "title": {
+    "en": "Ll 488 Brighton Rear Range Tower Demolition",
+    "fr": "Démolition De La Tour Du Feu D’alignement Postérieur Ll 488 De Brighton"
+   },
+   "buyer": "Department of Fisheries and Oceans (DFO)",
+   "supplier": "Thomas Young Builders Ltd.",
+   "awardDate": "2025-05-02",
+   "valueCad": 48800,
+   "regions": [
+    "Ontario (except NCR)"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=30006630"
+  },
+  {
+   "id": "cb-876-41955638",
+   "title": {
+    "en": "Prescott Canadian Coast Guard Base Water Main Repair Work",
+    "fr": "Travaux de réparation des conduites d'eau de la base des gardes-côtes canadiens de Prescott"
+   },
+   "buyer": "Department of Fisheries and Oceans (DFO)",
+   "supplier": "Bircon Canada Ltd",
+   "awardDate": "2025-04-30",
+   "valueCad": 54925,
+   "regions": [
+    "Canada",
+    "Prescott",
+    "Ontario (except NCR)"
+   ],
+   "tags": [
+    "utilities"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=30006626"
+  },
+  {
+   "id": "cb-819-71717841",
+   "title": {
+    "en": "M55 Panels and Breakers Replacement",
+    "fr": "M-55 Remplacement des panneaux et des disjoncteurs"
+   },
+   "buyer": "National Research Council of Canada (NRC)",
+   "supplier": "2355335 Ontario Ltd. o/a Arrow",
+   "awardDate": "2025-04-24",
+   "valueCad": 130498.9,
+   "regions": [
+    "Ottawa"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=24-58341"
+  },
+  {
+   "id": "cb-707-76347017",
+   "title": {
+    "en": "Washrooms Renovation of Building U-66",
+    "fr": "Rénovation de salles de bain de l’édifice U-66"
+   },
+   "buyer": "National Research Council Canada",
+   "supplier": "Govan Brown & Associates Limited",
+   "awardDate": "2025-04-10",
+   "valueCad": 256508.87,
+   "regions": [
+    "Ottawa"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=24-58337"
+  },
+  {
+   "id": "cb-52-65867963",
+   "title": {
+    "en": "Fan Coil Replacement",
+    "fr": "Remplacement des ventilo-convecteurs"
+   },
+   "buyer": "National Research Council Canada",
+   "supplier": "T.P. Crawford Limited",
+   "awardDate": "2025-04-10",
+   "valueCad": 440700,
+   "regions": [
+    "Ottawa"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=24-58338"
+  },
+  {
+   "id": "cb-535-17421845",
+   "title": {
+    "en": "Replacement of the domestic hot water heating system",
+    "fr": "Remplacement du système de chauffe-eau domestique"
+   },
+   "buyer": "National Research Council Canada",
+   "supplier": "Shawn Robinson Refrigeration Ltd.",
+   "awardDate": "2025-04-08",
+   "valueCad": 189840,
+   "regions": [
+    "Ottawa"
+   ],
+   "tags": [],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=24-58325"
+  },
+  {
+   "id": "cb-773-19843194",
+   "title": {
+    "en": "M50 Elevator No. 1 and Elevator No. 4",
+    "fr": "M-50 Ascenseur n°1 et Ascenseur n°4"
+   },
+   "buyer": "National Research Council of Canada (NRC)",
+   "supplier": "TK Elevator (Canada) Limited",
+   "awardDate": "2024-12-16",
+   "valueCad": 450423.65,
+   "regions": [
+    "Ottawa"
+   ],
+   "tags": [],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=24-58048-C"
+  },
+  {
+   "id": "cb-404-50634229",
+   "title": {
+    "en": "S77 Sussex Washroom Refurbishment",
+    "fr": "Rénovation des toilettes du S77 Sussex"
+   },
+   "buyer": "National Research Council of Canada (NRC)",
+   "supplier": "Govan Brown & Associates Limited",
+   "awardDate": "2024-10-10",
+   "valueCad": 399455,
+   "regions": [
+    "Ottawa"
+   ],
+   "tags": [
+    "road"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=24-58120"
+  },
+  {
+   "id": "cb-906-16702292",
+   "title": {
+    "en": "U72 Biolab Ventilation and Vestibule Upgrade / U72 Fuselage Outdoor Upgrade",
+    "fr": "Mise à niveau de la ventilation et du vestibule du Biolab U72 / Mise à niveau extérieure du fuselage U72"
+   },
+   "buyer": "National Research Council of Canada (NRC)",
+   "supplier": "Brawn Construction Ltd.",
+   "awardDate": "2024-08-12",
+   "valueCad": 1210306.39,
+   "regions": [
+    "Ottawa"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=24-58079"
+  },
+  {
+   "id": "cb-736-474076",
+   "title": {
+    "en": "Uplands Campus Pedestrian Pathway",
+    "fr": "Sentier piétonnier du campus Uplands"
+   },
+   "buyer": "National Research Council of Canada (NRC)",
+   "supplier": "1457478 Ontario Inc. In-Depth Contracting",
+   "awardDate": "2024-07-31",
+   "valueCad": 416843.44,
+   "regions": [
+    "Ottawa"
+   ],
+   "tags": [
+    "road",
+    "park"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=24-58057"
+  },
+  {
+   "id": "cb-352-49879123",
+   "title": {
+    "en": "U87 Electric Vehicle Charging Station",
+    "fr": "U87 - BORNE DE RECHARGE POUR VÉHICULES ÉLECTRIQUES"
+   },
+   "buyer": "National Research Council of Canada (NRC)",
+   "supplier": "Black and McDonald Limited",
+   "awardDate": "2024-07-29",
+   "valueCad": 673005.4,
+   "regions": [
+    "Ottawa"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=24-58024-B"
+  },
+  {
+   "id": "cb-966-2269794",
+   "title": {
+    "en": "M20 Room 211 Office Fit-Up",
+    "fr": "M20 - Aménagement du bureau 211"
+   },
+   "buyer": "National Research Council of Canada (NRC)",
+   "supplier": "Cannonbye Construction Ltd.",
+   "awardDate": "2024-07-10",
+   "valueCad": 394209.54,
+   "regions": [
+    "Ottawa"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=24-58034"
+  },
+  {
+   "id": "cb-854-22822718",
+   "title": {
+    "en": "M24 Room 111 Renovations",
+    "fr": "Réaménagement de la salle 111 du laboratoire M24"
+   },
+   "buyer": "National Research Council of Canada (NRC)",
+   "supplier": "Brawn Construction Ltd.",
+   "awardDate": "2024-06-17",
+   "valueCad": 392957.5,
+   "regions": [
+    "Ottawa"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=24-58025"
+  },
+  {
+   "id": "CW2351815",
+   "title": {
+    "en": "EP938-231593 - Construction Management Services Regulatory and Security Sciences",
+    "fr": "EP938-231593 - Services des Gestionnaire de Construction - Science réglementaire et Sciences pour la sécurité"
+   },
+   "buyer": "Department of Public Works and Government Services (PSPC)",
+   "supplier": "PCL Constructors Canada Inc.",
+   "awardDate": "2023-12-20",
+   "valueCad": 768607086.86,
+   "regions": [
+    "National Capital Region (NCR)"
+   ],
+   "tags": [
+    "building"
+   ],
+   "url": "https://canadabuys.canada.ca/en/tender-opportunities?search_filter=WS3819788409"
+  }
+ ]
+}

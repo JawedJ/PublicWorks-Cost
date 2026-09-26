@@ -1,6 +1,7 @@
 import {
   BcpiFileSchema,
   BuildingCostsFileSchema,
+  CanadaBuysFileSchema,
   OverrunReferenceFileSchema,
   ParkFeaturesFileSchema,
   RefDataSchema,
@@ -9,6 +10,7 @@ import {
   UnitPricesFileSchema,
   type BcpiFile,
   type BuildingCostsFile,
+  type CanadaBuysFile,
   type OverrunReferenceFile,
   type ParkFeaturesFile,
   type RefData,
@@ -21,6 +23,7 @@ import overrunReferenceJson from "./overrun-reference.json";
 import parkFeaturesJson from "./park-features.json";
 import regionalFactorsJson from "./regional-factors.json";
 import structuresJson from "./structures.json";
+import canadabuysAwardsJson from "./public/canadabuys-awards.json";
 import statcanBcpiJson from "./public/statcan-bcpi.json";
 import unitPricesJson from "./unit-prices.json";
 
@@ -54,3 +57,7 @@ export const refData: RefData = RefDataSchema.parse({
 
 /** Statistics Canada BCPI, table 18-10-0289-01 (Ontario CMAs + composite). */
 export const statcanBcpi: BcpiFile = BcpiFileSchema.parse(statcanBcpiJson);
+
+/** CanadaBuys federal construction awards in Ontario. Market evidence only. */
+export const canadabuysAwards: CanadaBuysFile =
+  CanadaBuysFileSchema.parse(canadabuysAwardsJson);
