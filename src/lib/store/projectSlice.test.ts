@@ -103,3 +103,46 @@ describe("projectSlice params and overrides", () => {
     expect(s().past.length).toBe(before);
   });
 });
+
+describe("site context auto-fill (P6.3)", () => {
+  beforeEach(() => useStore.setState(initial, true));
+
+  it("fills default road params from the street it follows, not user values", () => {
+    s().loadProject(northgateProject);
+    const road = s().components.find((c) => c.name === "Library Lane")!;
+    const g = road.geometry!.primary.geometry;
+    const [lng, lat] = (g.type === "LineString" ? g.coordinates[0] : [0, 0])!;
+    s().setComponentParam(road.id, "sidewalkSides", 2); // the user's answer
+    s().setSiteContext({
+      source: "overpass",
+      fetchedAt: "2026-09-26T00:00:00.000Z",
+      features: [
+        {
+          id: "w1",
+          kind: "road",
+          name: "Weber Street",
+          tags: { highway: "residential", lanes: "3", sidewalk: "no" },
+          geometry: {
+            type: "Feature",
+            properties: {},
+            geometry: {
+              type: "LineString",
+              coordinates: [
+                [lng!, lat!],
+                [lng! + 0.001, lat!],
+              ],
+            },
+          },
+        },
+      ],
+    });
+    const after = s().components.find((c) => c.id === road.id)!;
+    expect(after.params.lanes).toBe(3);
+    expect(after.paramMeta.lanes).toEqual({
+      source: "site_context",
+      evidence: "OpenStreetMap: lanes=3 on Weber Street",
+    });
+    expect(after.params.sidewalkSides).toBe(2);
+    expect(after.paramMeta.sidewalkSides?.source).toBe("user");
+  });
+});

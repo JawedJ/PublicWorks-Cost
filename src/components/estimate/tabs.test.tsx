@@ -5,6 +5,7 @@ import { describe, expect, it } from "vitest";
 import { scopeEstimate } from "@/lib/estimate/scope";
 import { northgateEstimate as est, northgateProject } from "@/lib/fixtures";
 import messages from "../../../messages/en.json";
+import { QuestionsPanel } from "@/components/questions/questions-panel";
 import { EstimateTab } from "./estimate-tab";
 import { InputsTab } from "./inputs-tab";
 import { LineItemsTab } from "./line-items-tab";
@@ -86,5 +87,17 @@ describe("estimate panel tabs", () => {
     expect(html).toContain("Match a known cost");
     expect(html).toContain("Suggested from the name:");
     expect(html).toContain("Aquatic centre");
+  });
+
+  it("Questions tab renders its loading state", () => {
+    const { html, errors } = render(
+      <QuestionsPanel
+        estimate={est}
+        components={northgateProject.components}
+        componentId={null}
+      />,
+    );
+    expect(errors).toEqual([]);
+    expect(html).toContain("Picking the questions that matter most");
   });
 });

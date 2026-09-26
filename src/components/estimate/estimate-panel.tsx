@@ -6,15 +6,16 @@ import { scopeEstimate } from "@/lib/estimate/scope";
 import { useEstimate } from "@/lib/estimate/useEstimate";
 import { useStore } from "@/lib/store/store";
 import { EstimateTab } from "./estimate-tab";
+import { QuestionsPanel } from "@/components/questions/questions-panel";
 import { InputsTab } from "./inputs-tab";
 import { LineItemsTab } from "./line-items-tab";
 
-const TABS = ["estimate", "lineItems", "inputs"] as const;
+const TABS = ["estimate", "questions", "lineItems", "inputs"] as const;
 type Tab = (typeof TABS)[number];
 
 // Right panel. A mounts it in the workspace layout (P3.2).
 // Scope (P3.5) = the shared selection: whole project, or the selected component.
-// Tabs: Estimate (P3.6), Line items (P3.10), Inputs (P3.11).
+// Tabs: Estimate (P3.6), Questions (P7.5), Line items (P3.10), Inputs (P3.11).
 
 export function EstimatePanel() {
   const t = useTranslations("estimate");
@@ -82,6 +83,13 @@ export function EstimatePanel() {
             scoped={scoped}
             components={components}
             region={region}
+          />
+        )}
+        {tab === "questions" && (
+          <QuestionsPanel
+            estimate={estimate}
+            components={components}
+            componentId={scoped.component?.componentId ?? null}
           />
         )}
         {tab === "lineItems" && (

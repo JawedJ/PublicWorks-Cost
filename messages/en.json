@@ -243,7 +243,8 @@
       "label": "Estimate views",
       "estimate": "Estimate",
       "lineItems": "Line items",
-      "inputs": "Inputs"
+      "inputs": "Inputs",
+      "questions": "Questions"
     }
   },
   "visuals": {
@@ -431,5 +432,23 @@
     "statcan": "BCPI, {quarter}",
     "awardsHeading": "Recent federal contracts in Ontario (CanadaBuys):",
     "footnote": "Sources: Altus Group 2026 Canadian Cost Guide (retrieved {altusDate}), Statistics Canada table 18-10-0289-01 (released {statcanDate}), CanadaBuys award notices (retrieved {canadabuysDate}). Evidence informs judgement; it doesn't change the estimate."
+  },
+  "questions": {
+    "intro": "A few answers that would tighten this estimate most, biggest costs first.",
+    "askAgain": "Ask again",
+    "loading": "Picking the questions that matter most…",
+    "allAnswered": "No open questions. Everything with a big effect on cost has an answer.",
+    "andOthers": "{count, plural, one {and # similar component} other {and # similar components}}",
+    "suggested": "suggested",
+    "yes": "Yes",
+    "no": "No",
+    "save": "Save answer",
+    "applyAll": "Apply to all {count}",
+    "skip": "Skip",
+    "fallbackNote": "Standard questions, ranked by cost impact (the AI assistant wasn't used).",
+    "notices": {
+      "ai_busy": "AI assistant busy, used standard questions.",
+      "ai_unavailable": "AI assistant unavailable, used standard questions."
+    }
   }
 }
