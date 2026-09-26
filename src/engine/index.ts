@@ -66,6 +66,12 @@ const SOFT: Record<
     permitsApprovals: 0.01,
     projectManagement: 0.03,
   },
+  parking: {
+    engineering: 0.08,
+    contractAdmin: 0.04,
+    permitsApprovals: 0.01,
+    projectManagement: 0.03,
+  },
   park: {
     engineering: 0.1,
     contractAdmin: 0.04,
@@ -173,6 +179,8 @@ function componentClass(
 
 function overrunEntry(ref: RefData, c: Component, cls: EstimateClass) {
   const entries = ref.overrunReference.entries;
+  // No parking-specific overrun data: paving work behaves like roads.
+  if (c.type === "parking") c = { ...c, type: "road", subtype: "" };
   return (
     entries.find(
       (e) =>

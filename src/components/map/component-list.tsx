@@ -15,6 +15,7 @@ import {
   Shapes,
   Shuffle,
   Sparkles,
+  SquareParking,
   Trash2,
   Trees,
   Undo2,
@@ -44,6 +45,7 @@ const typeIcon: Record<ComponentType, LucideIcon> = {
   park: Trees,
   building: Building2,
   structure: Bridge,
+  parking: SquareParking,
   custom: Shapes,
 };
 

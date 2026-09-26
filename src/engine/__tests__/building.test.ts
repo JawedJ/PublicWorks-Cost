@@ -51,9 +51,16 @@ describe("building template (SPEC 6.3)", () => {
     expect(q["section:b"]!.quantity).toBe(400);
     expect(q["roof:b"]!.quantity).toBe(400);
     expect(q.shape_complexity).toBeDefined();
+    // No parking by default: parking lots are their own component.
+    expect(q.parking).toBeUndefined();
+    expect(q.landscaping!.quantity).toBe(5000 - 1400);
+    expect(missingPrices(derive("library").lines)).toEqual([]);
+  });
+
+  it("still prices parking stalls entered on the building", () => {
+    const q = byId(derive("library", { parkingStalls: 30 }).lines);
     expect(q.parking!.quantity).toBe(900); // 30 stalls × 30 m²
     expect(q.landscaping!.quantity).toBe(5000 - 1400 - 900);
-    expect(missingPrices(derive("library").lines)).toEqual([]);
   });
 
   it("adds special spaces and scales to a GFA override", () => {
@@ -63,7 +70,7 @@ describe("building template (SPEC 6.3)", () => {
   });
 
   it("flags program-driven cost and a site that's too small", () => {
-    const { ctx } = derive("school", {}, 1500);
+    const { ctx } = derive("school", {}, 1300); // footprint 1,400 m²
     const codes = buildingTemplate.flags(ctx).map((f) => f.code);
     expect(codes).toEqual(
       expect.arrayContaining(["program_driven_cost", "building_does_not_fit"]),

@@ -3,6 +3,7 @@ import type { ComponentTemplate } from "../types";
 import { buildingTemplate } from "./building";
 import { customTemplate } from "./custom";
 import { parkTemplate } from "./park";
+import { parkingTemplate } from "./parking";
 import { roadTemplate } from "./road";
 import { structureTemplate } from "./structure";
 
@@ -11,5 +12,6 @@ export const templates: Record<ComponentType, ComponentTemplate> = {
   park: parkTemplate,
   building: buildingTemplate,
   structure: structureTemplate,
+  parking: parkingTemplate,
   custom: customTemplate,
 };

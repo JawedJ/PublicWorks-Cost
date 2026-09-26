@@ -24,6 +24,7 @@ export const ComponentTypeSchema = z.enum([
   "park",
   "building",
   "structure",
+  "parking",
   "custom",
 ]);
 export type ComponentType = z.infer<typeof ComponentTypeSchema>;

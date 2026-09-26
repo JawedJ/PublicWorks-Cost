@@ -12,6 +12,12 @@ export type PlannedInput = {
 };
 
 const RULES: { re: RegExp; type: ComponentType; subtype: string }[] = [
+  // Before the park rules ("car park"); underground parking is a building basement.
+  {
+    re: /(?<!underground )\bparking\b|\bcar ?parks?\b/,
+    type: "parking",
+    subtype: "surface_lot",
+  },
   { re: /mid[- ]?rise/, type: "building", subtype: "mid_rise_apartment" },
   {
     re: /(low[- ]?rise|apartment|condo)/,
@@ -70,11 +76,6 @@ const AMENITIES: { re: RegExp; param: string; count?: boolean }[] = [
   { re: /sally ?port/, param: "sallyPort" },
   { re: /council chamber/, param: "councilChamber" },
   { re: /furnish|ff&e|furniture/, param: "ffeIncluded" },
-  {
-    re: /(\d+|[a-z]+)\s+(?:parking\s+)?(?:stalls|spaces|cars)\b/,
-    param: "parkingStalls",
-    count: true,
-  },
   {
     re: /(\d+|[a-z]+)\s+(?:apparatus\s+|truck\s+)?bays\b/,
     param: "apparatusBays",
@@ -140,7 +141,7 @@ export function keywordParse(prompt: string): PlannedInput[] {
     }
     // Size phrases ("1.5 ha", "400 m", "two-storey") aren't counts.
     const bare = clause.replace(
-      /\d+(\.\d+)?\s*(m2|m²|sq ?m|square met\w*|ha|hectares?|km|m)\b|[a-z0-9]+[- ](storey|story|floor)s?/g,
+      /\d+(\.\d+)?\s*(m2|m²|sq ?m|square met\w*|ha|hectares?|km|m)\b|[a-z0-9]+[- ](storey|story|floor)s?|(\d+|[a-z]+)\s+(parking\s+)?(stalls|spaces|cars)\b/g,
       " ",
     );
     const count = numberBefore(bare.slice(0, bare.search(rule.re)));
@@ -159,6 +160,14 @@ export function keywordParse(prompt: string): PlannedInput[] {
     if (rule.type === "park") {
       if (ha) params.areaM2 = Number(ha[1]) * 10_000;
       else if (area) params.areaM2 = Number(area[1]);
+    }
+    if (rule.type === "parking") {
+      const stalls = clause.match(
+        /(\d+|[a-z]+)\s+(?:parking\s+)?(?:stalls|spaces|cars)\b/,
+      );
+      const n = stalls && (Number(stalls[1]) || WORDS[stalls[1]!]);
+      if (n) params.stalls = n;
+      if (area) params.areaM2 = Number(area[1]);
     }
     if (rule.type === "road" && length)
       params.lengthM = Number(length[1]) * (length[2] === "km" ? 1000 : 1);

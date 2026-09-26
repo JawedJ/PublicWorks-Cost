@@ -80,7 +80,8 @@
         "park": "Park",
         "building": "Building",
         "structure": "Structure",
-        "custom": "Custom"
+        "custom": "Custom",
+        "parking": "Parking lot"
       },
       "zoomTo": "Zoom to {name}",
       "zoomToShort": "Zoom to",
@@ -152,7 +153,8 @@
         "road": "Road",
         "park": "Park",
         "building": "Building",
-        "structure": "Structure"
+        "structure": "Structure",
+        "parking": "Parking lot"
       },
       "customNamePlaceholder": "Name it, e.g. skate park",
       "customNameLabel": "Name of the custom element"
@@ -293,7 +295,8 @@
       "park": "Park",
       "building": "Building",
       "structure": "Structure",
-      "custom": "Custom element"
+      "custom": "Custom element",
+      "parking": "Parking lot"
     },
     "features": "Features"
   },

@@ -8,6 +8,7 @@ export const mapColors = {
   pavement: "#7d8086",
   building: "#b29986",
   structure: "#4d5566",
+  parking: "#9ca3af",
   selected: "#e85e00", // --primary
 } as const;
 
@@ -16,5 +17,6 @@ export const componentColor: Record<ComponentType, string> = {
   park: mapColors.park,
   building: mapColors.building,
   structure: mapColors.structure,
+  parking: mapColors.parking,
   custom: mapColors.structure,
 };

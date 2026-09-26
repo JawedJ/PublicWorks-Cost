@@ -144,6 +144,12 @@
       "lengthM": 300
     }
   },
+  "parking": {
+    "surface_lot": {
+      "areaM2": 1500,
+      "aspect": 1.6
+    }
+  },
   "custom": {
     "custom": {
       "areaM2": 600,

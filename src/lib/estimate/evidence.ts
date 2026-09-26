@@ -142,6 +142,7 @@ const TYPE_TAGS: Record<ComponentType, string[]> = {
   park: ["park"],
   building: ["building"],
   structure: ["structure"],
+  parking: ["road"],
   custom: [],
 };
 

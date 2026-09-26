@@ -69,6 +69,7 @@ const TYPES: Exclude<ComponentType, "custom">[] = [
   "park",
   "building",
   "structure",
+  "parking",
 ];
 
 /** What the Add menu has chosen; turned into a `DrawTarget` against the current selection. */

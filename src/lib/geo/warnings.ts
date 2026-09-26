@@ -82,7 +82,7 @@ export function designWarnings(
 
   // Buildings and parks overlapping each other.
   const solids = drawn.filter(
-    (c) => c.type === "building" || c.type === "park",
+    (c) => c.type === "building" || c.type === "park" || c.type === "parking",
   );
   for (let i = 0; i < solids.length; i++)
     for (let j = i + 1; j < solids.length; j++) {

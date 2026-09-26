@@ -24,6 +24,7 @@ const SIZE_HINTS: Partial<Record<ComponentType, ParamDefinition[]>> = {
   building: [hint("storeys", "storeys", 1, 60)],
   park: [hint("areaM2", "m²", 1, 5_000_000)],
   road: [hint("lengthM", "m", 1, 50_000)],
+  parking: [hint("areaM2", "m²", 1, 500_000)],
 };
 
 function hint(
@@ -104,7 +105,8 @@ Rules:
 - count = how many identical components ("two fire stations" → 2). Otherwise 1.
 - Only set a param when the prompt clearly states it; value as text (e.g. "3", "poor", "true"); evidence = the exact phrase.
 - Sizes: building floor area → gfaOverrideM2, storeys → storeys, park area → areaM2 (1 ha = 10000), road length → lengthM.
-- Building amenities are params of that building, not components: pool → indoorPool, gym → gymnasium, rink → iceRink, kitchen → commercialKitchen, basement or underground parking → basement, "parking for 40 cars" → parkingStalls 40, bays → apparatusBays, elevators → extraElevators. Set every one the prompt mentions.
+- Building amenities are params of that building, not components: pool → indoorPool, gym → gymnasium, rink → iceRink, kitchen → commercialKitchen, basement or underground parking → basement, bays → apparatusBays, elevators → extraElevators. Set every one the prompt mentions.
+- Surface parking ("a parking lot", "parking for 40 cars") is its own component: type parking, subtype surface_lot, stalls = the number of cars/spaces, areaM2 if an area is given. Underground parking is not a lot: it's basement on the building.
 - Park amenities are features of their park, not components: put their ids in that park's features. If no park is mentioned, add one for them. Other types: features = [].
 - Anything not in the catalog → type "custom", subtype "custom", keeping its name.
 - Never output costs or prices.

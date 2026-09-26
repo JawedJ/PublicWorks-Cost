@@ -389,6 +389,13 @@ export function buildPlan(components: Component[]): PlanFeature[] {
       });
       treeFeatures(c, out);
     }
+    // A parking lot draws like a parking area feature: asphalt with stall lines.
+    if (c.type === "parking")
+      placedFeature(
+        c,
+        { id: c.id, kind: "parking", geometry: c.geometry.primary, params: {} },
+        out,
+      );
     for (const f of c.geometry.features) placedFeature(c, f, out);
     for (const s of c.geometry.sections ?? []) sectionFeatures(c, s, out);
   }

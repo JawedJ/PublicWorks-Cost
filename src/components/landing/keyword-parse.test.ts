@@ -31,9 +31,19 @@ describe("keywordParse", () => {
       indoorPool: true,
       gymnasium: true,
       basement: true,
-      parkingStalls: 40,
     });
     expect(r[1]!.params).toEqual({ apparatusBays: 3 });
+  });
+
+  it("makes surface parking its own component, with stalls", () => {
+    const r = keywordParse(
+      "a library with parking for 40 cars, and a 2,000 m² car park",
+    );
+    expect(r.map((x) => [x.type, x.params])).toEqual([
+      ["building", {}],
+      ["parking", { stalls: 40 }],
+      ["parking", { areaM2: 2000 }],
+    ]);
   });
 
   it("doesn't give a building the amenities of a later park", () => {

@@ -24,6 +24,7 @@ const T = typologies as unknown as {
   building: Record<string, BuildingTypology>;
   park: Record<string, AreaTypology>;
   road: Record<string, { lengthM: number }>;
+  parking: Record<string, AreaTypology>;
   custom: Record<string, AreaTypology>;
 };
 
@@ -78,9 +79,14 @@ export function sizeFor(
   }
   if (c.type === "structure") return { kind: "point" };
   const t =
-    (c.type === "park" ? T.park[c.subtype] : T.custom[c.subtype]) ??
-    DEFAULT_AREA;
-  const area = hint(c, "areaM2") ?? t.areaM2;
+    (c.type === "park"
+      ? T.park[c.subtype]
+      : c.type === "parking"
+        ? T.parking[c.subtype]
+        : T.custom[c.subtype]) ?? DEFAULT_AREA;
+  // Parking: 30 m² per stall (including aisles) when a stall count is given.
+  const stalls = c.type === "parking" ? hint(c, "stalls") : undefined;
+  const area = hint(c, "areaM2") ?? (stalls ? stalls * 30 : t.areaM2);
   const depthM = Math.sqrt(area / t.aspect);
   return { kind: "rect", widthM: depthM * t.aspect, depthM, setbackM: 5 };
 }
@@ -290,7 +296,10 @@ export function generateLayout(
 
   for (const c of components.filter(
     (x) =>
-      x.type === "building" || x.type === "structure" || x.type === "custom",
+      x.type === "building" ||
+      x.type === "structure" ||
+      x.type === "parking" ||
+      x.type === "custom",
   )) {
     const size = sizeFor(c);
     const w = size.kind === "rect" ? size.widthM : 10;
