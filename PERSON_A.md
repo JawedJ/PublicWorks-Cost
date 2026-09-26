@@ -6,17 +6,22 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Current state
 
-- **Current task:** P0.1
-- **Status:** not started   <!-- not started | in progress | blocked | at sync point -->
-- **Next action:** Scaffold the Next.js project.
-- **Blockers / needs from B:** none
-- **Last updated:** —
+- **Current task:** P0.8
+- **Status:** blocked   <!-- not started | in progress | blocked | at sync point -->
+- **Next action:** Human imports the repo into Vercel (DEPLOY.md), then record the URL below. Meanwhile start P1.1 (MapLibre workspace).
+- **Blockers / needs from B:** P0.8 needs the human's Vercel account. P1.3 needs B's schemas (`Component`, `ComponentGeometry`) on `main`.
+- **Last updated:** 2026-09-26
 
 ## Handoff notes
 
 > Where an unfinished task stopped, gotchas, things to verify. Replace each session.
 
-- _(none yet)_
+- Next.js is **16.3** (Middleware is now `src/proxy.ts`; read `node_modules/next/dist/docs/` before using Next APIs, see `AGENTS.md`).
+- `pnpm typecheck` runs `next typegen` first (needed for the global `PageProps` / `LayoutProps` types).
+- i18n lives in `src/lib/i18n/` (`routing.ts`, `navigation.ts`, `request.ts`); use `Link`/`useRouter` from `@/lib/i18n/navigation`, not `next/link`. Messages are typed from `messages/en.json` (`src/global.d.ts`).
+- Dark mode follows the OS; a `.dark` / `.light` class on `<html>` forces it. Map colours are tokens: `water`, `park`, `pavement`, `building`, `warning`, `sample`. Use the `figures` utility for tabular numerals.
+- Store: `designSlice` currently has selection, view mode, colour by cost, units. Components + undo/redo come in P1.3 once B's schemas exist.
+- `TopBar` accepts `children` for workspace actions (New project, Download project file) to be added later.
 
 ## Requests to Person B
 
@@ -35,7 +40,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 - [x] P0.4 Zustand, zod, Vitest, ESLint, Prettier; scripts `typecheck`, `lint`, `test`
 - [x] P0.6 App layout shell (top bar, language toggle, sample-data badge)
 - [x] P0.7 `.env.example`, `README.md`, `DEPLOY.md`
-- [ ] P0.8 Deploy placeholder to Vercel (record URL below)
+- [!] P0.8 Deploy placeholder to Vercel (record URL below)
 - [x] A.1 Create `src/lib/store/store.ts` with `designSlice.ts` (selection contract included) and an empty `projectSlice.ts` stub for B; merge to `main` **as early as possible** so B can build on it
 
 ### S1 → S2 — Map & drawing · Core
@@ -96,7 +101,11 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 
 | Feature | Key files | Notes |
 | --- | --- | --- |
-| _(fill in as you build)_ | | |
+| i18n routing | `src/lib/i18n/*`, `src/proxy.ts`, `messages/*.json` | locales `en`, `fr`; `intlLocale` maps to `en-CA`/`fr-CA` |
+| Layout shell | `src/app/[locale]/layout.tsx`, `src/components/layout/*` | top bar, sample-data badge, language toggle |
+| Design tokens | `src/app/globals.css` | light/dark, map colours, `figures` utility |
+| Store | `src/lib/store/store.ts`, `designSlice.ts` (+ test), `projectSlice.ts` (B's stub) | selection contract |
+| Pages | `src/app/[locale]/page.tsx` (landing placeholder), `src/app/[locale]/workspace/page.tsx` (placeholder) | |
 
 ## Environment
 
