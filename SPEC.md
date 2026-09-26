@@ -534,7 +534,7 @@ Right panel tabs:
 - **Scenarios**: list, create/duplicate, what-if sliders, side-by-side comparison.
 - **Export**: PDF council report, Excel workbook, download project file.
 
-A persistent top bar: project name (editable), "Download project file" button, "New project", language toggle, sample-data badge.
+A persistent top bar: project name (editable), "Download project file" button, "New project", language toggle.
 
 ---
 
@@ -792,3 +792,4 @@ One line per change to this spec: `YYYY-MM-DD P#.#: what changed and why`. Newes
 - 2026-09-26 UI [A, per the human]: Buildings no longer price parking at all (`parkingStalls` param and drawn parking areas on a building removed); parking is only the parking-lot component. The sample library's lot is now its own component. Map hover tooltips use the theme's popover colours (were white with light text).
 - 2026-09-26 UI [A, per the human]: The estimate panel always opens on the Estimate tab; placing the last planned component no longer switches to Questions (supersedes the P7.4 entry).
 - 2026-09-26 UI [A, per the human]: While drawing, the shape's area (length for lines) follows the cursor; the map hover tooltip adds the component's size (buildings: footprint and floor area). Parking lots are rectangles only: drawn with the rectangle tool, moved whole (no vertex edits), and scaled proportionally once rotated so they stay rectangles.
+- 2026-09-26 UI [A, per the human]: Sample-data badge removed from the top bar. Sample-data notices stay on the /data page and in exports.

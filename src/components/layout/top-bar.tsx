@@ -1,9 +1,8 @@
 import { useTranslations } from "next-intl";
 import { Link } from "@/lib/i18n/navigation";
-import { SampleDataBadge } from "./sample-data-badge";
 import { WorkspaceActions } from "./workspace-actions";
 
-/** Persistent top bar: app name, sample-data badge, project file actions in the workspace. */
+/** Persistent top bar: app name, project file actions in the workspace. */
 export function TopBar({ children }: { children?: React.ReactNode }) {
   const t = useTranslations("common");
 
@@ -19,7 +18,6 @@ export function TopBar({ children }: { children?: React.ReactNode }) {
         />
         {t("appName")}
       </Link>
-      <SampleDataBadge />
       <div className="flex flex-1 items-center justify-end gap-2">
         {children}
         <WorkspaceActions />
