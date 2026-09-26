@@ -218,11 +218,6 @@
       "tallBuilding": "“{name}” has {storeys} storeys, unusual for this type.",
       "longRoad": "“{name}” is {km} km long. Is that intended?",
       "tinyPark": "“{name}” is only {m2} m²."
-    },
-    "palette": {
-      "title": "Add to the map",
-      "hint": "Choose an item, then click on the map to start drawing it.",
-      "pick": "Draw a {type}: choose, then click on the map"
     }
   },
   "estimate": {

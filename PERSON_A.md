@@ -10,7 +10,7 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 - **Status:** at sync point   <!-- not started | in progress | blocked | at sync point -->
 - **Next action:** Zoning map layer when B's Z.1 schema is on main. Mount B's Questions panel in the flow when P7.5 lands. Then polish after feature freeze: P10.2 accessibility, P10.3 mobile, P10.5 performance, P10.8 final deploy. Zoning map layer when B's Z.1 schema is on main.
 - **Blockers / needs from B:** see Requests below.
-- **Last updated:** 2026-09-26 (P7.4 creation flow with Gemini parse + review; P50/share in the component list; project file buttons in the top bar; language toggle removed; park features from the prompt placed with the park; workspace height fix; UI tweaks: resizable side panels, narrower estimate panel, Add-to-the-map palette, building names in 3D; P1.7–P1.18, P3.2–P3.4, P3.9a, P4.3, P4.5, P5.1, P6.1–P6.2, P9.1–P9.5 merged to `main`)
+- **Last updated:** 2026-09-26 (P7.4 creation flow with Gemini parse + review; P50/share in the component list; project file buttons in the top bar; language toggle removed; park features from the prompt placed with the park; workspace height fix; UI tweaks: resizable side panels, narrower estimate panel, building names in 3D; P1.7–P1.18, P3.2–P3.4, P3.9a, P4.3, P4.5, P5.1, P6.1–P6.2, P9.1–P9.5 merged to `main`)
 
 ## Handoff notes
 
@@ -24,7 +24,7 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 - i18n: `request.ts` merges `fr.json` over `en.json`, so missing French keys fall back to English (the fr build broke on B's `projectFile` keys).
 - Top bar: `WorkspaceActions` shows B's Open/Download project file buttons on `/workspace`; the EN/FR toggle is gone (English only). Landing has Open project file next to the sample.
 - Gemini: `GEMINI_API_KEY` + `AI_PROVIDER=gemini` set in `.env.local` and in Vercel (by the human, 2026-09-26). The key was pasted in chat: rotate it after the hackathon.
-- UI tweaks (per the human): estimate panel defaults to 28% width; list and estimate panel resize by dragging their inner edges (`src/components/layout/resize-handle.tsx`, widths in `workspace-shell.tsx` state, not saved). "Add to the map" palette under the component list (`component-palette.tsx`): click a subtype to start drawing it (same as the Add menu), next map click begins the shape; the draw toolbar shows a palette-started target. 3D site shows building names as HTML tags projected each frame (`site-scene.tsx`).
+- UI tweaks (per the human): estimate panel defaults to 28% width; list and estimate panel resize by dragging their inner edges (`src/components/layout/resize-handle.tsx`, widths in `workspace-shell.tsx` state, not saved). (The "Add to the map" palette was removed again at the human's request; the Add menu above the map is the only way to add.) 3D site shows building names as HTML tags projected each frame (`site-scene.tsx`).
 - Section split (P1.8) not implemented; merge unions all sections (tallest wins).
 - Plan rendering (P1.11–13): `src/lib/render/plan.ts` builds one GeoJSON with a `layer` property; `plan-layers.tsx` styles it under the interactive `pw-*` layers, which are transparent (`plan` property) unless Colour by cost is on. Metric widths use a zoom-exponential expression (must be the outermost expression; no `max()` around it).
 - `useEstimate()` is called twice (EstimatePanel and ComponentLayers) → two engine runs per change. Fine for now; B could move the estimate into the store.
@@ -143,7 +143,6 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 | Design tokens | `src/app/globals.css` | light/dark, map colours, `figures` utility |
 | Store | `src/lib/store/store.ts`, `designSlice.ts` (+ test), `projectSlice.ts` (B's stub) | selection contract; components, project area, undo/redo, duplicate |
 | Geometry transforms | `src/lib/geo/transform.ts`, `bounds.ts` (+ test) | `translateFeature` in metres (duplicate offset); `featureBounds` / `componentBounds` for zoom to |
-| Add palette | `src/components/map/component-palette.tsx` | click a subtype to start drawing it |
 | Component list | `src/components/map/component-list.tsx` | select, zoom to, rename, duplicate, hide/show, delete, undo/redo buttons + shortcuts, sample loader |
 | Component map layers | `src/components/map/component-layers.tsx`, `src/lib/render/colors.ts` | placeholder styling until P1.11; click to select; selection highlight |
 | Drawing | `src/lib/geo/drawing.ts` (targets, tools per type, geometry from a shape), `src/components/map/draw-controller.tsx` (Terra Draw), `draw-toolbar.tsx`; store `drawing`, `startDrawing`, `cancelDrawing`, `finishDrawing` | Terra Draw 1.35 + MapLibre adapter; self-crossing polygons rejected |

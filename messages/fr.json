@@ -217,11 +217,6 @@
       "tallBuilding": "« {name} » compte {storeys} étages, inhabituel pour ce type.",
       "longRoad": "« {name} » mesure {km} km. Est-ce voulu?",
       "tinyPark": "« {name} » ne fait que {m2} m²."
-    },
-    "palette": {
-      "title": "Ajouter à la carte",
-      "hint": "Choisissez un élément, puis cliquez sur la carte pour commencer à le dessiner.",
-      "pick": "Dessiner : {type}. Choisissez, puis cliquez sur la carte"
     }
   },
   "estimate": {

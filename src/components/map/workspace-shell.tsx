@@ -9,7 +9,6 @@ import { SiteScene } from "@/components/visuals/site-scene";
 import { ComponentLayers } from "./component-layers";
 import { ComponentInspector } from "./component-inspector";
 import { ComponentList } from "./component-list";
-import { ComponentPalette } from "./component-palette";
 import { DrawController } from "./draw-controller";
 import { DrawToolbar } from "./draw-toolbar";
 import { EditToolbar } from "./edit-toolbar";
@@ -98,7 +97,6 @@ export function WorkspaceShell() {
             {/* On desktop the whole panel scrolls as one column when it doesn't fit. */}
             <div className="flex flex-col lg:h-full lg:overflow-y-auto">
               <ComponentList />
-              <ComponentPalette />
               <ComponentInspector />
             </div>
           </aside>
