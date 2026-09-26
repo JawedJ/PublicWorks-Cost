@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { resolveParams } from "../params";
+
 import { buildingTemplate } from "../templates/building";
 import { byId, makeCtx, missingPrices } from "./helpers";
 
@@ -66,5 +68,22 @@ describe("building template (SPEC 6.3)", () => {
     expect(codes).toEqual(
       expect.arrayContaining(["program_driven_cost", "building_does_not_fit"]),
     );
+  });
+});
+
+describe("building amenity defaults", () => {
+  it("are off for every subtype unless specified", () => {
+    const amenities = [
+      "gymnasium",
+      "indoorPool",
+      "iceRink",
+      "commercialKitchen",
+      "sallyPort",
+      "councilChamber",
+    ];
+    for (const { id } of buildingTemplate.subtypes) {
+      const p = resolveParams(buildingTemplate, id, {});
+      for (const a of amenities) expect(p[a], `${id}.${a}`).toBe(false);
+    }
   });
 });

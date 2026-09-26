@@ -809,13 +809,15 @@ export const buildingTemplate: ComponentTemplate = {
     },
   ],
   paramCatalog,
+  // Amenities (gym, pool, rink, kitchen, sally port, council chamber) are off unless the
+  // user or prompt turns them on; only typical sizes (parking, bays) default per subtype.
   subtypeDefaults: {
-    community_centre: { gymnasium: true, parkingStalls: 60 },
+    community_centre: { parkingStalls: 60 },
     library: { parkingStalls: 30 },
     fire_station: { apparatusBays: 3, parkingStalls: 20 },
-    police_station: { sallyPort: true, parkingStalls: 40 },
-    municipal_office: { councilChamber: true, parkingStalls: 60 },
-    school: { gymnasium: true, parkingStalls: 50 },
+    police_station: { parkingStalls: 40 },
+    municipal_office: { parkingStalls: 60 },
+    school: { parkingStalls: 50 },
     hospital: { parkingStalls: 300, siteServicing: "complex" },
     house: { ffeIncluded: false, siteServicing: "simple" },
     townhouse_block: { ffeIncluded: false },
@@ -823,7 +825,7 @@ export const buildingTemplate: ComponentTemplate = {
     mid_rise_apartment: { ffeIncluded: false },
     ice_arena: { parkingStalls: 150 },
     aquatic_centre: { parkingStalls: 120 },
-    secondary_school: { gymnasium: true, parkingStalls: 120 },
+    secondary_school: { parkingStalls: 120 },
     performing_arts: { parkingStalls: 150 },
     museum_gallery: { parkingStalls: 40 },
     medical_clinic: { parkingStalls: 50 },
