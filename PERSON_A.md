@@ -67,7 +67,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 - [x] P1.8 Multi-section buildings: split/merge sections, per-section storeys and roof
 - [x] P1.14 `measure.ts` (Turf) + unit tests; per-component, per-section, and project totals — **merge early, B's engine depends on it**
 - [x] P1.15 Live measurement labels + measurements panel + metric/imperial toggle
-- [ ] P1.6 Add menu incl. "Custom…" elements and custom park features (name + shape; the pricing choice form is B's `CustomPricingForm` — mount a placeholder until it exists)
+- [x] P1.6 Add menu incl. "Custom…" elements and custom park features (name + shape; the pricing choice form is B's `CustomPricingForm` — mount a placeholder until it exists)
 
 ### S2 → S3 — Rendering, layout & estimate on the map · Core
 - [ ] P1.13 Roads along any path at true width with markings, curbs, sidewalks, cycle lanes

@@ -90,7 +90,11 @@
         "area": "Zone du projet",
         "planned": "Dessiner « {name} »",
         "section": "Ajouter une section à « {name} »",
-        "hole": "Percer un vide dans « {name} »"
+        "hole": "Percer un vide dans « {name} »",
+        "feature": "{feature} dans « {name} »",
+        "featureMenu": "Ajouter un élément à « {name} »",
+        "customFeature": "Élément personnalisé dans « {name} »…",
+        "custom": "Élément personnalisé…"
       },
       "tools": {
         "polygon": "Polygone",
@@ -115,7 +119,15 @@
       },
       "notices": {
         "holeOutside": "Ce vide n’a pas été ajouté : dessinez-le à l’intérieur de la forme, sans toucher les autres vides."
-      }
+      },
+      "types": {
+        "road": "Route",
+        "park": "Parc",
+        "building": "Bâtiment",
+        "structure": "Ouvrage"
+      },
+      "customNamePlaceholder": "Nommez-le, p. ex. planchodrome",
+      "customNameLabel": "Nom de l’élément personnalisé"
     },
     "edit": {
       "label": "Modifier « {name} »",

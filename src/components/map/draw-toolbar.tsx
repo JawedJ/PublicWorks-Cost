@@ -6,22 +6,25 @@ import {
   Lasso,
   MapPin,
   Pentagon,
+  Plus,
   Signature,
   Spline,
   Square,
   X,
   type LucideIcon,
 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -31,7 +34,9 @@ import {
   type DrawTool,
 } from "@/lib/geo/drawing";
 import { holeTarget } from "@/lib/geo/edit";
-import type { ComponentType } from "@/lib/schemas";
+import parkFeatures from "@/data/park-features.json";
+import { templates } from "@/engine/templates";
+import type { Component, ComponentType } from "@/lib/schemas";
 import { useStore } from "@/lib/store/store";
 import { cn } from "@/lib/utils";
 
@@ -56,20 +61,42 @@ const toolIcon: Record<DrawTool, LucideIcon | typeof EllipseIcon> = {
   point: MapPin,
 };
 
-/** Component types that can be drawn from the toolbar, with their starting subtype. The Add menu (P1.6) offers every subtype. */
-const NEW_TYPES: { type: ComponentType; subtype: string }[] = [
-  { type: "road", subtype: "road_reconstruction" },
-  { type: "park", subtype: "neighbourhood_park" },
-  { type: "building", subtype: "community_centre" },
-  { type: "structure", subtype: "culvert_replacement" },
+/** Types offered in the Add menu, in order. */
+const TYPES: Exclude<ComponentType, "custom">[] = [
+  "road",
+  "park",
+  "building",
+  "structure",
 ];
 
-type TargetKey = ComponentType | "area" | "planned" | "section" | "hole";
+/** What the Add menu has chosen; turned into a `DrawTarget` against the current selection. */
+type Choice =
+  | { kind: "new"; type: ComponentType; subtype: string }
+  | { kind: "custom" }
+  | { kind: "feature"; featureKind: string }
+  | { kind: "customFeature" }
+  | { kind: "area" }
+  | { kind: "planned" }
+  | { kind: "section" }
+  | { kind: "hole" };
 
-/** Pick what to draw, then a shape tool. Shows a hint and Cancel while drawing. */
+const DEFAULT_CHOICE: Choice = {
+  kind: "new",
+  type: "road",
+  subtype: "road_reconstruction",
+};
+
+/** Components that can hold placed features (a park's playground, a building's parking). */
+function featureHost(c: Component | undefined) {
+  return c?.geometry && (c.type === "park" || c.type === "building")
+    ? c
+    : undefined;
+}
+
+/** The Add menu: pick what to draw (any type and subtype, park features, custom elements), then a shape tool. */
 export function DrawToolbar() {
   const t = useTranslations("design.draw");
-  const tTypes = useTranslations("design.components.types");
+  const locale = useLocale() as "en" | "fr";
   const components = useStore((s) => s.components);
   const drawing = useStore((s) => s.drawing);
   const drawNotice = useStore((s) => s.drawNotice);
@@ -78,54 +105,120 @@ export function DrawToolbar() {
   const selected = useStore((s) =>
     s.components.find((c) => c.id === s.selectedComponentId),
   );
-  const [key, setKey] = useState<TargetKey>("road");
+  const [choice, setChoice] = useState<Choice>(DEFAULT_CHOICE);
+  const [customName, setCustomName] = useState("");
 
   const planned = selected?.status === "planned" ? selected : undefined;
   const building =
     selected?.type === "building" && selected.geometry ? selected : undefined;
   const holed = selected && holeTarget(selected) ? selected : undefined;
+  const host = featureHost(selected);
 
-  function targetFor(k: TargetKey): DrawTarget | null {
-    if (k === "area") return { kind: "area" };
-    if (k === "planned")
-      return planned ? { kind: "planned", componentId: planned.id } : null;
-    if (k === "section")
-      return building ? { kind: "section", componentId: building.id } : null;
-    if (k === "hole")
-      return holed
-        ? {
-            kind: "hole",
-            componentId: holed.id,
-            sectionId: selectedSectionId,
-            featureId: selectedFeatureId,
-          }
-        : null;
-    const def = NEW_TYPES.find((x) => x.type === k);
-    if (!def) return null;
-    const n = components.filter((c) => c.type === k).length + 1;
-    return {
-      kind: "new",
-      type: def.type,
-      subtype: def.subtype,
-      name: t("newName", { type: tTypes(def.type), n }),
-    };
+  const subtypeLabel = (type: ComponentType, subtype: string) =>
+    templates[type].subtypes.find((x) => x.id === subtype)?.label[locale] ??
+    subtype;
+  const featureLabel = (kind: string) =>
+    (
+      parkFeatures.features as Record<
+        string,
+        { label: { en: string; fr: string } }
+      >
+    )[kind]?.label[locale] ?? kind;
+  const name = customName.trim();
+
+  function targetFor(c: Choice): DrawTarget | null {
+    switch (c.kind) {
+      case "area":
+        return { kind: "area" };
+      case "planned":
+        return planned ? { kind: "planned", componentId: planned.id } : null;
+      case "section":
+        return building ? { kind: "section", componentId: building.id } : null;
+      case "hole":
+        return holed
+          ? {
+              kind: "hole",
+              componentId: holed.id,
+              sectionId: selectedSectionId,
+              featureId: selectedFeatureId,
+            }
+          : null;
+      case "feature":
+        return host
+          ? {
+              kind: "feature",
+              componentId: host.id,
+              featureKind: c.featureKind,
+            }
+          : null;
+      case "customFeature":
+        return host && name
+          ? {
+              kind: "feature",
+              componentId: host.id,
+              featureKind: "custom",
+              customLabel: name,
+            }
+          : null;
+      case "custom":
+        return name
+          ? { kind: "new", type: "custom", subtype: "custom", name }
+          : null;
+      case "new": {
+        const n = components.filter((x) => x.subtype === c.subtype).length + 1;
+        return {
+          kind: "new",
+          type: c.type,
+          subtype: c.subtype,
+          name: t("newName", { type: subtypeLabel(c.type, c.subtype), n }),
+        };
+      }
+    }
   }
 
-  // A contextual choice falls back to a road when its component is no longer selected.
-  const activeKey: TargetKey = targetFor(key) ? key : "road";
-  const target = targetFor(activeKey)!;
-  const tools = toolsForTarget(target, components);
+  const needsName = choice.kind === "custom" || choice.kind === "customFeature";
+  // A contextual choice falls back to a new road when its component is no longer selected.
+  const contextual = !needsName && !targetFor(choice);
+  const active = contextual ? DEFAULT_CHOICE : choice;
+  const target = targetFor(active);
+  const tools = toolsForTarget(
+    target ?? { kind: "new", type: "custom", subtype: "custom", name: "" },
+    components,
+  );
 
-  const label = (k: TargetKey) =>
-    k === "area"
-      ? t("targets.area")
-      : k === "planned"
-        ? t("targets.planned", { name: planned?.name ?? "" })
-        : k === "section"
-          ? t("targets.section", { name: building?.name ?? "" })
-          : k === "hole"
-            ? t("targets.hole", { name: holed?.name ?? "" })
-            : t("targets.new", { type: tTypes(k) });
+  function label(c: Choice): string {
+    switch (c.kind) {
+      case "area":
+        return t("targets.area");
+      case "planned":
+        return t("targets.planned", { name: planned?.name ?? "" });
+      case "section":
+        return t("targets.section", { name: building?.name ?? "" });
+      case "hole":
+        return t("targets.hole", { name: holed?.name ?? "" });
+      case "feature":
+        return t("targets.feature", {
+          feature: featureLabel(c.featureKind),
+          name: host?.name ?? "",
+        });
+      case "customFeature":
+        return t("targets.customFeature", { name: host?.name ?? "" });
+      case "custom":
+        return t("targets.custom");
+      case "new":
+        return t("targets.new", { type: subtypeLabel(c.type, c.subtype) });
+    }
+  }
+
+  /** Choosing an item starts drawing it with its first tool (unless it needs a name first). */
+  function choose(c: Choice) {
+    setChoice(c);
+    if (c.kind === "custom" || c.kind === "customFeature") return;
+    const tgt = targetFor(c);
+    if (!tgt) return;
+    const first = toolsForTarget(tgt, components)[0];
+    if (first) useStore.getState().startDrawing({ target: tgt, tool: first });
+  }
 
   return (
     <div className="w-fit max-w-[calc(100vw-6rem)] rounded-md border bg-card p-1.5 text-sm shadow-sm">
@@ -136,63 +229,119 @@ export function DrawToolbar() {
               variant="outline"
               size="sm"
               disabled={Boolean(drawing)}
-              aria-label={t("whatLabel", { current: label(activeKey) })}
+              aria-label={t("whatLabel", { current: label(active) })}
               className="max-w-56"
             >
-              <span className="truncate">{label(activeKey)}</span>
+              <Plus />
+              <span className="truncate">{label(active)}</span>
               <ChevronDown />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start">
-            <DropdownMenuRadioGroup
-              value={activeKey}
-              onValueChange={(v) => setKey(v as TargetKey)}
-            >
-              <DropdownMenuLabel>{t("newComponent")}</DropdownMenuLabel>
-              {NEW_TYPES.map(({ type }) => (
-                <DropdownMenuRadioItem key={type} value={type}>
-                  {label(type)}
-                </DropdownMenuRadioItem>
-              ))}
+          <DropdownMenuContent
+            align="start"
+            className="max-h-[70vh] overflow-y-auto"
+          >
+            <DropdownMenuLabel>{t("newComponent")}</DropdownMenuLabel>
+            {TYPES.map((type) => (
+              <DropdownMenuSub key={type}>
+                <DropdownMenuSubTrigger>
+                  {t(`types.${type}`)}
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent>
+                  {templates[type].subtypes.map((st) => (
+                    <DropdownMenuItem
+                      key={st.id}
+                      onSelect={() =>
+                        choose({ kind: "new", type, subtype: st.id })
+                      }
+                    >
+                      {st.label[locale]}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
+            ))}
+            <DropdownMenuItem onSelect={() => choose({ kind: "custom" })}>
+              {t("targets.custom")}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onSelect={() => choose({ kind: "area" })}>
+              {t("targets.area")}
+            </DropdownMenuItem>
+            {(planned || building || holed || host) && (
               <DropdownMenuSeparator />
-              <DropdownMenuRadioItem value="area">
-                {label("area")}
-              </DropdownMenuRadioItem>
-              {(planned || building || holed) && <DropdownMenuSeparator />}
-              {planned && (
-                <DropdownMenuRadioItem value="planned">
-                  {label("planned")}
-                </DropdownMenuRadioItem>
-              )}
-              {building && (
-                <DropdownMenuRadioItem value="section">
-                  {label("section")}
-                </DropdownMenuRadioItem>
-              )}
-              {holed && (
-                <DropdownMenuRadioItem value="hole">
-                  {label("hole")}
-                </DropdownMenuRadioItem>
-              )}
-            </DropdownMenuRadioGroup>
+            )}
+            {planned && (
+              <DropdownMenuItem onSelect={() => choose({ kind: "planned" })}>
+                {label({ kind: "planned" })}
+              </DropdownMenuItem>
+            )}
+            {host && (
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>
+                  {t("targets.featureMenu", { name: host.name })}
+                </DropdownMenuSubTrigger>
+                <DropdownMenuSubContent className="max-h-[60vh] overflow-y-auto">
+                  {Object.keys(parkFeatures.features).map((kind) => (
+                    <DropdownMenuItem
+                      key={kind}
+                      onSelect={() =>
+                        choose({ kind: "feature", featureKind: kind })
+                      }
+                    >
+                      {featureLabel(kind)}
+                    </DropdownMenuItem>
+                  ))}
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onSelect={() => choose({ kind: "customFeature" })}
+                  >
+                    {t("targets.customFeature", { name: host.name })}
+                  </DropdownMenuItem>
+                </DropdownMenuSubContent>
+              </DropdownMenuSub>
+            )}
+            {building && (
+              <DropdownMenuItem onSelect={() => choose({ kind: "section" })}>
+                {label({ kind: "section" })}
+              </DropdownMenuItem>
+            )}
+            {holed && (
+              <DropdownMenuItem onSelect={() => choose({ kind: "hole" })}>
+                {label({ kind: "hole" })}
+              </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
+        {needsName && !drawing && (
+          <input
+            autoFocus
+            value={customName}
+            onChange={(e) => setCustomName(e.target.value)}
+            placeholder={t("customNamePlaceholder")}
+            aria-label={t("customNameLabel")}
+            className="h-7 w-44 rounded-md border bg-background px-2 text-sm"
+          />
+        )}
         <div role="group" aria-label={t("toolsLabel")} className="flex">
           {ALL_TOOLS.filter((tool) => tools.includes(tool)).map((tool) => {
             const Icon = toolIcon[tool];
-            const active = drawing?.tool === tool;
+            const on = drawing?.tool === tool;
             return (
               <Button
                 key={tool}
-                variant={active ? "default" : "ghost"}
+                variant={on ? "default" : "ghost"}
                 size="icon-sm"
-                aria-pressed={active}
+                aria-pressed={on}
                 aria-label={t(`tools.${tool}`)}
                 title={t(`tools.${tool}`)}
+                disabled={!target}
                 onClick={() => {
                   const store = useStore.getState();
-                  if (active) store.cancelDrawing();
-                  else store.startDrawing({ target, tool });
+                  if (on) store.cancelDrawing();
+                  else if (drawing)
+                    store.startDrawing({ target: drawing.target, tool });
+                  else if (target) store.startDrawing({ target, tool });
                 }}
               >
                 <Icon />

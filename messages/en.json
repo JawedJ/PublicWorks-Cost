@@ -90,7 +90,11 @@
         "area": "Project area",
         "planned": "Draw “{name}”",
         "section": "Add a section to “{name}”",
-        "hole": "Cut a hole in “{name}”"
+        "hole": "Cut a hole in “{name}”",
+        "feature": "{feature} in “{name}”",
+        "featureMenu": "Add a feature to “{name}”",
+        "customFeature": "Custom feature in “{name}”…",
+        "custom": "Custom element…"
       },
       "tools": {
         "polygon": "Polygon",
@@ -115,7 +119,15 @@
       },
       "notices": {
         "holeOutside": "That hole wasn’t added: draw it inside the shape, clear of other holes."
-      }
+      },
+      "types": {
+        "road": "Road",
+        "park": "Park",
+        "building": "Building",
+        "structure": "Structure"
+      },
+      "customNamePlaceholder": "Name it, e.g. skate park",
+      "customNameLabel": "Name of the custom element"
     },
     "edit": {
       "label": "Edit “{name}”",
