@@ -1,3 +1,4 @@
+import { useSyncExternalStore } from "react";
 import { fallbackQuestions } from "@/lib/questions/rank";
 import {
   type Estimate,
@@ -70,6 +71,78 @@ export async function requestQuestions(
       notice: "ai_unavailable",
     };
   }
+}
+
+// Questions are generated in the background once per project and set of
+// components (not every time the tab opens) and kept here, outside the panel,
+// so they survive switching tabs. Session memory only, like the project.
+
+type QuestionsState = {
+  /** Project id + estimated component ids the questions were asked for. */
+  key: string | null;
+  res: QuestionsResponse | null;
+  loading: boolean;
+  skipped: ReadonlySet<string>;
+};
+
+let state: QuestionsState = {
+  key: null,
+  res: null,
+  loading: false,
+  skipped: new Set(),
+};
+const listeners = new Set<() => void>();
+
+function setState(patch: Partial<QuestionsState>) {
+  state = { ...state, ...patch };
+  for (const l of listeners) l();
+}
+
+function subscribe(listener: () => void) {
+  listeners.add(listener);
+  return () => listeners.delete(listener);
+}
+
+/** The current questions, loading flag and skipped ids. */
+export function useQuestions(): QuestionsState {
+  return useSyncExternalStore(
+    subscribe,
+    () => state,
+    () => state,
+  );
+}
+
+function keyFor(estimate: Estimate): string {
+  const ids = estimate.components.map((c) => c.componentId).sort();
+  return `${useStore.getState().project.id}:${ids.join(",")}`;
+}
+
+/**
+ * Asks for questions unless they were already asked for this project and
+ * components (or `refresh`). Earlier questions stay visible while it runs.
+ */
+export async function loadQuestions(
+  estimate: Estimate,
+  { refresh = false }: { refresh?: boolean } = {},
+): Promise<void> {
+  const key = keyFor(estimate);
+  if (!refresh && key === state.key) return;
+  const newProject = state.key?.split(":")[0] !== key.split(":")[0];
+  setState({
+    key,
+    loading: true,
+    ...(newProject && { res: null }),
+    ...((refresh || newProject) && { skipped: new Set<string>() }),
+  });
+  const res = await requestQuestions(buildQuestionsRequest(estimate));
+  // A newer request (other project or components) replaced this one.
+  if (state.key !== key) return;
+  setState({ res, loading: false });
+}
+
+/** Hides a question for this session (until "Ask again"). */
+export function skipQuestion(id: string) {
+  setState({ skipped: new Set([...state.skipped, id]) });
 }
 
 /** Saves an answer on one or more components as the user's value (one undo step). */

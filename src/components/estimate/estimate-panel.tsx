@@ -2,7 +2,7 @@
 
 import { Calculator } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { scopeEstimate } from "@/lib/estimate/scope";
 import { useEstimate } from "@/lib/estimate/useEstimate";
 import { useZoningLookup } from "@/lib/zoning/useZoningLookup";
@@ -27,6 +27,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EstimateTab } from "./estimate-tab";
 import { QuestionsPanel } from "@/components/questions/questions-panel";
+import { loadQuestions } from "@/components/questions/questions";
 import { InputsTab } from "./inputs-tab";
 import { LineItemsTab } from "./line-items-tab";
 
@@ -47,6 +48,16 @@ export function EstimatePanel() {
   const components = useStore((s) => s.components);
   const region = useStore((s) => s.project.region);
   const [tab, setTab] = useState<Tab>("estimate");
+  // Questions are generated in the background, once per project and set of
+  // components (waiting for drawing to settle), not each time the tab opens.
+  const componentKey = estimate?.components.map((c) => c.componentId).join();
+  useEffect(() => {
+    if (!estimate?.components.length) return;
+    const timer = setTimeout(() => void loadQuestions(estimate), 2000);
+    return () => clearTimeout(timer);
+    // Only the component set matters; answers and edits don't re-ask.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [componentKey]);
   // Creation flow (P7.4, A): once the last planned component is placed, go to Questions.
   const planned = components.filter((c) => c.status === "planned").length;
   const [prevPlanned, setPrevPlanned] = useState(planned);

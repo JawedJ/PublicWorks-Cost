@@ -2,7 +2,7 @@
 
 import { CircleCheck, RefreshCw, Sparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,12 +40,12 @@ import type {
   ParamDefinition,
   ParamValue,
   Question,
-  QuestionsResponse,
 } from "@/lib/schemas";
 import {
   answerQuestion,
-  buildQuestionsRequest,
-  requestQuestions,
+  loadQuestions,
+  skipQuestion,
+  useQuestions,
 } from "./questions";
 
 // P7.5 (SPEC 9.2): smart follow-up questions across the whole project, biggest
@@ -61,28 +61,8 @@ type Props = {
 
 export function QuestionsPanel({ estimate, components, componentId }: Props) {
   const t = useTranslations("questions");
-  const [res, setRes] = useState<QuestionsResponse | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [skipped, setSkipped] = useState<Set<string>>(new Set());
-
-  async function ask() {
-    setLoading(true);
-    setSkipped(new Set());
-    setRes(await requestQuestions(buildQuestionsRequest(estimate)));
-    setLoading(false);
-  }
-
-  // Ask once when the tab opens (server-side cached); "Ask again" refreshes.
-  useEffect(() => {
-    let live = true;
-    void requestQuestions(buildQuestionsRequest(estimate)).then((r) => {
-      if (live) setRes(r);
-    });
-    return () => {
-      live = false;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // Generated in the background (EstimatePanel starts it); kept across tab switches.
+  const { res, loading, skipped } = useQuestions();
 
   const byId = new Map(components.map((c) => [c.id, c]));
   const open = (res?.questions ?? []).filter((q) => {
@@ -106,7 +86,7 @@ export function QuestionsPanel({ estimate, components, componentId }: Props) {
           variant="outline"
           size="sm"
           disabled={loading}
-          onClick={() => void ask()}
+          onClick={() => void loadQuestions(estimate, { refresh: true })}
         >
           {loading ? (
             <Spinner data-icon="inline-start" />
@@ -156,7 +136,7 @@ export function QuestionsPanel({ estimate, components, componentId }: Props) {
                 others={q.alsoApplies
                   .map((id) => byId.get(id))
                   .filter((x): x is Component => !!x)}
-                onSkip={() => setSkipped(new Set([...skipped, q.id]))}
+                onSkip={() => skipQuestion(q.id)}
               />
             </li>
           );
