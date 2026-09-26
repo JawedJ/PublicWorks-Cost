@@ -1,21 +1,28 @@
 import {
   BuildingCostsFileSchema,
+  OverrunReferenceFileSchema,
   ParkFeaturesFileSchema,
+  RefDataSchema,
+  RegionalFactorsFileSchema,
   StructuresFileSchema,
   UnitPricesFileSchema,
   type BuildingCostsFile,
+  type OverrunReferenceFile,
   type ParkFeaturesFile,
+  type RefData,
+  type RegionalFactorsFile,
   type StructuresFile,
   type UnitPricesFile,
 } from "@/lib/schemas";
 import buildingCostsJson from "./building-costs.json";
+import overrunReferenceJson from "./overrun-reference.json";
 import parkFeaturesJson from "./park-features.json";
+import regionalFactorsJson from "./regional-factors.json";
 import structuresJson from "./structures.json";
 import unitPricesJson from "./unit-prices.json";
 
 // Seed data (SPEC 8), parsed once so consumers get typed, validated objects.
 // Sample data only: every file has `meta.sample: true`. Treat as read-only.
-// P2.4 assembles these into the engine's `RefData`.
 
 export const unitPrices: UnitPricesFile =
   UnitPricesFileSchema.parse(unitPricesJson);
@@ -25,3 +32,17 @@ export const parkFeatures: ParkFeaturesFile =
   ParkFeaturesFileSchema.parse(parkFeaturesJson);
 export const structures: StructuresFile =
   StructuresFileSchema.parse(structuresJson);
+export const regionalFactors: RegionalFactorsFile =
+  RegionalFactorsFileSchema.parse(regionalFactorsJson);
+export const overrunReference: OverrunReferenceFile =
+  OverrunReferenceFileSchema.parse(overrunReferenceJson);
+
+/** Everything `computeEstimate` needs (TEAM.md 3.3). */
+export const refData: RefData = RefDataSchema.parse({
+  unitPrices,
+  buildingCosts,
+  parkFeatures,
+  structures,
+  regionalFactors,
+  overrunReference,
+});

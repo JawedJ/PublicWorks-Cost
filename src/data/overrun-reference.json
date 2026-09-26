@@ -1,0 +1,325 @@
+{
+  "meta": {
+    "sample": true,
+    "priceYear": 2025,
+    "notes": "Illustrative sample overrun reference classes (not real data), shaped after published research patterns: routine road work overruns about half the time by single digits; buildings and complex projects more; Class D estimates much more than Class A. The overrun factor (actual / estimate) is lognormal(mu, sigma), with mu chosen so P(factor > 1) equals probabilityOfOverrun."
+  },
+  "entries": [
+    {
+      "componentType": "road",
+      "estimateClass": "D",
+      "probabilityOfOverrun": 0.6,
+      "mu": 0.0507,
+      "sigma": 0.2,
+      "note": {
+        "en": "Routine road and utility work: about half of projects exceed budget, usually by single digits; early estimates overrun more often.",
+        "fr": "Travaux routiers et de services courants : environ la moitié des projets dépassent le budget, généralement de moins de 10 %; les estimations préliminaires dépassent plus souvent."
+      }
+    },
+    {
+      "componentType": "road",
+      "estimateClass": "C",
+      "probabilityOfOverrun": 0.52,
+      "mu": 0.007,
+      "sigma": 0.14,
+      "note": {
+        "en": "Routine road and utility work: about half of projects exceed budget, usually by single digits; early estimates overrun more often.",
+        "fr": "Travaux routiers et de services courants : environ la moitié des projets dépassent le budget, généralement de moins de 10 %; les estimations préliminaires dépassent plus souvent."
+      }
+    },
+    {
+      "componentType": "road",
+      "estimateClass": "B",
+      "probabilityOfOverrun": 0.45,
+      "mu": -0.0126,
+      "sigma": 0.1,
+      "note": {
+        "en": "Routine road and utility work: about half of projects exceed budget, usually by single digits; early estimates overrun more often.",
+        "fr": "Travaux routiers et de services courants : environ la moitié des projets dépassent le budget, généralement de moins de 10 %; les estimations préliminaires dépassent plus souvent."
+      }
+    },
+    {
+      "componentType": "road",
+      "estimateClass": "A",
+      "probabilityOfOverrun": 0.4,
+      "mu": -0.0177,
+      "sigma": 0.07,
+      "note": {
+        "en": "Routine road and utility work: about half of projects exceed budget, usually by single digits; early estimates overrun more often.",
+        "fr": "Travaux routiers et de services courants : environ la moitié des projets dépassent le budget, généralement de moins de 10 %; les estimations préliminaires dépassent plus souvent."
+      }
+    },
+    {
+      "componentType": "park",
+      "estimateClass": "D",
+      "probabilityOfOverrun": 0.55,
+      "mu": 0.0226,
+      "sigma": 0.18,
+      "note": {
+        "en": "Parks: moderate overrun risk, driven mostly by grading, drainage, and feature scope changes.",
+        "fr": "Parcs : risque de dépassement modéré, surtout lié au nivellement, au drainage et aux changements de portée."
+      }
+    },
+    {
+      "componentType": "park",
+      "estimateClass": "C",
+      "probabilityOfOverrun": 0.48,
+      "mu": -0.0065,
+      "sigma": 0.13,
+      "note": {
+        "en": "Parks: moderate overrun risk, driven mostly by grading, drainage, and feature scope changes.",
+        "fr": "Parcs : risque de dépassement modéré, surtout lié au nivellement, au drainage et aux changements de portée."
+      }
+    },
+    {
+      "componentType": "park",
+      "estimateClass": "B",
+      "probabilityOfOverrun": 0.42,
+      "mu": -0.0182,
+      "sigma": 0.09,
+      "note": {
+        "en": "Parks: moderate overrun risk, driven mostly by grading, drainage, and feature scope changes.",
+        "fr": "Parcs : risque de dépassement modéré, surtout lié au nivellement, au drainage et aux changements de portée."
+      }
+    },
+    {
+      "componentType": "park",
+      "estimateClass": "A",
+      "probabilityOfOverrun": 0.38,
+      "mu": -0.0214,
+      "sigma": 0.07,
+      "note": {
+        "en": "Parks: moderate overrun risk, driven mostly by grading, drainage, and feature scope changes.",
+        "fr": "Parcs : risque de dépassement modéré, surtout lié au nivellement, au drainage et aux changements de portée."
+      }
+    },
+    {
+      "componentType": "building",
+      "estimateClass": "D",
+      "probabilityOfOverrun": 0.72,
+      "mu": 0.1632,
+      "sigma": 0.28,
+      "note": {
+        "en": "Public buildings: most projects exceed early estimates, and overruns are larger than for civil work.",
+        "fr": "Bâtiments publics : la plupart des projets dépassent les estimations préliminaires, et les dépassements sont plus importants que pour les travaux civils."
+      }
+    },
+    {
+      "componentType": "building",
+      "estimateClass": "C",
+      "probabilityOfOverrun": 0.62,
+      "mu": 0.0611,
+      "sigma": 0.2,
+      "note": {
+        "en": "Public buildings: most projects exceed early estimates, and overruns are larger than for civil work.",
+        "fr": "Bâtiments publics : la plupart des projets dépassent les estimations préliminaires, et les dépassements sont plus importants que pour les travaux civils."
+      }
+    },
+    {
+      "componentType": "building",
+      "estimateClass": "B",
+      "probabilityOfOverrun": 0.52,
+      "mu": 0.007,
+      "sigma": 0.14,
+      "note": {
+        "en": "Public buildings: most projects exceed early estimates, and overruns are larger than for civil work.",
+        "fr": "Bâtiments publics : la plupart des projets dépassent les estimations préliminaires, et les dépassements sont plus importants que pour les travaux civils."
+      }
+    },
+    {
+      "componentType": "building",
+      "estimateClass": "A",
+      "probabilityOfOverrun": 0.45,
+      "mu": -0.0126,
+      "sigma": 0.1,
+      "note": {
+        "en": "Public buildings: most projects exceed early estimates, and overruns are larger than for civil work.",
+        "fr": "Bâtiments publics : la plupart des projets dépassent les estimations préliminaires, et les dépassements sont plus importants que pour les travaux civils."
+      }
+    },
+    {
+      "componentType": "building",
+      "estimateClass": "D",
+      "probabilityOfOverrun": 0.78,
+      "mu": 0.2703,
+      "sigma": 0.35,
+      "note": {
+        "en": "Schools: cost depends mostly on the internal program, so early estimates are especially uncertain.",
+        "fr": "Écoles : le coût dépend surtout du programme intérieur, donc les estimations préliminaires sont particulièrement incertaines."
+      },
+      "subtype": "school"
+    },
+    {
+      "componentType": "building",
+      "estimateClass": "C",
+      "probabilityOfOverrun": 0.68,
+      "mu": 0.1216,
+      "sigma": 0.26,
+      "note": {
+        "en": "Schools: cost depends mostly on the internal program, so early estimates are especially uncertain.",
+        "fr": "Écoles : le coût dépend surtout du programme intérieur, donc les estimations préliminaires sont particulièrement incertaines."
+      },
+      "subtype": "school"
+    },
+    {
+      "componentType": "building",
+      "estimateClass": "B",
+      "probabilityOfOverrun": 0.58,
+      "mu": 0.0363,
+      "sigma": 0.18,
+      "note": {
+        "en": "Schools: cost depends mostly on the internal program, so early estimates are especially uncertain.",
+        "fr": "Écoles : le coût dépend surtout du programme intérieur, donc les estimations préliminaires sont particulièrement incertaines."
+      },
+      "subtype": "school"
+    },
+    {
+      "componentType": "building",
+      "estimateClass": "A",
+      "probabilityOfOverrun": 0.5,
+      "mu": 0.0,
+      "sigma": 0.13,
+      "note": {
+        "en": "Schools: cost depends mostly on the internal program, so early estimates are especially uncertain.",
+        "fr": "Écoles : le coût dépend surtout du programme intérieur, donc les estimations préliminaires sont particulièrement incertaines."
+      },
+      "subtype": "school"
+    },
+    {
+      "componentType": "building",
+      "estimateClass": "D",
+      "probabilityOfOverrun": 0.78,
+      "mu": 0.2703,
+      "sigma": 0.35,
+      "note": {
+        "en": "Hospitals: complex programs and equipment make early estimates especially uncertain.",
+        "fr": "Hôpitaux : la complexité du programme et de l'équipement rend les estimations préliminaires particulièrement incertaines."
+      },
+      "subtype": "hospital"
+    },
+    {
+      "componentType": "building",
+      "estimateClass": "C",
+      "probabilityOfOverrun": 0.68,
+      "mu": 0.1216,
+      "sigma": 0.26,
+      "note": {
+        "en": "Hospitals: complex programs and equipment make early estimates especially uncertain.",
+        "fr": "Hôpitaux : la complexité du programme et de l'équipement rend les estimations préliminaires particulièrement incertaines."
+      },
+      "subtype": "hospital"
+    },
+    {
+      "componentType": "building",
+      "estimateClass": "B",
+      "probabilityOfOverrun": 0.58,
+      "mu": 0.0363,
+      "sigma": 0.18,
+      "note": {
+        "en": "Hospitals: complex programs and equipment make early estimates especially uncertain.",
+        "fr": "Hôpitaux : la complexité du programme et de l'équipement rend les estimations préliminaires particulièrement incertaines."
+      },
+      "subtype": "hospital"
+    },
+    {
+      "componentType": "building",
+      "estimateClass": "A",
+      "probabilityOfOverrun": 0.5,
+      "mu": 0.0,
+      "sigma": 0.13,
+      "note": {
+        "en": "Hospitals: complex programs and equipment make early estimates especially uncertain.",
+        "fr": "Hôpitaux : la complexité du programme et de l'équipement rend les estimations préliminaires particulièrement incertaines."
+      },
+      "subtype": "hospital"
+    },
+    {
+      "componentType": "structure",
+      "estimateClass": "D",
+      "probabilityOfOverrun": 0.65,
+      "mu": 0.1002,
+      "sigma": 0.26,
+      "note": {
+        "en": "Bridges, culverts, and pumping stations: site conditions (soils, water, utilities) drive frequent overruns.",
+        "fr": "Ponts, ponceaux et stations de pompage : les conditions du site (sols, eau, services) entraînent des dépassements fréquents."
+      }
+    },
+    {
+      "componentType": "structure",
+      "estimateClass": "C",
+      "probabilityOfOverrun": 0.57,
+      "mu": 0.0317,
+      "sigma": 0.18,
+      "note": {
+        "en": "Bridges, culverts, and pumping stations: site conditions (soils, water, utilities) drive frequent overruns.",
+        "fr": "Ponts, ponceaux et stations de pompage : les conditions du site (sols, eau, services) entraînent des dépassements fréquents."
+      }
+    },
+    {
+      "componentType": "structure",
+      "estimateClass": "B",
+      "probabilityOfOverrun": 0.48,
+      "mu": -0.0065,
+      "sigma": 0.13,
+      "note": {
+        "en": "Bridges, culverts, and pumping stations: site conditions (soils, water, utilities) drive frequent overruns.",
+        "fr": "Ponts, ponceaux et stations de pompage : les conditions du site (sols, eau, services) entraînent des dépassements fréquents."
+      }
+    },
+    {
+      "componentType": "structure",
+      "estimateClass": "A",
+      "probabilityOfOverrun": 0.42,
+      "mu": -0.0182,
+      "sigma": 0.09,
+      "note": {
+        "en": "Bridges, culverts, and pumping stations: site conditions (soils, water, utilities) drive frequent overruns.",
+        "fr": "Ponts, ponceaux et stations de pompage : les conditions du site (sols, eau, services) entraînent des dépassements fréquents."
+      }
+    },
+    {
+      "componentType": "custom",
+      "estimateClass": "D",
+      "probabilityOfOverrun": 0.7,
+      "mu": 0.1835,
+      "sigma": 0.35,
+      "note": {
+        "en": "Custom elements: no reference class, so a wide, cautious band is used.",
+        "fr": "Éléments personnalisés : aucune catégorie de référence, donc une fourchette large et prudente est utilisée."
+      }
+    },
+    {
+      "componentType": "custom",
+      "estimateClass": "C",
+      "probabilityOfOverrun": 0.62,
+      "mu": 0.0794,
+      "sigma": 0.26,
+      "note": {
+        "en": "Custom elements: no reference class, so a wide, cautious band is used.",
+        "fr": "Éléments personnalisés : aucune catégorie de référence, donc une fourchette large et prudente est utilisée."
+      }
+    },
+    {
+      "componentType": "custom",
+      "estimateClass": "B",
+      "probabilityOfOverrun": 0.55,
+      "mu": 0.0251,
+      "sigma": 0.2,
+      "note": {
+        "en": "Custom elements: no reference class, so a wide, cautious band is used.",
+        "fr": "Éléments personnalisés : aucune catégorie de référence, donc une fourchette large et prudente est utilisée."
+      }
+    },
+    {
+      "componentType": "custom",
+      "estimateClass": "A",
+      "probabilityOfOverrun": 0.5,
+      "mu": 0.0,
+      "sigma": 0.15,
+      "note": {
+        "en": "Custom elements: no reference class, so a wide, cautious band is used.",
+        "fr": "Éléments personnalisés : aucune catégorie de référence, donc une fourchette large et prudente est utilisée."
+      }
+    }
+  ]
+}

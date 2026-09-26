@@ -1,0 +1,229 @@
+{
+  "meta": {
+    "sample": true,
+    "priceYear": 2025,
+    "notes": "Illustrative sample location factors for Ontario, relative to the Ontario average (1.00). Not real cost data. referenceCma is the nearest census metropolitan area published in Statistics Canada table 18-10-0289-01, used for BCPI escalation; P2.5 maps it to the table's exact series name."
+  },
+  "regions": [
+    {
+      "key": "ontario_average",
+      "name": {
+        "en": "Ontario (average)",
+        "fr": "Ontario (moyenne)"
+      },
+      "factor": 1.0,
+      "referenceCma": "Toronto",
+      "remote": false
+    },
+    {
+      "key": "toronto",
+      "name": {
+        "en": "City of Toronto",
+        "fr": "Ville de Toronto"
+      },
+      "factor": 1.08,
+      "referenceCma": "Toronto",
+      "remote": false
+    },
+    {
+      "key": "peel_york_halton",
+      "name": {
+        "en": "Peel, York and Halton",
+        "fr": "Peel, York et Halton"
+      },
+      "factor": 1.05,
+      "referenceCma": "Toronto",
+      "remote": false
+    },
+    {
+      "key": "durham",
+      "name": {
+        "en": "Durham Region",
+        "fr": "Région de Durham"
+      },
+      "factor": 1.03,
+      "referenceCma": "Toronto",
+      "remote": false
+    },
+    {
+      "key": "ottawa",
+      "name": {
+        "en": "City of Ottawa",
+        "fr": "Ville d'Ottawa"
+      },
+      "factor": 1.02,
+      "referenceCma": "Ottawa",
+      "remote": false
+    },
+    {
+      "key": "hamilton",
+      "name": {
+        "en": "City of Hamilton",
+        "fr": "Ville de Hamilton"
+      },
+      "factor": 1.0,
+      "referenceCma": "Toronto",
+      "remote": false
+    },
+    {
+      "key": "waterloo_region",
+      "name": {
+        "en": "Waterloo Region",
+        "fr": "Région de Waterloo"
+      },
+      "factor": 0.99,
+      "referenceCma": "Toronto",
+      "remote": false
+    },
+    {
+      "key": "simcoe_barrie",
+      "name": {
+        "en": "Simcoe County and Barrie",
+        "fr": "Comté de Simcoe et Barrie"
+      },
+      "factor": 1.0,
+      "referenceCma": "Toronto",
+      "remote": false
+    },
+    {
+      "key": "niagara",
+      "name": {
+        "en": "Niagara Region",
+        "fr": "Région de Niagara"
+      },
+      "factor": 0.97,
+      "referenceCma": "Toronto",
+      "remote": false
+    },
+    {
+      "key": "london_middlesex",
+      "name": {
+        "en": "London and Middlesex",
+        "fr": "London et Middlesex"
+      },
+      "factor": 0.96,
+      "referenceCma": "Toronto",
+      "remote": false
+    },
+    {
+      "key": "windsor_essex",
+      "name": {
+        "en": "Windsor and Essex",
+        "fr": "Windsor et Essex"
+      },
+      "factor": 0.97,
+      "referenceCma": "Toronto",
+      "remote": false
+    },
+    {
+      "key": "kingston",
+      "name": {
+        "en": "Kingston",
+        "fr": "Kingston"
+      },
+      "factor": 0.98,
+      "referenceCma": "Ottawa",
+      "remote": false
+    },
+    {
+      "key": "eastern_ontario_rural",
+      "name": {
+        "en": "Eastern Ontario (rural)",
+        "fr": "Est de l'Ontario (rural)"
+      },
+      "factor": 0.97,
+      "referenceCma": "Ottawa",
+      "remote": false
+    },
+    {
+      "key": "southwestern_ontario_rural",
+      "name": {
+        "en": "Southwestern Ontario (rural)",
+        "fr": "Sud-ouest de l'Ontario (rural)"
+      },
+      "factor": 0.95,
+      "referenceCma": "Toronto",
+      "remote": false
+    },
+    {
+      "key": "greater_sudbury",
+      "name": {
+        "en": "Greater Sudbury",
+        "fr": "Grand Sudbury"
+      },
+      "factor": 1.08,
+      "referenceCma": "Toronto",
+      "remote": false
+    },
+    {
+      "key": "north_bay",
+      "name": {
+        "en": "North Bay",
+        "fr": "North Bay"
+      },
+      "factor": 1.07,
+      "referenceCma": "Toronto",
+      "remote": false
+    },
+    {
+      "key": "sault_ste_marie",
+      "name": {
+        "en": "Sault Ste. Marie",
+        "fr": "Sault Ste. Marie"
+      },
+      "factor": 1.1,
+      "referenceCma": "Toronto",
+      "remote": false
+    },
+    {
+      "key": "timmins",
+      "name": {
+        "en": "Timmins",
+        "fr": "Timmins"
+      },
+      "factor": 1.15,
+      "referenceCma": "Toronto",
+      "remote": false
+    },
+    {
+      "key": "thunder_bay",
+      "name": {
+        "en": "Thunder Bay",
+        "fr": "Thunder Bay"
+      },
+      "factor": 1.12,
+      "referenceCma": "Toronto",
+      "remote": false
+    },
+    {
+      "key": "kenora",
+      "name": {
+        "en": "Kenora",
+        "fr": "Kenora"
+      },
+      "factor": 1.2,
+      "referenceCma": "Toronto",
+      "remote": false
+    },
+    {
+      "key": "far_north_road_access",
+      "name": {
+        "en": "Far North (winter or seasonal road access)",
+        "fr": "Grand Nord (accès par route d'hiver ou saisonnière)"
+      },
+      "factor": 1.65,
+      "referenceCma": "Toronto",
+      "remote": true
+    },
+    {
+      "key": "far_north_fly_in",
+      "name": {
+        "en": "Far North (fly-in community)",
+        "fr": "Grand Nord (collectivité accessible par avion)"
+      },
+      "factor": 2.2,
+      "referenceCma": "Toronto",
+      "remote": true
+    }
+  ]
+}
