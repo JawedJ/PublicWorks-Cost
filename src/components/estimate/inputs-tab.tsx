@@ -19,11 +19,11 @@ import { NumberInput } from "./number-input";
 // Highest cost impact first.
 
 const BADGE: Record<ParamSource, string> = {
-  default: "bg-muted text-muted-foreground",
+  default: "bg-secondary text-muted-foreground",
   user: "bg-primary/15 text-primary",
-  ai_prompt: "bg-sky-500/15 text-sky-700 dark:text-sky-300",
-  ai_document: "bg-violet-500/15 text-violet-700 dark:text-violet-300",
-  site_context: "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300",
+  ai_prompt: "bg-chart-1/15 text-chart-1",
+  ai_document: "bg-chart-2/25 text-foreground",
+  site_context: "bg-chart-4/15 text-chart-4",
 };
 
 type Props = {
@@ -71,7 +71,7 @@ function ComponentInputs({
     c.geometry?.features.filter((f) => f.kind === "custom") ?? [];
 
   return (
-    <section className="flex flex-col gap-2">
+    <section className="flex flex-col gap-2 rounded-2xl border bg-card p-4">
       <header>
         {showName && <h3 className="font-medium">{c.name}</h3>}
         {subtype && <p className="text-xs text-muted-foreground">{subtype}</p>}

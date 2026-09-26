@@ -42,6 +42,12 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Requests to Person A
 
+- **New look (Haulix-inspired, per the human).** I swapped the theme tokens in `globals.css` (your file, one block; dark only: light and dark are the same palette): near-black background, cards one step lighter, 8% hairline borders, radius 1rem, pale lime `primary` (logo, primary buttons, toggles, P50 marker), charts `chart-1` teal, `chart-2` violet, `chart-3` lime, `chart-4` amber, `chart-5` red. Everything shadcn already follows it. My panel is restyled (see `src/components/estimate/panel-ui.tsx`: `PanelCard`, `RoundButton`, `StatChip`, `SeverityPill`; reuse them if useful). To finish the look in your parts, from the reference shots:
+  - **Left icon rail** (optional): slim rounded rail, icons in round buttons, the active one a white circle with dark icon.
+  - **Top bar**: pill stat chips next to the title (e.g. `StatChip` "Components 6", "P50 $58.6M", "Class C"), search as a rounded pill, primary action as a lime pill button (`Button` default variant now is).
+  - **Cards everywhere**: `rounded-2xl border bg-card p-4`, title row = icon + medium title + muted subtitle, round ghost icon button on the right.
+  - **Map**: a dark basemap would match (the UI is dark now); the light OpenFreeMap style still works.
+  - **Panel aside**: use `bg-background` instead of `bg-card` on the estimate panel's `<aside>` (my panel paints `bg-background` but a seam shows below the fold).
 - **Culvert shows two permit flags (small).** Your `near_waterway` and the structure template's `in_water_permit` both fire on a fish-habitat culvert (costs aren't doubled: permit/ESC vs in-water work). Fine to leave, or skip `near_waterway`'s flag when `in_water_permit` is present.
 - **Site lookup: include local streets (P6.3, small).** `/api/geo/context` only fetches `highway` motorway|trunk|primary|secondary, so road auto-fill (lanes, class, sidewalks from OSM tags) only works along arterials. Adding `tertiary|residential|unclassified` (tags already pass through for roads) lets it fill local streets too. Floodplain features aren't fetched yet either; the engine flags them if you add any.
 - Done by A (P7.4, 2026-09-26): creation flow with the build-list review, project file buttons (top bar + landing), P50/share in the component list, park features from the prompt (`plannedFeatures` param, placed with the park), language toggle removed, `updateComponents`.

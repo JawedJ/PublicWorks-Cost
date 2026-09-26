@@ -61,7 +61,10 @@ export function LineItemsTab({ estimate, scoped }: Props) {
           (l) => l.isQuantityOverridden || l.isPriceOverridden,
         );
         return (
-          <section key={id ?? "project"} className="flex flex-col gap-2">
+          <section
+            key={id ?? "project"}
+            className="flex flex-col gap-2 rounded-2xl border bg-card p-4"
+          >
             <header className="flex items-center justify-between gap-2">
               <h3 className="font-medium">
                 {id ? names.get(id) : t("projectLevel")}

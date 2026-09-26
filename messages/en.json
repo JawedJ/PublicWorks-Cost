@@ -262,7 +262,12 @@
       "lineItems": "Line items",
       "inputs": "Inputs",
       "questions": "Questions"
-    }
+    },
+    "classChip": "Class",
+    "contingencyChip": "Contingency",
+    "overrunChip": "Overrun risk",
+    "shareChip": "Share",
+    "p50Note": "P50: as likely to come in under as over"
   },
   "visuals": {
     "crossSection": {

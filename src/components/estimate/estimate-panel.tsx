@@ -6,6 +6,7 @@ import { scopeEstimate } from "@/lib/estimate/scope";
 import { useEstimate } from "@/lib/estimate/useEstimate";
 import { useZoningLookup } from "@/lib/zoning/useZoningLookup";
 import { useStore } from "@/lib/store/store";
+import { cn } from "@/lib/utils";
 import { EstimateTab } from "./estimate-tab";
 import { QuestionsPanel } from "@/components/questions/questions-panel";
 import { InputsTab } from "./inputs-tab";
@@ -39,7 +40,10 @@ export function EstimatePanel() {
 
   if (!estimate || estimate.components.length === 0) {
     return (
-      <section className="p-4 text-sm text-muted-foreground" aria-live="polite">
+      <section
+        className="min-h-full bg-background p-4 text-sm text-muted-foreground"
+        aria-live="polite"
+      >
         {computing ? t("computing") : t("empty")}
       </section>
     );
@@ -47,11 +51,14 @@ export function EstimatePanel() {
   const scoped = scopeEstimate(estimate, selectedId);
 
   return (
-    <section className="flex flex-col gap-4 p-4" aria-busy={computing}>
-      <label className="flex flex-col gap-1 text-sm">
-        <span className="text-muted-foreground">{t("scope")}</span>
+    <section
+      className="flex min-h-full flex-col gap-4 bg-background p-4 *:shrink-0"
+      aria-busy={computing}
+    >
+      <label className="flex items-center gap-2 text-sm">
+        <span className="shrink-0 text-muted-foreground">{t("scope")}</span>
         <select
-          className="rounded-md border bg-background px-2 py-1.5"
+          className="h-9 w-full min-w-0 rounded-full border bg-card px-3 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           value={scoped.component?.componentId ?? ""}
           onChange={(e) => selectComponent(e.target.value || null)}
         >
@@ -66,7 +73,7 @@ export function EstimatePanel() {
       <div
         role="tablist"
         aria-label={t("tabs.label")}
-        className="flex gap-1 border-b"
+        className="flex gap-1 overflow-x-auto rounded-full border bg-card p-1"
       >
         {TABS.map((id) => (
           <button
@@ -76,11 +83,12 @@ export function EstimatePanel() {
             id={`tab-${id}`}
             aria-selected={tab === id}
             aria-controls={`panel-${id}`}
-            className={`-mb-px border-b-2 px-3 py-1.5 text-sm ${
+            className={cn(
+              "flex-1 rounded-full px-3 py-1.5 text-sm whitespace-nowrap transition-colors",
               tab === id
-                ? "border-primary font-medium"
-                : "border-transparent text-muted-foreground hover:text-foreground"
-            }`}
+                ? "bg-foreground font-medium text-background"
+                : "text-muted-foreground hover:bg-secondary hover:text-foreground",
+            )}
             onClick={() => setTab(id)}
           >
             {t(`tabs.${id}`)}

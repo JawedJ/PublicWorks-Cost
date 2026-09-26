@@ -1,8 +1,11 @@
 "use client";
 
+import { ChartArea, ChartColumn, Layers, Ruler } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { Estimate, LineItem } from "@/lib/schemas";
 import { useStore } from "@/lib/store/store";
+import { cn } from "@/lib/utils";
+import { PanelCard } from "./panel-ui";
 
 // P3.8: estimate visuals, drawn with plain divs (no chart library).
 // Per-component breakdown, cost distribution, category breakdown and
@@ -22,19 +25,15 @@ const money = new Intl.NumberFormat("en-CA", {
 
 /** Component colours, in estimate order. */
 export const PALETTE = [
-  "bg-sky-500",
-  "bg-emerald-500",
-  "bg-amber-500",
-  "bg-violet-500",
-  "bg-rose-500",
-  "bg-teal-500",
-  "bg-orange-500",
-  "bg-indigo-500",
+  "bg-chart-1",
+  "bg-chart-2",
+  "bg-chart-3",
+  "bg-chart-4",
+  "bg-chart-5",
+  "bg-chart-1/55",
+  "bg-chart-2/55",
+  "bg-chart-4/55",
 ];
-
-function Heading({ children }: { children: React.ReactNode }) {
-  return <h3 className="mb-2 text-sm font-medium">{children}</h3>;
-}
 
 /** Stacked bar of component P50 shares, plus a clickable table. */
 export function ComponentBreakdown({ estimate }: { estimate: Estimate }) {
@@ -43,12 +42,11 @@ export function ComponentBreakdown({ estimate }: { estimate: Estimate }) {
   const selectComponent = useStore((s) => s.selectComponent);
   const comps = estimate.components;
   return (
-    <div>
-      <Heading>{t("byComponent")}</Heading>
+    <PanelCard icon={Layers} title={t("byComponent")}>
       <div
         role="img"
         aria-label={t("byComponentLabel")}
-        className="flex h-4 overflow-hidden rounded-full"
+        className="flex h-3 gap-0.5 overflow-hidden rounded-full"
       >
         {comps.map((c, i) => (
           <span
@@ -59,18 +57,21 @@ export function ComponentBreakdown({ estimate }: { estimate: Estimate }) {
           />
         ))}
       </div>
-      <ul className="mt-2 flex flex-col divide-y text-sm">
+      <ul className="flex flex-col text-sm">
         {comps.map((c, i) => (
           <li key={c.componentId}>
             <button
               type="button"
-              className="flex w-full items-center justify-between gap-2 py-1.5 text-left hover:bg-muted/50"
+              className="flex w-full items-center justify-between gap-2 rounded-lg px-1 py-2 text-left hover:bg-secondary"
               onClick={() => selectComponent(c.componentId)}
             >
               <span className="flex items-center gap-2">
                 <span
                   aria-hidden
-                  className={`size-2.5 shrink-0 rounded-sm ${PALETTE[i % PALETTE.length]}`}
+                  className={cn(
+                    "size-2.5 shrink-0 rounded-full",
+                    PALETTE[i % PALETTE.length],
+                  )}
                 />
                 {c.name}
               </span>
@@ -86,7 +87,7 @@ export function ComponentBreakdown({ estimate }: { estimate: Estimate }) {
           {tEst("undrawn", { count: estimate.undrawnComponents })}
         </p>
       )}
-    </div>
+    </PanelCard>
   );
 }
 
@@ -110,8 +111,7 @@ export function DistributionChart({
     { id: "P90", v: d.p90 },
   ];
   return (
-    <div>
-      <Heading>{t("distribution")}</Heading>
+    <PanelCard icon={ChartArea} title={t("distribution")}>
       <div
         role="img"
         aria-label={t("distributionLabel", {
@@ -124,18 +124,22 @@ export function DistributionChart({
         {bins.map((b) => (
           <span
             key={b.bin}
-            className={`flex-1 rounded-t-sm ${
+            className={cn(
+              "flex-1 rounded-t-sm",
               b.bin + width < d.p10 || b.bin > d.p90
-                ? "bg-muted-foreground/25"
-                : "bg-primary/50"
-            }`}
+                ? "bg-chart-2/30"
+                : "bg-chart-2",
+            )}
             style={{ height: `${(b.count / max) * 100}%` }}
           />
         ))}
         {marks.map((m) => (
           <span
             key={m.id}
-            className={`absolute inset-y-0 w-px ${m.id === "P50" ? "bg-primary" : "bg-foreground/40"}`}
+            className={cn(
+              "absolute inset-y-0 w-px",
+              m.id === "P50" ? "w-0.5 bg-primary" : "bg-foreground/40",
+            )}
             style={{ left: `${at(m.v)}%` }}
           />
         ))}
@@ -152,7 +156,7 @@ export function DistributionChart({
         ))}
       </div>
       <p className="text-xs text-muted-foreground">{t("distributionNote")}</p>
-    </div>
+    </PanelCard>
   );
 }
 
@@ -168,8 +172,7 @@ export function CategoryBreakdown({ lineItems }: { lineItems: LineItem[] }) {
   const max = rows[0]![1];
   const sum = rows.reduce((s, [, v]) => s + v, 0);
   return (
-    <div>
-      <Heading>{t("byCategory")}</Heading>
+    <PanelCard icon={ChartColumn} title={t("byCategory")}>
       <ul className="flex flex-col gap-1.5 text-sm">
         {rows.map(([cat, v]) => (
           <li
@@ -177,9 +180,9 @@ export function CategoryBreakdown({ lineItems }: { lineItems: LineItem[] }) {
             className="grid grid-cols-[7rem_1fr_auto] items-center gap-2"
           >
             <span className="truncate">{tCat(cat)}</span>
-            <span className="h-2 rounded-full bg-muted">
+            <span className="h-2 rounded-full bg-secondary">
               <span
-                className="block h-full rounded-full bg-primary/60"
+                className="block h-full rounded-full bg-chart-1"
                 style={{ width: `${(v / max) * 100}%` }}
               />
             </span>
@@ -192,7 +195,7 @@ export function CategoryBreakdown({ lineItems }: { lineItems: LineItem[] }) {
       <p className="mt-1 text-xs text-muted-foreground">
         {t("byCategoryNote")}
       </p>
-    </div>
+    </PanelCard>
   );
 }
 
@@ -211,18 +214,19 @@ export function PerUnitMetrics({
   const shown = rows.filter((r) => r.v !== undefined);
   if (shown.length === 0) return null;
   return (
-    <div>
-      <Heading>{t("perUnit")}</Heading>
+    <PanelCard icon={Ruler} title={t("perUnit")}>
       <dl className="grid grid-cols-3 gap-2 text-sm">
         {shown.map((r) => (
-          <div key={r.id} className="rounded-md bg-muted/50 p-2">
+          <div key={r.id} className="rounded-xl bg-secondary p-3">
             <dt className="text-xs text-muted-foreground">
               {t(`units.${r.id}`)}
             </dt>
-            <dd className="font-medium figures">{money.format(r.v!)}</dd>
+            <dd className="text-lg font-semibold figures">
+              {money.format(r.v!)}
+            </dd>
           </div>
         ))}
       </dl>
-    </div>
+    </PanelCard>
   );
 }

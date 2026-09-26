@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, ExternalLink } from "lucide-react";
+import { ChevronRight, ExternalLink, Landmark } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { altusBenchmarks, canadabuysAwards, statcanBcpi } from "@/data";
 import {
@@ -57,12 +57,13 @@ export function MarketEvidenceCard({
   const awards = comparableAwards(types);
 
   return (
-    <details className="group rounded-lg border text-sm">
-      <summary className="flex cursor-pointer list-none items-center gap-2 p-3 font-medium [&::-webkit-details-marker]:hidden">
-        <ChevronRight className="size-4 shrink-0 transition-transform group-open:rotate-90" />
+    <details className="group rounded-2xl border bg-card text-sm">
+      <summary className="flex cursor-pointer list-none items-center gap-2 p-4 font-medium [&::-webkit-details-marker]:hidden">
+        <Landmark aria-hidden className="size-4 opacity-80" />
         {t("title")}
+        <ChevronRight className="ml-auto size-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-90" />
       </summary>
-      <div className="flex flex-col gap-3 border-t p-3">
+      <div className="flex flex-col gap-3 px-4 pb-4">
         {bench.length > 0 && (
           <div className="flex flex-col gap-3">
             {bench.map((b) => {
@@ -173,10 +174,10 @@ function RangeBar({
   const span = hi - lo || 1;
   const at = Math.min(100, Math.max(0, 20 + ((value - lo) / span) * 60));
   return (
-    <div aria-hidden className="relative h-2 rounded-full bg-muted">
-      <span className="absolute inset-y-0 left-[20%] w-[60%] rounded-full bg-emerald-500/30" />
+    <div aria-hidden className="relative h-2 rounded-full bg-secondary">
+      <span className="absolute inset-y-0 left-[20%] w-[60%] rounded-full bg-chart-1/40" />
       <span
-        className="absolute -top-1 h-4 w-1 -translate-x-1/2 rounded-full bg-primary"
+        className="absolute -top-1 size-4 -translate-x-1/2 rounded-full border-[3px] border-card bg-primary"
         style={{ left: `${at}%` }}
       />
     </div>

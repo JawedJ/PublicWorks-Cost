@@ -65,7 +65,7 @@ export function CustomPricingForm({ name, pricing, onChange }: Props) {
   }
 
   return (
-    <div className="flex flex-col gap-2 rounded-md border p-2 text-sm">
+    <div className="flex flex-col gap-2 rounded-2xl border bg-card p-3 text-sm">
       <div role="radiogroup" aria-label={t("mode")} className="flex gap-3">
         {(["matched", "own_rate"] as const).map((m) => (
           <label key={m} className="flex items-center gap-1">
