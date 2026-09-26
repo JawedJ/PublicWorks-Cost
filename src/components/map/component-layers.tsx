@@ -18,6 +18,8 @@ import { HANDLE_CLASS } from "./transform-handles";
 // zoomed to. The procedural plan rendering (P1.11–P1.13) replaces the styling.
 
 const SOURCE = "pw-components";
+/** Storey height when a section doesn't set one, for 3D extrusion. */
+export const DEFAULT_FLOOR_HEIGHT_M = 4;
 const AREA_SOURCE = "pw-area";
 /** Layers that respond to clicks, top first. */
 const CLICKABLE = ["pw-point", "pw-line", "pw-section", "pw-fill"];
@@ -26,7 +28,12 @@ type Role = "primary" | "section" | "feature";
 
 function toFeatures(components: Component[]): GeoJSON.Feature[] {
   const out: GeoJSON.Feature[] = [];
-  const push = (f: AnyFeature, c: Component, role: Role) =>
+  const push = (
+    f: AnyFeature,
+    c: Component,
+    role: Role,
+    extra: Record<string, unknown> = {},
+  ) =>
     out.push({
       type: "Feature",
       geometry: f.geometry,
@@ -35,12 +42,17 @@ function toFeatures(components: Component[]): GeoJSON.Feature[] {
         type: c.type,
         role,
         color: componentColor[c.type],
+        ...extra,
       },
     });
   for (const c of components) {
     if (!c.visible || !c.geometry) continue;
     push(c.geometry.primary, c, "primary");
-    for (const s of c.geometry.sections ?? []) push(s.footprint, c, "section");
+    for (const s of c.geometry.sections ?? [])
+      push(s.footprint, c, "section", {
+        sectionId: s.id,
+        heightM: s.storeys * (s.floorHeightM ?? DEFAULT_FLOOR_HEIGHT_M),
+      });
     for (const f of c.geometry.features) push(f.geometry, c, "feature");
   }
   return out;
@@ -158,6 +170,28 @@ function addLayers(map: MapLibreMap) {
     },
     beforeId,
   );
+  // 3D map view: every building section extruded to its own height (P1.18).
+  const is3d = useStore.getState().viewMode === "map3d";
+  map.addLayer(
+    {
+      id: "pw-extrusion",
+      type: "fill-extrusion",
+      source: SOURCE,
+      filter: ["all", isPolygon, ["==", ["get", "role"], "section"]],
+      layout: { visibility: is3d ? "visible" : "none" },
+      paint: {
+        "fill-extrusion-color": [
+          "case",
+          ["==", ["get", "componentId"], selectedComponentId ?? ""],
+          mapColors.selected,
+          ["get", "color"],
+        ],
+        "fill-extrusion-height": ["get", "heightM"],
+        "fill-extrusion-opacity": 0.9,
+      },
+    },
+    beforeId,
+  );
   // Selection highlight, drawn on top.
   map.addLayer(
     {
@@ -197,6 +231,16 @@ export function ComponentLayers() {
   const components = useStore((s) => s.components);
   const areaBoundary = useStore((s) => s.areaBoundary);
   const selectedId = useStore((s) => s.selectedComponentId);
+  const viewMode = useStore((s) => s.viewMode);
+
+  useEffect(() => {
+    if (!map?.getLayer("pw-extrusion")) return;
+    map.setLayoutProperty(
+      "pw-extrusion",
+      "visibility",
+      viewMode === "map3d" ? "visible" : "none",
+    );
+  }, [map, viewMode]);
 
   // Add layers now and again after a basemap switch (setStyle drops them).
   useEffect(() => {
@@ -261,6 +305,12 @@ export function ComponentLayers() {
       "all",
       ["!=", ["geometry-type"], "Point"],
       selectedFilter(selectedId),
+    ]);
+    map.setPaintProperty("pw-extrusion", "fill-extrusion-color", [
+      "case",
+      ["==", ["get", "componentId"], selectedId ?? ""],
+      mapColors.selected,
+      ["get", "color"],
     ]);
     map.setFilter("pw-selected-point", [
       "all",

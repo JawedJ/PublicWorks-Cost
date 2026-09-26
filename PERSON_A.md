@@ -75,7 +75,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 - [ ] P1.12 Procedural park rendering: grass fill, seeded tree scatter, fitted field markings, parking stalls, custom feature hatch
 - [ ] P1.9 `src/data/typologies.json` (you own this one data file) + smart-start shape for a known type
 - [ ] P1.10 Generate starting layout (seeded): roads → buildings fronting roads → parks; spatial hints; no overlaps; Regenerate
-- [ ] P3.2 Workspace layout: view (left) + B's `<EstimatePanel/>` (right); view switcher 2D plan / 3D map
+- [x] P3.2 Workspace layout: view (left) + B's `<EstimatePanel/>` (right); view switcher 2D plan / 3D map
 - [ ] P3.3 Shared selection across views, component list, and line items; hover tooltips with cost (from `useEstimate`, fixture until live)
 - [ ] P3.4 "Colour by cost" toggle on map views
 - [ ] P3.9a Flag markers on the map (B owns the flags list)
@@ -84,7 +84,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 - [ ] P4.3 Unsaved-changes `beforeunload` warning; "New project" reset
 
 ### S3 → S4 — 3D and context
-- [ ] P1.18 3D map view: every building section extruded to its own height · Core
+- [x] P1.18 3D map view: every building section extruded to its own height · Core
 - [ ] P1.16 Advisory cross-component warnings (overlaps, outside park/area, unusual values) · Core
 - [ ] P1.17 `/api/geo/snap` (OSRM, cache, timeout) + "Snap to streets" with fallback · Stretch
 - [ ] P5.1 Map snapshot capture helper for B's PDF export · Core

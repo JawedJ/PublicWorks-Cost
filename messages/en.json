@@ -42,6 +42,11 @@
       "results": "Search results",
       "noResults": "No places found in Canada.",
       "error": "Search is unavailable right now. Pan the map instead."
+    },
+    "views": {
+      "label": "View",
+      "plan2d": "2D plan",
+      "map3d": "3D map"
     }
   },
   "design": {

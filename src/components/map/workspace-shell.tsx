@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { EstimatePanel } from "@/components/estimate/estimate-panel";
 import { ComponentLayers } from "./component-layers";
 import { ComponentList } from "./component-list";
 import { DrawController } from "./draw-controller";
@@ -10,6 +11,7 @@ import { Geocoder } from "./geocoder";
 import { MapProvider } from "./map-context";
 import { MapView } from "./map-view";
 import { TransformHandles } from "./transform-handles";
+import { ViewSwitcher } from "./view-switcher";
 
 /** Workspace layout: component list and view on the left (~60%), estimate panel on the right. */
 export function WorkspaceShell() {
@@ -32,6 +34,9 @@ export function WorkspaceShell() {
                 <Geocoder />
                 <DrawToolbar />
               </div>
+              <div className="absolute top-3 right-14 z-10">
+                <ViewSwitcher />
+              </div>
               <div className="absolute bottom-10 left-1/2 z-10 flex w-full -translate-x-1/2 justify-center">
                 <EditToolbar />
               </div>
@@ -46,11 +51,9 @@ export function WorkspaceShell() {
         </div>
         <aside
           aria-label={t("panelLabel")}
-          className="flex min-h-64 flex-col border-t bg-card p-4 lg:flex-[2] lg:border-t-0 lg:border-l"
+          className="flex min-h-64 flex-col overflow-y-auto border-t bg-card lg:flex-[2] lg:border-t-0 lg:border-l"
         >
-          <p className="text-sm text-muted-foreground">
-            {t("panelPlaceholder")}
-          </p>
+          <EstimatePanel />
         </aside>
       </div>
     </MapProvider>
