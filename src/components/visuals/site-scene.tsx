@@ -8,6 +8,7 @@ import { useEstimate } from "@/lib/estimate/useEstimate";
 import { componentBounds } from "@/lib/geo/bounds";
 import { localFrame } from "@/lib/geo/transform";
 import { intlLocale, type Locale } from "@/lib/i18n/routing";
+import { parkFeatures } from "@/data";
 import { componentColor } from "@/lib/render/colors";
 import { buildPlan, roadProfile } from "@/lib/render/plan";
 import type { Component, Position } from "@/lib/schemas";
@@ -17,9 +18,15 @@ import { useStore } from "@/lib/store/store";
 // in local metres. Buildings are extruded per section with floor lines, roads are
 // ribbons at true width with buried pipes shown under them, parks get lawns,
 // features and trees. Click to select (shared selection), hover for cost, and
-// Colour by cost recolours everything. Building names float above their roofs.
+// Colour by cost recolours everything. Component and feature names float above them.
+// Flat layers sit a few cm apart; the logarithmic depth buffer keeps them from
+// flickering (z-fighting) at a distance.
 
 const DEFAULT_FLOOR_M = 4;
+/** Feature tags (parking, playground…) hide beyond this camera distance. */
+const MINOR_LABEL_MAX_M = 900;
+/** Heights (m) of the flat layers, bottom to top. */
+const Y = { site: 0.05, lawn: 0.1, roadBase: 0.15, road: 0.2, feature: 0.3 };
 const COST_RAMP = ["#fde68a", "#fbbf24", "#f97316", "#dc2626", "#7f1d1d"];
 
 type XY = [number, number];
@@ -78,7 +85,29 @@ function ribbon(points: XY[], width: number, y: number): THREE.BufferGeometry {
 }
 
 /** A component name shown above a point in the scene. */
-type SceneLabel = { componentId: string; name: string; at: THREE.Vector3 };
+type SceneLabel = {
+  componentId: string;
+  name: string;
+  at: THREE.Vector3;
+  /** Features (parking, playground…) get a smaller tag. */
+  minor?: boolean;
+};
+
+/** Centre of a feature's bounding box. */
+function centreOfCoords(coords: Position[]): Position {
+  const xs = coords.map((p) => p[0]);
+  const ys = coords.map((p) => p[1]);
+  return [
+    (Math.min(...xs) + Math.max(...xs)) / 2,
+    (Math.min(...ys) + Math.max(...ys)) / 2,
+  ];
+}
+const coordsOf = (g: { type: string; coordinates: unknown }): Position[] =>
+  g.type === "Polygon"
+    ? (g.coordinates as Position[][])[0]!
+    : g.type === "LineString"
+      ? (g.coordinates as Position[])
+      : [g.coordinates as Position];
 
 function buildScene(
   components: Component[],
@@ -118,13 +147,51 @@ function buildScene(
         radius = Math.max(radius, Math.hypot(...toLocal(q)));
     }
 
+    // Name tags: above the tallest section for buildings, just above the ground otherwise.
+    {
+      const top = Math.max(
+        0,
+        ...(g.sections ?? []).map(
+          (s) => s.storeys * (s.floorHeightM ?? DEFAULT_FLOOR_M),
+        ),
+      );
+      const pc = g.primary.geometry;
+      const [x, y] = toLocal(
+        pc.type === "LineString"
+          ? (pc.coordinates[Math.floor(pc.coordinates.length / 2)] as Position)
+          : centreOfCoords(coordsOf(pc)),
+      );
+      labels.push({
+        componentId: c.id,
+        name: c.name,
+        // Buildings: just above the roof. Others: above the trees, clear of feature tags.
+        at: new THREE.Vector3(x, c.type === "building" ? top + 4 : 16, -y),
+      });
+      for (const f of g.features) {
+        const [fx, fy] = toLocal(centreOfCoords(coordsOf(f.geometry.geometry)));
+        labels.push({
+          componentId: c.id,
+          // Catalog labels carry the pricing unit, e.g. "Parking area (per m²)".
+          name:
+            f.customLabel ??
+            parkFeatures.features[f.kind]?.label.en.replace(
+              /\s*\(per [^)]*\)$/,
+              "",
+            ) ??
+            f.kind,
+          at: new THREE.Vector3(fx, 2, -fy),
+          minor: true,
+        });
+      }
+    }
+
     if (c.type === "road" && g.primary.geometry.type === "LineString") {
       const pts = g.primary.geometry.coordinates.map(toLocal);
       const r = roadProfile(c);
       group.add(
         tag(
           new THREE.Mesh(
-            ribbon(pts, r.totalM, 0.05),
+            ribbon(pts, r.totalM, Y.roadBase),
             new THREE.MeshLambertMaterial({ color: "#d4d4d8" }),
           ),
           c,
@@ -133,7 +200,7 @@ function buildScene(
       group.add(
         tag(
           new THREE.Mesh(
-            ribbon(pts, r.carriagewayM, 0.1),
+            ribbon(pts, r.carriagewayM, Y.road),
             new THREE.MeshLambertMaterial({ color }),
           ),
           c,
@@ -169,24 +236,6 @@ function buildScene(
       continue;
     }
 
-    if (c.type === "building") {
-      const b = componentBounds(c);
-      const top = Math.max(
-        0,
-        ...(g.sections ?? []).map(
-          (s) => s.storeys * (s.floorHeightM ?? DEFAULT_FLOOR_M),
-        ),
-      );
-      if (b) {
-        const [x, y] = toLocal([(b[0] + b[2]) / 2, (b[1] + b[3]) / 2]);
-        labels.push({
-          componentId: c.id,
-          name: c.name,
-          at: new THREE.Vector3(x, top + 3, -y),
-        });
-      }
-    }
-
     if (c.type === "building" && g.sections?.length) {
       if (g.primary.geometry.type === "Polygon") {
         group.add(
@@ -196,7 +245,7 @@ function buildScene(
                 new THREE.ShapeGeometry(
                   shapeOf(g.primary.geometry.coordinates, toLocal),
                 ),
-                0.02,
+                Y.site,
               ),
               new THREE.MeshLambertMaterial({ color: "#e7e0d6" }),
             ),
@@ -266,7 +315,7 @@ function buildScene(
               new THREE.ShapeGeometry(
                 shapeOf(g.primary.geometry.coordinates, toLocal),
               ),
-              0.03,
+              Y.lawn,
             ),
             new THREE.MeshLambertMaterial({
               color: color === componentColor[c.type] ? lawn : color,
@@ -292,6 +341,7 @@ function buildScene(
   const crown = new THREE.ConeGeometry(1, 1, 8);
   const trunkMat = new THREE.MeshLambertMaterial({ color: "#6b4f2a" });
   const crownMat = new THREE.MeshLambertMaterial({ color: "#3f7d3a" });
+  let featureIndex = 0;
   for (const f of buildPlan(components)) {
     const c = components.find((x) => x.id === f.properties.componentId);
     if (!c) continue;
@@ -320,7 +370,8 @@ function buildScene(
               new THREE.ShapeGeometry(
                 shapeOf(f.geometry.coordinates as Position[][], toLocal),
               ),
-              0.08,
+              // Overlapping features each get their own height.
+              Y.feature + 0.02 * (featureIndex++ % 10),
             ),
             mat,
           ),
@@ -352,7 +403,7 @@ export function SiteScene() {
     renderer: THREE.WebGLRenderer;
     controls: OrbitControls;
     content: THREE.Group | null;
-    labels: { at: THREE.Vector3; el: HTMLElement }[];
+    labels: { at: THREE.Vector3; el: HTMLElement; minor?: boolean }[];
     centreKey: string;
   } | null>(null);
   const labelLayer = useRef<HTMLDivElement>(null);
@@ -385,7 +436,10 @@ export function SiteScene() {
   useEffect(() => {
     const el = host.current;
     if (!el) return;
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      logarithmicDepthBuffer: true,
+    });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(el.clientWidth, el.clientHeight);
     el.appendChild(renderer.domElement);
@@ -432,7 +486,12 @@ export function SiteScene() {
       // Keep building names over their roofs.
       for (const l of three.current?.labels ?? []) {
         v.copy(l.at).project(camera);
-        const visible = v.z < 1 && Math.abs(v.x) < 1.1 && Math.abs(v.y) < 1.1;
+        const visible =
+          v.z < 1 &&
+          Math.abs(v.x) < 1.1 &&
+          Math.abs(v.y) < 1.1 &&
+          // Feature tags only when close enough to read them without clutter.
+          (!l.minor || camera.position.distanceTo(l.at) < MINOR_LABEL_MAX_M);
         l.el.style.display = visible ? "" : "none";
         if (visible)
           l.el.style.transform = `translate(${((v.x + 1) / 2) * el.clientWidth}px, ${((1 - v.y) / 2) * el.clientHeight}px) translate(-50%, -100%)`;
@@ -487,13 +546,19 @@ export function SiteScene() {
     for (const l of labels) {
       const el = document.createElement("div");
       el.textContent = l.name;
-      el.className = `absolute top-0 left-0 max-w-40 truncate rounded px-1.5 py-0.5 text-xs font-medium shadow-sm ${
-        l.componentId === selectedId
-          ? "bg-primary text-primary-foreground"
-          : "bg-card/90 text-foreground"
+      el.className = `absolute top-0 left-0 max-w-40 truncate rounded shadow-sm ${
+        l.minor
+          ? "bg-card/75 px-1 py-px text-[10px] text-muted-foreground"
+          : "z-10 px-1.5 py-0.5 text-xs font-medium"
+      } ${
+        l.minor
+          ? ""
+          : l.componentId === selectedId
+            ? "bg-primary text-primary-foreground"
+            : "bg-card/90 text-foreground"
       }`;
       labelLayer.current?.appendChild(el);
-      ctx.labels.push({ at: l.at, el });
+      ctx.labels.push({ at: l.at, el, minor: l.minor });
     }
     // Frame the project the first time (or when it moves elsewhere).
     const key = centre.map((v) => v.toFixed(3)).join(",");

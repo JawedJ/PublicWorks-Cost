@@ -13,9 +13,10 @@ import type {
 import { useStore } from "@/lib/store/store";
 import { NumberInput } from "./number-input";
 
-// P3.11: parameters per component with source badges. Scoped to the selected
-// component, or all components grouped. Editing a value marks it "You";
-// reset returns it to the default. Highest cost impact first.
+// P3.11: parameters per component. Values from the prompt, a document or the site
+// get a source badge (defaults and your own edits don't). Scoped to the selected
+// component, or all components grouped. Reset returns a value to the default.
+// Highest cost impact first.
 
 const BADGE: Record<ParamSource, string> = {
   default: "bg-muted text-muted-foreground",
@@ -147,12 +148,15 @@ function ParamRow({
         </span>
       </div>
       <div className="flex items-center gap-2 text-xs">
-        <span
-          className={`rounded px-1.5 py-0.5 ${BADGE[source]}`}
-          title={meta?.evidence}
-        >
-          {t(`sources.${source}`)}
-        </span>
+        {/* Only non-obvious sources get a badge (not the default or your own edit). */}
+        {source !== "default" && source !== "user" && (
+          <span
+            className={`rounded px-1.5 py-0.5 ${BADGE[source]}`}
+            title={meta?.evidence}
+          >
+            {t(`sources.${source}`)}
+          </span>
+        )}
         {meta?.evidence && (
           <span className="truncate text-muted-foreground">
             “{meta.evidence}”

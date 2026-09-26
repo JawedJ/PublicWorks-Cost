@@ -49,12 +49,12 @@ describe("estimate panel tabs", () => {
     });
   }
 
-  it("Inputs tab renders params with source badges", () => {
+  it("Inputs tab renders params, without Default/You badges", () => {
     const { html, errors } = render(
       <InputsTab components={northgateProject.components} componentId={null} />,
     );
     expect(errors).toEqual([]);
     for (const c of northgateProject.components) expect(html).toContain(c.name);
-    expect(html).toContain("Default");
+    expect(html).not.toMatch(/>(Default|You)</);
   });
 });

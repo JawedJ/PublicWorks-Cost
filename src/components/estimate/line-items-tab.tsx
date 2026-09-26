@@ -141,39 +141,44 @@ function Row({ item: l }: { item: LineItem }) {
 
   return (
     <tr className="align-top">
-      <td className="py-1.5 pr-2">
-        <p>
-          {l.description.en}
-          {l.lowConfidence && (
-            <span className="ml-1 rounded bg-warning/20 px-1 text-xs">
-              {t("lowConfidence")}
-            </span>
-          )}
-        </p>
+      {/* One cell so the description gets the full width; quantity and price sit underneath. */}
+      <td colSpan={4} className="py-1.5">
+        <div className="flex items-baseline justify-between gap-3">
+          <p className="min-w-0 [overflow-wrap:anywhere]">
+            {l.description.en}
+            {l.lowConfidence && (
+              <span className="ml-1 rounded bg-warning/20 px-1 text-xs">
+                {t("lowConfidence")}
+              </span>
+            )}
+          </p>
+          <span className="shrink-0 font-medium figures">
+            {money.format(l.total)}
+          </span>
+        </div>
         <p className="text-xs text-muted-foreground">
           {l.quantitySource.en} · {l.unitPriceSource.en}
         </p>
-      </td>
-      <td className="w-24 py-1.5 pr-2 text-right">
-        <Cell
-          label={t("editQuantity", { item: l.description.en })}
-          value={l.quantity}
-          display={`${qty.format(l.quantity)} ${unit}`}
-          overridden={l.isQuantityOverridden}
-          onChange={edit?.("quantities")}
-        />
-      </td>
-      <td className="w-24 py-1.5 pr-2 text-right">
-        <Cell
-          label={t("editUnitPrice", { item: l.description.en })}
-          value={round2(l.unitPrice.typical)}
-          display={`${unitMoney.format(l.unitPrice.typical)}/${unit}`}
-          overridden={l.isPriceOverridden}
-          onChange={edit?.("unitPrices")}
-        />
-      </td>
-      <td className="w-24 py-1.5 text-right font-medium figures">
-        {money.format(l.total)}
+        <div className="mt-1 flex gap-2">
+          <div className="w-28">
+            <Cell
+              label={t("editQuantity", { item: l.description.en })}
+              value={l.quantity}
+              display={`${qty.format(l.quantity)} ${unit}`}
+              overridden={l.isQuantityOverridden}
+              onChange={edit?.("quantities")}
+            />
+          </div>
+          <div className="w-28">
+            <Cell
+              label={t("editUnitPrice", { item: l.description.en })}
+              value={round2(l.unitPrice.typical)}
+              display={`${unitMoney.format(l.unitPrice.typical)}/${unit}`}
+              overridden={l.isPriceOverridden}
+              onChange={edit?.("unitPrices")}
+            />
+          </div>
+        </div>
       </td>
     </tr>
   );
@@ -197,7 +202,7 @@ function Cell({
   const t = useTranslations("lineItems");
   if (!onChange) return <span className="figures">{display}</span>;
   return (
-    <span className="flex flex-col items-end gap-0.5">
+    <span className="flex flex-col items-start gap-0.5">
       <NumberInput
         label={label}
         value={value}
