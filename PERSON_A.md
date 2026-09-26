@@ -8,9 +8,9 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 - **Current task:** none in progress; all my Core and Stretch tasks through S4 are merged, plus P7.4
 - **Status:** at sync point   <!-- not started | in progress | blocked | at sync point -->
-- **Next action:** Zoning map layer when B's Z.1 schema is on main. Mount B's Questions panel in the flow when P7.5 lands. Then polish after feature freeze: P10.2 accessibility, P10.3 mobile, P10.5 performance, P10.8 final deploy. Zoning map layer when B's Z.1 schema is on main.
+- **Next action:** Blocked on B for the zoning map layer (Z.1 schema) and the Questions step (P7.5). Remaining own tasks are P10 polish (needs the human's go-ahead). Offered to the human: auto-place components after the build-list review; helping B with P7.5/P7.8.
 - **Blockers / needs from B:** see Requests below.
-- **Last updated:** 2026-09-26 (P7.4 creation flow with Gemini parse + review; P50/share in the component list; project file buttons in the top bar; language toggle removed; park features from the prompt placed with the park; workspace height fix; UI tweaks: resizable side panels, narrower estimate panel, building names in 3D; P1.7–P1.18, P3.2–P3.4, P3.9a, P4.3, P4.5, P5.1, P6.1–P6.2, P9.1–P9.5 merged to `main`)
+- **Last updated:** 2026-09-26 (P6.3 site context in the engine, automatic lookup; rotate/tilt mode; P7.4 creation flow with Gemini parse + review; P50/share in the component list; project file buttons in the top bar; language toggle removed; park features from the prompt placed with the park; workspace height fix; UI tweaks: resizable side panels, narrower estimate panel, building names in 3D; P1.7–P1.18, P3.2–P3.4, P3.9a, P4.3, P4.5, P5.1, P6.1–P6.2, P9.1–P9.5 merged to `main`)
 
 ## Handoff notes
 
