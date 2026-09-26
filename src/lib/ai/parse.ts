@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { keywordParse } from "@/components/landing/keyword-parse";
+import { parkFeatures } from "@/data";
 import { templates } from "@/engine/templates";
 import {
   type BuildListItem,
@@ -63,6 +64,7 @@ const AiDraftSchema = z.object({
       count: z.int(),
       sourcePhrase: z.string(),
       spatialHint: z.string(),
+      features: z.array(z.string()),
       params: z.array(
         z.object({ id: z.string(), value: z.string(), evidence: z.string() }),
       ),
@@ -87,7 +89,11 @@ function catalogText(): string {
           return `  - ${p.id} (${detail}): ${p.label.en}`;
         })
         .join("\n");
-      return `type ${type}; subtypes: ${subtypes}\n${params || "  (no params)"}`;
+      const features =
+        type === "park"
+          ? `\n  features: ${Object.keys(parkFeatures.features).join(", ")}`
+          : "";
+      return `type ${type}; subtypes: ${subtypes}\n${params || "  (no params)"}${features}`;
     })
     .join("\n\n");
 }
@@ -98,8 +104,10 @@ Rules:
 - count = how many identical components ("two fire stations" → 2). Otherwise 1.
 - Only set a param when the prompt clearly states it; value as text (e.g. "3", "poor", "true"); evidence = the exact phrase.
 - Sizes: building floor area → gfaOverrideM2, storeys → storeys, park area → areaM2 (1 ha = 10000), road length → lengthM.
+- Park amenities are features of their park, not components: put their ids in that park's features. If no park is mentioned, add one for them. Other types: features = [].
 - Anything not in the catalog → type "custom", subtype "custom", keeping its name.
 - Never output costs or prices.
+- Resolve relative dates ("next spring") from today's date.
 - name: short project name. municipality, startDate (YYYY-MM-DD), spatialHint: empty string if not stated.
 - Write names in the user's language.
 
@@ -170,6 +178,9 @@ export function toProjectDraft(
       evidence,
       ...(c.spatialHint.trim() && { spatialHint: c.spatialHint.trim() }),
       ...(c.sourcePhrase.trim() && { sourcePhrase: c.sourcePhrase.trim() }),
+      ...(c.type === "park" && {
+        features: c.features.filter((f) => f in parkFeatures.features),
+      }),
     };
     return expand(item, c.count);
   });
@@ -212,8 +223,10 @@ export async function parsePrompt(
   try {
     const raw = await provider.generateStructured({
       system: SYSTEM + catalogText(),
-      prompt: `Language: ${locale}\nRequest: ${prompt}`,
+      prompt: `Today: ${new Date().toISOString().slice(0, 10)}\nLanguage: ${locale}\nRequest: ${prompt}`,
       schema: AiDraftSchema,
+      // Extraction, not reasoning: the lite model is fast enough and keeps the landing snappy.
+      fast: true,
     });
     const result: ParseResponse = {
       draft: toProjectDraft(raw, locale),

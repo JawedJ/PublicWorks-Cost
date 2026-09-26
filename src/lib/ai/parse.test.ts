@@ -14,7 +14,18 @@ const raw = {
       count: 2,
       sourcePhrase: "two local streets",
       spatialHint: "",
+      features: ["playground"],
       params: [{ id: "notARealParam", value: "3", evidence: "x" }],
+    },
+    {
+      type: "park" as const,
+      subtype: "neighbourhood_park",
+      name: "Park",
+      count: 1,
+      sourcePhrase: "a park with a playground",
+      spatialHint: "",
+      features: ["playground", "splash_pad", "moon_base"],
+      params: [],
     },
     {
       type: "building" as const,
@@ -23,6 +34,7 @@ const raw = {
       count: 1,
       sourcePhrase: "a two-storey library",
       spatialHint: "next to the park",
+      features: [],
       params: [{ id: "storeys", value: "2", evidence: "two-storey" }],
     },
     {
@@ -32,6 +44,7 @@ const raw = {
       count: 99,
       sourcePhrase: "",
       spatialHint: "",
+      features: [],
       params: [],
     },
   ],
@@ -48,6 +61,9 @@ describe("toProjectDraft", () => {
       "Local street 2",
     ]);
     expect(roads[0]!.params).toEqual({});
+    expect(roads[0]!.features).toBeUndefined();
+    const park = d.components.find((c) => c.type === "park")!;
+    expect(park.features).toEqual(["playground", "splash_pad"]);
     const lib = d.components.find((c) => c.subtype === "library")!;
     expect(lib.params.storeys).toBe(2);
     expect(lib.evidence.storeys).toBe("two-storey");

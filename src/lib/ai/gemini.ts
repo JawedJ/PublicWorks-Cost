@@ -5,11 +5,11 @@ import { type AIProvider, AIUnavailableError } from "./provider";
 // response JSON schema; output is validated with zod and retried once.
 
 const API = "https://generativelanguage.googleapis.com/v1beta/models";
-const TIMEOUT_MS = 20_000;
+const TIMEOUT_MS = 30_000;
 
 export function createGeminiProvider(apiKey: string): AIProvider {
   const model = process.env.GEMINI_MODEL || "gemini-flash-latest";
-  const fastModel = process.env.GEMINI_MODEL_FAST || model;
+  const fastModel = process.env.GEMINI_MODEL_FAST || "gemini-flash-lite-latest";
 
   async function call(opts: {
     system: string;

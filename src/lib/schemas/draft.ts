@@ -15,6 +15,8 @@ export const BuildListItemSchema = z.object({
   spatialHint: z.string().optional(),
   /** The phrase this component came from. */
   sourcePhrase: z.string().optional(),
+  /** Parks only: park feature kinds mentioned (e.g. "playground"); placed when the layout is generated. */
+  features: z.array(z.string()).optional(),
 });
 export type BuildListItem = z.infer<typeof BuildListItemSchema>;
 

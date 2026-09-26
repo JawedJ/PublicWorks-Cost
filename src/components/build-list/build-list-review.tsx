@@ -4,6 +4,7 @@ import { Copy, Plus, Trash2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { parkFeatures } from "@/data";
 import { templates } from "@/engine/templates";
 import {
   type BuildListItem,
@@ -187,6 +188,18 @@ export function BuildListReview({ initial, source, onConfirm, onBack }: Props) {
                     );
                   })}
                 </ul>
+              )}
+              {c.features && c.features.length > 0 && (
+                <p className="text-xs">
+                  {t("features")}:{" "}
+                  {c.features
+                    .map(
+                      (f) =>
+                        parkFeatures.features[f]?.label[locale] ??
+                        f.replace(/_/g, " "),
+                    )
+                    .join(", ")}
+                </p>
               )}
               {(c.sourcePhrase || c.spatialHint) && (
                 <p className="text-xs text-muted-foreground">

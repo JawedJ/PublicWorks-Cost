@@ -278,6 +278,7 @@
       "building": "Building",
       "structure": "Structure",
       "custom": "Custom element"
-    }
+    },
+    "features": "Features"
   }
 }
