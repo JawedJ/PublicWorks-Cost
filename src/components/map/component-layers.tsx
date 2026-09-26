@@ -385,9 +385,15 @@ export function ComponentLayers() {
       map.getCanvas().style.cursor = "";
       tooltip.current?.remove();
     };
-    // Hover tooltip with the component's name and cost (P3.3).
-    const onMove = async (e: MapMouseEvent) => {
-      if (useStore.getState().drawing) return;
+    // Hover tooltip with the component's name, size and cost (P3.3). Created
+    // synchronously from a preloaded class: an await here let two mouse moves
+    // each create one, leaving an untracked copy stuck on the map.
+    let PopupClass: typeof Popup | null = null;
+    void import("maplibre-gl").then((m) => (PopupClass = m.Popup));
+    const onMove = (e: MapMouseEvent) => {
+      // Hidden while drawing, or while a button is held (dragging a shape or vertex).
+      if (useStore.getState().drawing || e.originalEvent.buttons !== 0)
+        return void tooltip.current?.remove();
       const hit = map
         .queryRenderedFeatures(e.point, {
           layers: CLICKABLE.filter((id) => map.getLayer(id)),
@@ -408,8 +414,8 @@ export function ComponentLayers() {
         : labels.current.noCost;
       const text = [c.name, size, cost].filter(Boolean).join(" · ");
       if (!tooltip.current) {
-        const { Popup } = await import("maplibre-gl");
-        tooltip.current = new Popup({
+        if (!PopupClass) return;
+        tooltip.current = new PopupClass({
           closeButton: false,
           closeOnClick: false,
           offset: 12,
@@ -418,7 +424,9 @@ export function ComponentLayers() {
       }
       tooltip.current.setLngLat(e.lngLat).setText(text).addTo(map);
     };
+    const hide = () => tooltip.current?.remove();
     map.on("mousemove", onMove);
+    map.on("mousedown", hide);
     map.on("click", onClick);
     const subs = CLICKABLE.flatMap((layer) => [
       map.on("mouseenter", layer, pointer),
@@ -428,7 +436,9 @@ export function ComponentLayers() {
       map.off("style.load", onStyle);
       map.off("click", onClick);
       map.off("mousemove", onMove);
+      map.off("mousedown", hide);
       tooltip.current?.remove();
+      tooltip.current = null;
       subs.forEach((s) => s.unsubscribe());
     };
   }, [map]);

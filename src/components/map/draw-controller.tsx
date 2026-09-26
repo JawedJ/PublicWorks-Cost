@@ -486,16 +486,17 @@ export function DrawController() {
   useEffect(() => {
     if (!map || !drawing) return;
     let tip: Popup | null = null;
-    let cancelled = false;
+    // Preloaded so the tooltip is created synchronously (no duplicate from racing awaits).
+    let PopupClass: typeof Popup | null = null;
+    void import("maplibre-gl").then((m) => (PopupClass = m.Popup));
     let at: MapMouseEvent["lngLat"] | null = null;
-    const update = async () => {
+    const update = () => {
       const draw = drawRef.current;
       const text = draw?.enabled && at ? drawingSize(draw, locale) : "";
       if (!text) return void tip?.remove();
       if (!tip) {
-        const { Popup } = await import("maplibre-gl");
-        if (cancelled) return;
-        tip = new Popup({
+        if (!PopupClass) return;
+        tip = new PopupClass({
           closeButton: false,
           closeOnClick: false,
           offset: [14, 14],
@@ -507,14 +508,13 @@ export function DrawController() {
     };
     const onMove = (e: MapMouseEvent) => {
       at = e.lngLat;
-      void update();
+      update();
     };
-    const onChange = () => void update();
+    const onChange = () => update();
     const draw = drawRef.current;
     map.on("mousemove", onMove);
     draw?.on("change", onChange);
     return () => {
-      cancelled = true;
       map.off("mousemove", onMove);
       draw?.off("change", onChange);
       tip?.remove();
