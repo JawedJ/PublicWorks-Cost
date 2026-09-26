@@ -6,11 +6,11 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Current state
 
-- **Current task:** P2.2 (seed data: `unit-prices.json`)
+- **Current task:** P2.3 (seed data: building costs, park features, structures)
 - **Status:** not started   <!-- not started | in progress | blocked | at sync point -->
-- **Next action:** P2.2 `src/data/unit-prices.json` + loader validated with the P2.1 reference-data schemas; then P2.3, P2.4.
+- **Next action:** P2.3 `building-costs.json`, `park-features.json`, `structures.json` + loaders in `src/data/index.ts`; then P2.4.
 - **Blockers / needs from A:** none
-- **Last updated:** 2026-09-26 (B.2 done)
+- **Last updated:** 2026-09-26 (P2.2 done)
 
 ## Handoff notes
 
@@ -42,7 +42,7 @@ While A scaffolds, draft these locally; commit right after A's scaffold lands on
 - [x] B.2 `projectSlice.ts` (params, paramMeta, overrides, settings, scenarios) plugged into A's `store.ts`
 
 ### S1 → S2 — Data & engine · Core
-- [ ] P2.2 Seed data: `unit-prices.json`
+- [x] P2.2 Seed data: `unit-prices.json`
 - [ ] P2.3 Seed data: `building-costs.json` (incl. housing subtypes), `park-features.json`, `structures.json`
 - [ ] P2.4 Seed data: `regional-factors.json` (incl. reference CMA per region), `overrun-reference.json`
 - [ ] P2.5 Script `fetch-statcan-bcpi.ts` → `src/data/public/statcan-bcpi.json` + schema
@@ -125,4 +125,5 @@ Flags only; never block, never change the estimate. Do Waterloo first (demo city
 | Schemas (Project, Component, Geometry, Scenario, Measurements, Estimate, LineItem, Flag, reference data) | `src/lib/schemas/*.ts`, tests in `src/lib/schemas/__tests__/` | Import from `@/lib/schemas` (index re-exports all) |
 | API route conventions (zod body validation, error format, per-IP rate limiter) | `src/lib/api/` (`route.ts`, `errors.ts`, `rate-limit.ts`, `api.test.ts`) | Import from `@/lib/api`; shared with A's `/api/geo/*` routes |
 | Project store slice (project meta, settings, scenarios, param/override helpers) | `src/lib/store/projectSlice.ts` (+ test) | `selectProject(state)` gives the full `Project` |
+| Seed data (sample prices, SPEC 8) | `src/data/*.json`, loaded and validated in `src/data/index.ts` (+ `__tests__/seed-data.test.ts`) | `import { unitPrices } from "@/data"`; 102 unit-price items, priceYear 2025; mobilization is a % in the engine, not a unit price |
 | Northgate fixtures (sample project + estimate for A's views) | `src/lib/fixtures/` | `import { northgateProject, northgateEstimate } from "@/lib/fixtures"` |

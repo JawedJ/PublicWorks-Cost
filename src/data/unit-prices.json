@@ -1,0 +1,1539 @@
+{
+  "meta": {
+    "sample": true,
+    "priceYear": 2025,
+    "notes": "Illustrative sample unit prices for Ontario municipal civil work, typical 2025 (CAD, excluding HST). Not real cost data. Bands: low/high reflect typical bid spread; volatile or site-dependent items are wider. Mobilization is computed as a percentage in the engine, not a unit price."
+  },
+  "items": [
+    {
+      "id": "excavation_common",
+      "description": {
+        "en": "Excavation and removal, common material",
+        "fr": "Excavation et enlèvement, matériaux ordinaires"
+      },
+      "unit": "m3",
+      "price": {
+        "low": 27.2,
+        "typical": 32,
+        "high": 41.6
+      },
+      "priceCategory": "labour",
+      "category": "earthworks"
+    },
+    {
+      "id": "excavation_rock",
+      "description": {
+        "en": "Rock excavation",
+        "fr": "Excavation de roc"
+      },
+      "unit": "m3",
+      "price": {
+        "low": 116,
+        "typical": 145,
+        "high": 210
+      },
+      "priceCategory": "labour",
+      "category": "earthworks"
+    },
+    {
+      "id": "excavation_trench",
+      "description": {
+        "en": "Trench excavation and backfill",
+        "fr": "Excavation et remblayage de tranchée"
+      },
+      "unit": "m3",
+      "price": {
+        "low": 49.3,
+        "typical": 58,
+        "high": 75.4
+      },
+      "priceCategory": "labour",
+      "category": "earthworks"
+    },
+    {
+      "id": "unsuitable_soil_removal",
+      "description": {
+        "en": "Removal and replacement of unsuitable soil",
+        "fr": "Enlèvement et remplacement de sol impropre"
+      },
+      "unit": "m3",
+      "price": {
+        "low": 54.4,
+        "typical": 68,
+        "high": 98.6
+      },
+      "priceCategory": "labour",
+      "category": "earthworks"
+    },
+    {
+      "id": "contaminated_soil_disposal",
+      "description": {
+        "en": "Contaminated soil disposal",
+        "fr": "Élimination de sol contaminé"
+      },
+      "unit": "t",
+      "price": {
+        "low": 76.0,
+        "typical": 95,
+        "high": 138
+      },
+      "priceCategory": "general",
+      "category": "earthworks"
+    },
+    {
+      "id": "fill_imported",
+      "description": {
+        "en": "Imported fill, placed and compacted",
+        "fr": "Remblai importé, mis en place et compacté"
+      },
+      "unit": "m3",
+      "price": {
+        "low": 32.3,
+        "typical": 38,
+        "high": 49.4
+      },
+      "priceCategory": "general",
+      "category": "earthworks"
+    },
+    {
+      "id": "grading_rough_fine",
+      "description": {
+        "en": "Rough and fine grading",
+        "fr": "Nivellement brut et fin"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 5.1,
+        "typical": 6,
+        "high": 7.8
+      },
+      "priceCategory": "labour",
+      "category": "earthworks"
+    },
+    {
+      "id": "dewatering",
+      "description": {
+        "en": "Dewatering allowance",
+        "fr": "Provision pour assèchement"
+      },
+      "unit": "month",
+      "price": {
+        "low": 11200,
+        "typical": 14000,
+        "high": 20300
+      },
+      "priceCategory": "labour",
+      "category": "earthworks"
+    },
+    {
+      "id": "erosion_sediment_control",
+      "description": {
+        "en": "Erosion and sediment control",
+        "fr": "Contrôle de l'érosion et des sédiments"
+      },
+      "unit": "m",
+      "price": {
+        "low": 15.3,
+        "typical": 18,
+        "high": 23.4
+      },
+      "priceCategory": "general",
+      "category": "earthworks"
+    },
+    {
+      "id": "geotextile",
+      "description": {
+        "en": "Geotextile",
+        "fr": "Géotextile"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 3.82,
+        "typical": 4.5,
+        "high": 5.85
+      },
+      "priceCategory": "general",
+      "category": "earthworks"
+    },
+    {
+      "id": "granular_a",
+      "description": {
+        "en": "Granular A base",
+        "fr": "Fondation en granulat A"
+      },
+      "unit": "m3",
+      "price": {
+        "low": 44.2,
+        "typical": 52,
+        "high": 67.6
+      },
+      "priceCategory": "general",
+      "category": "paving"
+    },
+    {
+      "id": "granular_b",
+      "description": {
+        "en": "Granular B subbase",
+        "fr": "Sous-fondation en granulat B"
+      },
+      "unit": "m3",
+      "price": {
+        "low": 37.4,
+        "typical": 44,
+        "high": 57.2
+      },
+      "priceCategory": "general",
+      "category": "paving"
+    },
+    {
+      "id": "asphalt_hl3",
+      "description": {
+        "en": "Asphalt surface course HL3",
+        "fr": "Couche de surface en enrobé HL3"
+      },
+      "unit": "t",
+      "price": {
+        "low": 120,
+        "typical": 150,
+        "high": 218
+      },
+      "priceCategory": "asphalt",
+      "category": "paving"
+    },
+    {
+      "id": "asphalt_hl8",
+      "description": {
+        "en": "Asphalt binder course HL8",
+        "fr": "Couche de liaison en enrobé HL8"
+      },
+      "unit": "t",
+      "price": {
+        "low": 110,
+        "typical": 138,
+        "high": 200
+      },
+      "priceCategory": "asphalt",
+      "category": "paving"
+    },
+    {
+      "id": "asphalt_milling",
+      "description": {
+        "en": "Asphalt milling",
+        "fr": "Planage de l'enrobé"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 5.95,
+        "typical": 7,
+        "high": 9.1
+      },
+      "priceCategory": "asphalt",
+      "category": "paving"
+    },
+    {
+      "id": "pavement_removal",
+      "description": {
+        "en": "Existing pavement removal",
+        "fr": "Enlèvement de la chaussée existante"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 9.35,
+        "typical": 11,
+        "high": 14.3
+      },
+      "priceCategory": "labour",
+      "category": "paving"
+    },
+    {
+      "id": "tack_coat",
+      "description": {
+        "en": "Tack coat",
+        "fr": "Couche d'accrochage"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 1.02,
+        "typical": 1.2,
+        "high": 1.56
+      },
+      "priceCategory": "asphalt",
+      "category": "paving"
+    },
+    {
+      "id": "pavement_markings",
+      "description": {
+        "en": "Pavement markings",
+        "fr": "Marquage de la chaussée"
+      },
+      "unit": "m",
+      "price": {
+        "low": 3.82,
+        "typical": 4.5,
+        "high": 5.85
+      },
+      "priceCategory": "general",
+      "category": "paving"
+    },
+    {
+      "id": "cycle_track_asphalt",
+      "description": {
+        "en": "Asphalt cycle track, including base",
+        "fr": "Piste cyclable en enrobé, fondation incluse"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 80.75,
+        "typical": 95,
+        "high": 124
+      },
+      "priceCategory": "asphalt",
+      "category": "paving"
+    },
+    {
+      "id": "parking_lot_asphalt",
+      "description": {
+        "en": "Parking lot, asphalt, including base",
+        "fr": "Stationnement en enrobé, fondation incluse"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 97.75,
+        "typical": 115,
+        "high": 150
+      },
+      "priceCategory": "asphalt",
+      "category": "site_works"
+    },
+    {
+      "id": "permeable_pavers",
+      "description": {
+        "en": "Permeable pavers, including base",
+        "fr": "Pavés perméables, fondation incluse"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 157,
+        "typical": 185,
+        "high": 240
+      },
+      "priceCategory": "concrete",
+      "category": "paving"
+    },
+    {
+      "id": "curb_gutter",
+      "description": {
+        "en": "Concrete curb and gutter",
+        "fr": "Bordure et caniveau en béton"
+      },
+      "unit": "m",
+      "price": {
+        "low": 80.75,
+        "typical": 95,
+        "high": 124
+      },
+      "priceCategory": "concrete",
+      "category": "concrete"
+    },
+    {
+      "id": "curb_barrier",
+      "description": {
+        "en": "Concrete barrier curb",
+        "fr": "Bordure-barrière en béton"
+      },
+      "unit": "m",
+      "price": {
+        "low": 69.7,
+        "typical": 82,
+        "high": 107
+      },
+      "priceCategory": "concrete",
+      "category": "concrete"
+    },
+    {
+      "id": "sidewalk_concrete",
+      "description": {
+        "en": "Concrete sidewalk",
+        "fr": "Trottoir en béton"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 102,
+        "typical": 120,
+        "high": 156
+      },
+      "priceCategory": "concrete",
+      "category": "concrete"
+    },
+    {
+      "id": "sidewalk_removal",
+      "description": {
+        "en": "Sidewalk removal",
+        "fr": "Enlèvement de trottoir"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 18.7,
+        "typical": 22,
+        "high": 28.6
+      },
+      "priceCategory": "labour",
+      "category": "demolition"
+    },
+    {
+      "id": "driveway_apron",
+      "description": {
+        "en": "Concrete driveway apron",
+        "fr": "Entrée charretière en béton"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 115,
+        "typical": 135,
+        "high": 176
+      },
+      "priceCategory": "concrete",
+      "category": "concrete"
+    },
+    {
+      "id": "tactile_plate",
+      "description": {
+        "en": "Tactile walking surface indicator",
+        "fr": "Indicateur tactile de surface de marche"
+      },
+      "unit": "each",
+      "price": {
+        "low": 585,
+        "typical": 650,
+        "high": 780
+      },
+      "priceCategory": "general",
+      "category": "concrete"
+    },
+    {
+      "id": "concrete_apron",
+      "description": {
+        "en": "Concrete apron and heavy-duty site paving",
+        "fr": "Tablier en béton et pavage lourd"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 140,
+        "typical": 165,
+        "high": 214
+      },
+      "priceCategory": "concrete",
+      "category": "site_works"
+    },
+    {
+      "id": "retaining_wall_precast",
+      "description": {
+        "en": "Precast retaining wall (face area)",
+        "fr": "Mur de soutènement préfabriqué (surface)"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 760,
+        "typical": 950,
+        "high": 1378
+      },
+      "priceCategory": "concrete",
+      "category": "structures"
+    },
+    {
+      "id": "watermain_150_pvc",
+      "description": {
+        "en": "Watermain 150 mm PVC",
+        "fr": "Conduite d'eau 150 mm PVC"
+      },
+      "unit": "m",
+      "price": {
+        "low": 459,
+        "typical": 540,
+        "high": 702
+      },
+      "priceCategory": "pipe",
+      "category": "watermain"
+    },
+    {
+      "id": "watermain_200_pvc",
+      "description": {
+        "en": "Watermain 200 mm PVC",
+        "fr": "Conduite d'eau 200 mm PVC"
+      },
+      "unit": "m",
+      "price": {
+        "low": 527,
+        "typical": 620,
+        "high": 806
+      },
+      "priceCategory": "pipe",
+      "category": "watermain"
+    },
+    {
+      "id": "watermain_300_pvc",
+      "description": {
+        "en": "Watermain 300 mm PVC",
+        "fr": "Conduite d'eau 300 mm PVC"
+      },
+      "unit": "m",
+      "price": {
+        "low": 663,
+        "typical": 780,
+        "high": 1014
+      },
+      "priceCategory": "pipe",
+      "category": "watermain"
+    },
+    {
+      "id": "watermain_300_di",
+      "description": {
+        "en": "Watermain 300 mm ductile iron",
+        "fr": "Conduite d'eau 300 mm fonte ductile"
+      },
+      "unit": "m",
+      "price": {
+        "low": 782,
+        "typical": 920,
+        "high": 1196
+      },
+      "priceCategory": "pipe",
+      "category": "watermain"
+    },
+    {
+      "id": "watermain_400_di",
+      "description": {
+        "en": "Watermain 400 mm ductile iron",
+        "fr": "Conduite d'eau 400 mm fonte ductile"
+      },
+      "unit": "m",
+      "price": {
+        "low": 920,
+        "typical": 1150,
+        "high": 1668
+      },
+      "priceCategory": "pipe",
+      "category": "watermain"
+    },
+    {
+      "id": "hydrant",
+      "description": {
+        "en": "Fire hydrant assembly",
+        "fr": "Borne d'incendie complète"
+      },
+      "unit": "each",
+      "price": {
+        "low": 8075,
+        "typical": 9500,
+        "high": 12350
+      },
+      "priceCategory": "pipe",
+      "category": "watermain"
+    },
+    {
+      "id": "valve_150",
+      "description": {
+        "en": "Gate valve and box, 150 mm",
+        "fr": "Robinet-vanne et boîtier, 150 mm"
+      },
+      "unit": "each",
+      "price": {
+        "low": 2720,
+        "typical": 3200,
+        "high": 4160
+      },
+      "priceCategory": "pipe",
+      "category": "watermain"
+    },
+    {
+      "id": "valve_200",
+      "description": {
+        "en": "Gate valve and box, 200 mm",
+        "fr": "Robinet-vanne et boîtier, 200 mm"
+      },
+      "unit": "each",
+      "price": {
+        "low": 3315,
+        "typical": 3900,
+        "high": 5070
+      },
+      "priceCategory": "pipe",
+      "category": "watermain"
+    },
+    {
+      "id": "valve_300",
+      "description": {
+        "en": "Gate valve and chamber, 300 mm",
+        "fr": "Robinet-vanne et chambre, 300 mm"
+      },
+      "unit": "each",
+      "price": {
+        "low": 12325,
+        "typical": 14500,
+        "high": 18850
+      },
+      "priceCategory": "pipe",
+      "category": "watermain"
+    },
+    {
+      "id": "water_service",
+      "description": {
+        "en": "Water service connection, 25 mm",
+        "fr": "Branchement d'eau, 25 mm"
+      },
+      "unit": "each",
+      "price": {
+        "low": 3570,
+        "typical": 4200,
+        "high": 5460
+      },
+      "priceCategory": "pipe",
+      "category": "watermain"
+    },
+    {
+      "id": "temporary_water",
+      "description": {
+        "en": "Temporary water supply",
+        "fr": "Alimentation temporaire en eau"
+      },
+      "unit": "m",
+      "price": {
+        "low": 38.25,
+        "typical": 45,
+        "high": 58.5
+      },
+      "priceCategory": "pipe",
+      "category": "watermain"
+    },
+    {
+      "id": "watermain_abandon",
+      "description": {
+        "en": "Abandon existing watermain",
+        "fr": "Abandon de la conduite d'eau existante"
+      },
+      "unit": "m",
+      "price": {
+        "low": 23.8,
+        "typical": 28,
+        "high": 36.4
+      },
+      "priceCategory": "labour",
+      "category": "watermain"
+    },
+    {
+      "id": "storm_300",
+      "description": {
+        "en": "Storm sewer 300 mm",
+        "fr": "Égout pluvial 300 mm"
+      },
+      "unit": "m",
+      "price": {
+        "low": 476,
+        "typical": 560,
+        "high": 728
+      },
+      "priceCategory": "pipe",
+      "category": "sewer"
+    },
+    {
+      "id": "storm_450",
+      "description": {
+        "en": "Storm sewer 450 mm",
+        "fr": "Égout pluvial 450 mm"
+      },
+      "unit": "m",
+      "price": {
+        "low": 663,
+        "typical": 780,
+        "high": 1014
+      },
+      "priceCategory": "pipe",
+      "category": "sewer"
+    },
+    {
+      "id": "storm_600",
+      "description": {
+        "en": "Storm sewer 600 mm",
+        "fr": "Égout pluvial 600 mm"
+      },
+      "unit": "m",
+      "price": {
+        "low": 833,
+        "typical": 980,
+        "high": 1274
+      },
+      "priceCategory": "pipe",
+      "category": "sewer"
+    },
+    {
+      "id": "storm_900",
+      "description": {
+        "en": "Storm sewer 900 mm",
+        "fr": "Égout pluvial 900 mm"
+      },
+      "unit": "m",
+      "price": {
+        "low": 1160,
+        "typical": 1450,
+        "high": 2102
+      },
+      "priceCategory": "pipe",
+      "category": "sewer"
+    },
+    {
+      "id": "sanitary_200",
+      "description": {
+        "en": "Sanitary sewer 200 mm",
+        "fr": "Égout sanitaire 200 mm"
+      },
+      "unit": "m",
+      "price": {
+        "low": 527,
+        "typical": 620,
+        "high": 806
+      },
+      "priceCategory": "pipe",
+      "category": "sewer"
+    },
+    {
+      "id": "sanitary_250",
+      "description": {
+        "en": "Sanitary sewer 250 mm",
+        "fr": "Égout sanitaire 250 mm"
+      },
+      "unit": "m",
+      "price": {
+        "low": 586,
+        "typical": 690,
+        "high": 897
+      },
+      "priceCategory": "pipe",
+      "category": "sewer"
+    },
+    {
+      "id": "sanitary_375",
+      "description": {
+        "en": "Sanitary sewer 375 mm",
+        "fr": "Égout sanitaire 375 mm"
+      },
+      "unit": "m",
+      "price": {
+        "low": 731,
+        "typical": 860,
+        "high": 1118
+      },
+      "priceCategory": "pipe",
+      "category": "sewer"
+    },
+    {
+      "id": "catch_basin",
+      "description": {
+        "en": "Catch basin with lead",
+        "fr": "Puisard avec raccord"
+      },
+      "unit": "each",
+      "price": {
+        "low": 3570,
+        "typical": 4200,
+        "high": 5460
+      },
+      "priceCategory": "concrete",
+      "category": "sewer"
+    },
+    {
+      "id": "maintenance_hole_1200",
+      "description": {
+        "en": "Maintenance hole, 1200 mm",
+        "fr": "Regard, 1200 mm"
+      },
+      "unit": "each",
+      "price": {
+        "low": 9350,
+        "typical": 11000,
+        "high": 14300
+      },
+      "priceCategory": "concrete",
+      "category": "sewer"
+    },
+    {
+      "id": "maintenance_hole_1500",
+      "description": {
+        "en": "Maintenance hole, 1500 mm",
+        "fr": "Regard, 1500 mm"
+      },
+      "unit": "each",
+      "price": {
+        "low": 13175,
+        "typical": 15500,
+        "high": 20150
+      },
+      "priceCategory": "concrete",
+      "category": "sewer"
+    },
+    {
+      "id": "sanitary_service",
+      "description": {
+        "en": "Sanitary service lateral",
+        "fr": "Branchement sanitaire"
+      },
+      "unit": "each",
+      "price": {
+        "low": 4420,
+        "typical": 5200,
+        "high": 6760
+      },
+      "priceCategory": "pipe",
+      "category": "sewer"
+    },
+    {
+      "id": "storm_service",
+      "description": {
+        "en": "Storm service lateral",
+        "fr": "Branchement pluvial"
+      },
+      "unit": "each",
+      "price": {
+        "low": 3230,
+        "typical": 3800,
+        "high": 4940
+      },
+      "priceCategory": "pipe",
+      "category": "sewer"
+    },
+    {
+      "id": "sewer_cctv",
+      "description": {
+        "en": "Sewer CCTV inspection",
+        "fr": "Inspection télévisée des égouts"
+      },
+      "unit": "m",
+      "price": {
+        "low": 8.1,
+        "typical": 9,
+        "high": 10.8
+      },
+      "priceCategory": "general",
+      "category": "sewer"
+    },
+    {
+      "id": "bypass_pumping",
+      "description": {
+        "en": "Sewer bypass pumping",
+        "fr": "Pompage de dérivation des égouts"
+      },
+      "unit": "month",
+      "price": {
+        "low": 17600,
+        "typical": 22000,
+        "high": 31900
+      },
+      "priceCategory": "labour",
+      "category": "sewer"
+    },
+    {
+      "id": "stormwater_ogs",
+      "description": {
+        "en": "Oil-grit separator",
+        "fr": "Séparateur huile-sédiments"
+      },
+      "unit": "each",
+      "price": {
+        "low": 52000,
+        "typical": 65000,
+        "high": 94250
+      },
+      "priceCategory": "concrete",
+      "category": "sewer"
+    },
+    {
+      "id": "streetlight_pole",
+      "description": {
+        "en": "Streetlight pole, arm and LED luminaire",
+        "fr": "Lampadaire complet avec luminaire DEL"
+      },
+      "unit": "each",
+      "price": {
+        "low": 6630,
+        "typical": 7800,
+        "high": 10140
+      },
+      "priceCategory": "steel",
+      "category": "lighting"
+    },
+    {
+      "id": "streetlight_cable",
+      "description": {
+        "en": "Streetlight cable and duct",
+        "fr": "Câble et conduit d'éclairage"
+      },
+      "unit": "m",
+      "price": {
+        "low": 55.25,
+        "typical": 65,
+        "high": 84.5
+      },
+      "priceCategory": "general",
+      "category": "lighting"
+    },
+    {
+      "id": "pedestrian_light",
+      "description": {
+        "en": "Pedestrian-scale light pole",
+        "fr": "Lampadaire piétonnier"
+      },
+      "unit": "each",
+      "price": {
+        "low": 5270,
+        "typical": 6200,
+        "high": 8060
+      },
+      "priceCategory": "steel",
+      "category": "lighting"
+    },
+    {
+      "id": "traffic_signal",
+      "description": {
+        "en": "Traffic signal, full intersection",
+        "fr": "Feux de circulation, intersection complète"
+      },
+      "unit": "each",
+      "price": {
+        "low": 256000,
+        "typical": 320000,
+        "high": 464000
+      },
+      "priceCategory": "steel",
+      "category": "lighting"
+    },
+    {
+      "id": "pedestrian_crossover",
+      "description": {
+        "en": "Pedestrian crossover (level 2)",
+        "fr": "Passage pour piétons (niveau 2)"
+      },
+      "unit": "each",
+      "price": {
+        "low": 68000,
+        "typical": 85000,
+        "high": 123250
+      },
+      "priceCategory": "steel",
+      "category": "lighting"
+    },
+    {
+      "id": "topsoil_150",
+      "description": {
+        "en": "Topsoil, 150 mm",
+        "fr": "Terre végétale, 150 mm"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 5.95,
+        "typical": 7,
+        "high": 9.1
+      },
+      "priceCategory": "general",
+      "category": "landscaping"
+    },
+    {
+      "id": "sod",
+      "description": {
+        "en": "Sod",
+        "fr": "Gazon en plaques"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 5.1,
+        "typical": 6,
+        "high": 7.8
+      },
+      "priceCategory": "general",
+      "category": "landscaping"
+    },
+    {
+      "id": "hydroseed",
+      "description": {
+        "en": "Hydroseeding",
+        "fr": "Hydroensemencement"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 2.12,
+        "typical": 2.5,
+        "high": 3.25
+      },
+      "priceCategory": "general",
+      "category": "landscaping"
+    },
+    {
+      "id": "boulevard_restoration",
+      "description": {
+        "en": "Boulevard topsoil and sod",
+        "fr": "Terre végétale et gazon de boulevard"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 11.9,
+        "typical": 14,
+        "high": 18.2
+      },
+      "priceCategory": "general",
+      "category": "landscaping"
+    },
+    {
+      "id": "tree_60mm",
+      "description": {
+        "en": "Tree, 60 mm caliper, planted",
+        "fr": "Arbre, calibre 60 mm, planté"
+      },
+      "unit": "each",
+      "price": {
+        "low": 638,
+        "typical": 750,
+        "high": 975
+      },
+      "priceCategory": "general",
+      "category": "landscaping"
+    },
+    {
+      "id": "tree_soil_cell",
+      "description": {
+        "en": "Street tree in soil cells",
+        "fr": "Arbre de rue en cellules de sol"
+      },
+      "unit": "each",
+      "price": {
+        "low": 7600,
+        "typical": 9500,
+        "high": 13775
+      },
+      "priceCategory": "general",
+      "category": "landscaping"
+    },
+    {
+      "id": "shrub_bed",
+      "description": {
+        "en": "Shrub and perennial bed",
+        "fr": "Massif d'arbustes et de vivaces"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 55.25,
+        "typical": 65,
+        "high": 84.5
+      },
+      "priceCategory": "general",
+      "category": "landscaping"
+    },
+    {
+      "id": "irrigation",
+      "description": {
+        "en": "Irrigation system",
+        "fr": "Système d'irrigation"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 11.9,
+        "typical": 14,
+        "high": 18.2
+      },
+      "priceCategory": "pipe",
+      "category": "landscaping"
+    },
+    {
+      "id": "site_landscaping",
+      "description": {
+        "en": "Site landscaping, general",
+        "fr": "Aménagement paysager du site, général"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 15.3,
+        "typical": 18,
+        "high": 23.4
+      },
+      "priceCategory": "general",
+      "category": "landscaping"
+    },
+    {
+      "id": "chain_link_fence",
+      "description": {
+        "en": "Chain-link fence, 1.8 m",
+        "fr": "Clôture à mailles de chaîne, 1,8 m"
+      },
+      "unit": "m",
+      "price": {
+        "low": 93.5,
+        "typical": 110,
+        "high": 143
+      },
+      "priceCategory": "steel",
+      "category": "park_features"
+    },
+    {
+      "id": "ornamental_fence",
+      "description": {
+        "en": "Ornamental metal fence",
+        "fr": "Clôture ornementale en métal"
+      },
+      "unit": "m",
+      "price": {
+        "low": 221,
+        "typical": 260,
+        "high": 338
+      },
+      "priceCategory": "steel",
+      "category": "park_features"
+    },
+    {
+      "id": "bench",
+      "description": {
+        "en": "Bench, installed",
+        "fr": "Banc, installé"
+      },
+      "unit": "each",
+      "price": {
+        "low": 2380,
+        "typical": 2800,
+        "high": 3640
+      },
+      "priceCategory": "steel",
+      "category": "park_features"
+    },
+    {
+      "id": "waste_receptacle",
+      "description": {
+        "en": "Waste and recycling receptacle",
+        "fr": "Poubelle et bac de recyclage"
+      },
+      "unit": "each",
+      "price": {
+        "low": 2040,
+        "typical": 2400,
+        "high": 3120
+      },
+      "priceCategory": "steel",
+      "category": "park_features"
+    },
+    {
+      "id": "bike_rack",
+      "description": {
+        "en": "Bike rack",
+        "fr": "Support à vélos"
+      },
+      "unit": "each",
+      "price": {
+        "low": 808,
+        "typical": 950,
+        "high": 1235
+      },
+      "priceCategory": "steel",
+      "category": "park_features"
+    },
+    {
+      "id": "picnic_table",
+      "description": {
+        "en": "Picnic table, accessible",
+        "fr": "Table de pique-nique accessible"
+      },
+      "unit": "each",
+      "price": {
+        "low": 2720,
+        "typical": 3200,
+        "high": 4160
+      },
+      "priceCategory": "lumber",
+      "category": "park_features"
+    },
+    {
+      "id": "trail_granular",
+      "description": {
+        "en": "Granular trail, including base",
+        "fr": "Sentier en granulat, fondation incluse"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 35.7,
+        "typical": 42,
+        "high": 54.6
+      },
+      "priceCategory": "general",
+      "category": "park_features"
+    },
+    {
+      "id": "trail_asphalt",
+      "description": {
+        "en": "Asphalt trail, including base",
+        "fr": "Sentier en enrobé, fondation incluse"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 72.25,
+        "typical": 85,
+        "high": 110
+      },
+      "priceCategory": "asphalt",
+      "category": "park_features"
+    },
+    {
+      "id": "boardwalk_timber",
+      "description": {
+        "en": "Timber boardwalk",
+        "fr": "Promenade en bois"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 880,
+        "typical": 1100,
+        "high": 1595
+      },
+      "priceCategory": "lumber",
+      "category": "park_features"
+    },
+    {
+      "id": "unit_paver_plaza",
+      "description": {
+        "en": "Unit paver plaza, including base",
+        "fr": "Place en pavés, fondation incluse"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 178,
+        "typical": 210,
+        "high": 273
+      },
+      "priceCategory": "concrete",
+      "category": "park_features"
+    },
+    {
+      "id": "site_furniture_allowance",
+      "description": {
+        "en": "Site furniture allowance (per ha)",
+        "fr": "Provision pour mobilier (par ha)"
+      },
+      "unit": "ha",
+      "price": {
+        "low": 32000,
+        "typical": 40000,
+        "high": 58000
+      },
+      "priceCategory": "general",
+      "category": "park_features"
+    },
+    {
+      "id": "site_servicing_simple",
+      "description": {
+        "en": "Site servicing, simple",
+        "fr": "Viabilisation du site, simple"
+      },
+      "unit": "lump",
+      "price": {
+        "low": 144000,
+        "typical": 180000,
+        "high": 261000
+      },
+      "priceCategory": "pipe",
+      "category": "site_works"
+    },
+    {
+      "id": "site_servicing_average",
+      "description": {
+        "en": "Site servicing, average",
+        "fr": "Viabilisation du site, moyenne"
+      },
+      "unit": "lump",
+      "price": {
+        "low": 280000,
+        "typical": 350000,
+        "high": 507500
+      },
+      "priceCategory": "pipe",
+      "category": "site_works"
+    },
+    {
+      "id": "site_servicing_complex",
+      "description": {
+        "en": "Site servicing, complex",
+        "fr": "Viabilisation du site, complexe"
+      },
+      "unit": "lump",
+      "price": {
+        "low": 576000,
+        "typical": 720000,
+        "high": 1044000
+      },
+      "priceCategory": "pipe",
+      "category": "site_works"
+    },
+    {
+      "id": "parking_stall_surface",
+      "description": {
+        "en": "Surface parking stall (30 m²), all-in",
+        "fr": "Place de stationnement en surface (30 m²), tout compris"
+      },
+      "unit": "each",
+      "price": {
+        "low": 3570,
+        "typical": 4200,
+        "high": 5460
+      },
+      "priceCategory": "asphalt",
+      "category": "site_works"
+    },
+    {
+      "id": "stormwater_management_site",
+      "description": {
+        "en": "On-site stormwater management (per m² of site)",
+        "fr": "Gestion des eaux pluviales sur le site (par m² de site)"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 17.6,
+        "typical": 22,
+        "high": 31.9
+      },
+      "priceCategory": "pipe",
+      "category": "site_works"
+    },
+    {
+      "id": "ev_charger_level2",
+      "description": {
+        "en": "EV charger, level 2, installed",
+        "fr": "Borne de recharge niveau 2, installée"
+      },
+      "unit": "each",
+      "price": {
+        "low": 10200,
+        "typical": 12000,
+        "high": 15600
+      },
+      "priceCategory": "general",
+      "category": "site_works"
+    },
+    {
+      "id": "building_demolition",
+      "description": {
+        "en": "Building demolition",
+        "fr": "Démolition de bâtiment"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 96.0,
+        "typical": 120,
+        "high": 174
+      },
+      "priceCategory": "labour",
+      "category": "demolition"
+    },
+    {
+      "id": "hazmat_abatement",
+      "description": {
+        "en": "Hazardous materials abatement allowance",
+        "fr": "Provision pour matières dangereuses"
+      },
+      "unit": "m2",
+      "price": {
+        "low": 48.0,
+        "typical": 60,
+        "high": 87.0
+      },
+      "priceCategory": "labour",
+      "category": "demolition"
+    },
+    {
+      "id": "structure_removal",
+      "description": {
+        "en": "Existing structure removal",
+        "fr": "Enlèvement de la structure existante"
+      },
+      "unit": "lump",
+      "price": {
+        "low": 68000,
+        "typical": 85000,
+        "high": 123250
+      },
+      "priceCategory": "labour",
+      "category": "demolition"
+    },
+    {
+      "id": "traffic_control_full_closure",
+      "description": {
+        "en": "Traffic control, full closure",
+        "fr": "Signalisation, fermeture complète"
+      },
+      "unit": "month",
+      "price": {
+        "low": 10200,
+        "typical": 12000,
+        "high": 15600
+      },
+      "priceCategory": "labour",
+      "category": "traffic_control"
+    },
+    {
+      "id": "traffic_control_staged",
+      "description": {
+        "en": "Traffic control, staged construction",
+        "fr": "Signalisation, construction par étapes"
+      },
+      "unit": "month",
+      "price": {
+        "low": 15300,
+        "typical": 18000,
+        "high": 23400
+      },
+      "priceCategory": "labour",
+      "category": "traffic_control"
+    },
+    {
+      "id": "traffic_control_night",
+      "description": {
+        "en": "Traffic control, night work",
+        "fr": "Signalisation, travail de nuit"
+      },
+      "unit": "month",
+      "price": {
+        "low": 20800,
+        "typical": 26000,
+        "high": 37700
+      },
+      "priceCategory": "labour",
+      "category": "traffic_control"
+    },
+    {
+      "id": "detour_signage",
+      "description": {
+        "en": "Detour signage",
+        "fr": "Signalisation de détour"
+      },
+      "unit": "lump",
+      "price": {
+        "low": 12750,
+        "typical": 15000,
+        "high": 19500
+      },
+      "priceCategory": "general",
+      "category": "traffic_control"
+    },
+    {
+      "id": "paid_duty_officer",
+      "description": {
+        "en": "Paid-duty police officer",
+        "fr": "Policier en service rémunéré"
+      },
+      "unit": "month",
+      "price": {
+        "low": 16800,
+        "typical": 21000,
+        "high": 30450
+      },
+      "priceCategory": "labour",
+      "category": "traffic_control"
+    },
+    {
+      "id": "in_water_work",
+      "description": {
+        "en": "In-water work, dewatering and fish rescue",
+        "fr": "Travaux en eau, assèchement et sauvetage des poissons"
+      },
+      "unit": "lump",
+      "price": {
+        "low": 144000,
+        "typical": 180000,
+        "high": 261000
+      },
+      "priceCategory": "labour",
+      "category": "structures"
+    },
+    {
+      "id": "rip_rap",
+      "description": {
+        "en": "Rip-rap erosion protection",
+        "fr": "Enrochement de protection"
+      },
+      "unit": "m3",
+      "price": {
+        "low": 119,
+        "typical": 140,
+        "high": 182
+      },
+      "priceCategory": "general",
+      "category": "structures"
+    },
+    {
+      "id": "guide_rail_steel",
+      "description": {
+        "en": "Steel beam guide rail",
+        "fr": "Glissière de sécurité en acier"
+      },
+      "unit": "m",
+      "price": {
+        "low": 178,
+        "typical": 210,
+        "high": 273
+      },
+      "priceCategory": "steel",
+      "category": "structures"
+    },
+    {
+      "id": "utility_relocation",
+      "description": {
+        "en": "Utility relocation allowance",
+        "fr": "Provision pour déplacement des services"
+      },
+      "unit": "lump",
+      "price": {
+        "low": 96000,
+        "typical": 120000,
+        "high": 174000
+      },
+      "priceCategory": "general",
+      "category": "general"
+    },
+    {
+      "id": "survey_layout",
+      "description": {
+        "en": "Construction layout survey",
+        "fr": "Arpentage d'implantation"
+      },
+      "unit": "lump",
+      "price": {
+        "low": 21250,
+        "typical": 25000,
+        "high": 32500
+      },
+      "priceCategory": "labour",
+      "category": "general"
+    },
+    {
+      "id": "materials_testing",
+      "description": {
+        "en": "Materials testing and inspection",
+        "fr": "Essais et inspection des matériaux"
+      },
+      "unit": "lump",
+      "price": {
+        "low": 25500,
+        "typical": 30000,
+        "high": 39000
+      },
+      "priceCategory": "general",
+      "category": "general"
+    },
+    {
+      "id": "condition_survey",
+      "description": {
+        "en": "Pre-construction condition survey",
+        "fr": "Relevé de l'état avant les travaux"
+      },
+      "unit": "each",
+      "price": {
+        "low": 405,
+        "typical": 450,
+        "high": 540
+      },
+      "priceCategory": "labour",
+      "category": "general"
+    }
+  ]
+}
