@@ -6,11 +6,11 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Current state
 
-- **Current task:** P2.10 (building component type)
+- **Current task:** P3.1 (`useEstimate` wired to the store)
 - **Status:** not started   <!-- not started | in progress | blocked | at sync point -->
-- **Next action:** P2.10 `src/engine/templates/building.ts`: GFA from sections, shape complexity line, roof premiums, quality/sustainability, special spaces, site works, fit-on-site and school/hospital flags + tests.
+- **Next action:** P3.1 `src/lib/estimate/useEstimate.ts` (debounced `computeEstimate` on store changes). A's `measure.ts` isn't on main yet, so use a temporary approximate measure and swap when it lands.
 - **Blockers / needs from A:** none
-- **Last updated:** 2026-09-26 (P2.9 done)
+- **Last updated:** 2026-09-26 (engine P2.10–P2.19 done)
 
 ## Handoff notes
 
@@ -19,6 +19,7 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 - P2.1 schemas are merged to `main`.
 - P2.5: `pnpm data:bcpi` runs `scripts/fetch-statcan-bcpi.ts` with plain `node` (Node 26 strips types; `scripts/package.json` sets ESM). Scripts can't use the `@/` alias. `statcanBcpi` from `@/data`: series keyed by `geo` × `type` × `division`, points `["2026Q2", 108.9]` oldest first. A few type × division combos aren't published (e.g. Ottawa single-detached earthwork); the engine must fall back to the composite division.
 - P2.8: engine pattern. Each template (`src/engine/templates/*.ts`) exports a `ComponentTemplate` (`src/engine/types.ts`): `paramCatalog`, optional `subtypeDefaults`, `deriveQuantities(ctx) → QuantityLine[]`, `flags(ctx) → TemplateFlag[]`. A `QuantityLine` has a component-local `localId` (overrides are keyed by it; line item id will be `${componentId}:${localId}`) and a `PriceRef` (`unitPrice` id, or `direct` price for building/park/structure/custom). `resolveParams` fills defaults and clamps. Bilingual text via `t()` / `L()` in `src/engine/text.ts`. Test helpers in `src/engine/__tests__/helpers.ts`. Road params reuse the fixture ids; new ids: `scope`, `cycling`, `watermainMaterial`, `rockExpected`, `utilityConflicts`, `boulevardWidthM`.
+- P2.10–P2.19: `computeEstimate(project, measurements, refData, { seed, now?, iterations? })` in `src/engine/index.ts` (MVP-simple). Unit prices include region × BCPI (price year → latest quarter; non-buildings use non-residential as proxy) × scenario shock × 8% winter premium. Escalation to construction midpoint is a separate amount; the BCPI trailing-8q rate is used while `settings.escalationRate` is still the 0.04 default. Mobilization = 6% of direct (one project line). Soft cost %s per type in `SOFT`. Class from answered high-impact params. Monte Carlo: triangular per line, correlated by price category (ρ 0.6), lognormal overrun per component. Drivers = price categories only. Northgate: ~$52M P50, 42 ms for 5,000 iterations.
 - P2.9: park feature params live in `featureParamCatalog` (per kind) in `templates/park.ts`, resolved with `resolveDefinitions`. Feature line ids are `feature:<featureId>` (+ `:lighting`). Kinds in `park-features.json` without params (skate_park, dog_park, …) are priced by drawn area; `custom` kinds are skipped until P2.12; unknown kinds get a `park_feature_not_priced` flag.
 - P2.6/P2.7: `pnpm data:refresh` runs both scripts (~1 min). CanadaBuys needs a browser-like User-Agent (403 otherwise). Filter: CNST category + delivery region naming Ontario/Ottawa/NCR (not Gatineau/Quebec); no region → skipped. ~98 awards; `tags` (road/utilities/park/building/structure) come from title + GSIN/UNSPSC keywords and are rough ("building" is broad). No stable notice URL in the data, so `url` is a CanadaBuys search link by solicitation number.
 - P2.2–P2.4: `refData` from `@/data` is ready for the engine. Overrun lookup: prefer the entry matching type + subtype + class, else type + class (no subtype).
@@ -55,16 +56,16 @@ While A scaffolds, draft these locally; commit right after A's scaffold lands on
 - [x] P2.7 `pnpm data:refresh`; commit generated files
 - [x] P2.8 Component type: road + tests
 - [x] P2.9 Component type: park + tests
-- [ ] P2.10 Component type: building (sections, GFA, shape complexity, roofs, fit-on-site, school/hospital uncertainty) + tests
-- [ ] P2.11 Component type: structure + tests
-- [ ] P2.12 Custom elements: matched or user-entered rates, wide bands, lower class + tests
-- [ ] P2.13 Pricing: regional factor, BCPI escalation (labelled proxies), trailing-trend default rate, shocks, overrides + tests
-- [ ] P2.14 Winter logic, soft costs, taxes + tests
-- [ ] P2.15 Estimate class from completeness score + improvement hints + tests
-- [ ] P2.16 Seeded Monte Carlo + overrun reference + contingency + tests
-- [ ] P2.17 Drivers (tornado, by component) + flags aggregation + tests
-- [ ] P2.18 Project roll-up: per-component costs, mobilization, per-component + project percentiles, project class + tests
-- [ ] P2.19 `computeEstimate()` entry point; multi-component and determinism tests
+- [x] P2.10 Component type: building (sections, GFA, shape complexity, roofs, fit-on-site, school/hospital uncertainty) + tests
+- [x] P2.11 Component type: structure + tests
+- [x] P2.12 Custom elements: matched or user-entered rates, wide bands, lower class + tests
+- [x] P2.13 Pricing: regional factor, BCPI escalation (labelled proxies), trailing-trend default rate, shocks, overrides + tests
+- [x] P2.14 Winter logic, soft costs, taxes + tests
+- [x] P2.15 Estimate class from completeness score + improvement hints + tests
+- [x] P2.16 Seeded Monte Carlo + overrun reference + contingency + tests
+- [x] P2.17 Drivers (tornado, by component) + flags aggregation + tests
+- [x] P2.18 Project roll-up: per-component costs, mobilization, per-component + project percentiles, project class + tests
+- [x] P2.19 `computeEstimate()` entry point; multi-component and determinism tests
 - [ ] P3.1 `useEstimate()` wired to the live store (uses A's `measureProject`), debounced, Web Worker if needed — **the S2 integration milestone**
 
 ### S2 → S3 — Estimate panel, AI flow & project files · Core
@@ -133,5 +134,5 @@ Flags only; never block, never change the estimate. Do Waterloo first (demo city
 | Seed data (sample prices, SPEC 8) | `src/data/*.json`, loaded and validated in `src/data/index.ts` (+ `__tests__/seed-data.test.ts`) | `import { refData } from "@/data"` for the engine (or each file by name); 22 Ontario regions, 28 overrun reference entries (lognormal, mu set so P(factor > 1) = probabilityOfOverrun); 102 unit-price items, 11 building subtypes, 17 park feature kinds, 16 structure items, priceYear 2025; mobilization is a % in the engine, not a unit price |
 | StatCan BCPI (real data) | `scripts/fetch-statcan-bcpi.ts` → `src/data/public/statcan-bcpi.json`; schema `src/lib/schemas/public-data.ts`; tests `src/data/__tests__/public-data.test.ts` | `pnpm data:bcpi`; Statistics Canada Open Licence |
 | CanadaBuys awards (real data, evidence only) | `scripts/fetch-canadabuys.ts` → `src/data/public/canadabuys-awards.json`; schema in `src/lib/schemas/public-data.ts` | `pnpm data:canadabuys`; `pnpm data:refresh` runs all public data scripts; OGL-Canada |
-| Cost engine: component templates | `src/engine/types.ts`, `params.ts`, `text.ts`, `templates/road.ts`, `templates/park.ts`; tests in `src/engine/__tests__/` | Pure TS; road = SPEC 6.1, park = 6.2 |
+| Cost engine: component templates | `src/engine/types.ts`, `params.ts`, `text.ts`, `index.ts` (`computeEstimate`), `escalation.ts`, `rng.ts`, `templates/*.ts`; tests in `src/engine/__tests__/` | Pure TS, SPEC 6–7 |
 | Northgate fixtures (sample project + estimate for A's views) | `src/lib/fixtures/` | `import { northgateProject, northgateEstimate } from "@/lib/fixtures"` |
