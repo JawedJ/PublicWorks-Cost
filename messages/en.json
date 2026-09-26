@@ -347,5 +347,17 @@
       "mobilization": "Mobilization",
       "general": "General"
     }
+  },
+  "projectFile": {
+    "download": "Download project file",
+    "open": "Open project file",
+    "replaceConfirm": "Opening a project file replaces the current project. Unsaved changes will be lost. Continue?",
+    "errors": {
+      "too_large": "That file is too large to be a project file.",
+      "invalid_json": "That file isn't a PublicWorks Cost project file (it isn't valid JSON).",
+      "not_project": "That file isn't a PublicWorks Cost project file.",
+      "newer_version": "This project file was made with a newer version of the app (file version {detail}) and can't be opened here.",
+      "invalid": "This project file is damaged or incomplete and can't be opened. Details: {detail}"
+    }
   }
 }
