@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { refData } from "@/data";
 import { northgateProject } from "@/lib/fixtures";
-import { approxMeasureProject as measure } from "@/lib/estimate/approx-measure";
+import { measureProject as measure } from "@/lib/geo/measure";
 import { EstimateSchema } from "@/lib/schemas";
 import { computeEstimate } from "..";
 

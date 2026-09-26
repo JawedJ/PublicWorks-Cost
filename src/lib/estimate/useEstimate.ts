@@ -6,7 +6,7 @@ import { computeEstimate } from "@/engine";
 import type { Estimate } from "@/lib/schemas";
 import { selectProject } from "@/lib/store/projectSlice";
 import { useStore } from "@/lib/store/store";
-import { approxMeasureProject as measureProject } from "./approx-measure";
+import { measureProject } from "@/lib/geo/measure";
 
 // TEAM.md 3.5: recomputes the estimate when the project changes, debounced.
 // The engine takes ~50 ms for 5,000 iterations, so it runs on the main thread.
