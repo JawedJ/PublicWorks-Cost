@@ -204,7 +204,12 @@ export function buildReport(
   const s = project.settings;
   const settings = [
     { label: "Start date", value: s.startDate },
-    { label: "Duration", value: `${s.durationMonths} months` },
+    {
+      label: "Construction time",
+      value: estimate.schedule
+        ? `About ${Math.round(estimate.schedule.months)} months (likely ${Math.round(estimate.schedule.p10Months)}–${Math.round(estimate.schedule.p90Months)}); ${estimate.schedule.source.en}`
+        : `${s.durationMonths} months`,
+    },
     { label: "Pricing region", value: project.region },
     {
       label: "Escalation rate",
@@ -232,6 +237,7 @@ export function buildReport(
     "Building rates: Altus Group 2026 Canadian Cost Guide (Ontario ranges), escalated with Statistics Canada BCPI.",
     "Price trend: Statistics Canada Building Construction Price Index (table 18-10-0289-01).",
     "Comparable contracts: CanadaBuys award notices (Open Government Licence – Canada).",
+    "Construction time: fitted on CanadaBuys federal construction contract start and end dates (Open Government Licence – Canada).",
     "Site context: OpenStreetMap contributors via Overpass (ODbL).",
     "Zoning (advisory): City of Waterloo By-law 2018-050, City of Ottawa By-law 2008-250, City of Cambridge By-law 150-85.",
   ];

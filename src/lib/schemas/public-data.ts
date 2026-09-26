@@ -105,3 +105,38 @@ export const AltusBenchmarksFileSchema = z.object({
   ),
 });
 export type AltusBenchmarksFile = z.infer<typeof AltusBenchmarksFileSchema>;
+
+// --- construction-durations.json (scripts/fetch-durations.ts) ---
+
+export const DurationFitSchema = z.object({
+  n: z.int().positive(),
+  /** months = k × contractValue^b */
+  k: z.number().positive(),
+  b: z.number(),
+  /** 10th/90th percentile of actual ÷ fitted duration. */
+  p10Factor: z.number().positive(),
+  p90Factor: z.number().positive(),
+});
+export type DurationFit = z.infer<typeof DurationFitSchema>;
+
+export const ConstructionDurationsFileSchema = z.object({
+  source: z.object({
+    title: z.string(),
+    publisher: z.string(),
+    url: z.url(),
+    files: z.array(z.url()),
+    licence: z.string(),
+    licenceUrl: z.url(),
+    retrievedAt: IsoDateTimeSchema,
+    method: z.string(),
+    limits: z.string(),
+  }),
+  fits: z.object({
+    building: DurationFitSchema,
+    civil: DurationFitSchema,
+    all: DurationFitSchema,
+  }),
+});
+export type ConstructionDurationsFile = z.infer<
+  typeof ConstructionDurationsFileSchema
+>;

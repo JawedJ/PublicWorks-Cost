@@ -1,6 +1,6 @@
 "use client";
 
-import { ShieldCheck, TrendingUp } from "lucide-react";
+import { CalendarClock, ShieldCheck, TrendingUp } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -123,6 +123,11 @@ export function EstimateTab({ estimate, scoped, components, region }: Props) {
         </div>
       )}
 
+      <DurationCard
+        estimate={estimate}
+        componentId={scoped.component?.componentId ?? null}
+      />
+
       {whole && <ComponentBreakdown estimate={estimate} />}
       {whole && <DistributionChart distribution={estimate.distribution} />}
       <CategoryBreakdown lineItems={scoped.lineItems} />
@@ -142,6 +147,47 @@ export function EstimateTab({ estimate, scoped, components, region }: Props) {
         <p className="text-xs text-muted-foreground">{t("componentNote")}</p>
       )}
     </div>
+  );
+}
+
+/** Construction time from real contract durations (whole project or one component). */
+function DurationCard({
+  estimate,
+  componentId,
+}: {
+  estimate: Estimate;
+  componentId: string | null;
+}) {
+  const t = useTranslations("estimate");
+  const s = estimate.schedule;
+  const comp = componentId
+    ? estimate.components.find((c) => c.componentId === componentId)
+    : null;
+  const months = comp ? comp.durationMonths : s?.months;
+  if (!s || !months) return null;
+  return (
+    <Card size="sm">
+      <CardHeader>
+        <CardDescription className="flex items-center gap-2">
+          <CalendarClock />
+          {t("durationHeading")}
+        </CardDescription>
+        <CardTitle className="text-2xl tabular-nums">
+          {t("durationMonths", { months: Math.round(months) })}
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-1 text-sm text-muted-foreground">
+        {!comp && (
+          <span>
+            {t("durationRange", {
+              low: Math.round(s.p10Months),
+              high: Math.round(s.p90Months),
+            })}
+          </span>
+        )}
+        <span className="text-xs">{s.source.en}.</span>
+      </CardContent>
+    </Card>
   );
 }
 

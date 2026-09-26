@@ -15,6 +15,7 @@ import type {
   RefData,
   Scenario,
 } from "@/lib/schemas";
+import { durationFit, durationSourceNote, typicalMonths } from "./duration";
 import { bcpiEscalation, trailingAnnualRate } from "./escalation";
 import { zoningFlags } from "./zoning";
 import { resolveParams } from "./params";
@@ -234,6 +235,8 @@ export function computeEstimate(
     cls: EstimateClass;
     hints: ImprovementHint[];
     lines: LineItem[];
+    months: number;
+    offset: number;
   };
   const comps: Comp[] = [];
   let bcpiDetail: ReturnType<typeof bcpiEscalation> | null = null;
@@ -263,68 +266,88 @@ export function computeEstimate(
     const compStart = new Date(
       Date.UTC(start.getUTCFullYear(), start.getUTCMonth() + offset, 1),
     );
-    const winter = overlapsWinter(compStart, settings.durationMonths);
     const shockOf = (pc: PriceCategory) =>
       (pc === "general" ? 0 : (scenario.shocks[pc] ?? 0)) / 100;
+    const priceOf = (q: QuantityLine) => {
+      const pr = q.price;
+      return pr.kind === "unitPrice"
+        ? refData.unitPrices.items.find((i) => i.id === pr.id)!
+        : null;
+    };
+    const baseTypical = (q: QuantityLine) =>
+      q.price.kind === "direct"
+        ? q.price.price.typical
+        : priceOf(q)!.price.typical;
 
-    const lines = template
-      .deriveQuantities(ctx)
-      .map((q: QuantityLine): LineItem => {
-        const pr = q.price;
-        const p =
-          pr.kind === "unitPrice"
-            ? refData.unitPrices.items.find((i) => i.id === pr.id)!
-            : null;
-        const d = pr.kind === "direct" ? pr : null;
-        const category = p?.category ?? d!.category;
-        const priceCategory = p?.priceCategory ?? d!.priceCategory;
-        const base = p?.price ?? d!.price;
-        const factor =
-          regionFactor *
-          bcpi.factor *
-          (1 + shockOf(priceCategory)) *
-          (winter && WINTER_CATEGORIES.includes(category)
-            ? 1 + WINTER_PREMIUM
-            : 1);
-        const qOverride = c.overrides.quantities[q.localId];
-        const pOverride = c.overrides.unitPrices[q.localId];
-        const quantity = qOverride ?? q.quantity;
-        const unitPrice =
+    // Construction time from the component's rough contract value (real
+    // contract durations, duration.ts); it sets winter work and escalation.
+    const quantities = template.deriveQuantities(ctx);
+    const roughValue =
+      quantities.reduce(
+        (sum, q) =>
+          sum +
+          (c.overrides.quantities[q.localId] ?? q.quantity) *
+            (c.overrides.unitPrices[q.localId] ??
+              baseTypical(q) * regionFactor * bcpi.factor),
+        0,
+      ) *
+      (1 + MOBILIZATION_PCT);
+    const months = typicalMonths(c.type, roughValue);
+    const winter = overlapsWinter(compStart, months);
+
+    const lines = quantities.map((q: QuantityLine): LineItem => {
+      const pr = q.price;
+      const p = priceOf(q);
+      const d = pr.kind === "direct" ? pr : null;
+      const category = p?.category ?? d!.category;
+      const priceCategory = p?.priceCategory ?? d!.priceCategory;
+      const base = p?.price ?? d!.price;
+      const factor =
+        regionFactor *
+        bcpi.factor *
+        (1 + shockOf(priceCategory)) *
+        (winter && WINTER_CATEGORIES.includes(category)
+          ? 1 + WINTER_PREMIUM
+          : 1);
+      const qOverride = c.overrides.quantities[q.localId];
+      const pOverride = c.overrides.unitPrices[q.localId];
+      const quantity = qOverride ?? q.quantity;
+      const unitPrice =
+        pOverride !== undefined
+          ? { low: pOverride, typical: pOverride, high: pOverride }
+          : {
+              low: base.low * factor,
+              typical: base.typical * factor,
+              high: base.high * factor,
+            };
+      return {
+        id: `${c.id}:${q.localId}`,
+        componentId: c.id,
+        elementRef: q.elementRef,
+        category,
+        description: q.description ?? p?.description ?? d!.description,
+        quantity,
+        unit: q.unit,
+        quantitySource:
+          qOverride !== undefined
+            ? L("Entered by user", "Saisi par l'utilisateur")
+            : q.quantitySource,
+        unitPrice,
+        unitPriceSource:
           pOverride !== undefined
-            ? { low: pOverride, typical: pOverride, high: pOverride }
-            : {
-                low: base.low * factor,
-                typical: base.typical * factor,
-                high: base.high * factor,
-              };
-        return {
-          id: `${c.id}:${q.localId}`,
-          componentId: c.id,
-          elementRef: q.elementRef,
-          category,
-          description: q.description ?? p?.description ?? d!.description,
-          quantity,
-          unit: q.unit,
-          quantitySource:
-            qOverride !== undefined
-              ? L("Entered by user", "Saisi par l'utilisateur")
-              : q.quantitySource,
-          unitPrice,
-          unitPriceSource:
-            pOverride !== undefined
-              ? L("Entered by user", "Saisi par l'utilisateur")
-              : (d?.source ??
-                L(
-                  `Sample Ontario unit price, ${priceYear}, adjusted for region and date`,
-                  `Prix unitaire ontarien type (échantillon), ${priceYear}, ajusté pour la région et la date`,
-                )),
-          priceCategory,
-          total: quantity * unitPrice.typical,
-          isQuantityOverridden: qOverride !== undefined,
-          isPriceOverridden: pOverride !== undefined,
-          lowConfidence: d?.lowConfidence ?? false,
-        };
-      });
+            ? L("Entered by user", "Saisi par l'utilisateur")
+            : (d?.source ??
+              L(
+                `Sample Ontario unit price, ${priceYear}, adjusted for region and date`,
+                `Prix unitaire ontarien type (échantillon), ${priceYear}, ajusté pour la région et la date`,
+              )),
+        priceCategory,
+        total: quantity * unitPrice.typical,
+        isQuantityOverridden: qOverride !== undefined,
+        isPriceOverridden: pOverride !== undefined,
+        lowConfidence: d?.lowConfidence ?? false,
+      };
+    });
 
     // Site context (P6.3): allowances and permit flags for nearby schools, water, rail…
     const site = siteAllowances(
@@ -354,7 +377,7 @@ export function computeEstimate(
     const softTotal = Object.values(soft).reduce((s, v) => s + v, 0);
     const midpointMonths = Math.max(
       0,
-      monthsBetween(now, compStart) + settings.durationMonths / 2,
+      monthsBetween(now, compStart) + months / 2,
     );
     const escalation =
       (direct + softTotal) * ((1 + annualRate) ** (midpointMonths / 12) - 1);
@@ -375,7 +398,18 @@ export function computeEstimate(
       });
     }
     lineItems.push(...lines);
-    comps.push({ c, direct, base: 0, soft, escalation, cls, hints, lines });
+    comps.push({
+      c,
+      direct,
+      base: 0,
+      soft,
+      escalation,
+      cls,
+      hints,
+      lines,
+      months,
+      offset,
+    });
   }
 
   // --- Project-level mobilization (one per project) and taxes ---
@@ -495,8 +529,25 @@ export function computeEstimate(
       estimateClass: x.cls,
       share: p50 > 0 ? Math.min(1, cp50 / p50) : 0,
       improvementHints: x.hints,
+      durationMonths: x.months,
     };
   });
+
+  // --- Schedule: the longest component, after its start offset ---
+  const last = comps.reduce<Comp | null>(
+    (a, x) => (!a || x.offset + x.months > a.offset + a.months ? x : a),
+    null,
+  );
+  const fit = last && durationFit(last.c.type);
+  const schedule =
+    last && fit
+      ? {
+          months: last.offset + last.months,
+          p10Months: last.offset + last.months * fit.p10Factor,
+          p90Months: last.offset + last.months * fit.p90Factor,
+          source: L(durationSourceNote(), durationSourceNote()),
+        }
+      : undefined;
 
   // --- Project class: cost-weighted, rounded toward less certain ---
   const weighted =
@@ -608,6 +659,7 @@ export function computeEstimate(
     },
     drivers,
     flags,
+    ...(schedule && { schedule }),
     perUnitMetrics: {
       perM:
         tot.roadLengthM > 0 && sumBase("road") > 0

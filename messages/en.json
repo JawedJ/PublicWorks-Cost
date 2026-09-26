@@ -277,7 +277,10 @@
     "p50Note": "P50: as likely to come in under as over",
     "components": "Components",
     "emptyTitle": "No estimate yet",
-    "flagCount": "{count} components"
+    "flagCount": "{count} components",
+    "durationHeading": "Construction time",
+    "durationMonths": "About {months} months",
+    "durationRange": "Likely {low}–{high} months. Sets escalation to the construction midpoint and winter work."
   },
   "visuals": {
     "crossSection": {
