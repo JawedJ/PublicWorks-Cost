@@ -6,9 +6,9 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Current state
 
-- **Current task:** S4 core: exports (P5.2–P5.4), demos (P4.4, P7.8); P6.3, P7.5 done (P3.6, P3.9b, P3.10, P3.11, P4.1–P4.2 done)
+- **Current task:** none in progress. Exports (P5.2–P5.4) done; demos (P4.4) wait on A's drawn files
 - **Status:** not started   <!-- not started | in progress | blocked | at sync point -->
-- **Next action:** exports (P5.2–P5.4), then demo projects (needs A's drawn files).
+- **Next action:** demo projects (needs A's drawn files; the human picks them), then /data page (P10.6).
 - **Blockers / needs from A:** none
 - **Last updated:** 2026-09-26 (P3.6 Estimate tab)
 
@@ -116,9 +116,9 @@ Flags only; never block, never change the estimate. Do Waterloo first (demo city
 - [x] P7.5 `/api/ai/questions` across components + fallback + Questions panel · Core
 - [ ] P4.4 Three demo projects (A draws geometry in the app and downloads the project file; you add params, cached AI outputs, and scenarios) · Core
 - [ ] P7.8 Cached AI outputs for demo projects · Core
-- [ ] P5.2 PDF council report (template narrative, A's map snapshot), English · Core
-- [ ] P5.3 Excel workbook (Summary, Line Items, Assumptions, Scenarios) · Core
-- [ ] P5.4 Export tab · Core
+- [x] P5.2 PDF council report (template narrative, A's map snapshot), English · Core. `src/lib/export/pdf.ts` (jsPDF + autotable, loaded on demand) from the shared model in `src/lib/export/report-data.ts`. Cover with map (fit to project, camera restored), summary, build-up, risk, components, categories, drivers, grouped flags, scenarios, assumptions, sources
+- [x] P5.3 Excel workbook (Summary, Line Items, Assumptions, Scenarios) · Core. `src/lib/export/xlsx.ts` (ExcelJS, on demand), plus a Flags sheet; line totals are live formulas where qty × price = total
+- [x] P5.4 Export tab · Core. `src/components/estimate/export-tab.tsx`: PDF (site plan switch), Excel, project file
 - [ ] P7.7 `/api/ai/narrative` with number check + template fallback; used in PDF · Stretch
 - [ ] P8.1 Scenario create/duplicate/rename/delete · Stretch
 - [ ] P8.2 What-if controls (date shift, price shocks, param changes, add/remove components) · Stretch
