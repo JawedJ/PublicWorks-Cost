@@ -75,3 +75,16 @@ describe("computeEstimate (Northgate)", () => {
     expect(e.flags.map((f) => f.code)).toContain("soil_unknown");
   });
 });
+
+describe("estimate class", () => {
+  it("doesn't change when an on/off input is toggled back off", () => {
+    const base = structuredClone(northgateProject);
+    const toggled = structuredClone(northgateProject);
+    const lib = toggled.components.find((c) => c.subtype === "library")!;
+    lib.params.indoorPool = false;
+    lib.paramMeta.indoorPool = { source: "user" };
+    const cls = (p: typeof base) =>
+      run(p).components.find((c) => c.componentId === lib.id)!.estimateClass;
+    expect(cls(toggled)).toBe(cls(base));
+  });
+});

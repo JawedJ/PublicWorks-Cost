@@ -151,8 +151,12 @@ function componentClass(
     (d) => d.costImpact >= 3,
   );
   const total = important.reduce((s, d) => s + d.costImpact, 0) || 1;
+  // On/off inputs are always answered: off means the thing isn't there, so toggling
+  // them never changes the class. Other inputs count once someone sets them.
   const answered = important.filter(
-    (d) => c.paramMeta[d.id] && c.paramMeta[d.id]!.source !== "default",
+    (d) =>
+      d.type === "boolean" ||
+      (c.paramMeta[d.id] && c.paramMeta[d.id]!.source !== "default"),
   );
   const score =
     answered.reduce((s, d) => s + d.costImpact, 0) / total +
