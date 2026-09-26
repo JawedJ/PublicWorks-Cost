@@ -17,6 +17,8 @@ export function ViewSwitcher() {
   const setViewMode = useStore((s) => s.setViewMode);
   const colourByCost = useStore((s) => s.colourByCost);
   const setColourByCost = useStore((s) => s.setColourByCost);
+  const showZoning = useStore((s) => s.showZoning);
+  const setShowZoning = useStore((s) => s.setShowZoning);
 
   useEffect(() => {
     if (!map) return;
@@ -27,20 +29,8 @@ export function ViewSwitcher() {
   }, [map, viewMode]);
 
   return (
-    <div className="flex gap-2">
-      <button
-        type="button"
-        aria-pressed={colourByCost}
-        onClick={() => setColourByCost(!colourByCost)}
-        className={cn(
-          "rounded-md border px-3 py-1.5 text-xs font-medium shadow-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
-          colourByCost
-            ? "bg-foreground text-background"
-            : "bg-card hover:bg-muted",
-        )}
-      >
-        {t("colourByCost")}
-      </button>
+    // View switcher on top; the map toggles (colour by cost, zoning) underneath.
+    <div className="flex flex-col items-end gap-2">
       <div
         role="radiogroup"
         aria-label={t("label")}
@@ -63,6 +53,36 @@ export function ViewSwitcher() {
             {t(v)}
           </button>
         ))}
+      </div>
+      <div className="flex gap-2">
+        <button
+          type="button"
+          aria-pressed={colourByCost}
+          onClick={() => setColourByCost(!colourByCost)}
+          className={cn(
+            "rounded-md border px-3 py-1.5 text-xs font-medium shadow-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
+            colourByCost
+              ? "bg-foreground text-background"
+              : "bg-card hover:bg-muted",
+          )}
+        >
+          {t("colourByCost")}
+        </button>
+        {viewMode !== "site3d" && (
+          <button
+            type="button"
+            aria-pressed={showZoning}
+            onClick={() => setShowZoning(!showZoning)}
+            className={cn(
+              "rounded-md border px-3 py-1.5 text-xs font-medium shadow-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
+              showZoning
+                ? "bg-foreground text-background"
+                : "bg-card hover:bg-muted",
+            )}
+          >
+            {t("zoning")}
+          </button>
+        )}
       </div>
     </div>
   );

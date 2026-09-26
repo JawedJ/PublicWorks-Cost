@@ -82,6 +82,8 @@ export type DesignSlice = DesignSnapshot & {
   selectedElement: SelectedElement | null;
   viewMode: ViewMode;
   colourByCost: boolean;
+  /** Zoning map layer (Waterloo) on or off. */
+  showZoning: boolean;
   unitSystem: UnitSystem;
   /** Undo/redo stacks; most recent last. */
   past: DesignSnapshot[];
@@ -104,6 +106,7 @@ export type DesignSlice = DesignSnapshot & {
   selectElement: (element: SelectedElement | null) => void;
   setViewMode: (mode: ViewMode) => void;
   setColourByCost: (on: boolean) => void;
+  setShowZoning: (on: boolean) => void;
   setUnitSystem: (units: UnitSystem) => void;
 
   /** Adds a component; it is 'drawn' if it has geometry, otherwise 'planned'. Returns its id. */
@@ -288,6 +291,7 @@ export const createDesignSlice: StateCreator<Store, [], [], DesignSlice> = (
     selectedElement: null,
     viewMode: "plan2d",
     colourByCost: false,
+    showZoning: false,
     unitSystem: "metric",
     past: [],
     future: [],
@@ -310,6 +314,7 @@ export const createDesignSlice: StateCreator<Store, [], [], DesignSlice> = (
       }),
     setViewMode: (viewMode) => set({ viewMode }),
     setColourByCost: (colourByCost) => set({ colourByCost }),
+    setShowZoning: (showZoning) => set({ showZoning }),
     setUnitSystem: (unitSystem) => set({ unitSystem }),
 
     addComponent: (input) => get().addComponents([input])[0]!,

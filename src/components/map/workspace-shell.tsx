@@ -19,6 +19,7 @@ import { SiteContextLookup } from "./site-context";
 import { SmartPlacer } from "./smart-placer";
 import { TransformHandles } from "./transform-handles";
 import { ViewSwitcher } from "./view-switcher";
+import { ZoningLayer } from "./zoning-layer";
 
 /** Warns before leaving the page with a design in progress (projects aren't saved; SPEC 15). */
 function useUnsavedWarning() {
@@ -62,6 +63,7 @@ export function WorkspaceShell() {
           >
             <MapView>
               <ComponentLayers />
+              <ZoningLayer />
               <DrawController />
               <TransformHandles />
               <SmartPlacer />

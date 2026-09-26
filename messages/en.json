@@ -61,12 +61,27 @@
       "plan2d": "2D plan",
       "map3d": "3D map",
       "colourByCost": "Colour by cost",
-      "site3d": "3D site"
+      "site3d": "3D site",
+      "zoning": "Zoning"
     },
     "noCost": "No cost yet",
     "rotateMode": "Rotate mode: drag on the map to turn it (and tilt it in the 3D map)",
     "rotateHint": "Drag left or right to turn the map. Click the rotate button or press Esc when done.",
-    "rotateHint3d": "Drag left or right to turn, up or down to tilt. Click the rotate button or press Esc when done."
+    "rotateHint3d": "Drag left or right to turn, up or down to tilt. Click the rotate button or press Esc when done.",
+    "zoning": {
+      "title": "Zoning (Waterloo)",
+      "noData": "No zoning data here. The zoning layer covers the City of Waterloo only.",
+      "source": "City of Waterloo Zoning By-law 2018-050 zone map, snapshot. Advisory: may lag recent amendments; not a legal zoning determination. Click a zone for its code.",
+      "groups": {
+        "residential": "Residential",
+        "mixedUse": "Mixed use",
+        "commercial": "Commercial",
+        "employment": "Employment",
+        "openSpace": "Open space",
+        "institutional": "Institutional",
+        "other": "Other"
+      }
+    }
   },
   "design": {
     "components": {
