@@ -256,3 +256,12 @@
     linear-gradient(var(--primary), var(--primary)) center / 2px 10px no-repeat,
     #fff;
 }
+.pw-tooltip .maplibregl-popup-content {
+  padding: 4px 8px;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  pointer-events: none;
+}
+.pw-tooltip {
+  pointer-events: none;
+}

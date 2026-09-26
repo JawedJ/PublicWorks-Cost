@@ -5,8 +5,12 @@ import type {
   GeoJSONSource,
   Map as MapLibreMap,
   MapMouseEvent,
+  Popup,
 } from "maplibre-gl";
-import { useEffect } from "react";
+import { useEffect, useMemo, useRef } from "react";
+import { useLocale, useTranslations } from "next-intl";
+import { useEstimate } from "@/lib/estimate/useEstimate";
+import { intlLocale, type Locale } from "@/lib/i18n/routing";
 import { componentColor, mapColors } from "@/lib/render/colors";
 import type { AnyFeature, Component, PolygonFeature } from "@/lib/schemas";
 import { useStore } from "@/lib/store/store";
@@ -27,7 +31,26 @@ const CLICKABLE = ["pw-point", "pw-line", "pw-section", "pw-fill"];
 
 type Role = "primary" | "section" | "feature";
 
-function toFeatures(components: Component[]): GeoJSON.Feature[] {
+/** Cost per component for colour by cost and tooltips. */
+export type CostInfo = Map<string, { p50: number; share: number }>;
+
+/** Light yellow (cheapest) → deep red (most expensive), by share of the largest. */
+function costColor(share: number, maxShare: number): string {
+  const ramp = ["#fde68a", "#fbbf24", "#f97316", "#dc2626", "#7f1d1d"];
+  const i = Math.min(
+    ramp.length - 1,
+    Math.floor((maxShare ? share / maxShare : 0) * (ramp.length - 1) + 0.5),
+  );
+  return ramp[i]!;
+}
+
+function toFeatures(
+  components: Component[],
+  cost?: CostInfo | null,
+): GeoJSON.Feature[] {
+  const maxShare = cost
+    ? Math.max(0, ...[...cost.values()].map((x) => x.share))
+    : 0;
   const out: GeoJSON.Feature[] = [];
   const push = (
     f: AnyFeature,
@@ -42,7 +65,9 @@ function toFeatures(components: Component[]): GeoJSON.Feature[] {
         componentId: c.id,
         type: c.type,
         role,
-        color: componentColor[c.type],
+        color: cost
+          ? costColor(cost.get(c.id)?.share ?? 0, maxShare)
+          : componentColor[c.type],
         ...extra,
       },
     });
@@ -229,10 +254,41 @@ function addLayers(map: MapLibreMap) {
 /** Draws the store's components on the map; clicking one selects it. */
 export function ComponentLayers() {
   const map = useMap();
+  const t = useTranslations("map");
+  const locale = intlLocale[useLocale() as Locale];
+  const tooltip = useRef<Popup | null>(null);
+  const costRef = useRef<CostInfo | null>(null);
+  const labels = useRef({ money: (n: number) => String(n), noCost: "" });
+  useEffect(() => {
+    const fmt = new Intl.NumberFormat(locale, {
+      style: "currency",
+      currency: "CAD",
+      notation: "compact",
+      maximumFractionDigits: 1,
+    });
+    labels.current = { money: (n) => fmt.format(n), noCost: t("noCost") };
+  }, [locale, t]);
   const components = useStore((s) => s.components);
   const areaBoundary = useStore((s) => s.areaBoundary);
   const selectedId = useStore((s) => s.selectedComponentId);
   const viewMode = useStore((s) => s.viewMode);
+  const colourByCost = useStore((s) => s.colourByCost);
+  const { estimate } = useEstimate();
+  const cost = useMemo<CostInfo | null>(
+    () =>
+      estimate
+        ? new Map(
+            estimate.components.map((c) => [
+              c.componentId,
+              { p50: c.p50, share: c.share },
+            ]),
+          )
+        : null,
+    [estimate],
+  );
+  useEffect(() => {
+    costRef.current = cost;
+  }, [cost]);
 
   useEffect(() => {
     if (!map?.getLayer("pw-extrusion")) return;
@@ -273,7 +329,37 @@ export function ComponentLayers() {
       useStore.getState().selectComponent(typeof id === "string" ? id : null);
     };
     const pointer = () => (map.getCanvas().style.cursor = "pointer");
-    const unpointer = () => (map.getCanvas().style.cursor = "");
+    const unpointer = () => {
+      map.getCanvas().style.cursor = "";
+      tooltip.current?.remove();
+    };
+    // Hover tooltip with the component's name and cost (P3.3).
+    const onMove = async (e: MapMouseEvent) => {
+      if (useStore.getState().drawing) return;
+      const hit = map
+        .queryRenderedFeatures(e.point, {
+          layers: CLICKABLE.filter((id) => map.getLayer(id)),
+        })
+        .at(0);
+      const id = hit?.properties?.componentId;
+      const c = useStore.getState().components.find((x) => x.id === id);
+      if (!c) return void tooltip.current?.remove();
+      const info = costRef.current?.get(c.id);
+      const text = info
+        ? `${c.name} · ${labels.current.money(info.p50)} · ${Math.round(info.share * 100)}%`
+        : `${c.name} · ${labels.current.noCost}`;
+      if (!tooltip.current) {
+        const { Popup } = await import("maplibre-gl");
+        tooltip.current = new Popup({
+          closeButton: false,
+          closeOnClick: false,
+          offset: 12,
+          className: "pw-tooltip",
+        });
+      }
+      tooltip.current.setLngLat(e.lngLat).setText(text).addTo(map);
+    };
+    map.on("mousemove", onMove);
     map.on("click", onClick);
     const subs = CLICKABLE.flatMap((layer) => [
       map.on("mouseenter", layer, pointer),
@@ -282,6 +368,8 @@ export function ComponentLayers() {
     return () => {
       map.off("style.load", onStyle);
       map.off("click", onClick);
+      map.off("mousemove", onMove);
+      tooltip.current?.remove();
       subs.forEach((s) => s.unsubscribe());
     };
   }, [map]);
@@ -289,9 +377,9 @@ export function ComponentLayers() {
   useEffect(() => {
     map?.getSource<GeoJSONSource>(SOURCE)?.setData({
       type: "FeatureCollection",
-      features: toFeatures(components),
+      features: toFeatures(components, colourByCost ? cost : null),
     });
-  }, [map, components]);
+  }, [map, components, colourByCost, cost]);
 
   useEffect(() => {
     map?.getSource<GeoJSONSource>(AREA_SOURCE)?.setData({

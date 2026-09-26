@@ -46,8 +46,10 @@
     "views": {
       "label": "View",
       "plan2d": "2D plan",
-      "map3d": "3D map"
-    }
+      "map3d": "3D map",
+      "colourByCost": "Colour by cost"
+    },
+    "noCost": "No cost yet"
   },
   "design": {
     "components": {

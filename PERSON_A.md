@@ -76,8 +76,8 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 - [ ] P1.9 `src/data/typologies.json` (you own this one data file) + smart-start shape for a known type
 - [ ] P1.10 Generate starting layout (seeded): roads → buildings fronting roads → parks; spatial hints; no overlaps; Regenerate
 - [x] P3.2 Workspace layout: view (left) + B's `<EstimatePanel/>` (right); view switcher 2D plan / 3D map
-- [ ] P3.3 Shared selection across views, component list, and line items; hover tooltips with cost (from `useEstimate`, fixture until live)
-- [ ] P3.4 "Colour by cost" toggle on map views
+- [x] P3.3 Shared selection across views, component list, and line items; hover tooltips with cost (from `useEstimate`, fixture until live)
+- [x] P3.4 "Colour by cost" toggle on map views
 - [ ] P3.9a Flag markers on the map (B owns the flags list)
 - [ ] P7.4 Creation flow navigation: Describe → Review build list (B's screen) → Locate → Draw each planned component (checklist) → Questions (B's panel) → Estimate
 - [ ] P4.5 Landing page: prompt box (calls B's parse), blank map option, demo cards, open project file button (B's loader)
