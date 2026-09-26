@@ -12,8 +12,37 @@ import type {
 
 export const MAX_QUESTIONS = 8;
 
-/** Never asked: the drawing already answers them. */
-const NOT_ASKED = new Set(["gfaOverrideM2", "lengthM", "areaM2", "storeys"]);
+/** Never asked: the drawing (or the site lookup) already answers them. */
+const NOT_ASKED = new Set([
+  "gfaOverrideM2",
+  "lengthM",
+  "areaM2",
+  "storeys",
+  "demolitionM2",
+]);
+
+/** Below this cost impact a default is good enough; not worth the user's time. */
+const MIN_IMPACT = 3;
+
+/** Structure inputs that apply to each kind of structure. */
+const STRUCTURE_PARAMS: Record<string, string[]> = {
+  culvert_replacement: ["spanM", "lengthM", "fishHabitat"],
+  small_bridge: ["deckLengthM", "deckWidthM", "structureType", "fishHabitat"],
+  pumping_station: ["capacityTier"],
+};
+
+/** Follow-ups that only make sense given another answer (e.g. pipe size only if the pipe is replaced). */
+const ONLY_IF: Record<string, (v: Record<string, ParamValue>) => boolean> = {
+  watermainDiameterMm: (v) => v.watermain === true,
+  watermainMaterial: (v) => v.watermain === true,
+  stormDiameterMm: (v) => v.stormSewer === true,
+  excavationDepthM: (v) => v.scope === "full_reconstruction",
+  sidewalkWidthM: (v) => Number(v.sidewalkSides) > 0,
+  hardscapeSurface: (v) => Number(v.hardscapeShare) > 0,
+};
+
+/** Existing buildings in the way outrank everything: they can add a lot and only the user knows. */
+const DEMOLITION_BOOST = 4;
 
 /** Building special spaces only make sense for some subtypes. */
 const SPECIAL_SPACES: Record<string, string[]> = {
@@ -31,10 +60,19 @@ const SPECIAL_SPACES: Record<string, string[]> = {
   councilChamber: ["municipal_office"],
 };
 
-function relevant(type: string, subtype: string, paramId: string) {
-  if (NOT_ASKED.has(paramId)) return false;
-  const only = type === "building" ? SPECIAL_SPACES[paramId] : undefined;
-  return !only || only.includes(subtype);
+function relevant(
+  c: QuestionsRequest["components"][number],
+  def: ParamDefinition,
+  values: Record<string, ParamValue>,
+) {
+  if (NOT_ASKED.has(def.id)) return false;
+  if (def.id === "demolishExisting") return (c.existing?.count ?? 0) > 0;
+  if (def.costImpact < MIN_IMPACT) return false;
+  if (c.type === "structure")
+    return STRUCTURE_PARAMS[c.subtype]?.includes(def.id) ?? true;
+  if (ONLY_IF[def.id] && !ONLY_IF[def.id]!(values)) return false;
+  const only = c.type === "building" ? SPECIAL_SPACES[def.id] : undefined;
+  return !only || only.includes(c.subtype);
 }
 
 export type Candidate = {
@@ -50,7 +88,17 @@ export type Candidate = {
   suggested: ParamValue;
   alsoApplies: string[];
   score: number;
+  /** A site-specific reason the fallback uses instead of the catalog's. */
+  reason?: string;
 };
+
+const fmt = new Intl.NumberFormat("en-CA", { maximumFractionDigits: 0 });
+
+/** Why the demolition question is asked, with what the site lookup found. */
+function existingReason(c: QuestionsRequest["components"][number]) {
+  const e = c.existing!;
+  return `OpenStreetMap shows ${e.count} existing building${e.count === 1 ? "" : "s"} (about ${fmt.format(e.floorAreaM2)} m² of floor area) where ${c.name} goes. Demolition and abatement are priced unless you keep them.`;
+}
 
 /** Every unanswered param, one per type + param ("soil for all roads"), best first. */
 export function candidates(req: QuestionsRequest): Candidate[] {
@@ -60,12 +108,21 @@ export function candidates(req: QuestionsRequest): Candidate[] {
     const tpl = templates[c.type];
     const values = resolveParams(tpl, c.subtype, c.params);
     for (const def of tpl.paramCatalog) {
-      if (def.costImpact < 2 || !relevant(c.type, c.subtype, def.id)) continue;
+      if (!relevant(c, def, values)) continue;
       if ((c.sources[def.id] ?? "default") !== "default") continue;
-      const score = def.costImpact * Math.max(c.share, 0.02);
+      const score =
+        def.costImpact *
+        Math.max(c.share, 0.02) *
+        (def.id === "demolishExisting" ? DEMOLITION_BOOST : 1);
       // Buildings group with the same kind of building only; roads, parks and
       // structures with their whole type ("soil for all roads").
-      const group = c.type === "building" ? `${c.type}/${c.subtype}` : c.type;
+      // Existing buildings are specific to each site, so that question is never grouped.
+      const group =
+        def.id === "demolishExisting"
+          ? c.id
+          : c.type === "building"
+            ? `${c.type}/${c.subtype}`
+            : c.type;
       const key = `${group}:${def.id}`;
       const prev = byKey.get(key);
       if (!prev) {
@@ -80,6 +137,7 @@ export function candidates(req: QuestionsRequest): Candidate[] {
           suggested: values[def.id]!,
           alsoApplies: [],
           score,
+          ...(def.id === "demolishExisting" && { reason: existingReason(c) }),
         });
         continue;
       }
@@ -114,7 +172,7 @@ export function toQuestion(
     id: c.id,
     componentId: c.componentId,
     paramId: c.def.id,
-    reason: reason || c.def.why.en,
+    reason: reason || c.reason || c.def.why.en,
     suggested: suggested ?? c.suggested,
     alsoApplies: c.alsoApplies,
   };

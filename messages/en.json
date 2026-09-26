@@ -484,7 +484,56 @@
       "ai_busy": "AI assistant busy, used standard questions.",
       "ai_unavailable": "AI assistant unavailable, used standard questions."
     },
-    "allAnsweredTitle": "All caught up"
+    "allAnsweredTitle": "All caught up",
+    "ask": {
+      "road": {
+        "scope": "How much of {name} is being rebuilt?",
+        "lanes": "How many travel lanes will {name} have?",
+        "roadClass": "What kind of road is {name}?",
+        "sidewalkSides": "How many sides of {name} get a sidewalk?",
+        "cycling": "What kind of bike lane goes on {name}?",
+        "watermain": "Is the watermain under {name} being replaced?",
+        "watermainDiameterMm": "What size is the new watermain under {name}?",
+        "stormSewer": "Is the storm sewer under {name} being replaced?",
+        "stormDiameterMm": "What size is the new storm sewer under {name}?",
+        "sanitarySewer": "Is the sanitary sewer under {name} being replaced?",
+        "excavationDepthM": "How deep does {name} need to be dug out?",
+        "soilCondition": "What is the soil like under {name}?",
+        "rockExpected": "Is there bedrock close to the surface along {name}?",
+        "trafficStaging": "How will traffic get through while {name} is under construction?",
+        "utilityConflicts": "Are gas, hydro or telecom lines in the way on {name}?"
+      },
+      "park": {
+        "hardscapeShare": "How much of {name} is paved (plazas, courts, paths)?",
+        "demolishExisting": "Should the existing buildings where {name} goes be demolished?"
+      },
+      "building": {
+        "quality": "What level of finish is {name}?",
+        "sustainability": "What energy target is {name} aiming for?",
+        "basement": "Does {name} need a basement?",
+        "siteServicing": "How hard is it to connect {name} to water, sewer and power?",
+        "gymnasium": "Will {name} have a gymnasium?",
+        "indoorPool": "Will {name} have an indoor pool?",
+        "iceRink": "Will {name} have an indoor ice rink?",
+        "apparatusBays": "How many truck bays does {name} need?",
+        "sallyPort": "Does {name} need a sally port and holding cells?",
+        "demolishExisting": "Should the existing buildings where {name} goes be demolished?"
+      },
+      "structure": {
+        "spanM": "How wide is the culvert opening at {name}?",
+        "lengthM": "How long is the culvert at {name}, end to end?",
+        "fishHabitat": "Does the watercourse at {name} have fish habitat?",
+        "deckLengthM": "How long is the bridge at {name}?",
+        "deckWidthM": "How wide is the bridge deck at {name}?",
+        "structureType": "What type of bridge is {name}?",
+        "capacityTier": "How big is the pumping station at {name}?"
+      },
+      "parking": {
+        "surface": "What surface will {name} have?",
+        "lighting": "Will {name} be lit at night?",
+        "demolishExisting": "Should the existing buildings where {name} goes be demolished?"
+      }
+    }
   },
   "export": {
     "pdfTitle": "Council report (PDF)",

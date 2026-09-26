@@ -10,7 +10,7 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 - **Status:** at sync point   <!-- not started | in progress | blocked | at sync point -->
 - **Next action:** Demo projects (P4.4: draw three in the app, download project files for B; waiting on the human to pick them). Then P10 polish (needs the human's go-ahead).
 - **Blockers / needs from B:** see Requests below.
-- **Last updated:** 2026-09-26 (map-aware starting layout; build list tags removable with ×; sample-data badge removed from the top bar; P6.3 site context in the engine, automatic lookup; rotate/tilt mode; P7.4 creation flow with Gemini parse + review; P50/share in the component list; project file buttons in the top bar; language toggle removed; park features from the prompt placed with the park; workspace height fix; UI tweaks: resizable side panels, narrower estimate panel, building names in 3D; P1.7–P1.18, P3.2–P3.4, P3.9a, P4.3, P4.5, P5.1, P6.1–P6.2, P9.1–P9.5 merged to `main`)
+- **Last updated:** 2026-09-26 (demolition of existing buildings + better questions; map-aware starting layout; build list tags removable with ×; sample-data badge removed from the top bar; P6.3 site context in the engine, automatic lookup; rotate/tilt mode; P7.4 creation flow with Gemini parse + review; P50/share in the component list; project file buttons in the top bar; language toggle removed; park features from the prompt placed with the park; workspace height fix; UI tweaks: resizable side panels, narrower estimate panel, building names in 3D; P1.7–P1.18, P3.2–P3.4, P3.9a, P4.3, P4.5, P5.1, P6.1–P6.2, P9.1–P9.5 merged to `main`)
 
 ## Handoff notes
 

@@ -142,3 +142,29 @@ describe("askQuestions", () => {
     });
   });
 });
+
+describe("site-specific questions", () => {
+  it("asks first about existing buildings in the way, with what was found", () => {
+    const b = req.components.find((c) => c.type === "building")!;
+    const withSite: QuestionsRequest = {
+      ...req,
+      components: req.components.map((c) =>
+        c.id === b.id ? { ...c, existing: { count: 2, floorAreaM2: 850 } } : c,
+      ),
+    };
+    const q = fallbackQuestions(withSite)[0]!;
+    expect(q.paramId).toBe("demolishExisting");
+    expect(q.componentId).toBe(b.id);
+    expect(q.reason).toContain("850 m²");
+    // Not asked where nothing is in the way.
+    expect(
+      fallbackQuestions(req).some((x) => x.paramId === "demolishExisting"),
+    ).toBe(false);
+  });
+
+  it("only asks structure inputs that fit the kind of structure", () => {
+    for (const c of candidates(req))
+      if (c.subtype === "culvert_replacement")
+        expect(["spanM", "lengthM", "fishHabitat"]).toContain(c.def.id);
+  });
+});

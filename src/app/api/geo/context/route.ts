@@ -2,8 +2,8 @@ import { z } from "zod";
 import { jsonRoute, rateLimiters } from "@/lib/api";
 import type { SiteContext, SiteFeature } from "@/lib/schemas";
 
-// Site context (P6.1): schools, hospitals, waterways, rail and major roads near the
-// project, from OpenStreetMap via Overpass. Cached per area; on timeout or error it
+// Site context (P6.1): schools, hospitals, waterways, rail, major roads and existing
+// buildings near the project, from OpenStreetMap via Overpass. Cached per area; on timeout or error it
 // returns `source: "unavailable"` so the app keeps working.
 
 const BodySchema = z.object({
@@ -42,7 +42,14 @@ function kindOf(tags: Record<string, string>): SiteFeature["kind"] | null {
   if (tags.waterway) return "waterway";
   if (tags.railway === "rail") return "rail";
   if (tags.highway) return "road";
+  if (tags.building) return "building";
   return null;
+}
+
+function pick(tags: Record<string, string>, keys: string[]) {
+  return Object.fromEntries(
+    keys.filter((k) => tags[k]).map((k) => [k, tags[k]!]),
+  );
 }
 
 function toFeature(el: OsmElement): SiteFeature | null {
@@ -52,7 +59,38 @@ function toFeature(el: OsmElement): SiteFeature | null {
   const line = el.geometry?.map((p) => [p.lon, p.lat] as [number, number]);
   const point =
     el.center ?? (el.lat !== undefined ? { lat: el.lat, lon: el.lon! } : null);
-  // Schools and hospitals as points (their centre); linear features as lines.
+  // Schools and hospitals as points (their centre); buildings as footprints;
+  // linear features as lines.
+  const closed =
+    line &&
+    line.length >= 4 &&
+    line[0]![0] === line.at(-1)![0] &&
+    line[0]![1] === line.at(-1)![1];
+  if (kind === "building")
+    return closed
+      ? {
+          id: `${el.type}/${el.id}`,
+          kind,
+          name: tags.name,
+          geometry: {
+            type: "Feature",
+            properties: {},
+            geometry: {
+              type: "Polygon",
+              coordinates: [
+                line.map(
+                  ([x, y]) =>
+                    [Number(x.toFixed(6)), Number(y.toFixed(6))] as [
+                      number,
+                      number,
+                    ],
+                ),
+              ],
+            },
+          },
+          tags: pick(tags, ["building", "building:levels", "height"]),
+        }
+      : null;
   const geometry =
     (kind === "school" || kind === "hospital") && point
       ? {
@@ -88,8 +126,10 @@ export const POST = jsonRoute(
       way["railway"="rail"](${b});
     )->.site;
     way["highway"~"^(motorway|trunk|primary|secondary|tertiary|residential|unclassified)$"](${b})->.roads;
+    way["building"](${b})->.buildings;
     .site out tags geom 300;
-    .roads out tags geom 600;`;
+    .roads out tags geom 600;
+    .buildings out tags geom 5000;`;
     for (const url of OVERPASS_URLS) {
       try {
         const res = await fetch(url, {

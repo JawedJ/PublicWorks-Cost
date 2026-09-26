@@ -59,7 +59,14 @@ export function EstimatePanel() {
   const [tab, setTab] = useState<Tab>("estimate");
   // Questions are generated in the background, once per project and set of
   // components (waiting for drawing to settle), not each time the tab opens.
-  const componentKey = estimate?.components.map((c) => c.componentId).join();
+  // Existing-building flags come from the site lookup, which lands a bit later.
+  const componentKey = [
+    estimate?.components.map((c) => c.componentId).join(),
+    estimate?.flags
+      .filter((f) => f.code.startsWith("existing_buildings"))
+      .flatMap((f) => f.componentIds)
+      .join(),
+  ].join("|");
   useEffect(() => {
     if (!estimate?.components.length) return;
     const timer = setTimeout(() => void loadQuestions(estimate), 2000);

@@ -11,6 +11,7 @@ export const SiteFeatureKindSchema = z.enum([
   "rail",
   "road",
   "floodplain",
+  "building",
 ]);
 export type SiteFeatureKind = z.infer<typeof SiteFeatureKindSchema>;
 
@@ -19,7 +20,7 @@ export const SiteFeatureSchema = z.object({
   kind: SiteFeatureKindSchema,
   name: z.string().optional(),
   geometry: AnyFeatureSchema,
-  /** OSM tags kept for road attributes (lanes, surface, maxspeed, ...). */
+  /** OSM tags kept for road attributes (lanes, surface, maxspeed, ...) and buildings (levels, height). */
   tags: z.record(z.string(), z.string()).optional(),
 });
 export type SiteFeature = z.infer<typeof SiteFeatureSchema>;

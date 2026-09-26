@@ -165,6 +165,9 @@ function QuestionCard({
   const t = useTranslations("questions");
   const [value, setValue] = useState<ParamValue>(q.suggested);
   const label = def.label.en;
+  // Asked as a plain question where we have one ("What is the soil like under Main St?").
+  const askKey = `ask.${c.type}.${def.id}` as Parameters<typeof t>[0];
+  const title = t.has(askKey) ? t(askKey, { name: c.name }) : label;
   const numOk =
     def.type !== "number" ||
     (Number.isFinite(Number(value)) &&
@@ -177,7 +180,7 @@ function QuestionCard({
   return (
     <Card size="sm">
       <CardHeader>
-        <CardTitle>{label}</CardTitle>
+        <CardTitle>{title}</CardTitle>
         <CardDescription>
           {c.name}
           {others.length > 0 && ` ${t("andOthers", { count: others.length })}`}

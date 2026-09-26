@@ -36,6 +36,13 @@ export const QuestionsRequestSchema = z.object({
         share: z.number().min(0).max(1),
         params: z.record(z.string(), ParamValueSchema),
         sources: z.record(z.string(), ParamSourceSchema),
+        /** Existing buildings standing where it goes (from the site lookup). */
+        existing: z
+          .object({
+            count: z.int().min(0),
+            floorAreaM2: z.number().min(0),
+          })
+          .optional(),
       }),
     )
     .max(60),

@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import { existingBuildingsOn } from "@/engine/demolition";
 import { fallbackQuestions } from "@/lib/questions/rank";
 import {
   type Estimate,
@@ -24,6 +25,10 @@ const SITE_CODES = new Set([
 
 export function buildQuestionsRequest(estimate: Estimate): QuestionsRequest {
   const { components, project } = useStore.getState();
+  const existing = (c: (typeof components)[number]) => {
+    const e = existingBuildingsOn(c, project.siteContext);
+    return e.count ? { count: e.count, floorAreaM2: e.floorAreaM2 } : undefined;
+  };
   const shares = new Map(
     estimate.components.map((c) => [c.componentId, c.share]),
   );
@@ -41,6 +46,7 @@ export function buildQuestionsRequest(estimate: Estimate): QuestionsRequest {
         sources: Object.fromEntries(
           Object.entries(c.paramMeta).map(([k, m]) => [k, m.source]),
         ),
+        existing: existing(c),
       })),
     siteNotes: estimate.flags
       .filter((f) => SITE_CODES.has(f.code))
@@ -114,7 +120,13 @@ export function useQuestions(): QuestionsState {
 
 function keyFor(estimate: Estimate): string {
   const ids = estimate.components.map((c) => c.componentId).sort();
-  return `${useStore.getState().project.id}:${ids.join(",")}`;
+  const { components, project } = useStore.getState();
+  // Ask again when the site lookup finds existing buildings in the way.
+  const inTheWay = components
+    .filter((c) => existingBuildingsOn(c, project.siteContext).count > 0)
+    .map((c) => c.id)
+    .sort();
+  return `${project.id}:${ids.join(",")}:${inTheWay.join(",")}`;
 }
 
 /**
