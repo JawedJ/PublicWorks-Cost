@@ -1,0 +1,42 @@
+{
+ "source": {
+  "title": "CanadaBuys award notices: contract start and end dates",
+  "publisher": "Public Services and Procurement Canada",
+  "url": "https://open.canada.ca/data/en/dataset/a1acb126-9ce8-40a9-b889-5da2b1dd20cb",
+  "files": [
+   "https://canadabuys.canada.ca/opendata/pub/2026-2027-awardNotice-avisAttribution.csv",
+   "https://canadabuys.canada.ca/opendata/pub/2025-2026-awardNotice-avisAttribution.csv",
+   "https://canadabuys.canada.ca/opendata/pub/2024-2025-awardNotice-avisAttribution.csv",
+   "https://canadabuys.canada.ca/opendata/pub/2023-2024-awardNotice-avisAttribution.csv",
+   "https://canadabuys.canada.ca/opendata/pub/2022-2023-awardNotice-avisAttribution.csv"
+  ],
+  "licence": "Open Government Licence - Canada",
+  "licenceUrl": "https://open.canada.ca/en/open-government-licence-canada",
+  "retrievedAt": "2026-09-26T23:31:31.617Z",
+  "method": "Construction (CNST) awards across Canada, latest amendment, CAD, value ≥ $100,000, 0.5–120 months, excluding maintenance, service, consulting and standing-offer contracts. months = k × value^b fitted on logs (Bromilow time–cost form). Buildings and civil work split by title keywords. p10Factor/p90Factor: 10th/90th percentile of actual ÷ fitted.",
+  "limits": "Federal contracts, not municipal. Contract periods, not measured construction time (may include closeout or early start dates). Values include taxes. Wide spread: treat as a typical duration, not a schedule."
+ },
+ "fits": {
+  "building": {
+   "n": 245,
+   "k": 0.04074,
+   "b": 0.3771,
+   "p10Factor": 0.449,
+   "p90Factor": 2.158
+  },
+  "civil": {
+   "n": 162,
+   "k": 0.05561,
+   "b": 0.3279,
+   "p10Factor": 0.412,
+   "p90Factor": 2.307
+  },
+  "all": {
+   "n": 713,
+   "k": 0.04164,
+   "b": 0.3643,
+   "p10Factor": 0.415,
+   "p90Factor": 2.154
+  }
+ }
+}

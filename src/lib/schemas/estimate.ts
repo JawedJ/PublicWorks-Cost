@@ -96,6 +96,8 @@ export const ComponentEstimateSchema = z.object({
   share: z.number().min(0).max(1),
   /** Answers that would raise this component's class. */
   improvementHints: z.array(ImprovementHintSchema),
+  /** Typical construction time from its cost (CanadaBuys contract durations). */
+  durationMonths: z.number().positive().optional(),
 });
 export type ComponentEstimate = z.infer<typeof ComponentEstimateSchema>;
 
@@ -161,6 +163,15 @@ export const EstimateSchema = z.object({
     }),
   ),
   flags: z.array(FlagSchema),
+  /** Construction time: longest component (after its start offset). */
+  schedule: z
+    .object({
+      months: z.number().positive(),
+      p10Months: z.number().positive(),
+      p90Months: z.number().positive(),
+      source: LocalizedTextSchema,
+    })
+    .optional(),
   perUnitMetrics: z.object({
     perM: NonNegativeSchema.optional(),
     perM2: NonNegativeSchema.optional(),

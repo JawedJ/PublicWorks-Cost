@@ -120,6 +120,7 @@ Flags only; never block, never change the estimate. Do Waterloo first (demo city
 - [x] P5.3 Excel workbook (Summary, Line Items, Assumptions, Scenarios) · Core. `src/lib/export/xlsx.ts` (ExcelJS, on demand), plus a Flags sheet; line totals are live formulas where qty × price = total
 - [x] P5.4 Export tab · Core. `src/components/estimate/export-tab.tsx`: PDF (site plan switch), Excel, project file
 - [x] Custom auto-pricing (per the human): AI basis pick in `src/lib/ai/parse.ts` (`costBasis`, custom `areaM2` hint) → `BuildListItem.customPricing` → component; engine fallback `autoPricing()` in `src/engine/templates/custom.ts` (name match, else `site_landscaping`), flag `custom_auto_priced`
+- [x] Construction time from real data (per the human): `scripts/fetch-durations.ts` → `construction-durations.json`; `src/engine/duration.ts`; `Estimate.schedule`, `ComponentEstimate.durationMonths`; Construction time card in the Estimate tab; reports
 - [ ] P7.7 `/api/ai/narrative` with number check + template fallback; used in PDF · Stretch
 - [ ] P8.1 Scenario create/duplicate/rename/delete · Stretch
 - [ ] P8.2 What-if controls (date shift, price shocks, param changes, add/remove components) · Stretch

@@ -3,6 +3,7 @@ import {
   BuildingCostsFileSchema,
   AltusBenchmarksFileSchema,
   CanadaBuysFileSchema,
+  ConstructionDurationsFileSchema,
   OverrunReferenceFileSchema,
   ParkFeaturesFileSchema,
   RefDataSchema,
@@ -13,6 +14,7 @@ import {
   type BuildingCostsFile,
   type AltusBenchmarksFile,
   type CanadaBuysFile,
+  type ConstructionDurationsFile,
   type OverrunReferenceFile,
   type ParkFeaturesFile,
   type RefData,
@@ -26,6 +28,7 @@ import parkFeaturesJson from "./park-features.json";
 import regionalFactorsJson from "./regional-factors.json";
 import structuresJson from "./structures.json";
 import canadabuysAwardsJson from "./public/canadabuys-awards.json";
+import constructionDurationsJson from "./public/construction-durations.json";
 import altusBenchmarksJson from "./altus-benchmarks.json";
 import statcanBcpiJson from "./public/statcan-bcpi.json";
 import unitPricesJson from "./unit-prices.json";
@@ -68,3 +71,7 @@ export const canadabuysAwards: CanadaBuysFile =
 /** Altus Group 2026 road benchmarks ($/m). Cross-check in the market evidence card only. */
 export const altusBenchmarks: AltusBenchmarksFile =
   AltusBenchmarksFileSchema.parse(altusBenchmarksJson);
+
+/** Construction duration vs contract value, fitted on CanadaBuys contracts (scripts/fetch-durations.ts). */
+export const constructionDurations: ConstructionDurationsFile =
+  ConstructionDurationsFileSchema.parse(constructionDurationsJson);
