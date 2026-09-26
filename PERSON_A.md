@@ -6,9 +6,9 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Current state
 
-- **Current task:** P1.1
-- **Status:** at sync point   <!-- not started | in progress | blocked | at sync point -->
-- **Next action:** S1 check with B, then P1.1 (MapLibre workspace).
+- **Current task:** P1.2
+- **Status:** in progress   <!-- not started | in progress | blocked | at sync point -->
+- **Next action:** P1.2 geocoding search with fly-to.
 - **Blockers / needs from B:** P1.3 needs B's schemas (`Component`, `ComponentGeometry`) on `main`.
 - **Last updated:** 2026-09-26
 
@@ -21,6 +21,7 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 - i18n lives in `src/lib/i18n/` (`routing.ts`, `navigation.ts`, `request.ts`); use `Link`/`useRouter` from `@/lib/i18n/navigation`, not `next/link`. Messages are typed from `messages/en.json` (`src/global.d.ts`).
 - Dark mode follows the OS; a `.dark` / `.light` class on `<html>` forces it. Map colours are tokens: `water`, `park`, `pavement`, `building`, `warning`, `sample`. Use the `figures` utility for tabular numerals.
 - Store: `designSlice` currently has selection, view mode, colour by cost, units. Components + undo/redo come in P1.3 once B's schemas exist.
+- MapLibre 6: its CSS sets `position: relative` on the container, so size it with `h-full w-full`, not `absolute inset-0`. The worker must be served from `/maplibre/` (see `setWorkerUrl` in `map-view.tsx`).
 - `TopBar` accepts `children` for workspace actions (New project, Download project file) to be added later.
 
 ## Requests to Person B
@@ -44,7 +45,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 - [x] A.1 Create `src/lib/store/store.ts` with `designSlice.ts` (selection contract included) and an empty `projectSlice.ts` stub for B; merge to `main` **as early as possible** so B can build on it
 
 ### S1 → S2 — Map & drawing · Core
-- [ ] P1.1 Workspace page with MapLibre, basemap (MapTiler, OpenFreeMap fallback), controls
+- [x] P1.1 Workspace page with MapLibre, basemap (MapTiler, OpenFreeMap fallback), controls
 - [ ] P1.2 Geocoding search with fly-to
 - [ ] P1.3 Store: multiple components (planned/drawn, user/generated), selection, undo/redo
 - [ ] P1.4 Component list panel (select, zoom to, rename, duplicate, hide/show, delete)
@@ -105,7 +106,8 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 | Layout shell | `src/app/[locale]/layout.tsx`, `src/components/layout/*` | top bar, sample-data badge, language toggle |
 | Design tokens | `src/app/globals.css` | light/dark, map colours, `figures` utility |
 | Store | `src/lib/store/store.ts`, `designSlice.ts` (+ test), `projectSlice.ts` (B's stub) | selection contract |
-| Pages | `src/app/[locale]/page.tsx` (landing placeholder), `src/app/[locale]/workspace/page.tsx` (placeholder) | |
+| Pages | `src/app/[locale]/page.tsx` (landing placeholder), `src/app/[locale]/workspace/page.tsx` | |
+| Map | `src/components/map/map-view.tsx`, `map-context.tsx` (`useMap()`), `basemap-toggle.tsx`, `workspace-shell.tsx`; `src/lib/geo/basemaps.ts` | MapTiler streets/hybrid, OpenFreeMap positron without key; worker copied to `public/maplibre` by `pnpm copy:maplibre` (runs in dev/build) |
 
 ## Environment
 

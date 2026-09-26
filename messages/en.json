@@ -23,6 +23,18 @@
   },
   "map": {
     "workspaceTitle": "Workspace",
-    "placeholder": "The map workspace will appear here."
+    "mapLabel": "Map",
+    "viewLabel": "Map view",
+    "panelLabel": "Estimate panel",
+    "panelPlaceholder": "The estimate will appear here once components are drawn.",
+    "loadError": "The map could not load. Check your connection; everything else still works.",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "resetBearing": "Reset rotation",
+    "basemap": {
+      "label": "Basemap",
+      "streets": "Map",
+      "satellite": "Satellite"
+    }
   }
 }

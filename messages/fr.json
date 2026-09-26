@@ -23,6 +23,18 @@
   },
   "map": {
     "workspaceTitle": "Espace de travail",
-    "placeholder": "L’espace de travail cartographique apparaîtra ici."
+    "mapLabel": "Carte",
+    "viewLabel": "Vue cartographique",
+    "panelLabel": "Panneau d’estimation",
+    "panelPlaceholder": "L’estimation apparaîtra ici une fois les composantes dessinées.",
+    "loadError": "La carte n’a pas pu se charger. Vérifiez votre connexion; le reste de l’application fonctionne.",
+    "zoomIn": "Zoom avant",
+    "zoomOut": "Zoom arrière",
+    "resetBearing": "Réinitialiser l’orientation",
+    "basemap": {
+      "label": "Fond de carte",
+      "streets": "Carte",
+      "satellite": "Satellite"
+    }
   }
 }

@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { use } from "react";
+import { WorkspaceShell } from "@/components/map/workspace-shell";
 import type { Locale } from "@/lib/i18n/routing";
 
 export default function WorkspacePage({
@@ -11,9 +12,9 @@ export default function WorkspacePage({
   const t = useTranslations("map");
 
   return (
-    <div className="flex flex-1 items-center justify-center p-8 text-muted-foreground">
+    <>
       <h1 className="sr-only">{t("workspaceTitle")}</h1>
-      <p>{t("placeholder")}</p>
-    </div>
+      <WorkspaceShell />
+    </>
   );
 }
