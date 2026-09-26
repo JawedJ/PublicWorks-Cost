@@ -193,9 +193,17 @@ export function DrawToolbar() {
       ? target
       : null;
   const tools = toolsForTarget(
-    target ?? { kind: "new", type: "custom", subtype: "custom", name: "" },
+    drawing?.target ??
+      target ?? { kind: "new", type: "custom", subtype: "custom", name: "" },
     components,
   );
+  // Drawing can also be started from the component palette; show what is being drawn.
+  const shown =
+    drawing?.target.kind === "new" && drawing.target.type !== "custom"
+      ? t("targets.new", {
+          type: subtypeLabel(drawing.target.type, drawing.target.subtype),
+        })
+      : label(active);
 
   function label(c: Choice): string {
     switch (c.kind) {
@@ -240,11 +248,11 @@ export function DrawToolbar() {
               variant="outline"
               size="sm"
               disabled={Boolean(drawing)}
-              aria-label={t("whatLabel", { current: label(active) })}
+              aria-label={t("whatLabel", { current: shown })}
               className="max-w-56"
             >
               <Plus />
-              <span className="truncate">{label(active)}</span>
+              <span className="truncate">{shown}</span>
               <ChevronDown />
             </Button>
           </DropdownMenuTrigger>

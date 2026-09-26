@@ -1,13 +1,15 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useEffect } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { useStore } from "@/lib/store/store";
 import { EstimatePanel } from "@/components/estimate/estimate-panel";
+import { ResizeHandle } from "@/components/layout/resize-handle";
 import { SiteScene } from "@/components/visuals/site-scene";
 import { ComponentLayers } from "./component-layers";
 import { ComponentInspector } from "./component-inspector";
 import { ComponentList } from "./component-list";
+import { ComponentPalette } from "./component-palette";
 import { DrawController } from "./draw-controller";
 import { DrawToolbar } from "./draw-toolbar";
 import { EditToolbar } from "./edit-toolbar";
@@ -18,7 +20,6 @@ import { SmartPlacer } from "./smart-placer";
 import { TransformHandles } from "./transform-handles";
 import { ViewSwitcher } from "./view-switcher";
 
-/** Workspace layout: component list and view on the left (~60%), estimate panel on the right. */
 /** Warns before leaving the page with a design in progress (projects aren't saved; SPEC 15). */
 function useUnsavedWarning() {
   const hasWork = useStore(
@@ -32,16 +33,28 @@ function useUnsavedWarning() {
   }, [hasWork]);
 }
 
+const clamp = (v: number, min: number, max: number) =>
+  Math.round(Math.min(Math.max(v, min), max));
+
+/**
+ * Workspace layout: component list, view, and estimate panel (~28% wide by default).
+ * On desktop, the list and the estimate panel can be resized by dragging their inner edges.
+ */
 export function WorkspaceShell() {
   const t = useTranslations("map");
   useUnsavedWarning();
   const viewMode = useStore((s) => s.viewMode);
   const tDesign = useTranslations("design");
+  const listRef = useRef<HTMLElement>(null);
+  const panelRef = useRef<HTMLElement>(null);
+  // null = default width from CSS; set once the user drags.
+  const [listWidth, setListWidth] = useState<number | null>(null);
+  const [panelWidth, setPanelWidth] = useState<number | null>(null);
 
   return (
     <MapProvider>
       <div className="flex min-h-0 flex-1 flex-col lg:h-[calc(100dvh-3.5rem)] lg:flex-row">
-        <div className="flex shrink-0 flex-col lg:min-h-0 lg:flex-[3] lg:flex-row">
+        <div className="flex shrink-0 flex-col lg:min-h-0 lg:min-w-0 lg:flex-1 lg:flex-row">
           <section
             aria-label={t("viewLabel")}
             className="relative h-[60vh] lg:order-2 lg:h-auto lg:flex-1"
@@ -65,22 +78,55 @@ export function WorkspaceShell() {
             </MapView>
           </section>
           <aside
+            ref={listRef}
             aria-label={tDesign("listLabel")}
-            className="max-h-72 border-t bg-card lg:order-1 lg:max-h-none lg:w-64 lg:border-t-0 lg:border-r xl:w-72"
+            style={
+              listWidth === null
+                ? undefined
+                : ({ "--list-w": `${listWidth}px` } as CSSProperties)
+            }
+            className={`relative max-h-72 border-t bg-card lg:order-1 lg:max-h-none lg:shrink-0 lg:border-t-0 lg:border-r ${
+              listWidth === null ? "lg:w-64 xl:w-72" : "lg:w-(--list-w)"
+            }`}
           >
+            <ResizeHandle
+              side="right"
+              label={t("resizeList")}
+              getWidth={() => listRef.current?.offsetWidth ?? 0}
+              onResize={(w) => setListWidth(clamp(w, 200, 480))}
+            />
             <div className="flex h-full min-h-0 flex-col">
               <div className="min-h-0 flex-1">
                 <ComponentList />
               </div>
+              <ComponentPalette />
               <ComponentInspector />
             </div>
           </aside>
         </div>
         <aside
+          ref={panelRef}
           aria-label={t("panelLabel")}
-          className="flex min-h-64 flex-col overflow-y-auto border-t bg-card lg:flex-[2] lg:border-t-0 lg:border-l"
+          style={
+            panelWidth === null
+              ? undefined
+              : ({ "--panel-w": `${panelWidth}px` } as CSSProperties)
+          }
+          className={`relative flex min-h-64 flex-col border-t bg-card lg:shrink-0 lg:border-t-0 lg:border-l ${
+            panelWidth === null ? "lg:w-[28%]" : "lg:w-(--panel-w)"
+          }`}
         >
-          <EstimatePanel />
+          <ResizeHandle
+            side="left"
+            label={t("resizePanel")}
+            getWidth={() => panelRef.current?.offsetWidth ?? 0}
+            onResize={(w) =>
+              setPanelWidth(clamp(w, 280, window.innerWidth * 0.6))
+            }
+          />
+          <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
+            <EstimatePanel />
+          </div>
         </aside>
       </div>
     </MapProvider>

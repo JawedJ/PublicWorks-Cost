@@ -37,6 +37,8 @@
     "mapLabel": "Map",
     "viewLabel": "Map view",
     "panelLabel": "Estimate panel",
+    "resizeList": "Resize component list",
+    "resizePanel": "Resize estimate panel",
     "panelPlaceholder": "The estimate will appear here once components are drawn.",
     "loadError": "The map could not load. Check your connection; everything else still works.",
     "zoomIn": "Zoom in",
@@ -215,6 +217,11 @@
       "tallBuilding": "“{name}” has {storeys} storeys, unusual for this type.",
       "longRoad": "“{name}” is {km} km long. Is that intended?",
       "tinyPark": "“{name}” is only {m2} m²."
+    },
+    "palette": {
+      "title": "Add to the map",
+      "hint": "Choose an item, then click on the map to start drawing it.",
+      "pick": "Draw a {type}: choose, then click on the map"
     }
   },
   "estimate": {

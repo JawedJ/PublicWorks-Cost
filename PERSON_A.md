@@ -10,7 +10,7 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 - **Status:** at sync point   <!-- not started | in progress | blocked | at sync point -->
 - **Next action:** P7.4 creation flow once B's parse endpoint + build-list screen land (swap the landing keyword fallback for B's parse). Then polish after feature freeze: P10.2 accessibility, P10.3 mobile, P10.5 performance, P10.8 final deploy. Zoning map layer when B's Z.1 schema is on main.
 - **Blockers / needs from B:** see Requests below.
-- **Last updated:** 2026-09-26 (P1.7–P1.18, P3.2–P3.4, P3.9a, P4.3, P4.5, P5.1, P6.1–P6.2, P9.1–P9.5 merged to `main`)
+- **Last updated:** 2026-09-26 (UI tweaks: resizable side panels, narrower estimate panel, Add-to-the-map palette, building names in 3D; P1.7–P1.18, P3.2–P3.4, P3.9a, P4.3, P4.5, P5.1, P6.1–P6.2, P9.1–P9.5 merged to `main`)
 
 ## Handoff notes
 
@@ -18,6 +18,7 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 - **Pace (per the human, 2026-09-26):** fast MVP. Batch tasks, verify main functionality only (checks + one smoke screenshot), log rough edges here instead of polishing.
 - Editing (P1.7): selected component's shapes are copied into Terra Draw select mode (`draw-controller.tsx`, ids `<componentId>|p|s|f`). Only outlines go to Terra Draw (it rejects holes); `withElementShape` puts holes back. Clicks on shapes are picked by `pickElement` (Terra Draw's own click selection is off). Move/rotate/scale of the whole component are MapLibre markers (`transform-handles.tsx`) with live preview (`previewComponentGeometry` + `endGeometryPreview` = one undo step). Known rough edges: rotated shapes scale in the axis-aligned frame; Terra Draw's grab distance is its 40 px default (grabs corners on small shapes); the Terra Draw overlay fill covers holes.
+- UI tweaks (per the human): estimate panel defaults to 28% width; list and estimate panel resize by dragging their inner edges (`src/components/layout/resize-handle.tsx`, widths in `workspace-shell.tsx` state, not saved). "Add to the map" palette under the component list (`component-palette.tsx`): click a subtype to start drawing it (same as the Add menu), next map click begins the shape; the draw toolbar shows a palette-started target. 3D site shows building names as HTML tags projected each frame (`site-scene.tsx`).
 - Section split (P1.8) not implemented; merge unions all sections (tallest wins).
 - Plan rendering (P1.11–13): `src/lib/render/plan.ts` builds one GeoJSON with a `layer` property; `plan-layers.tsx` styles it under the interactive `pw-*` layers, which are transparent (`plan` property) unless Colour by cost is on. Metric widths use a zoom-exponential expression (must be the outermost expression; no `max()` around it).
 - `useEstimate()` is called twice (EstimatePanel and ComponentLayers) → two engine runs per change. Fine for now; B could move the estimate into the store.
@@ -136,6 +137,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 | Design tokens | `src/app/globals.css` | light/dark, map colours, `figures` utility |
 | Store | `src/lib/store/store.ts`, `designSlice.ts` (+ test), `projectSlice.ts` (B's stub) | selection contract; components, project area, undo/redo, duplicate |
 | Geometry transforms | `src/lib/geo/transform.ts`, `bounds.ts` (+ test) | `translateFeature` in metres (duplicate offset); `featureBounds` / `componentBounds` for zoom to |
+| Add palette | `src/components/map/component-palette.tsx` | click a subtype to start drawing it |
 | Component list | `src/components/map/component-list.tsx` | select, zoom to, rename, duplicate, hide/show, delete, undo/redo buttons + shortcuts, sample loader |
 | Component map layers | `src/components/map/component-layers.tsx`, `src/lib/render/colors.ts` | placeholder styling until P1.11; click to select; selection highlight |
 | Drawing | `src/lib/geo/drawing.ts` (targets, tools per type, geometry from a shape), `src/components/map/draw-controller.tsx` (Terra Draw), `draw-toolbar.tsx`; store `drawing`, `startDrawing`, `cancelDrawing`, `finishDrawing` | Terra Draw 1.35 + MapLibre adapter; self-crossing polygons rejected |

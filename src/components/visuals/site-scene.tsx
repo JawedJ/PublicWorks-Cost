@@ -17,7 +17,7 @@ import { useStore } from "@/lib/store/store";
 // in local metres. Buildings are extruded per section with floor lines, roads are
 // ribbons at true width with buried pipes shown under them, parks get lawns,
 // features and trees. Click to select (shared selection), hover for cost, and
-// Colour by cost recolours everything.
+// Colour by cost recolours everything. Building names float above their roofs.
 
 const DEFAULT_FLOOR_M = 4;
 const COST_RAMP = ["#fde68a", "#fbbf24", "#f97316", "#dc2626", "#7f1d1d"];
@@ -77,13 +77,17 @@ function ribbon(points: XY[], width: number, y: number): THREE.BufferGeometry {
   return g;
 }
 
+/** A component name shown above a point in the scene. */
+type SceneLabel = { componentId: string; name: string; at: THREE.Vector3 };
+
 function buildScene(
   components: Component[],
   centre: Position,
   colorFor: (c: Component) => string,
-): { group: THREE.Group; radius: number } {
+): { group: THREE.Group; radius: number; labels: SceneLabel[] } {
   const { toLocal } = localFrame(centre);
   const group = new THREE.Group();
+  const labels: SceneLabel[] = [];
   let radius = 100;
   const tag = (o: THREE.Object3D, c: Component) => {
     o.userData.componentId = c.id;
@@ -163,6 +167,24 @@ function buildScene(
         );
       }
       continue;
+    }
+
+    if (c.type === "building") {
+      const b = componentBounds(c);
+      const top = Math.max(
+        0,
+        ...(g.sections ?? []).map(
+          (s) => s.storeys * (s.floorHeightM ?? DEFAULT_FLOOR_M),
+        ),
+      );
+      if (b) {
+        const [x, y] = toLocal([(b[0] + b[2]) / 2, (b[1] + b[3]) / 2]);
+        labels.push({
+          componentId: c.id,
+          name: c.name,
+          at: new THREE.Vector3(x, top + 3, -y),
+        });
+      }
     }
 
     if (c.type === "building" && g.sections?.length) {
@@ -307,7 +329,7 @@ function buildScene(
       );
     }
   }
-  return { group, radius };
+  return { group, radius, labels };
 }
 
 function disposeGroup(group: THREE.Object3D) {
@@ -330,8 +352,10 @@ export function SiteScene() {
     renderer: THREE.WebGLRenderer;
     controls: OrbitControls;
     content: THREE.Group | null;
+    labels: { at: THREE.Vector3; el: HTMLElement }[];
     centreKey: string;
   } | null>(null);
+  const labelLayer = useRef<HTMLDivElement>(null);
   const components = useStore((s) => s.components);
   const selectedId = useStore((s) => s.selectedComponentId);
   const colourByCost = useStore((s) => s.colourByCost);
@@ -397,12 +421,22 @@ export function SiteScene() {
       renderer,
       controls,
       content: null,
+      labels: [],
       centreKey: "",
     };
     let frame = 0;
+    const v = new THREE.Vector3();
     const loop = () => {
       controls.update();
       renderer.render(scene, camera);
+      // Keep building names over their roofs.
+      for (const l of three.current?.labels ?? []) {
+        v.copy(l.at).project(camera);
+        const visible = v.z < 1 && Math.abs(v.x) < 1.1 && Math.abs(v.y) < 1.1;
+        l.el.style.display = visible ? "" : "none";
+        if (visible)
+          l.el.style.transform = `translate(${((v.x + 1) / 2) * el.clientWidth}px, ${((1 - v.y) / 2) * el.clientHeight}px) translate(-50%, -100%)`;
+      }
       frame = requestAnimationFrame(loop);
     };
     loop();
@@ -433,6 +467,8 @@ export function SiteScene() {
       disposeGroup(ctx.content);
       ctx.content = null;
     }
+    ctx.labels = [];
+    labelLayer.current?.replaceChildren();
     if (!centre) return;
     const maxShare = Math.max(0, ...[...cost.values()].map((c) => c.share));
     const colorFor = (c: Component) => {
@@ -445,9 +481,20 @@ export function SiteScene() {
       }
       return c.type === "road" ? "#51565e" : componentColor[c.type];
     };
-    const { group, radius } = buildScene(components, centre, colorFor);
+    const { group, radius, labels } = buildScene(components, centre, colorFor);
     ctx.scene.add(group);
     ctx.content = group;
+    for (const l of labels) {
+      const el = document.createElement("div");
+      el.textContent = l.name;
+      el.className = `absolute top-0 left-0 max-w-40 truncate rounded px-1.5 py-0.5 text-xs font-medium shadow-sm ${
+        l.componentId === selectedId
+          ? "bg-primary text-primary-foreground"
+          : "bg-card/90 text-foreground"
+      }`;
+      labelLayer.current?.appendChild(el);
+      ctx.labels.push({ at: l.at, el });
+    }
     // Frame the project the first time (or when it moves elsewhere).
     const key = centre.map((v) => v.toFixed(3)).join(",");
     if (key !== ctx.centreKey) {
@@ -519,6 +566,11 @@ export function SiteScene() {
         className="h-full w-full"
         aria-label={t("label")}
         role="img"
+      />
+      <div
+        ref={labelLayer}
+        aria-hidden
+        className="pointer-events-none absolute inset-0 overflow-hidden"
       />
       {hover && (
         <div
