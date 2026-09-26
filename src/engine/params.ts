@@ -1,4 +1,4 @@
-import type { ParamValue } from "@/lib/schemas";
+import type { ParamDefinition, ParamValue } from "@/lib/schemas";
 import type { ComponentTemplate, ResolvedParams } from "./types";
 
 /**
@@ -11,17 +11,29 @@ export function resolveParams(
   subtype: string,
   given: Record<string, ParamValue>,
 ): ResolvedParams {
-  const subtypeDefaults = template.subtypeDefaults?.[subtype] ?? {};
+  return resolveDefinitions(
+    template.paramCatalog,
+    given,
+    template.subtypeDefaults?.[subtype],
+  );
+}
+
+/** Same as `resolveParams` for any list of definitions (e.g. a park feature's params). */
+export function resolveDefinitions(
+  defs: ParamDefinition[],
+  given: Record<string, ParamValue>,
+  defaults: Record<string, ParamValue> = {},
+): ResolvedParams {
   const out: ResolvedParams = {};
-  for (const def of template.paramCatalog) {
-    const fallback = subtypeDefaults[def.id] ?? def.default;
+  for (const def of defs) {
+    const fallback = defaults[def.id] ?? def.default;
     const value = given[def.id];
     out[def.id] = valid(def, value) ? normalize(def, value) : fallback;
   }
   return out;
 }
 
-type Def = ComponentTemplate["paramCatalog"][number];
+type Def = ParamDefinition;
 
 function valid(def: Def, value: ParamValue | undefined): value is ParamValue {
   if (value === undefined) return false;
