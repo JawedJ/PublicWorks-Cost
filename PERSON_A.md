@@ -34,7 +34,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 - [x] P0.3 next-intl with `/en` and `/fr` routing, `messages/en.json`, `messages/fr.json`
 - [x] P0.4 Zustand, zod, Vitest, ESLint, Prettier; scripts `typecheck`, `lint`, `test`
 - [x] P0.6 App layout shell (top bar, language toggle, sample-data badge)
-- [ ] P0.7 `.env.example`, `README.md`, `DEPLOY.md`
+- [x] P0.7 `.env.example`, `README.md`, `DEPLOY.md`
 - [ ] P0.8 Deploy placeholder to Vercel (record URL below)
 - [x] A.1 Create `src/lib/store/store.ts` with `designSlice.ts` (selection contract included) and an empty `projectSlice.ts` stub for B; merge to `main` **as early as possible** so B can build on it
 
