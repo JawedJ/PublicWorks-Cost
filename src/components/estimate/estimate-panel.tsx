@@ -28,15 +28,23 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EstimateTab } from "./estimate-tab";
 import { QuestionsPanel } from "@/components/questions/questions-panel";
 import { loadQuestions } from "@/components/questions/questions";
+import { ExportTab } from "./export-tab";
 import { InputsTab } from "./inputs-tab";
 import { LineItemsTab } from "./line-items-tab";
 
-const TABS = ["estimate", "questions", "lineItems", "inputs"] as const;
+const TABS = [
+  "estimate",
+  "questions",
+  "lineItems",
+  "inputs",
+  "export",
+] as const;
 type Tab = (typeof TABS)[number];
 
 // Right panel. A mounts it in the workspace layout (P3.2).
 // Scope (P3.5) = the shared selection: whole project, or the selected component.
-// Tabs: Estimate (P3.6), Questions (P7.5), Line items (P3.10), Inputs (P3.11).
+// Tabs: Estimate (P3.6), Questions (P7.5), Line items (P3.10), Inputs (P3.11),
+// Export (P5.4).
 
 export function EstimatePanel() {
   const t = useTranslations("estimate");
@@ -137,6 +145,9 @@ export function EstimatePanel() {
         </TabsContent>
         <TabsContent value="inputs">
           <InputsTab components={components} componentId={scopeId} />
+        </TabsContent>
+        <TabsContent value="export">
+          <ExportTab estimate={estimate} />
         </TabsContent>
       </Tabs>
     </section>

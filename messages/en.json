@@ -265,7 +265,8 @@
       "estimate": "Estimate",
       "lineItems": "Line items",
       "inputs": "Inputs",
-      "questions": "Questions"
+      "questions": "Questions",
+      "export": "Export"
     },
     "classChip": "Class",
     "contingencyChip": "Contingency",
@@ -481,5 +482,19 @@
       "ai_unavailable": "AI assistant unavailable, used standard questions."
     },
     "allAnsweredTitle": "All caught up"
+  },
+  "export": {
+    "pdfTitle": "Council report (PDF)",
+    "pdfDescription": "Cover with site plan, executive summary, estimate range and class, breakdowns, risk and contingency, flags, assumptions and data sources.",
+    "includeMap": "Include site plan",
+    "downloadPdf": "Download PDF",
+    "xlsxTitle": "Excel workbook",
+    "xlsxDescription": "Summary, line items with sources, assumptions, scenarios and flags. Line totals are live formulas.",
+    "downloadXlsx": "Download Excel",
+    "projectTitle": "Project file",
+    "projectDescription": "Everything you drew and answered, to reopen later. Nothing is saved otherwise.",
+    "preparing": "Preparing…",
+    "failed": "The export couldn't be created. Try again.",
+    "sampleNote": "Reports state that road, park and structure prices are sample data and building rates come from the Altus 2026 cost guide."
   }
 }
