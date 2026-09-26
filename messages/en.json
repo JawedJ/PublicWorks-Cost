@@ -227,7 +227,7 @@
     "wholeProject": "Whole project",
     "shareOfProject": "{pct}% of project P50",
     "classAccuracy": "Typical accuracy {low}% to +{high}%",
-    "improveHeading": "To improve accuracy, answer:",
+    "improveHeading": "To narrow the range, fill in (click to go to the input):",
     "contingencyHeading": "Recommended contingency",
     "contingencyPct": "{pct}% of the {base} base estimate",
     "overrunHeading": "Overrun risk",

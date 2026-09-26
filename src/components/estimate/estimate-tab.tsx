@@ -4,7 +4,6 @@ import { useTranslations } from "next-intl";
 import { CLASS_RANGE } from "@/engine";
 import type { ScopedEstimate } from "@/lib/estimate/scope";
 import type { Component, Estimate } from "@/lib/schemas";
-import { useStore } from "@/lib/store/store";
 import {
   CategoryBreakdown,
   ComponentBreakdown,
@@ -33,11 +32,18 @@ type Props = {
   components: Component[];
   /** Project region key (for the StatCan trend). */
   region: string;
+  /** Opens the input for an improvement hint (Inputs tab, that field). */
+  onAnswer?: (componentId: string, paramId: string) => void;
 };
 
-export function EstimateTab({ estimate, scoped, components, region }: Props) {
+export function EstimateTab({
+  estimate,
+  scoped,
+  components,
+  region,
+  onAnswer,
+}: Props) {
   const t = useTranslations("estimate");
-  const selectComponent = useStore((s) => s.selectComponent);
   const names = new Map(
     estimate.components.map((c) => [c.componentId, c.name]),
   );
@@ -73,10 +79,10 @@ export function EstimateTab({ estimate, scoped, components, region }: Props) {
                 <li key={`${h.componentId}:${h.paramId}`}>
                   <button
                     type="button"
-                    className="text-left underline-offset-2 hover:underline"
-                    onClick={() => selectComponent(h.componentId)}
+                    className="text-left text-primary underline-offset-2 hover:underline"
+                    onClick={() => onAnswer?.(h.componentId, h.paramId)}
                   >
-                    {h.label.en}
+                    {h.label.en} →
                     {whole && (
                       <span className="text-muted-foreground">
                         {" "}
