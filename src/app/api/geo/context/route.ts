@@ -40,7 +40,7 @@ function kindOf(tags: Record<string, string>): SiteFeature["kind"] | null {
   if (tags.amenity === "school") return "school";
   if (tags.amenity === "hospital") return "hospital";
   if (tags.waterway) return "waterway";
-  if (tags.railway === "rail") return "rail";
+  if (tags.railway === "rail" || tags.railway === "light_rail") return "rail";
   if (tags.highway) return "road";
   if (tags.building) return "building";
   return null;
@@ -59,8 +59,9 @@ function toFeature(el: OsmElement): SiteFeature | null {
   const line = el.geometry?.map((p) => [p.lon, p.lat] as [number, number]);
   const point =
     el.center ?? (el.lat !== undefined ? { lat: el.lat, lon: el.lon! } : null);
-  // Schools and hospitals as points (their centre); buildings as footprints;
-  // linear features as lines.
+  // Schools and hospitals mapped as a node are points; mapped as an area they come
+  // back as their outline (distances are to the property edge). Buildings are
+  // footprints; linear features are lines.
   const closed =
     line &&
     line.length >= 4 &&
@@ -123,7 +124,7 @@ export const POST = jsonRoute(
     const query = `[out:json][timeout:11];(
       nwr["amenity"~"^(school|hospital)$"](${b});
       way["waterway"~"^(river|stream|canal)$"](${b});
-      way["railway"="rail"](${b});
+      way["railway"~"^(rail|light_rail)$"](${b});
     )->.site;
     way["highway"~"^(motorway|trunk|primary|secondary|tertiary|residential|unclassified)$"](${b})->.roads;
     way["building"](${b})->.buildings;

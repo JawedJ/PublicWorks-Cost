@@ -86,7 +86,7 @@
     },
     {
       "componentId": "c-library-parking",
-      "name": "Library parking lot",
+      "name": "Library Parking Lot",
       "type": "parking",
       "directCost": 138000,
       "p10": 164000.0,
@@ -127,7 +127,7 @@
     },
     {
       "componentId": "c-creek-culvert",
-      "name": "Laurel Creek culvert",
+      "name": "Laurel Creek Culvert",
       "type": "structure",
       "directCost": 714000,
       "p10": 801000.0,
@@ -2011,7 +2011,7 @@
     {
       "id": "c-creek-culvert:spanM",
       "label": {
-        "en": "Laurel Creek culvert — span",
+        "en": "Laurel Creek Culvert — span",
         "fr": "Ponceau du ruisseau Laurel — portée"
       },
       "componentId": "c-creek-culvert",

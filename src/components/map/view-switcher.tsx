@@ -6,6 +6,7 @@ import type { ViewMode } from "@/lib/store/designSlice";
 import { useStore } from "@/lib/store/store";
 import { cn } from "@/lib/utils";
 import { useMap } from "./map-context";
+import { MAP_SEGMENTED, MAP_TOGGLE_OFF, MAP_TOGGLE_ON } from "./toggle-styles";
 
 const VIEWS = ["plan2d", "map3d", "site3d"] as const satisfies ViewMode[];
 
@@ -36,7 +37,10 @@ export function ViewSwitcher() {
       <div
         role="radiogroup"
         aria-label={t("label")}
-        className="flex overflow-hidden rounded-md border bg-card text-xs shadow-sm"
+        className={cn(
+          "flex overflow-hidden rounded-md border text-xs shadow-sm",
+          MAP_SEGMENTED,
+        )}
       >
         {VIEWS.map((v) => (
           <button
@@ -47,9 +51,7 @@ export function ViewSwitcher() {
             onClick={() => setViewMode(v)}
             className={cn(
               "px-3 py-1.5 font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
-              viewMode === v
-                ? "bg-foreground text-background"
-                : "hover:bg-muted",
+              viewMode === v ? MAP_TOGGLE_ON : "hover:bg-zinc-100",
             )}
           >
             {t(v)}
@@ -63,9 +65,7 @@ export function ViewSwitcher() {
           onClick={() => setColourByCost(!colourByCost)}
           className={cn(
             "rounded-md border px-3 py-1.5 text-xs font-medium shadow-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
-            colourByCost
-              ? "bg-foreground text-background"
-              : "bg-card hover:bg-muted",
+            colourByCost ? MAP_TOGGLE_ON : MAP_TOGGLE_OFF,
           )}
         >
           {t("colourByCost")}
@@ -77,9 +77,7 @@ export function ViewSwitcher() {
             onClick={() => setShowZoning(!showZoning)}
             className={cn(
               "rounded-md border px-3 py-1.5 text-xs font-medium shadow-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
-              showZoning
-                ? "bg-foreground text-background"
-                : "bg-card hover:bg-muted",
+              showZoning ? MAP_TOGGLE_ON : MAP_TOGGLE_OFF,
             )}
           >
             {t("zoning")}
@@ -93,9 +91,7 @@ export function ViewSwitcher() {
             onClick={() => setShowIssues(!showIssues)}
             className={cn(
               "rounded-md border px-3 py-1.5 text-xs font-medium shadow-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
-              showIssues
-                ? "bg-foreground text-background"
-                : "bg-card hover:bg-muted",
+              showIssues ? MAP_TOGGLE_ON : MAP_TOGGLE_OFF,
             )}
           >
             {t("issues")}

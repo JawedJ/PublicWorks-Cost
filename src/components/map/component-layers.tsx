@@ -19,7 +19,6 @@ import type { AnyFeature, Component, PolygonFeature } from "@/lib/schemas";
 import { useStore } from "@/lib/store/store";
 import { DRAW_LAYER_PREFIX, justFinishedDrawing } from "./draw-controller";
 import { useMap } from "./map-context";
-import { FlagMarkers } from "./flag-markers";
 import { IssueHighlights } from "./issue-highlights";
 import { PlanLayers } from "./plan-layers";
 import { WarningMarkers } from "./warning-markers";
@@ -483,7 +482,6 @@ export function ComponentLayers() {
       <PlanLayers map={map} beforeId="pw-area" />
       <MeasurementLabels map={map} />
       <IssueHighlights map={map} estimate={estimate} />
-      <FlagMarkers map={map} estimate={estimate} />
       <WarningMarkers map={map} />
     </>
   );

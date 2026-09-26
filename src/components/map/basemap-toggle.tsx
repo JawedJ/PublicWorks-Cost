@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { availableBasemaps, type BasemapId } from "@/lib/geo/basemaps";
 import { cn } from "@/lib/utils";
+import { MAP_SEGMENTED, MAP_TOGGLE_ON } from "./toggle-styles";
 
 /** Segmented switch between street map and satellite imagery. */
 export function BasemapToggle({
@@ -19,7 +20,10 @@ export function BasemapToggle({
     <div
       role="radiogroup"
       aria-label={t("label")}
-      className="flex overflow-hidden rounded-md border bg-card text-xs shadow-sm"
+      className={cn(
+        "flex overflow-hidden rounded-md border text-xs shadow-sm",
+        MAP_SEGMENTED,
+      )}
     >
       {availableBasemaps.map((id) => (
         <button
@@ -30,7 +34,7 @@ export function BasemapToggle({
           onClick={() => onChange(id)}
           className={cn(
             "px-3 py-1.5 font-medium transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
-            value === id ? "bg-foreground text-background" : "hover:bg-muted",
+            value === id ? MAP_TOGGLE_ON : "hover:bg-zinc-100",
           )}
         >
           {t(id)}

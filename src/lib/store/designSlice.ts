@@ -35,6 +35,7 @@ import {
   smartGeometry,
 } from "@/lib/geo/generate";
 import type { Surroundings } from "@/lib/geo/site-layout";
+import { capitalizeName } from "@/lib/names";
 import { mirrorAbout, translateFeature } from "@/lib/geo/transform";
 import type { Store } from "./store";
 
@@ -217,7 +218,7 @@ export { newId };
 export function createComponent(input: NewComponentInput): Component {
   return {
     id: input.id ?? newId(),
-    name: input.name,
+    name: capitalizeName(input.name),
     type: input.type,
     subtype: input.subtype,
     status: input.geometry ? "drawn" : "planned",
@@ -402,7 +403,8 @@ export const createDesignSlice: StateCreator<Store, [], [], DesignSlice> = (
         geometry: undefined,
         status: "planned",
       })),
-    renameComponent: (id, name) => mapComponent(id, (c) => ({ ...c, name })),
+    renameComponent: (id, name) =>
+      mapComponent(id, (c) => ({ ...c, name: capitalizeName(name) })),
     setComponentVisible: (id, visible) =>
       mapComponent(id, (c) => ({ ...c, visible })),
 
@@ -472,7 +474,7 @@ export const createDesignSlice: StateCreator<Store, [], [], DesignSlice> = (
         const id = get().addComponent({
           type: target.type,
           subtype: target.subtype,
-          name: target.name,
+          name: capitalizeName(target.name),
           geometry: geometryForType(target.type, shape),
         });
         get().selectComponent(id);
@@ -526,7 +528,7 @@ export const createDesignSlice: StateCreator<Store, [], [], DesignSlice> = (
         const id = get().addComponent({
           type: target.type,
           subtype: target.subtype,
-          name: target.name,
+          name: capitalizeName(target.name),
           geometry: smartGeometry(
             { type: target.type, subtype: target.subtype, params: {} },
             centre,

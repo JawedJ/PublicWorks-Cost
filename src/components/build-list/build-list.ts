@@ -7,29 +7,12 @@ import {
   ParseResponseSchema,
   type ProjectDraft,
 } from "@/lib/schemas";
+import { capitalizeName } from "@/lib/names";
 import { useStore } from "@/lib/store/store";
 
+export { capitalizeName };
+
 // Client helpers for the creation flow (P7.2/P7.3; A wires the navigation in P7.4).
-
-const SMALL_WORDS = new Set(
-  "a an and at by for in of on or the to with".split(" "),
-);
-
-/**
- * Capitalizes a name the way a sign would read: "main street watermain" →
- * "Main Street Watermain". Words that already have capitals ("HL3", "McRae")
- * and small words after the first ("of", "and") are left alone.
- */
-export function capitalizeName(name: string): string {
-  let first = true;
-  return name.replace(/[^\s-]+/g, (word) => {
-    const isFirst = first;
-    first = false;
-    if (word !== word.toLowerCase()) return word;
-    if (!isFirst && SMALL_WORDS.has(word)) return word;
-    return word.charAt(0).toUpperCase() + word.slice(1);
-  });
-}
 
 /** The draft with every component name (and the project name) capitalized. */
 export function capitalizeDraft(draft: ProjectDraft): ProjectDraft {

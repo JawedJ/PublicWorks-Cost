@@ -444,7 +444,7 @@
     },
     {
       "id": "c-library-parking",
-      "name": "Library parking lot",
+      "name": "Library Parking Lot",
       "type": "parking",
       "subtype": "surface_lot",
       "status": "drawn",
@@ -593,7 +593,7 @@
     },
     {
       "id": "c-creek-culvert",
-      "name": "Laurel Creek culvert",
+      "name": "Laurel Creek Culvert",
       "type": "structure",
       "subtype": "culvert_replacement",
       "status": "drawn",
