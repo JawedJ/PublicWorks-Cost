@@ -236,7 +236,13 @@
     "overrunHeading": "Overrun risk",
     "overrunChance": "{pct}% chance of going over",
     "overrunTypical": "Similar projects typically run {pct}% over budget",
-    "byComponent": "By component"
+    "byComponent": "By component",
+    "projectWide": "Whole project",
+    "severity": {
+      "high": "High",
+      "warning": "Warning",
+      "info": "Info"
+    }
   },
   "visuals": {
     "crossSection": {

@@ -5,6 +5,7 @@ import { CLASS_RANGE } from "@/engine";
 import type { ScopedEstimate } from "@/lib/estimate/scope";
 import type { Estimate } from "@/lib/schemas";
 import { useStore } from "@/lib/store/store";
+import { FlagsList } from "./flags-list";
 
 // P3.6: Estimate tab. Headline range, class badge with improvement hints,
 // contingency and overrun risk (whole project), per-component list, flags.
@@ -143,19 +144,7 @@ export function EstimateTab({ estimate, scoped }: Props) {
         </div>
       )}
 
-      {scoped.flags.length > 0 && (
-        <div>
-          <h3 className="mb-1 text-sm font-medium">{t("flags")}</h3>
-          <ul className="flex flex-col gap-1 text-sm">
-            {scoped.flags.map((f) => (
-              <li key={f.id}>
-                <span className="font-medium">{f.title.en}</span> —{" "}
-                {f.explanation.en}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <FlagsList flags={scoped.flags} names={whole ? names : undefined} />
 
       {!whole && (
         <p className="text-xs text-muted-foreground">{t("componentNote")}</p>
