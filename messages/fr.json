@@ -47,7 +47,7 @@
   "design": {
     "components": {
       "title": "Composantes",
-      "empty": "Aucune composante pour l’instant. Les outils de dessin arrivent bientôt; en attendant, vous pouvez charger le projet exemple pour essayer la liste.",
+      "empty": "Aucune composante pour l’instant. Dessinez-en une avec les outils de la carte, ou chargez le projet exemple.",
       "loadSample": "Charger le projet exemple (Northgate)",
       "planned": "Prévue",
       "notDrawn": "Pas encore dessinée",
@@ -84,7 +84,8 @@
         "new": "Nouveau : {type}",
         "area": "Zone du projet",
         "planned": "Dessiner « {name} »",
-        "section": "Ajouter une section à « {name} »"
+        "section": "Ajouter une section à « {name} »",
+        "hole": "Percer un vide dans « {name} »"
       },
       "tools": {
         "polygon": "Polygone",
@@ -106,6 +107,24 @@
         "freehandLine": "Cliquez pour commencer, déplacez pour dessiner, puis cliquez pour terminer.",
         "point": "Cliquez pour le placer.",
         "cancel": "Appuyez sur Échap pour annuler."
+      },
+      "notices": {
+        "holeOutside": "Ce vide n’a pas été ajouté : dessinez-le à l’intérieur de la forme, sans toucher les autres vides."
+      }
+    },
+    "edit": {
+      "label": "Modifier « {name} »",
+      "hint": "Faites glisser une forme pour la déplacer, ou ses points pour la remodeler. Faites glisser un point milieu pour ajouter un point; clic droit sur un point pour le retirer. Utilisez les poignées pour tout déplacer, faire pivoter ou redimensionner (Maj conserve les proportions).",
+      "mirrorHorizontal": "Retourner de gauche à droite",
+      "mirrorVertical": "Retourner de haut en bas",
+      "duplicate": "Dupliquer",
+      "delete": "Supprimer « {name} »",
+      "deleteSection": "Supprimer cette section",
+      "deleteFeature": "Supprimer cet élément",
+      "handles": {
+        "move": "Déplacer",
+        "rotate": "Faire pivoter (Maj : pas de 15°)",
+        "scale": "Redimensionner (Maj conserve les proportions)"
       }
     }
   },

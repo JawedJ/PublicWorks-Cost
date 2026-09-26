@@ -349,3 +349,98 @@ describe("designSlice drawing", () => {
     expect(s().areaBoundary).toBeNull();
   });
 });
+
+describe("designSlice editing", () => {
+  beforeEach(() => useStore.setState(initial, true));
+
+  const addBuilding = () =>
+    s().addComponent({
+      type: "building",
+      subtype: "library",
+      name: "Library",
+      geometry: buildingGeometry(),
+      origin: "generated",
+    });
+
+  it("a live drag previews without history and commits as one undo step", () => {
+    const id = addBuilding();
+    const before = s().components[0]!.geometry!;
+    const moved = { ...before, primary: square(-79.3, 43.7) };
+    const pastLength = s().past.length;
+    s().previewComponentGeometry(id, moved);
+    s().previewComponentGeometry(id, moved);
+    expect(s().past).toHaveLength(pastLength);
+    s().endGeometryPreview(id, before, moved);
+    expect(s().past).toHaveLength(pastLength + 1);
+    expect(s().components[0]!.origin).toBe("user");
+    s().undo();
+    expect(s().components[0]!.geometry).toEqual(before);
+  });
+
+  it("reshaping the linked first section keeps the site in step", () => {
+    const id = addBuilding();
+    s().editElement(
+      id,
+      { role: "section", id: "sec-a" },
+      square(-79.4, 43.7, 0.002),
+    );
+    const g = s().components[0]!.geometry!;
+    expect(g.sections![0]!.footprint.geometry).toEqual(
+      square(-79.4, 43.7, 0.002).geometry,
+    );
+    expect(g.primary.geometry).toEqual(g.sections![0]!.footprint.geometry);
+  });
+
+  it("mirrors a component about its centre, and undoes it", () => {
+    const id = addBuilding();
+    const before = s().components[0]!.geometry!;
+    s().mirrorComponent(id, "vertical");
+    const ring =
+      s().components[0]!.geometry!.sections![0]!.footprint.geometry
+        .coordinates[0]!;
+    const lngs = ring.map((p) => p[0]);
+    expect(Math.min(...lngs)).toBeCloseTo(-79.4, 9);
+    expect(Math.max(...lngs)).toBeCloseTo(-79.399, 9);
+    s().undo();
+    expect(s().components[0]!.geometry).toEqual(before);
+  });
+
+  it("removes a section but keeps the last one", () => {
+    const id = addBuilding();
+    s().startDrawing({
+      target: { kind: "section", componentId: id },
+      tool: "rectangle",
+    });
+    s().finishDrawing(square(-79.39, 43.7));
+    const [, second] = s().components[0]!.geometry!.sections!;
+    s().removeElement(id, { role: "section", id: second!.id });
+    expect(s().components[0]!.geometry!.sections).toHaveLength(1);
+    s().removeElement(id, { role: "section", id: "sec-a" });
+    expect(s().components[0]!.geometry!.sections).toHaveLength(1);
+  });
+
+  it("cuts a courtyard, and reports a hole drawn outside the shape", () => {
+    const id = addBuilding();
+    s().startDrawing({
+      target: { kind: "hole", componentId: id },
+      tool: "rectangle",
+    });
+    expect(s().finishDrawing(square(-79.3996, 43.7004, 0.0002))).toBe(id);
+    expect(
+      s().components[0]!.geometry!.sections![0]!.footprint.geometry.coordinates,
+    ).toHaveLength(2);
+
+    s().startDrawing({
+      target: { kind: "hole", componentId: id },
+      tool: "rectangle",
+    });
+    expect(s().finishDrawing(square(-79.5, 43.7))).toBeNull();
+    expect(s().drawNotice).toBe("holeOutside");
+    expect(s().drawing).toBeNull();
+    s().startDrawing({
+      target: { kind: "hole", componentId: id },
+      tool: "polygon",
+    });
+    expect(s().drawNotice).toBeNull();
+  });
+});

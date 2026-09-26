@@ -47,7 +47,7 @@
   "design": {
     "components": {
       "title": "Components",
-      "empty": "No components yet. Drawing tools are coming next; for now you can load the sample project to try the list.",
+      "empty": "No components yet. Draw one with the tools on the map, or load the sample project.",
       "loadSample": "Load sample project (Northgate)",
       "planned": "Planned",
       "notDrawn": "Not drawn yet",
@@ -84,7 +84,8 @@
         "new": "New {type}",
         "area": "Project area",
         "planned": "Draw “{name}”",
-        "section": "Add a section to “{name}”"
+        "section": "Add a section to “{name}”",
+        "hole": "Cut a hole in “{name}”"
       },
       "tools": {
         "polygon": "Polygon",
@@ -106,6 +107,24 @@
         "freehandLine": "Click to start, move to draw, and click again to finish.",
         "point": "Click to place it.",
         "cancel": "Press Esc to cancel."
+      },
+      "notices": {
+        "holeOutside": "That hole wasn’t added: draw it inside the shape, clear of other holes."
+      }
+    },
+    "edit": {
+      "label": "Edit “{name}”",
+      "hint": "Drag a shape to move it, or its points to reshape it. Drag a midpoint to add a point; right-click a point to remove it. Use the handles to move, rotate, or resize everything (Shift keeps proportions).",
+      "mirrorHorizontal": "Flip left to right",
+      "mirrorVertical": "Flip top to bottom",
+      "duplicate": "Duplicate",
+      "delete": "Delete “{name}”",
+      "deleteSection": "Delete this section",
+      "deleteFeature": "Delete this feature",
+      "handles": {
+        "move": "Move",
+        "rotate": "Rotate (Shift snaps to 15°)",
+        "scale": "Resize (Shift keeps proportions)"
       }
     }
   },

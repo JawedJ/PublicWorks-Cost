@@ -30,6 +30,7 @@ import {
   type DrawTarget,
   type DrawTool,
 } from "@/lib/geo/drawing";
+import { holeTarget } from "@/lib/geo/edit";
 import type { ComponentType } from "@/lib/schemas";
 import { useStore } from "@/lib/store/store";
 import { cn } from "@/lib/utils";
@@ -63,7 +64,7 @@ const NEW_TYPES: { type: ComponentType; subtype: string }[] = [
   { type: "structure", subtype: "culvert_replacement" },
 ];
 
-type TargetKey = ComponentType | "area" | "planned" | "section";
+type TargetKey = ComponentType | "area" | "planned" | "section" | "hole";
 
 /** Pick what to draw, then a shape tool. Shows a hint and Cancel while drawing. */
 export function DrawToolbar() {
@@ -71,6 +72,9 @@ export function DrawToolbar() {
   const tTypes = useTranslations("design.components.types");
   const components = useStore((s) => s.components);
   const drawing = useStore((s) => s.drawing);
+  const drawNotice = useStore((s) => s.drawNotice);
+  const selectedSectionId = useStore((s) => s.selectedElement?.sectionId);
+  const selectedFeatureId = useStore((s) => s.selectedElement?.featureId);
   const selected = useStore((s) =>
     s.components.find((c) => c.id === s.selectedComponentId),
   );
@@ -79,6 +83,7 @@ export function DrawToolbar() {
   const planned = selected?.status === "planned" ? selected : undefined;
   const building =
     selected?.type === "building" && selected.geometry ? selected : undefined;
+  const holed = selected && holeTarget(selected) ? selected : undefined;
 
   function targetFor(k: TargetKey): DrawTarget | null {
     if (k === "area") return { kind: "area" };
@@ -86,6 +91,15 @@ export function DrawToolbar() {
       return planned ? { kind: "planned", componentId: planned.id } : null;
     if (k === "section")
       return building ? { kind: "section", componentId: building.id } : null;
+    if (k === "hole")
+      return holed
+        ? {
+            kind: "hole",
+            componentId: holed.id,
+            sectionId: selectedSectionId,
+            featureId: selectedFeatureId,
+          }
+        : null;
     const def = NEW_TYPES.find((x) => x.type === k);
     if (!def) return null;
     const n = components.filter((c) => c.type === k).length + 1;
@@ -109,7 +123,9 @@ export function DrawToolbar() {
         ? t("targets.planned", { name: planned?.name ?? "" })
         : k === "section"
           ? t("targets.section", { name: building?.name ?? "" })
-          : t("targets.new", { type: tTypes(k) });
+          : k === "hole"
+            ? t("targets.hole", { name: holed?.name ?? "" })
+            : t("targets.new", { type: tTypes(k) });
 
   return (
     <div className="w-fit max-w-[calc(100vw-6rem)] rounded-md border bg-card p-1.5 text-sm shadow-sm">
@@ -142,7 +158,7 @@ export function DrawToolbar() {
               <DropdownMenuRadioItem value="area">
                 {label("area")}
               </DropdownMenuRadioItem>
-              {(planned || building) && <DropdownMenuSeparator />}
+              {(planned || building || holed) && <DropdownMenuSeparator />}
               {planned && (
                 <DropdownMenuRadioItem value="planned">
                   {label("planned")}
@@ -151,6 +167,11 @@ export function DrawToolbar() {
               {building && (
                 <DropdownMenuRadioItem value="section">
                   {label("section")}
+                </DropdownMenuRadioItem>
+              )}
+              {holed && (
+                <DropdownMenuRadioItem value="hole">
+                  {label("hole")}
                 </DropdownMenuRadioItem>
               )}
             </DropdownMenuRadioGroup>
@@ -180,6 +201,14 @@ export function DrawToolbar() {
           })}
         </div>
       </div>
+      {!drawing && drawNotice && (
+        <p
+          role="status"
+          className="mt-1.5 max-w-72 border-t px-1 pt-1.5 text-xs text-muted-foreground"
+        >
+          {t(`notices.${drawNotice}`)}
+        </p>
+      )}
       {drawing && (
         <div
           role="status"

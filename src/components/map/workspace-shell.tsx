@@ -5,9 +5,11 @@ import { ComponentLayers } from "./component-layers";
 import { ComponentList } from "./component-list";
 import { DrawController } from "./draw-controller";
 import { DrawToolbar } from "./draw-toolbar";
+import { EditToolbar } from "./edit-toolbar";
 import { Geocoder } from "./geocoder";
 import { MapProvider } from "./map-context";
 import { MapView } from "./map-view";
+import { TransformHandles } from "./transform-handles";
 
 /** Workspace layout: component list and view on the left (~60%), estimate panel on the right. */
 export function WorkspaceShell() {
@@ -25,9 +27,13 @@ export function WorkspaceShell() {
             <MapView>
               <ComponentLayers />
               <DrawController />
+              <TransformHandles />
               <div className="absolute top-3 left-3 z-10 flex flex-col items-start gap-2">
                 <Geocoder />
                 <DrawToolbar />
+              </div>
+              <div className="absolute bottom-10 left-1/2 z-10 flex w-full -translate-x-1/2 justify-center">
+                <EditToolbar />
               </div>
             </MapView>
           </section>

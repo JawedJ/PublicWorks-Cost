@@ -15,7 +15,17 @@ import {
   withSection,
   type Drawing,
 } from "@/lib/geo/drawing";
-import { translateFeature } from "@/lib/geo/transform";
+import {
+  componentCentre,
+  holeTarget,
+  withElementShape,
+  withHole,
+  withoutElement,
+  withPrimaryMoved,
+  transformGeometry,
+  type ElementRef,
+} from "@/lib/geo/edit";
+import { mirrorAbout, translateFeature } from "@/lib/geo/transform";
 import type { Store } from "./store";
 
 // Person A's slice: the project's components (geometry, add/remove/duplicate),
@@ -69,6 +79,8 @@ export type DesignSlice = DesignSnapshot & {
   future: DesignSnapshot[];
   /** The shape being drawn on the map, or `null` when not drawing. */
   drawing: Drawing | null;
+  /** Why the last finished shape was not applied (shown by the draw toolbar). */
+  drawNotice: "holeOutside" | null;
 
   /** Select a whole component (or clear with `null`). */
   selectComponent: (componentId: string | null) => void;
@@ -96,6 +108,31 @@ export type DesignSlice = DesignSnapshot & {
     geometry: ComponentGeometry,
     origin?: Component["origin"],
   ) => void;
+  /**
+   * Shows a geometry during a drag without recording history. End the drag with
+   * `endGeometryPreview` so the whole drag is one undo step.
+   */
+  previewComponentGeometry: (id: string, geometry: ComponentGeometry) => void;
+  /** Ends a live drag that started from `before`, committing `after` as one undo step. */
+  endGeometryPreview: (
+    id: string,
+    before: ComponentGeometry,
+    after: ComponentGeometry,
+  ) => void;
+  /**
+   * Writes back one edited shape. `moved` means the primary shape was dragged,
+   * so everything inside it (sections, features) moves with it.
+   */
+  editElement: (
+    componentId: string,
+    ref: ElementRef,
+    shape: AnyFeature,
+    moved?: boolean,
+  ) => void;
+  /** Flips a whole component about its centre. */
+  mirrorComponent: (id: string, axis: "vertical" | "horizontal") => void;
+  /** Deletes a building section or placed feature (not the last section). */
+  removeElement: (componentId: string, ref: ElementRef) => void;
   /** Removes geometry, returning the component to 'planned'. */
   clearComponentGeometry: (id: string) => void;
   renameComponent: (id: string, name: string) => void;
@@ -212,6 +249,7 @@ export const createDesignSlice: StateCreator<Store, [], [], DesignSlice> = (
     past: [],
     future: [],
     drawing: null,
+    drawNotice: null,
 
     selectComponent: (componentId) =>
       set({
@@ -237,6 +275,39 @@ export const createDesignSlice: StateCreator<Store, [], [], DesignSlice> = (
       mapComponent(id, (c) => ({ ...c, ...patch })),
     setComponentGeometry: (id, geometry, origin = "user") =>
       mapComponent(id, (c) => ({ ...c, geometry, status: "drawn", origin })),
+    previewComponentGeometry: (id, geometry) =>
+      set((s) => ({
+        components: s.components.map((c) =>
+          c.id === id ? { ...c, geometry } : c,
+        ),
+      })),
+    endGeometryPreview: (id, before, after) => {
+      get().previewComponentGeometry(id, before);
+      get().setComponentGeometry(id, after);
+    },
+    editElement: (componentId, ref, shape, moved = false) => {
+      const g = get().components.find((c) => c.id === componentId)?.geometry;
+      if (!g) return;
+      const next =
+        moved && ref.role === "primary"
+          ? withPrimaryMoved(g, shape)
+          : withElementShape(g, ref, shape, moved);
+      if (next) get().setComponentGeometry(componentId, next);
+    },
+    mirrorComponent: (id, axis) => {
+      const c = get().components.find((x) => x.id === id);
+      const centre = c && componentCentre(c);
+      if (!c?.geometry || !centre) return;
+      get().setComponentGeometry(
+        id,
+        transformGeometry(c.geometry, mirrorAbout(centre, axis), true),
+      );
+    },
+    removeElement: (componentId, ref) => {
+      const g = get().components.find((c) => c.id === componentId)?.geometry;
+      const next = g && withoutElement(g, ref);
+      if (next) get().setComponentGeometry(componentId, next);
+    },
     clearComponentGeometry: (id) =>
       mapComponent(id, (c) => ({
         ...c,
@@ -293,7 +364,7 @@ export const createDesignSlice: StateCreator<Store, [], [], DesignSlice> = (
         !toolsForTarget(drawing.target, get().components).includes(drawing.tool)
       )
         return;
-      set({ drawing });
+      set({ drawing, drawNotice: null });
     },
     cancelDrawing: () => set({ drawing: null }),
 
@@ -325,6 +396,19 @@ export const createDesignSlice: StateCreator<Store, [], [], DesignSlice> = (
       let geometry: ComponentGeometry | undefined;
       if (target.kind === "planned") {
         geometry = geometryForType(c.type, shape);
+      } else if (target.kind === "hole") {
+        const ref = holeTarget(c, target);
+        if (!c.geometry || !ref || shape.geometry.type !== "Polygon")
+          return null;
+        const next = withHole(c.geometry, ref, {
+          ...shape,
+          geometry: shape.geometry,
+        });
+        if (!next) {
+          set({ drawNotice: "holeOutside" });
+          return null;
+        }
+        geometry = next;
       } else if (target.kind === "section") {
         if (!c.geometry || shape.geometry.type !== "Polygon") return null;
         geometry = withSection(c.geometry, {

@@ -45,6 +45,13 @@ export type DrawTarget =
       featureKind: string;
       customLabel?: string;
     }
+  /** A hole (e.g. a courtyard) cut out of a building section or another polygon; see `holeTarget`. */
+  | {
+      kind: "hole";
+      componentId: string;
+      sectionId?: string;
+      featureId?: string;
+    }
   /** The optional outline of the general project area. */
   | { kind: "area" };
 
@@ -81,6 +88,7 @@ export function toolsForTarget(
       return c ? toolsForType(c.type) : [];
     }
     case "section":
+    case "hole":
     case "area":
       return SHAPE_TOOLS;
     case "feature":

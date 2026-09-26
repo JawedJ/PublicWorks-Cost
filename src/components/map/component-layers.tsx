@@ -4,6 +4,7 @@ import type {
   ExpressionSpecification,
   GeoJSONSource,
   Map as MapLibreMap,
+  MapMouseEvent,
 } from "maplibre-gl";
 import { useEffect } from "react";
 import { componentColor, mapColors } from "@/lib/render/colors";
@@ -11,6 +12,7 @@ import type { AnyFeature, Component, PolygonFeature } from "@/lib/schemas";
 import { useStore } from "@/lib/store/store";
 import { DRAW_LAYER_PREFIX, justFinishedDrawing } from "./draw-controller";
 import { useMap } from "./map-context";
+import { HANDLE_CLASS } from "./transform-handles";
 
 // Plain rendering of every visible component so it can be seen, selected and
 // zoomed to. The procedural plan rendering (P1.11–P1.13) replaces the styling.
@@ -203,8 +205,20 @@ export function ComponentLayers() {
     const onStyle = () => addLayers(map);
     map.on("style.load", onStyle);
 
-    const onClick = (e: { point: { x: number; y: number } }) => {
+    const onClick = (e: MapMouseEvent) => {
       if (useStore.getState().drawing || justFinishedDrawing()) return;
+      // Clicks on transform handles, or on the shapes being edited, belong to the editor.
+      const el = e.originalEvent.target as HTMLElement | null;
+      if (el?.closest(`.${HANDLE_CLASS}`)) return;
+      const drawLayers = map
+        .getStyle()
+        .layers.filter((l) => l.id.startsWith(`${DRAW_LAYER_PREFIX}-`))
+        .map((l) => l.id);
+      if (
+        drawLayers.length &&
+        map.queryRenderedFeatures(e.point, { layers: drawLayers }).length
+      )
+        return;
       const hit = map
         .queryRenderedFeatures([e.point.x, e.point.y], {
           layers: CLICKABLE.filter((id) => map.getLayer(id)),

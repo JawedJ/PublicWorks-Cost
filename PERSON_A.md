@@ -7,7 +7,7 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 ## Current state
 
 - **Current task:** P1.7
-- **Status:** not started   <!-- not started | in progress | blocked | at sync point -->
+- **Status:** in progress   <!-- not started | in progress | blocked | at sync point -->
 - **Next action:** P1.7 editing (move, rotate, scale, vertex edit, holes, duplicate, mirror, delete). Likely Terra Draw's select mode: load the selected component's shapes into Terra Draw for editing, write back on `finish` with one `setComponentGeometry` per drag.
 - **Blockers / needs from B:** none.
 - **Last updated:** 2026-09-26 (P1.5 merged to `main`)
@@ -63,7 +63,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 - [x] P1.3 Store: multiple components (planned/drawn, user/generated), selection, undo/redo
 - [x] P1.4 Component list panel (select, zoom to, rename, duplicate, hide/show, delete)
 - [x] P1.5 Freeform draw tools: polygon, rectangle, circle/ellipse, freehand, line/polyline, point; project area
-- [ ] P1.7 Editing: move, rotate, scale, vertex edit, holes, duplicate, mirror, delete
+- [x] P1.7 Editing: move, rotate, scale, vertex edit, holes, duplicate, mirror, delete
 - [ ] P1.8 Multi-section buildings: split/merge sections, per-section storeys and roof
 - [ ] P1.14 `measure.ts` (Turf) + unit tests; per-component, per-section, and project totals — **merge early, B's engine depends on it**
 - [ ] P1.15 Live measurement labels + measurements panel + metric/imperial toggle

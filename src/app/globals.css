@@ -221,3 +221,38 @@
 @utility figures {
   font-variant-numeric: tabular-nums;
 }
+
+/* Map transform handles (transform-handles.tsx): MapLibre markers, so plain CSS. */
+.pw-handle {
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--primary);
+  border-radius: 2px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 35%);
+  touch-action: none;
+}
+.pw-handle-nw,
+.pw-handle-se {
+  cursor: nwse-resize;
+}
+.pw-handle-ne,
+.pw-handle-sw {
+  cursor: nesw-resize;
+}
+.pw-handle-rotate {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  cursor: grab;
+}
+.pw-handle-move {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  cursor: move;
+  background:
+    linear-gradient(var(--primary), var(--primary)) center / 10px 2px no-repeat,
+    linear-gradient(var(--primary), var(--primary)) center / 2px 10px no-repeat,
+    #fff;
+}
