@@ -178,4 +178,19 @@ describe("computeEstimate with site context", () => {
     ).toBe(true);
     expect(withSchool.flags.some((f) => f.code === "near_school")).toBe(true);
   });
+
+  it("shows one permit flag on a culvert in a creek, keeping the site cost", () => {
+    const e = run(structuredClone(northgateProject).siteContext);
+    const culvert = northgateProject.components.find(
+      (c) => c.type === "structure",
+    )!;
+    const codes = e.flags
+      .filter((f) => f.componentIds.includes(culvert.id))
+      .map((f) => f.code);
+    expect(codes).toContain("in_water_permit");
+    expect(codes).not.toContain("near_waterway");
+    expect(
+      e.lineItems.some((l) => l.id === `${culvert.id}:site-waterway`),
+    ).toBe(true);
+  });
 });

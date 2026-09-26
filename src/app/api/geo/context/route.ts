@@ -80,12 +80,16 @@ export const POST = jsonRoute(
     const hit = cache.get(key);
     if (hit) return hit;
     const b = `${s},${w},${n},${e}`;
+    // Site features and roads are output separately so many local streets can't
+    // crowd schools, water or rail out of the result cap.
     const query = `[out:json][timeout:11];(
       nwr["amenity"~"^(school|hospital)$"](${b});
       way["waterway"~"^(river|stream|canal)$"](${b});
       way["railway"="rail"](${b});
-      way["highway"~"^(motorway|trunk|primary|secondary)$"](${b});
-    );out tags geom 400;`;
+    )->.site;
+    way["highway"~"^(motorway|trunk|primary|secondary|tertiary|residential|unclassified)$"](${b})->.roads;
+    .site out tags geom 300;
+    .roads out tags geom 600;`;
     for (const url of OVERPASS_URLS) {
       try {
         const res = await fetch(url, {

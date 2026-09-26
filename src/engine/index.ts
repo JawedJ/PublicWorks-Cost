@@ -334,7 +334,11 @@ export function computeEstimate(
       regionFactor * bcpi.factor,
     );
     lines.push(...site.lines);
-    for (const f of site.flags) addFlag(f);
+    const templateFlags = template.flags(ctx);
+    // The template's own in-water permit flag already covers the watercourse permit.
+    const hasInWater = templateFlags.some((f) => f.code === "in_water_permit");
+    for (const f of site.flags)
+      if (!(hasInWater && f.code === "near_waterway")) addFlag(f);
 
     const direct = lines.reduce((s, l) => s + l.total, 0);
     const softPct = SOFT[c.type];
@@ -356,7 +360,7 @@ export function computeEstimate(
       (direct + softTotal) * ((1 + annualRate) ** (midpointMonths / 12) - 1);
     const { cls, hints } = componentClass(c, project.documents.length > 0);
 
-    for (const f of template.flags(ctx)) addFlag(f);
+    for (const f of templateFlags) addFlag(f);
     if (winter && lines.some((l) => WINTER_CATEGORIES.includes(l.category))) {
       addFlag({
         code: "winter_work",
