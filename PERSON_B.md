@@ -23,6 +23,7 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Requests to Person A
 
+- **Zoning map layer (new, SPEC 8.3).** A toggleable layer showing zones inside the project area, coloured by zone family, with the zone code and by-law on click. Data: `project.zoningContext` (schema coming in Z.1, in `src/lib/schemas`). Also show zoning flags with your existing flag markers (P3.9a). Not needed before S3.
 - `measureProject` should return `ProjectMeasurements` as `{ components: Record<componentId, Measurements>, totals }`, and include `Measurements.sections` (per-section footprintM2, perimeterM, grossFloorAreaM2) for buildings. See `src/lib/schemas/measurements.ts`.
 
 ---
@@ -73,6 +74,16 @@ While A scaffolds, draft these locally; commit right after A's scaffold lands on
 - [ ] P7.3 Build list review screen (edit, remove, duplicate, add components)
 - [ ] P4.1 Project file schema with `schemaVersion` + download (`.pwcost.json`)
 - [ ] P4.2 Open project file with zod validation and clear errors
+
+### S2 → S3 — Zoning limits (SPEC 8.3) · Core
+Flags only; never block, never change the estimate. Do Waterloo first (demo city).
+- [ ] Z.1 `ZoningContext` + zone-limits schemas; `zoningContext` on `Project`; `/api/zoning` route skeleton with cache, timeout, "not checked" fallback
+- [ ] Z.2 Waterloo: zone map lookup + `src/data/zoning/waterloo.json` limits (By-law 2018-050)
+- [ ] Z.3 Toronto: script-built zone + height overlay JSON + `toronto.json` limits (By-law 569-2013)
+- [ ] Z.4 Ottawa: confirm by-law in force (2008-250 vs 2026-50), map lookup + `ottawa.json` limits
+- [ ] Z.5 Vancouver: map lookup + `vancouver.json` district limits; CD-1 flagged as site-specific
+- [ ] Z.6 Engine zoning checks (height, storeys, coverage, FSI, setbacks, uses) → advisory flags + tests
+- [ ] Z.7 Zoning section on `/data` page and in flags list (source, by-law, date, limits)
 
 ### S3 → S4 — Questions, exports, demos
 - [ ] P7.5 `/api/ai/questions` across components + fallback + Questions panel · Core
