@@ -235,7 +235,14 @@ export function computeEstimate(
       settings,
       siteContext: project.siteContext,
     };
-    const bcpi = bcpiEscalation(refData, cma, c.type, c.subtype, priceYear);
+    // Building rates have their own price year (Altus 2026); the rest use unit prices'.
+    const bcpi = bcpiEscalation(
+      refData,
+      cma,
+      c.type,
+      c.subtype,
+      c.type === "building" ? refData.buildingCosts.meta.priceYear : priceYear,
+    );
     if (!bcpiDetail || c.type === "building") bcpiDetail = bcpi;
 
     const offset = c.startOffsetMonths ?? 0;

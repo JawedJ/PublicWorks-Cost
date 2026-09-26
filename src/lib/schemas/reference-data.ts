@@ -67,6 +67,8 @@ export const BuildingCostsFileSchema = z.object({
       perM2: PriceRangeSchema,
       /** Extra spread for program-driven types (school, hospital); 1 = none. */
       uncertaintyMultiplier: z.number().min(1).default(1),
+      /** Where the rate comes from (e.g. Altus Group 2026); sample label when absent. */
+      source: LocalizedTextSchema.optional(),
     }),
   ),
   qualityFactors: z.object({

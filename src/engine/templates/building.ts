@@ -406,7 +406,7 @@ function deriveQuantities(ctx: TemplateContext): QuantityLine[] {
         ),
         "building",
         rate,
-        BUILDING_SOURCE,
+        sub.source ?? BUILDING_SOURCE,
       ),
       quantity: gfa,
       unit: "m2",
@@ -447,7 +447,15 @@ function deriveQuantities(ctx: TemplateContext): QuantityLine[] {
         ),
         "building",
         scale(rate, premium),
-        BUILDING_SOURCE,
+        sub.source
+          ? t(
+              sub.source,
+              L(
+                " + sample sustainability premium",
+                " + prime de durabilité (échantillon)",
+              ),
+            )
+          : BUILDING_SOURCE,
       ),
       quantity: totalGfa,
       unit: "m2",

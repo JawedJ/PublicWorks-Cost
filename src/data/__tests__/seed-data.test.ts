@@ -147,9 +147,17 @@ describe("structures.json", () => {
 });
 
 describe("all seed files", () => {
-  it("are marked as 2025 sample data", () => {
-    for (const file of Object.values(refData)) {
-      expect(file.meta).toMatchObject({ sample: true, priceYear: 2025 });
+  it("are marked as sample data with a price year", () => {
+    for (const [name, file] of Object.entries(refData)) {
+      // Building base rates are Altus Group 2026; the file's other values are still sample.
+      const year = name === "buildingCosts" ? 2026 : 2025;
+      expect(file.meta).toMatchObject({ sample: true, priceYear: year });
+    }
+  });
+
+  it("cites a source for every building rate", () => {
+    for (const sub of Object.values(refData.buildingCosts.subtypes)) {
+      expect(sub.source?.en).toMatch(/^Altus Group 2026/);
     }
   });
 });

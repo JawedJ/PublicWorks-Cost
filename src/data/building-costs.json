@@ -1,8 +1,8 @@
 {
   "meta": {
     "sample": true,
-    "priceYear": 2025,
-    "notes": "Illustrative sample building costs for Ontario, typical 2025 (CAD per m² of gross floor area, excluding HST, soft costs, FF&E, and site works). Not real cost data. School and hospital are rough: their cost depends mostly on the internal program."
+    "priceYear": 2026,
+    "notes": "Base $/m² GFA per building subtype: Altus Group 2026 Canadian Cost Guide (pp. 5–6), the average of the GTA and Ottawa ranges converted from $/sq ft (×10.7639); typical = midpoint. Hard construction costs only: excludes land, soft costs, taxes, contingencies, FF&E, parking and site works. Figures transcribed from Precedent Developments' republication of the guide (retrieved 2026-09-26). Quality factors, sustainability and roof premiums and special spaces are still sample values."
   },
   "subtypes": {
     "community_centre": {
@@ -11,11 +11,15 @@
         "fr": "Centre communautaire"
       },
       "perM2": {
-        "low": 4420,
-        "typical": 5200,
-        "high": 6500
+        "low": 6835,
+        "typical": 8638,
+        "high": 10441
       },
-      "uncertaintyMultiplier": 1
+      "uncertaintyMultiplier": 1,
+      "source": {
+        "en": "Altus Group 2026 Canadian Cost Guide, p. 6: Multi-use recreational centre, GTA and Ottawa average ($635–$970/sq ft)",
+        "fr": "Altus Group 2026 Canadian Cost Guide, p. 6: Multi-use recreational centre, GTA and Ottawa average ($635–$970/sq ft)"
+      }
     },
     "library": {
       "label": {
@@ -23,11 +27,15 @@
         "fr": "Bibliothèque"
       },
       "perM2": {
-        "low": 4590,
-        "typical": 5400,
-        "high": 6750
+        "low": 6458,
+        "typical": 8477,
+        "high": 10495
       },
-      "uncertaintyMultiplier": 1
+      "uncertaintyMultiplier": 1,
+      "source": {
+        "en": "Altus Group 2026 Canadian Cost Guide, p. 6: Library, GTA and Ottawa average ($600–$975/sq ft)",
+        "fr": "Altus Group 2026 Canadian Cost Guide, p. 6: Library, GTA and Ottawa average ($600–$975/sq ft)"
+      }
     },
     "fire_station": {
       "label": {
@@ -35,11 +43,15 @@
         "fr": "Caserne de pompiers"
       },
       "perM2": {
-        "low": 5015,
-        "typical": 5900,
-        "high": 7375
+        "low": 6297,
+        "typical": 7212,
+        "high": 8127
       },
-      "uncertaintyMultiplier": 1
+      "uncertaintyMultiplier": 1,
+      "source": {
+        "en": "Altus Group 2026 Canadian Cost Guide, p. 6: Fire/EMS station, GTA and Ottawa average ($585–$755/sq ft)",
+        "fr": "Altus Group 2026 Canadian Cost Guide, p. 6: Fire/EMS station, GTA and Ottawa average ($585–$755/sq ft)"
+      }
     },
     "police_station": {
       "label": {
@@ -47,11 +59,15 @@
         "fr": "Poste de police"
       },
       "perM2": {
-        "low": 5355,
-        "typical": 6300,
-        "high": 7875
+        "low": 6135,
+        "typical": 6660,
+        "high": 7185
       },
-      "uncertaintyMultiplier": 1
+      "uncertaintyMultiplier": 1,
+      "source": {
+        "en": "Altus Group 2026 Canadian Cost Guide, p. 6: Police station - local detachment, GTA and Ottawa average ($570–$668/sq ft)",
+        "fr": "Altus Group 2026 Canadian Cost Guide, p. 6: Police station - local detachment, GTA and Ottawa average ($570–$668/sq ft)"
+      }
     },
     "municipal_office": {
       "label": {
@@ -59,11 +75,15 @@
         "fr": "Bureau municipal"
       },
       "perM2": {
-        "low": 3995,
-        "typical": 4700,
-        "high": 5875
+        "low": 4440,
+        "typical": 5072,
+        "high": 5705
       },
-      "uncertaintyMultiplier": 1
+      "uncertaintyMultiplier": 1,
+      "source": {
+        "en": "Altus Group 2026 Canadian Cost Guide, p. 6: Municipal office - including fit-up, GTA and Ottawa average ($412–$530/sq ft)",
+        "fr": "Altus Group 2026 Canadian Cost Guide, p. 6: Municipal office - including fit-up, GTA and Ottawa average ($412–$530/sq ft)"
+      }
     },
     "school": {
       "label": {
@@ -71,11 +91,15 @@
         "fr": "École (approximatif)"
       },
       "perM2": {
-        "low": 3655,
-        "typical": 4300,
-        "high": 5375
+        "low": 3902,
+        "typical": 5019,
+        "high": 6135
       },
-      "uncertaintyMultiplier": 1.5
+      "uncertaintyMultiplier": 1.5,
+      "source": {
+        "en": "Altus Group 2026 Canadian Cost Guide, p. 6: Elementary school, GTA and Ottawa average ($362–$570/sq ft)",
+        "fr": "Altus Group 2026 Canadian Cost Guide, p. 6: Elementary school, GTA and Ottawa average ($362–$570/sq ft)"
+      }
     },
     "hospital": {
       "label": {
@@ -83,11 +107,15 @@
         "fr": "Hôpital (approximatif)"
       },
       "perM2": {
-        "low": 8330,
-        "typical": 9800,
-        "high": 12250
+        "low": 10925,
+        "typical": 14128,
+        "high": 17330
       },
-      "uncertaintyMultiplier": 1.8
+      "uncertaintyMultiplier": 1.8,
+      "source": {
+        "en": "Altus Group 2026 Canadian Cost Guide, p. 6: General hospital/acute care, GTA and Ottawa average ($1,015–$1,610/sq ft)",
+        "fr": "Altus Group 2026 Canadian Cost Guide, p. 6: General hospital/acute care, GTA and Ottawa average ($1,015–$1,610/sq ft)"
+      }
     },
     "house": {
       "label": {
@@ -95,11 +123,15 @@
         "fr": "Maison individuelle"
       },
       "perM2": {
-        "low": 2805,
-        "typical": 3300,
-        "high": 4125
+        "low": 1668,
+        "typical": 2193,
+        "high": 2718
       },
-      "uncertaintyMultiplier": 1
+      "uncertaintyMultiplier": 1,
+      "source": {
+        "en": "Altus Group 2026 Canadian Cost Guide, p. 5: Single family residential with unfinished basement, GTA and Ottawa average ($155–$252/sq ft)",
+        "fr": "Altus Group 2026 Canadian Cost Guide, p. 5: Single family residential with unfinished basement, GTA and Ottawa average ($155–$252/sq ft)"
+      }
     },
     "townhouse_block": {
       "label": {
@@ -107,11 +139,15 @@
         "fr": "Rangée de maisons en bande"
       },
       "perM2": {
-        "low": 3060,
-        "typical": 3600,
-        "high": 4500
+        "low": 1641,
+        "typical": 2045,
+        "high": 2449
       },
-      "uncertaintyMultiplier": 1
+      "uncertaintyMultiplier": 1,
+      "source": {
+        "en": "Altus Group 2026 Canadian Cost Guide, p. 5: Row townhouse with unfinished basement, GTA and Ottawa average ($152–$228/sq ft)",
+        "fr": "Altus Group 2026 Canadian Cost Guide, p. 5: Row townhouse with unfinished basement, GTA and Ottawa average ($152–$228/sq ft)"
+      }
     },
     "low_rise_apartment": {
       "label": {
@@ -119,11 +155,15 @@
         "fr": "Immeuble de faible hauteur (jusqu'à 4 étages)"
       },
       "perM2": {
-        "low": 3485,
-        "typical": 4100,
-        "high": 5125
+        "low": 2368,
+        "typical": 2852,
+        "high": 3337
       },
-      "uncertaintyMultiplier": 1
+      "uncertaintyMultiplier": 1,
+      "source": {
+        "en": "Altus Group 2026 Canadian Cost Guide, p. 5: Up to 6 storey wood framed condo, GTA and Ottawa average ($220–$310/sq ft)",
+        "fr": "Altus Group 2026 Canadian Cost Guide, p. 5: Up to 6 storey wood framed condo, GTA and Ottawa average ($220–$310/sq ft)"
+      }
     },
     "mid_rise_apartment": {
       "label": {
@@ -131,11 +171,15 @@
         "fr": "Immeuble de hauteur moyenne (5 à 12 étages)"
       },
       "perM2": {
-        "low": 3995,
-        "typical": 4700,
-        "high": 5875
+        "low": 2718,
+        "typical": 3270,
+        "high": 3821
       },
-      "uncertaintyMultiplier": 1
+      "uncertaintyMultiplier": 1,
+      "source": {
+        "en": "Altus Group 2026 Canadian Cost Guide, p. 5: Condominiums/Apartments - up to 12 storeys, GTA and Ottawa average ($252–$355/sq ft)",
+        "fr": "Altus Group 2026 Canadian Cost Guide, p. 5: Condominiums/Apartments - up to 12 storeys, GTA and Ottawa average ($252–$355/sq ft)"
+      }
     }
   },
   "qualityFactors": {
