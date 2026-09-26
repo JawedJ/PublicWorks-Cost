@@ -6,11 +6,11 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Current state
 
-- **Current task:** P1.5
+- **Current task:** P1.7
 - **Status:** not started   <!-- not started | in progress | blocked | at sync point -->
-- **Next action:** P1.5 freeform draw tools (Terra Draw: polygon, rectangle, circle, freehand, line, point; project area). Check Terra Draw's current docs for MapLibre 6 first. Drawn shapes go to the store via `addComponent` / `setComponentGeometry`; `component-layers.tsx` already renders them.
+- **Next action:** P1.7 editing (move, rotate, scale, vertex edit, holes, duplicate, mirror, delete). Likely Terra Draw's select mode: load the selected component's shapes into Terra Draw for editing, write back on `finish` with one `setComponentGeometry` per drag.
 - **Blockers / needs from B:** none.
-- **Last updated:** 2026-09-26 (P1.4 merged to `main`)
+- **Last updated:** 2026-09-26 (P1.5 merged to `main`)
 
 ## Handoff notes
 
@@ -25,6 +25,10 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 - Temporary: the empty list has a "Load sample project (Northgate)" button that loads B's fixture into the store (design part only). Remove or move it once the landing page's demo cards (P4.5) exist.
 - `component-layers.tsx` is a plain placeholder rendering (fills, lines ~10 m wide at street zoom, circles for points, orange selection outline, dashed project area) and click-to-select. P1.11–P1.13 replace the styling; keep the `componentId` property and click handling. Layers are re-added on `style.load` after a basemap switch. MapLibre can't parse oklch, so map colours are hex in `src/lib/render/colors.ts`.
 - Radix menu gotcha: when a menu item opens an input, prevent `onCloseAutoFocus` and focus the input there (see rename in `component-list.tsx`). Focus lands after the menu's close animation.
+- Drawing (P1.5): the toolbar under the search box picks what to draw (new road/park/building/structure with a starting subtype, project area, the selected planned component, or a section on the selected building), then a shape tool limited to what that target allows (`toolsForTarget` in `src/lib/geo/drawing.ts`). `drawing` in the store drives Terra Draw (`draw-controller.tsx`); on finish the shape goes through `finishDrawing` (one undo step, selects the component) and is removed from Terra Draw. Terra Draw is recreated on `style.load` after a basemap switch; component layers are inserted below its `td-*` layers. The click that finishes a shape is ignored by click-to-select (`justFinishedDrawing`).
+- Park features and custom elements are supported by `finishDrawing` (`kind: "feature"`) but have no toolbar entry yet: the feature palette and "Custom…" come with the Add menu (P1.6).
+- New buildings start with 1 storey and a flat roof (`DEFAULT_STOREYS`); P1.8 adds the storeys/roof controls, P1.9 smart-start sizes.
+- **Deferred checks (per the human, 2026-09-26):** don't spend time verifying mobile layout or French text while building features. Only English on desktop is checked for now; mobile is covered in P10.3 and French in P10.1. Known unchecked: the draw toolbar and component list at phone width, and French labels' length in the toolbar.
 - For live drags (P1.7), call `setComponentGeometry` only on drag end so each drag is one undo step.
 - MapLibre 6: its CSS sets `position: relative` on the container, so size it with `h-full w-full`, not `absolute inset-0`. The worker must be served from `/maplibre/` (see `setWorkerUrl` in `map-view.tsx`).
 - Commits: plain `P1.3 [A]: …` messages under the user's name, **no Co-Authored-By trailer**.
@@ -56,7 +60,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 - [x] P1.2 Geocoding search with fly-to
 - [x] P1.3 Store: multiple components (planned/drawn, user/generated), selection, undo/redo
 - [x] P1.4 Component list panel (select, zoom to, rename, duplicate, hide/show, delete)
-- [ ] P1.5 Freeform draw tools: polygon, rectangle, circle/ellipse, freehand, line/polyline, point; project area
+- [x] P1.5 Freeform draw tools: polygon, rectangle, circle/ellipse, freehand, line/polyline, point; project area
 - [ ] P1.7 Editing: move, rotate, scale, vertex edit, holes, duplicate, mirror, delete
 - [ ] P1.8 Multi-section buildings: split/merge sections, per-section storeys and roof
 - [ ] P1.14 `measure.ts` (Turf) + unit tests; per-component, per-section, and project totals — **merge early, B's engine depends on it**
@@ -116,6 +120,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 | Geometry transforms | `src/lib/geo/transform.ts`, `bounds.ts` (+ test) | `translateFeature` in metres (duplicate offset); `featureBounds` / `componentBounds` for zoom to |
 | Component list | `src/components/map/component-list.tsx` | select, zoom to, rename, duplicate, hide/show, delete, undo/redo buttons + shortcuts, sample loader |
 | Component map layers | `src/components/map/component-layers.tsx`, `src/lib/render/colors.ts` | placeholder styling until P1.11; click to select; selection highlight |
+| Drawing | `src/lib/geo/drawing.ts` (targets, tools per type, geometry from a shape), `src/components/map/draw-controller.tsx` (Terra Draw), `draw-toolbar.tsx`; store `drawing`, `startDrawing`, `cancelDrawing`, `finishDrawing` | Terra Draw 1.35 + MapLibre adapter; self-crossing polygons rejected |
 | UI primitives | `src/components/ui/button.tsx`, `dropdown-menu.tsx` (shadcn) | |
 | Pages | `src/app/[locale]/page.tsx` (landing placeholder), `src/app/[locale]/workspace/page.tsx` | |
 | Place search | `src/components/map/geocoder.tsx`, `src/lib/geo/geocode.ts` (+ test) | MapTiler search-as-you-type (Canada, current language); Photon (OSM) without a key; suggestions as you type from 2 characters; 6 s timeout |

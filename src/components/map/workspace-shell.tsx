@@ -3,6 +3,8 @@
 import { useTranslations } from "next-intl";
 import { ComponentLayers } from "./component-layers";
 import { ComponentList } from "./component-list";
+import { DrawController } from "./draw-controller";
+import { DrawToolbar } from "./draw-toolbar";
 import { Geocoder } from "./geocoder";
 import { MapProvider } from "./map-context";
 import { MapView } from "./map-view";
@@ -22,8 +24,10 @@ export function WorkspaceShell() {
           >
             <MapView>
               <ComponentLayers />
-              <div className="absolute top-3 left-3 z-10">
+              <DrawController />
+              <div className="absolute top-3 left-3 z-10 flex flex-col items-start gap-2">
                 <Geocoder />
+                <DrawToolbar />
               </div>
             </MapView>
           </section>

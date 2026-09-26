@@ -1,10 +1,20 @@
 import type { StateCreator } from "zustand";
 import type {
+  AnyFeature,
   Component,
   ComponentGeometry,
   ComponentType,
   PolygonFeature,
 } from "@/lib/schemas";
+import {
+  geometryForType,
+  geometryTypeOf,
+  newId,
+  toolsForTarget,
+  withFeature,
+  withSection,
+  type Drawing,
+} from "@/lib/geo/drawing";
 import { translateFeature } from "@/lib/geo/transform";
 import type { Store } from "./store";
 
@@ -57,6 +67,8 @@ export type DesignSlice = DesignSnapshot & {
   /** Undo/redo stacks; most recent last. */
   past: DesignSnapshot[];
   future: DesignSnapshot[];
+  /** The shape being drawn on the map, or `null` when not drawing. */
+  drawing: Drawing | null;
 
   /** Select a whole component (or clear with `null`). */
   selectComponent: (componentId: string | null) => void;
@@ -95,13 +107,21 @@ export type DesignSlice = DesignSnapshot & {
   /** Replaces all components and the area (e.g. opening a project file). Clears history and selection. */
   loadDesign: (snapshot: DesignSnapshot) => void;
 
+  /** Starts drawing, if the tool suits the target. */
+  startDrawing: (drawing: Drawing) => void;
+  cancelDrawing: () => void;
+  /**
+   * Applies a finished shape to the current drawing target (one undo step), selects
+   * the component, and stops drawing. Returns the component id, or `null` if the
+   * shape doesn't fit the target.
+   */
+  finishDrawing: (shape: AnyFeature) => string | null;
+
   undo: () => void;
   redo: () => void;
 };
 
-export function newId(): string {
-  return crypto.randomUUID();
-}
+export { newId };
 
 export function createComponent(input: NewComponentInput): Component {
   return {
@@ -191,6 +211,7 @@ export const createDesignSlice: StateCreator<Store, [], [], DesignSlice> = (
     unitSystem: "metric",
     past: [],
     future: [],
+    drawing: null,
 
     selectComponent: (componentId) =>
       set({
@@ -266,6 +287,63 @@ export const createDesignSlice: StateCreator<Store, [], [], DesignSlice> = (
         selectedComponentId: null,
         selectedElement: null,
       }),
+
+    startDrawing: (drawing) => {
+      if (
+        !toolsForTarget(drawing.target, get().components).includes(drawing.tool)
+      )
+        return;
+      set({ drawing });
+    },
+    cancelDrawing: () => set({ drawing: null }),
+
+    finishDrawing: (shape) => {
+      const drawing = get().drawing;
+      if (!drawing || shape.geometry.type !== geometryTypeOf(drawing.tool))
+        return null;
+      const { target } = drawing;
+      set({ drawing: null });
+
+      if (target.kind === "area") {
+        if (shape.geometry.type !== "Polygon") return null;
+        commit({ areaBoundary: { ...shape, geometry: shape.geometry } });
+        return null;
+      }
+      if (target.kind === "new") {
+        const id = get().addComponent({
+          type: target.type,
+          subtype: target.subtype,
+          name: target.name,
+          geometry: geometryForType(target.type, shape),
+        });
+        get().selectComponent(id);
+        return id;
+      }
+
+      const c = get().components.find((x) => x.id === target.componentId);
+      if (!c) return null;
+      let geometry: ComponentGeometry | undefined;
+      if (target.kind === "planned") {
+        geometry = geometryForType(c.type, shape);
+      } else if (target.kind === "section") {
+        if (!c.geometry || shape.geometry.type !== "Polygon") return null;
+        geometry = withSection(c.geometry, {
+          ...shape,
+          geometry: shape.geometry,
+        });
+      } else {
+        if (!c.geometry) return null;
+        geometry = withFeature(
+          c.geometry,
+          shape,
+          target.featureKind,
+          target.customLabel,
+        );
+      }
+      get().setComponentGeometry(c.id, geometry);
+      get().selectComponent(c.id);
+      return c.id;
+    },
 
     undo: () => {
       const { past, future } = get();

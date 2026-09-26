@@ -235,3 +235,117 @@ describe("designSlice undo/redo", () => {
     expect(s().components).toHaveLength(0);
   });
 });
+
+describe("designSlice drawing", () => {
+  beforeEach(() => useStore.setState(initial, true));
+
+  const line = {
+    type: "Feature" as const,
+    properties: {},
+    geometry: {
+      type: "LineString" as const,
+      coordinates: [
+        [-79.4, 43.7],
+        [-79.39, 43.7],
+      ] as [number, number][],
+    },
+  };
+  const pin = {
+    type: "Feature" as const,
+    properties: {},
+    geometry: {
+      type: "Point" as const,
+      coordinates: [-79.4, 43.7] as [number, number],
+    },
+  };
+
+  it("refuses a tool the target can't use", () => {
+    s().startDrawing({
+      target: { kind: "new", type: "road", subtype: "r", name: "Road 1" },
+      tool: "polygon",
+    });
+    expect(s().drawing).toBeNull();
+  });
+
+  it("a drawn road becomes a selected, drawn component in one undo step", () => {
+    s().startDrawing({
+      target: {
+        kind: "new",
+        type: "road",
+        subtype: "road_reconstruction",
+        name: "Road 1",
+      },
+      tool: "line",
+    });
+    const id = s().finishDrawing(line)!;
+    const c = s().components[0]!;
+    expect(c).toMatchObject({
+      id,
+      name: "Road 1",
+      status: "drawn",
+      origin: "user",
+    });
+    expect(c.geometry!.primary).toEqual(line);
+    expect(s().selectedComponentId).toBe(id);
+    expect(s().drawing).toBeNull();
+    expect(ComponentSchema.safeParse(c).success).toBe(true);
+    s().undo();
+    expect(s().components).toHaveLength(0);
+  });
+
+  it("a drawn building gets a first section from its shape", () => {
+    s().startDrawing({
+      target: {
+        kind: "new",
+        type: "building",
+        subtype: "library",
+        name: "Library",
+      },
+      tool: "rectangle",
+    });
+    s().finishDrawing(square(-79.4, 43.7));
+    const g = s().components[0]!.geometry!;
+    expect(g.sections).toHaveLength(1);
+    expect(g.sections![0]!.footprint).toEqual(g.primary);
+    expect(ComponentSchema.safeParse(s().components[0]).success).toBe(true);
+
+    // A second section
+    s().startDrawing({
+      target: { kind: "section", componentId: s().components[0]!.id },
+      tool: "polygon",
+    });
+    s().finishDrawing(square(-79.399, 43.7));
+    expect(s().components[0]!.geometry!.sections).toHaveLength(2);
+  });
+
+  it("fulfils a planned component and places features", () => {
+    const id = s().addComponent({ type: "park", subtype: "p", name: "Park" });
+    s().startDrawing({
+      target: { kind: "planned", componentId: id },
+      tool: "freehand",
+    });
+    s().finishDrawing(square(-79.4, 43.7, 0.01));
+    expect(s().components[0]!.status).toBe("drawn");
+
+    s().startDrawing({
+      target: { kind: "feature", componentId: id, featureKind: "playground" },
+      tool: "point",
+    });
+    s().finishDrawing(pin);
+    expect(s().components[0]!.geometry!.features[0]).toMatchObject({
+      kind: "playground",
+      geometry: pin,
+    });
+  });
+
+  it("draws the project area, and ignores a shape of the wrong type", () => {
+    s().startDrawing({ target: { kind: "area" }, tool: "circle" });
+    expect(s().finishDrawing(line)).toBeNull();
+    expect(s().areaBoundary).toBeNull();
+    s().startDrawing({ target: { kind: "area" }, tool: "circle" });
+    s().finishDrawing(square(-79.4, 43.7));
+    expect(s().areaBoundary).toEqual(square(-79.4, 43.7));
+    s().undo();
+    expect(s().areaBoundary).toBeNull();
+  });
+});

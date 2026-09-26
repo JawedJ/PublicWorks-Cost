@@ -73,6 +73,40 @@
       "undo": "Annuler",
       "redo": "Rétablir"
     },
-    "listLabel": "Liste des composantes"
+    "listLabel": "Liste des composantes",
+    "draw": {
+      "newComponent": "Nouvelle composante",
+      "newName": "{type} {n}",
+      "whatLabel": "Quoi dessiner : {current}",
+      "toolsLabel": "Outils de dessin",
+      "cancel": "Annuler le dessin",
+      "targets": {
+        "new": "Nouveau : {type}",
+        "area": "Zone du projet",
+        "planned": "Dessiner « {name} »",
+        "section": "Ajouter une section à « {name} »"
+      },
+      "tools": {
+        "polygon": "Polygone",
+        "rectangle": "Rectangle",
+        "circle": "Cercle",
+        "ellipse": "Ellipse",
+        "freehand": "Forme à main levée",
+        "line": "Ligne",
+        "freehandLine": "Ligne à main levée",
+        "point": "Point"
+      },
+      "hints": {
+        "polygon": "Cliquez pour ajouter des sommets. Cliquez de nouveau sur le premier sommet pour terminer.",
+        "rectangle": "Cliquez sur un coin, puis sur le coin opposé.",
+        "circle": "Cliquez sur le centre, puis de nouveau pour fixer la taille.",
+        "ellipse": "Cliquez sur le centre, puis de nouveau pour fixer la taille.",
+        "freehand": "Cliquez pour commencer, déplacez pour dessiner, puis cliquez pour terminer.",
+        "line": "Cliquez pour ajouter des points. Cliquez de nouveau sur le dernier point pour terminer.",
+        "freehandLine": "Cliquez pour commencer, déplacez pour dessiner, puis cliquez pour terminer.",
+        "point": "Cliquez pour le placer.",
+        "cancel": "Appuyez sur Échap pour annuler."
+      }
+    }
   }
 }

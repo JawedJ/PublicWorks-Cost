@@ -73,6 +73,40 @@
       "undo": "Undo",
       "redo": "Redo"
     },
-    "listLabel": "Component list"
+    "listLabel": "Component list",
+    "draw": {
+      "newComponent": "New component",
+      "newName": "{type} {n}",
+      "whatLabel": "What to draw: {current}",
+      "toolsLabel": "Drawing tools",
+      "cancel": "Cancel drawing",
+      "targets": {
+        "new": "New {type}",
+        "area": "Project area",
+        "planned": "Draw “{name}”",
+        "section": "Add a section to “{name}”"
+      },
+      "tools": {
+        "polygon": "Polygon",
+        "rectangle": "Rectangle",
+        "circle": "Circle",
+        "ellipse": "Ellipse",
+        "freehand": "Freehand shape",
+        "line": "Line",
+        "freehandLine": "Freehand line",
+        "point": "Point"
+      },
+      "hints": {
+        "polygon": "Click to add corners. Click the first corner again to finish.",
+        "rectangle": "Click one corner, then the opposite corner.",
+        "circle": "Click the centre, then click again to set the size.",
+        "ellipse": "Click the centre, then click again to set the size.",
+        "freehand": "Click to start, move to draw, and click again to finish.",
+        "line": "Click to add points. Click the last point again to finish.",
+        "freehandLine": "Click to start, move to draw, and click again to finish.",
+        "point": "Click to place it.",
+        "cancel": "Press Esc to cancel."
+      }
+    }
   }
 }

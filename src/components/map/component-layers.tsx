@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import { componentColor, mapColors } from "@/lib/render/colors";
 import type { AnyFeature, Component, PolygonFeature } from "@/lib/schemas";
 import { useStore } from "@/lib/store/store";
+import { DRAW_LAYER_PREFIX, justFinishedDrawing } from "./draw-controller";
 import { useMap } from "./map-context";
 
 // Plain rendering of every visible component so it can be seen, selected and
@@ -57,6 +58,10 @@ const selectedFilter = (id: string | null): ExpressionSpecification => [
 ];
 function addLayers(map: MapLibreMap) {
   if (map.getSource(SOURCE)) return;
+  // Keep components below Terra Draw's in-progress shape.
+  const beforeId = map
+    .getStyle()
+    .layers.find((l) => l.id.startsWith(`${DRAW_LAYER_PREFIX}-`))?.id;
   const { components, areaBoundary, selectedComponentId } = useStore.getState();
   map.addSource(AREA_SOURCE, {
     type: "geojson",
@@ -66,98 +71,122 @@ function addLayers(map: MapLibreMap) {
     type: "geojson",
     data: { type: "FeatureCollection", features: toFeatures(components) },
   });
-  map.addLayer({
-    id: "pw-area",
-    type: "line",
-    source: AREA_SOURCE,
-    paint: {
-      "line-color": mapColors.structure,
-      "line-width": 1.5,
-      "line-dasharray": [4, 3],
+  map.addLayer(
+    {
+      id: "pw-area",
+      type: "line",
+      source: AREA_SOURCE,
+      paint: {
+        "line-color": mapColors.structure,
+        "line-width": 1.5,
+        "line-dasharray": [4, 3],
+      },
     },
-  });
-  map.addLayer({
-    id: "pw-fill",
-    type: "fill",
-    source: SOURCE,
-    filter: ["all", isPolygon, ["!=", ["get", "role"], "section"]],
-    paint: {
-      "fill-color": ["get", "color"],
-      "fill-opacity": ["case", ["==", ["get", "role"], "feature"], 0.5, 0.3],
+    beforeId,
+  );
+  map.addLayer(
+    {
+      id: "pw-fill",
+      type: "fill",
+      source: SOURCE,
+      filter: ["all", isPolygon, ["!=", ["get", "role"], "section"]],
+      paint: {
+        "fill-color": ["get", "color"],
+        "fill-opacity": ["case", ["==", ["get", "role"], "feature"], 0.5, 0.3],
+      },
     },
-  });
-  map.addLayer({
-    id: "pw-section",
-    type: "fill",
-    source: SOURCE,
-    filter: ["all", isPolygon, ["==", ["get", "role"], "section"]],
-    paint: { "fill-color": ["get", "color"], "fill-opacity": 0.85 },
-  });
-  map.addLayer({
-    id: "pw-outline",
-    type: "line",
-    source: SOURCE,
-    filter: isPolygon,
-    paint: { "line-color": ["get", "color"], "line-width": 1.2 },
-  });
-  map.addLayer({
-    id: "pw-line",
-    type: "line",
-    source: SOURCE,
-    filter: isLine,
-    layout: { "line-cap": "round", "line-join": "round" },
-    paint: {
-      "line-color": ["get", "color"],
-      // Roads (primary lines) at a rough true width of ~10 m; paths inside parks stay thin.
-      "line-width": [
-        "interpolate",
-        ["exponential", 2],
-        ["zoom"],
-        12,
-        ["case", ["==", ["get", "role"], "primary"], 1.5, 1],
-        19,
-        ["case", ["==", ["get", "role"], "primary"], 60, 4],
-      ],
-      "line-opacity": 0.85,
+    beforeId,
+  );
+  map.addLayer(
+    {
+      id: "pw-section",
+      type: "fill",
+      source: SOURCE,
+      filter: ["all", isPolygon, ["==", ["get", "role"], "section"]],
+      paint: { "fill-color": ["get", "color"], "fill-opacity": 0.85 },
     },
-  });
-  map.addLayer({
-    id: "pw-point",
-    type: "circle",
-    source: SOURCE,
-    filter: isPoint,
-    paint: {
-      "circle-radius": 7,
-      "circle-color": ["get", "color"],
-      "circle-stroke-color": "#ffffff",
-      "circle-stroke-width": 2,
+    beforeId,
+  );
+  map.addLayer(
+    {
+      id: "pw-outline",
+      type: "line",
+      source: SOURCE,
+      filter: isPolygon,
+      paint: { "line-color": ["get", "color"], "line-width": 1.2 },
     },
-  });
+    beforeId,
+  );
+  map.addLayer(
+    {
+      id: "pw-line",
+      type: "line",
+      source: SOURCE,
+      filter: isLine,
+      layout: { "line-cap": "round", "line-join": "round" },
+      paint: {
+        "line-color": ["get", "color"],
+        // Roads (primary lines) at a rough true width of ~10 m; paths inside parks stay thin.
+        "line-width": [
+          "interpolate",
+          ["exponential", 2],
+          ["zoom"],
+          12,
+          ["case", ["==", ["get", "role"], "primary"], 1.5, 1],
+          19,
+          ["case", ["==", ["get", "role"], "primary"], 60, 4],
+        ],
+        "line-opacity": 0.85,
+      },
+    },
+    beforeId,
+  );
+  map.addLayer(
+    {
+      id: "pw-point",
+      type: "circle",
+      source: SOURCE,
+      filter: isPoint,
+      paint: {
+        "circle-radius": 7,
+        "circle-color": ["get", "color"],
+        "circle-stroke-color": "#ffffff",
+        "circle-stroke-width": 2,
+      },
+    },
+    beforeId,
+  );
   // Selection highlight, drawn on top.
-  map.addLayer({
-    id: "pw-selected-line",
-    type: "line",
-    source: SOURCE,
-    filter: [
-      "all",
-      ["!=", ["geometry-type"], "Point"],
-      selectedFilter(selectedComponentId),
-    ],
-    layout: { "line-cap": "round", "line-join": "round" },
-    paint: { "line-color": mapColors.selected, "line-width": 3 },
-  });
-  map.addLayer({
-    id: "pw-selected-point",
-    type: "circle",
-    source: SOURCE,
-    filter: ["all", isPoint, selectedFilter(selectedComponentId)],
-    paint: {
-      "circle-radius": 10,
-      "circle-color": "rgba(0,0,0,0)",
-      "circle-stroke-color": mapColors.selected,
-      "circle-stroke-width": 3,
+  map.addLayer(
+    {
+      id: "pw-selected-line",
+      type: "line",
+      source: SOURCE,
+      filter: [
+        "all",
+        ["!=", ["geometry-type"], "Point"],
+        selectedFilter(selectedComponentId),
+      ],
+      layout: { "line-cap": "round", "line-join": "round" },
+      paint: { "line-color": mapColors.selected, "line-width": 3 },
     },
-  });
+    beforeId,
+  );
+  map.addLayer(
+    {
+      id: "pw-selected-point",
+      type: "circle",
+      source: SOURCE,
+      filter: ["all", isPoint, selectedFilter(selectedComponentId)],
+      paint: {
+        "circle-radius": 10,
+        "circle-color": "rgba(0,0,0,0)",
+        "circle-stroke-color": mapColors.selected,
+        "circle-stroke-width": 3,
+      },
+    },
+    beforeId,
+  );
 }
 
 /** Draws the store's components on the map; clicking one selects it. */
@@ -175,6 +204,7 @@ export function ComponentLayers() {
     map.on("style.load", onStyle);
 
     const onClick = (e: { point: { x: number; y: number } }) => {
+      if (useStore.getState().drawing || justFinishedDrawing()) return;
       const hit = map
         .queryRenderedFeatures([e.point.x, e.point.y], {
           layers: CLICKABLE.filter((id) => map.getLayer(id)),
