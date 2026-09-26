@@ -43,5 +43,36 @@
       "noResults": "Aucun lieu trouvé au Canada.",
       "error": "La recherche est indisponible pour le moment. Déplacez la carte manuellement."
     }
+  },
+  "design": {
+    "components": {
+      "title": "Composantes",
+      "empty": "Aucune composante pour l’instant. Les outils de dessin arrivent bientôt; en attendant, vous pouvez charger le projet exemple pour essayer la liste.",
+      "loadSample": "Charger le projet exemple (Northgate)",
+      "planned": "Prévue",
+      "notDrawn": "Pas encore dessinée",
+      "types": {
+        "road": "Rue",
+        "park": "Parc",
+        "building": "Bâtiment",
+        "structure": "Ouvrage d’art",
+        "custom": "Personnalisée"
+      },
+      "zoomTo": "Zoomer sur {name}",
+      "zoomToShort": "Zoomer",
+      "hide": "Masquer {name}",
+      "show": "Afficher {name}",
+      "hideShort": "Masquer",
+      "showShort": "Afficher",
+      "more": "Autres actions pour {name}",
+      "rename": "Renommer",
+      "renameLabel": "Nom de la composante",
+      "duplicate": "Dupliquer",
+      "copyName": "{name} (copie)",
+      "delete": "Supprimer",
+      "undo": "Annuler",
+      "redo": "Rétablir"
+    },
+    "listLabel": "Liste des composantes"
   }
 }

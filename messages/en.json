@@ -43,5 +43,36 @@
       "noResults": "No places found in Canada.",
       "error": "Search is unavailable right now. Pan the map instead."
     }
+  },
+  "design": {
+    "components": {
+      "title": "Components",
+      "empty": "No components yet. Drawing tools are coming next; for now you can load the sample project to try the list.",
+      "loadSample": "Load sample project (Northgate)",
+      "planned": "Planned",
+      "notDrawn": "Not drawn yet",
+      "types": {
+        "road": "Road",
+        "park": "Park",
+        "building": "Building",
+        "structure": "Structure",
+        "custom": "Custom"
+      },
+      "zoomTo": "Zoom to {name}",
+      "zoomToShort": "Zoom to",
+      "hide": "Hide {name}",
+      "show": "Show {name}",
+      "hideShort": "Hide",
+      "showShort": "Show",
+      "more": "More actions for {name}",
+      "rename": "Rename",
+      "renameLabel": "Component name",
+      "duplicate": "Duplicate",
+      "copyName": "{name} (copy)",
+      "delete": "Delete",
+      "undo": "Undo",
+      "redo": "Redo"
+    },
+    "listLabel": "Component list"
   }
 }
