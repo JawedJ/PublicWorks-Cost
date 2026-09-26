@@ -1,6 +1,6 @@
 "use client";
 
-import { Copy, Plus, Trash2 } from "lucide-react";
+import { Copy, Plus, Trash2, X } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -40,6 +40,16 @@ export function BuildListReview({ initial, source, onConfirm, onBack }: Props) {
   const label = (type: ComponentType, subtype: string) =>
     templates[type].subtypes.find((s) => s.id === subtype)?.label[locale] ??
     subtype;
+
+  /** Drop one detail the parser picked up (e.g. a wrong road class); it falls back to its default. */
+  function removeParam(i: number, id: string) {
+    const c = items[i]!;
+    const params = { ...c.params };
+    const evidence = { ...c.evidence };
+    delete params[id];
+    delete evidence[id];
+    update(i, { params, evidence });
+  }
 
   function add() {
     const subtype = templates.building.subtypes[0]!.id;
@@ -176,30 +186,42 @@ export function BuildListReview({ initial, source, onConfirm, onBack }: Props) {
                 <ul className="flex flex-wrap gap-1.5 text-xs">
                   {params.map(([id, value]) => {
                     const def = tpl.paramCatalog.find((d) => d.id === id);
+                    const text = `${def?.label[locale] ?? id}: ${String(value)}${def?.unit ? ` ${def.unit}` : ""}`;
                     return (
-                      <li
+                      <Tag
                         key={id}
                         title={c.evidence[id]}
-                        className="rounded-full bg-muted px-2 py-0.5"
-                      >
-                        {def?.label[locale] ?? id}: {String(value)}
-                        {def?.unit ? ` ${def.unit}` : ""}
-                      </li>
+                        text={text}
+                        removeLabel={t("removeTag", { tag: text })}
+                        onRemove={() => removeParam(i, id)}
+                      />
                     );
                   })}
                 </ul>
               )}
               {c.features && c.features.length > 0 && (
-                <p className="text-xs">
-                  {t("features")}:{" "}
-                  {c.features
-                    .map(
-                      (f) =>
+                <div className="flex flex-wrap items-center gap-1.5 text-xs">
+                  <span>{t("features")}:</span>
+                  <ul className="contents">
+                    {c.features.map((f, k) => {
+                      const text =
                         parkFeatures.features[f]?.label[locale] ??
-                        f.replace(/_/g, " "),
-                    )
-                    .join(", ")}
-                </p>
+                        f.replace(/_/g, " ");
+                      return (
+                        <Tag
+                          key={`${f}-${k}`}
+                          text={text}
+                          removeLabel={t("removeTag", { tag: text })}
+                          onRemove={() =>
+                            update(i, {
+                              features: c.features!.filter((_, j) => j !== k),
+                            })
+                          }
+                        />
+                      );
+                    })}
+                  </ul>
+                </div>
               )}
               {(c.sourcePhrase || c.spatialHint) && (
                 <p className="text-xs text-muted-foreground">
@@ -232,5 +254,35 @@ export function BuildListReview({ initial, source, onConfirm, onBack }: Props) {
         </Button>
       </div>
     </section>
+  );
+}
+
+/** A detail chip with a small × to remove it. */
+function Tag({
+  text,
+  title,
+  removeLabel,
+  onRemove,
+}: {
+  text: string;
+  title?: string;
+  removeLabel: string;
+  onRemove: () => void;
+}) {
+  return (
+    <li
+      title={title}
+      className="flex items-center gap-1 rounded-full bg-muted py-0.5 pr-1 pl-2"
+    >
+      {text}
+      <button
+        type="button"
+        aria-label={removeLabel}
+        onClick={onRemove}
+        className="rounded-full p-0.5 text-muted-foreground hover:bg-background hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+      >
+        <X className="size-3" />
+      </button>
+    </li>
   );
 }
