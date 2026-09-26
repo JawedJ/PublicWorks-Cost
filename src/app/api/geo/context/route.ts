@@ -15,9 +15,15 @@ const BodySchema = z.object({
     }),
 });
 
-const OVERPASS_URL =
+// The public Overpass server is often busy (429/504): try it twice, then a mirror.
+const MAIN_URL =
   process.env.OVERPASS_URL || "https://overpass-api.de/api/interpreter";
-const TIMEOUT_MS = 10_000;
+const OVERPASS_URLS = [
+  MAIN_URL,
+  MAIN_URL,
+  "https://overpass.private.coffee/api/interpreter",
+];
+const TIMEOUT_MS = 12_000;
 const cache = new Map<string, SiteContext>();
 
 type OsmElement = {
@@ -74,45 +80,47 @@ export const POST = jsonRoute(
     const hit = cache.get(key);
     if (hit) return hit;
     const b = `${s},${w},${n},${e}`;
-    const query = `[out:json][timeout:9];(
+    const query = `[out:json][timeout:11];(
       nwr["amenity"~"^(school|hospital)$"](${b});
       way["waterway"~"^(river|stream|canal)$"](${b});
       way["railway"="rail"](${b});
       way["highway"~"^(motorway|trunk|primary|secondary)$"](${b});
     );out tags geom 400;`;
-    try {
-      const res = await fetch(OVERPASS_URL, {
-        method: "POST",
-        headers: {
-          "content-type": "application/x-www-form-urlencoded",
-          accept: "application/json",
-          // Overpass refuses requests without an identifying User-Agent.
-          "user-agent":
-            "PublicWorksCost/0.1 (public infrastructure cost estimator)",
-        },
-        body: `data=${encodeURIComponent(query)}`,
-        signal: AbortSignal.timeout(TIMEOUT_MS),
-      });
-      if (!res.ok) throw new Error(`Overpass ${res.status}`);
-      const json = (await res.json()) as { elements?: OsmElement[] };
-      const features = (json.elements ?? [])
-        .map(toFeature)
-        .filter((f): f is SiteFeature => f !== null);
-      const ctx: SiteContext = {
-        source: "overpass",
-        fetchedAt: new Date().toISOString(),
-        features,
-      };
-      if (cache.size > 200) cache.clear();
-      cache.set(key, ctx);
-      return ctx;
-    } catch (err) {
-      console.warn("[api/geo/context] unavailable", err);
-      return {
-        source: "unavailable",
-        fetchedAt: new Date().toISOString(),
-        features: [],
-      };
+    for (const url of OVERPASS_URLS) {
+      try {
+        const res = await fetch(url, {
+          method: "POST",
+          headers: {
+            "content-type": "application/x-www-form-urlencoded",
+            accept: "application/json",
+            // Overpass refuses requests without an identifying User-Agent.
+            "user-agent":
+              "PublicWorksCost/0.1 (public infrastructure cost estimator)",
+          },
+          body: `data=${encodeURIComponent(query)}`,
+          signal: AbortSignal.timeout(TIMEOUT_MS),
+        });
+        if (!res.ok) throw new Error(`Overpass ${res.status}`);
+        const json = (await res.json()) as { elements?: OsmElement[] };
+        const features = (json.elements ?? [])
+          .map(toFeature)
+          .filter((f): f is SiteFeature => f !== null);
+        const ctx: SiteContext = {
+          source: "overpass",
+          fetchedAt: new Date().toISOString(),
+          features,
+        };
+        if (cache.size > 200) cache.clear();
+        cache.set(key, ctx);
+        return ctx;
+      } catch (err) {
+        console.warn(`[api/geo/context] ${url} unavailable`, err);
+      }
     }
+    return {
+      source: "unavailable",
+      fetchedAt: new Date().toISOString(),
+      features: [],
+    };
   },
 );

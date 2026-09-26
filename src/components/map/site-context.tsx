@@ -14,6 +14,8 @@ import { useMap } from "./map-context";
 // project (via /api/geo/context) and shows them with buffer rings on the map.
 
 const SOURCE = "pw-site";
+/** Largest search box the API accepts (degrees of longitude, latitude), a bit under its limit. */
+const MAX_SPAN = [0.075, 0.055] as const;
 /** Buffer ring radius around schools and hospitals, and half-width along water and rail (m). */
 const BUFFER_M = { school: 150, hospital: 150, waterway: 30, rail: 30 };
 const COLOR = {
@@ -30,12 +32,16 @@ function projectBbox(pad = 0.004): [number, number, number, number] | null {
     areaBoundary ? featureBounds(areaBoundary) : null,
   ].filter((b): b is NonNullable<typeof b> => b !== null);
   if (!boxes.length) return null;
-  return [
-    Math.min(...boxes.map((b) => b[0])) - pad,
-    Math.min(...boxes.map((b) => b[1])) - pad,
-    Math.max(...boxes.map((b) => b[2])) + pad,
-    Math.max(...boxes.map((b) => b[3])) + pad,
-  ];
+  const w = Math.min(...boxes.map((b) => b[0])) - pad;
+  const s = Math.min(...boxes.map((b) => b[1])) - pad;
+  const e = Math.max(...boxes.map((b) => b[2])) + pad;
+  const n = Math.max(...boxes.map((b) => b[3])) + pad;
+  // The API looks at most ~5 km across; a larger project checks the area around its centre.
+  const cx = (w + e) / 2;
+  const cy = (s + n) / 2;
+  const hw = Math.min((e - w) / 2, MAX_SPAN[0] / 2);
+  const hh = Math.min((n - s) / 2, MAX_SPAN[1] / 2);
+  return [cx - hw, cy - hh, cx + hw, cy + hh];
 }
 
 function addLayers(map: MapLibreMap) {
@@ -61,6 +67,8 @@ function addLayers(map: MapLibreMap) {
       type: "line",
       source: SOURCE,
       filter: ["==", ["geometry-type"], "LineString"],
+      // Round joins: the wide buffer band otherwise spikes into long triangles at sharp bends.
+      layout: { "line-join": "round", "line-cap": "round" },
       paint: {
         "line-color": ["get", "color"],
         "line-opacity": 0.12,

@@ -32,7 +32,7 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 - `useEstimate()` is called twice (EstimatePanel and ComponentLayers) → two engine runs per change. Fine for now; B could move the estimate into the store.
 - Landing prompt uses a TEMPORARY keyword parser (`src/components/landing/keyword-parse.ts`) until B's `/api/ai/parse`; it creates planned components with size hints `gfaOverrideM2`, `storeys`, `areaM2`, `lengthM` that smart start / Generate layout read.
 - 3D site (P9.2–P9.5): `src/components/visuals/site-scene.tsx`, plain three.js + OrbitControls, rebuilt on every design/selection/colour change (fine at demo scale). Pipes are drawn under every road at fixed depths (not from params yet).
-- Site context (P6): `/api/geo/context` needs a User-Agent header for Overpass; Overpass sometimes 504s → `source: "unavailable"`. Result stored with B's `setSiteContext`; B's engine can turn it into flags (P6.3).
+- Site context (P6): `/api/geo/context` needs a User-Agent header for Overpass; overpass-api.de often 429/504s or takes >10 s, so the route tries it twice (12 s each) then the private.coffee mirror (unverified: didn't answer from the dev machine; overpass.osm.ch is Swiss-only). Oversized projects search a ~5 km box around their centre instead of failing. The water/rail buffer band uses round line joins (miter joins made long triangle spikes at bends). Result stored with B's `setSiteContext`; B's engine can turn it into flags (P6.3).
 - `captureMapSnapshot` / `useMapSnapshot` (`src/components/map/snapshot.ts`) not yet exercised in a browser.
 
 - Next.js is **16.3** (Middleware is now `src/proxy.ts`; read `node_modules/next/dist/docs/` before using Next APIs, see `AGENTS.md`).
