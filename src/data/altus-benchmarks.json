@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "title": "Altus Group 2026 Canadian Cost Guide: site servicing benchmarks",
+    "page": 7,
+    "notes": "Local and arterial road costs per metre (hard construction), GTA and Ottawa. Used only as a cross-check in the market evidence card, never in the estimate. Transcribed from Precedent Developments' republication of the guide (retrieved 2026-09-26).",
+    "url": "https://www.altusgroup.com/featured-insights/canadian-cost-guide/",
+    "retrievedAt": "2026-09-26"
+  },
+  "roads": [
+    {
+      "id": "local_8m",
+      "label": "Local road, 8 m wide",
+      "perM": { "gta": [4350, 6000], "ottawa": [3300, 4400] }
+    },
+    {
+      "id": "arterial_9m",
+      "label": "Arterial road, 9 m wide",
+      "perM": { "gta": [4500, 6200], "ottawa": [3400, 4900] }
+    },
+    {
+      "id": "arterial_12m",
+      "label": "Arterial road, 12 m wide",
+      "perM": { "gta": [5300, 6900], "ottawa": [4500, 5500] }
+    }
+  ]
+}

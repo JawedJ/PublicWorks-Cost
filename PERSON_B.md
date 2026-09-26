@@ -6,9 +6,9 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Current state
 
-- **Current task:** P3.8 charts (P3.6, P3.9b, P3.10, P3.11, P4.1–P4.2 done)
+- **Current task:** Z.1 zoning (Waterloo only); P3.7, P3.8, B.3 done (P3.6, P3.9b, P3.10, P3.11, P4.1–P4.2 done)
 - **Status:** not started   <!-- not started | in progress | blocked | at sync point -->
-- **Next action:** P3.8, P3.7, then zoning (Waterloo only: Z.1, Z.2, Z.5, Z.6).
+- **Next action:** zoning (Waterloo only: Z.1, Z.2, Z.5, Z.6).
 - **Blockers / needs from A:** none
 - **Last updated:** 2026-09-26 (P3.6 Estimate tab)
 
@@ -16,6 +16,7 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 > Where an unfinished task stopped, gotchas, things to verify. Replace each session.
 
+- P3.7: `src/lib/estimate/evidence.ts` (pure, tested): `benchmarks(estimate, components, scopeId)` (building-only and all-in $/sq ft vs the subtype's Altus range; road $/m vs `altus-benchmarks.json` by `roadClass`), `priceTrend(region)` (4-quarter BCPI non-residential change for the region's CMA), `comparableAwards(types)` (3 most recent CanadaBuys by tag). UI `market-evidence-card.tsx`. P3.8: `charts.tsx` (plain divs): `ComponentBreakdown` (stacked bar + list, replaces the old list), `DistributionChart`, `CategoryBreakdown` (scoped), `DriversTornado`, `PerUnitMetrics`; whole-project-only except category. `EstimateTab` now takes `components` and `region`. The Northgate estimate fixture still has the old sample building prices (tests only).
 - Real data: building base rates are Altus Group 2026 (GTA/Ottawa average, per-subtype `source`, price year 2026; SPEC Change log). B.3 added 7 more Altus building subtypes (+ typologies) and `<CustomPricingForm name pricing onChange/>` in `custom-pricing-form.tsx`, shown in the Inputs tab for custom components and for each custom park feature. `customBases(refData)` / `suggestBasis(name, bases)` in `src/engine/templates/custom.ts`; building bases use ids `building:<subtype>` (per m² of drawn area). Matched = wider band; own rate = user low/high or −30%/+60%.
 - P3.11: `<InputsTab components componentId/>` in `inputs-tab.tsx` (third panel tab). Each catalog param, highest cost impact first, resolved value (subtype defaults applied), number/enum/boolean editor, source badge (Default / You / From prompt / From document / From site) with evidence, "Use default" → `clearComponentParam`. Edits use `setComponentParam` (source `user`). Shared `NumberInput` (commit on blur/Enter) in `number-input.tsx`, also used by line items. `useEstimate` now shares one result per store state across all callers (panel, map colours, 3D, component list), so extra callers are free; new callers start from the cached result.
 - P4.1–P4.2: `src/lib/project-file.ts` (pure, tested): `serializeProject` (stamps `CURRENT_SCHEMA_VERSION`), `projectFileName(name)` → `slug.pwcost.json`, `parseProjectFile(text)` → `{ ok, project }` or `{ ok: false, error: too_large | invalid_json | not_project | newer_version | invalid, detail }` (first zod issue path). No migrations (only v1). Buttons in `src/components/project-file/project-file-buttons.tsx`: `<DownloadProjectButton/>` (disabled with no components) and `<OpenProjectButton/>` (file picker, confirm before replacing work, `loadProject` then `router.push("/workspace")`, inline error). Strings under `projectFile`. Not mounted yet: request to A.
@@ -78,8 +79,8 @@ While A scaffolds, draft these locally; commit right after A's scaffold lands on
 ### S2 → S3 — Estimate panel, AI flow & project files · Core
 - [x] P3.5 Scope selector: whole project / single component, respected by all tabs
 - [x] P3.6 Estimate tab: range display, class badge + hints, contingency, overrun risk card
-- [ ] P3.7 Market evidence card: StatCan price trend, matched CanadaBuys awards with links, optional municipal tenders, sources footnote
-- [ ] P3.8 Per-component breakdown, distribution chart, category breakdown, drivers tornado, per-unit metrics
+- [x] P3.7 Market evidence card: StatCan price trend, matched CanadaBuys awards with links, optional municipal tenders, sources footnote
+- [x] P3.8 Per-component breakdown, distribution chart, category breakdown, drivers tornado, per-unit metrics
 - [x] P3.9b Flags list in the panel (A owns the map markers)
 - [x] P3.10 Line items tab: grouped editable table, sources, overrides, reset
 - [x] P3.11 Inputs tab: parameters per component with source badges; P50 and share for A's component list
@@ -137,6 +138,7 @@ Flags only; never block, never change the estimate. Do Waterloo first (demo city
 | --- | --- | --- |
 | Schemas (Project, Component, Geometry, Scenario, Measurements, Estimate, LineItem, Flag, reference data) | `src/lib/schemas/*.ts`, tests in `src/lib/schemas/__tests__/` | Import from `@/lib/schemas` (index re-exports all) |
 | API route conventions (zod body validation, error format, per-IP rate limiter) | `src/lib/api/` (`route.ts`, `errors.ts`, `rate-limit.ts`, `api.test.ts`) | Import from `@/lib/api`; shared with A's `/api/geo/*` routes |
+| Market evidence card (Altus benchmark, StatCan trend, CanadaBuys) and estimate charts | `src/lib/estimate/evidence.ts` (+ test), `src/components/estimate/market-evidence-card.tsx`, `charts.tsx`, `src/data/altus-benchmarks.json` | Evidence never feeds the engine |
 | Custom element pricing (matched incl. Altus building rates / own rate) | `src/components/estimate/custom-pricing-form.tsx`, `src/engine/templates/custom.ts` | In the Inputs tab |
 | Project files (download/open `.pwcost.json`) | `src/lib/project-file.ts` (+ test), `src/components/project-file/project-file-buttons.tsx` | A mounts the buttons |
 | Project store slice (project meta, settings, scenarios, param/override helpers) | `src/lib/store/projectSlice.ts` (+ test) | `selectProject(state)` gives the full `Project` |

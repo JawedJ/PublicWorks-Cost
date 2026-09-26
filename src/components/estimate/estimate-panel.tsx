@@ -22,6 +22,7 @@ export function EstimatePanel() {
   const selectComponent = useStore((s) => s.selectComponent);
   const selectedId = useStore((s) => s.selectedComponentId);
   const components = useStore((s) => s.components);
+  const region = useStore((s) => s.project.region);
   const [tab, setTab] = useState<Tab>("estimate");
 
   if (!estimate || estimate.components.length === 0) {
@@ -76,7 +77,12 @@ export function EstimatePanel() {
       </div>
       <div role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`}>
         {tab === "estimate" && (
-          <EstimateTab estimate={estimate} scoped={scoped} />
+          <EstimateTab
+            estimate={estimate}
+            scoped={scoped}
+            components={components}
+            region={region}
+          />
         )}
         {tab === "lineItems" && (
           <LineItemsTab estimate={estimate} scoped={scoped} />

@@ -33,11 +33,22 @@ describe("estimate panel tabs", () => {
 
     it(`Estimate tab renders (${scope})`, () => {
       const { html, errors } = render(
-        <EstimateTab estimate={est} scoped={scoped} />,
+        <EstimateTab
+          estimate={est}
+          scoped={scoped}
+          components={northgateProject.components}
+          region={northgateProject.region}
+        />,
       );
       expect(errors).toEqual([]);
       expect(html).toContain(`Class ${scoped.estimateClass} estimate`);
-      if (!id) expect(html).toContain("Overrun risk");
+      expect(html).toContain("Market evidence");
+      expect(html).toContain("Where the money goes");
+      if (!id) {
+        expect(html).toContain("Overrun risk");
+        expect(html).toContain("Range of outcomes");
+        expect(html).toContain("What moves the total most");
+      }
     });
 
     it(`Line items tab renders (${scope})`, () => {
