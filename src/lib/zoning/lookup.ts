@@ -1,5 +1,6 @@
 import type { ZoneResult, ZoningRequest, ZoningResponse } from "@/lib/schemas";
 import { sourceFor } from "./sources";
+import { WATERLOO_BBOX, waterlooZoneAt } from "./waterloo";
 
 // Server side of /api/zoning: one point query per building, cached by ~10 m cell.
 
@@ -7,6 +8,12 @@ const TIMEOUT_MS = 8_000;
 const cache = new Map<string, ZoneResult>();
 
 async function queryPoint(lng: number, lat: number): Promise<ZoneResult> {
+  const [w, s, e, n] = WATERLOO_BBOX;
+  if (lng >= w && lng <= e && lat >= s && lat <= n) {
+    const local = waterlooZoneAt(lng, lat);
+    // Outside Waterloo's zones but in its box (e.g. Kitchener): try the others.
+    if (local.status === "ok") return local;
+  }
   const source = sourceFor(lng, lat);
   if (!source) return { status: "no_data" };
   const key = `${lng.toFixed(4)},${lat.toFixed(4)}`;
