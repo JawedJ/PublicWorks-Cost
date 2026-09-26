@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { EstimatePanel } from "@/components/estimate/estimate-panel";
 import { ComponentLayers } from "./component-layers";
+import { ComponentInspector } from "./component-inspector";
 import { ComponentList } from "./component-list";
 import { DrawController } from "./draw-controller";
 import { DrawToolbar } from "./draw-toolbar";
@@ -46,7 +47,12 @@ export function WorkspaceShell() {
             aria-label={tDesign("listLabel")}
             className="max-h-72 border-t bg-card lg:order-1 lg:max-h-none lg:w-64 lg:border-t-0 lg:border-r xl:w-72"
           >
-            <ComponentList />
+            <div className="flex h-full min-h-0 flex-col">
+              <div className="min-h-0 flex-1">
+                <ComponentList />
+              </div>
+              <ComponentInspector />
+            </div>
           </aside>
         </div>
         <aside

@@ -443,4 +443,31 @@ describe("designSlice editing", () => {
     });
     expect(s().drawNotice).toBeNull();
   });
+
+  it("updates a section and merges touching sections", () => {
+    const id = addBuilding();
+    s().updateSection(id, "sec-a", { storeys: 4, roof: "green" });
+    expect(s().components[0]!.geometry!.sections![0]).toMatchObject({
+      storeys: 4,
+      roof: "green",
+    });
+    s().startDrawing({
+      target: { kind: "section", componentId: id },
+      tool: "rectangle",
+    });
+    // Shares the east edge of sec-a.
+    s().finishDrawing(square(-79.399, 43.7));
+    const ids = s().components[0]!.geometry!.sections!.map((x) => x.id);
+    expect(s().mergeSections(id, ids)).toBe(true);
+    const sections = s().components[0]!.geometry!.sections!;
+    expect(sections).toHaveLength(1);
+    expect(sections[0]!.storeys).toBe(4);
+    s().startDrawing({
+      target: { kind: "section", componentId: id },
+      tool: "rectangle",
+    });
+    s().finishDrawing(square(-79.3, 43.7));
+    const apart = s().components[0]!.geometry!.sections!.map((x) => x.id);
+    expect(s().mergeSections(id, apart)).toBe(false);
+  });
 });

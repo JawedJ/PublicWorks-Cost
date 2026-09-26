@@ -21,6 +21,7 @@
     "@turf/area": "^7.4.0",
     "@turf/helpers": "^7.4.0",
     "@turf/length": "^7.4.0",
+    "@turf/union": "^7.4.0",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.4.0",
     "immer": "^11.1.18",

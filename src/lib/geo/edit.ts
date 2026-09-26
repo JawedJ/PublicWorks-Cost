@@ -5,6 +5,9 @@ import type {
   PolygonFeature,
   Position,
 } from "@/lib/schemas";
+import turfUnion from "@turf/union";
+import { featureCollection } from "@turf/helpers";
+import type { BuildingSection } from "@/lib/schemas";
 import { componentBounds } from "./bounds";
 import { mapFeature, type PositionFn } from "./transform";
 
@@ -325,4 +328,39 @@ export function pickElement(
     }
   }
   return best ? (best as { ref: ElementRef }).ref : null;
+}
+
+/**
+ * Merges building sections into one (the tallest section's storeys and roof win).
+ * Returns `null` if fewer than two sections or they don't form one polygon.
+ */
+export function withMergedSections(
+  g: ComponentGeometry,
+  ids: string[],
+): ComponentGeometry | null {
+  const picked = (g.sections ?? []).filter((s) => ids.includes(s.id));
+  if (picked.length < 2) return null;
+  const merged = turfUnion(featureCollection(picked.map((s) => s.footprint)));
+  if (merged?.geometry.type !== "Polygon") return null;
+  const tallest = picked.reduce((a, b) => (b.storeys > a.storeys ? b : a));
+  const section: BuildingSection = {
+    ...tallest,
+    footprint: {
+      type: "Feature",
+      properties: {},
+      geometry: {
+        type: "Polygon",
+        coordinates: merged.geometry.coordinates as Position[][],
+      },
+    },
+  };
+  const firstIndex = g.sections!.findIndex((s) => ids.includes(s.id));
+  const rest = g.sections!.filter((s) => !ids.includes(s.id));
+  rest.splice(firstIndex, 0, section);
+  const linked = sharesSite(g) && ids.includes(g.sections![0]!.id);
+  return {
+    ...g,
+    primary: linked && firstIndex === 0 ? section.footprint : g.primary,
+    sections: rest,
+  };
 }

@@ -12,6 +12,7 @@ import type { AnyFeature, Component, PolygonFeature } from "@/lib/schemas";
 import { useStore } from "@/lib/store/store";
 import { DRAW_LAYER_PREFIX, justFinishedDrawing } from "./draw-controller";
 import { useMap } from "./map-context";
+import { MeasurementLabels } from "./measurement-labels";
 import { HANDLE_CLASS } from "./transform-handles";
 
 // Plain rendering of every visible component so it can be seen, selected and
@@ -319,5 +320,5 @@ export function ComponentLayers() {
     ]);
   }, [map, selectedId, components]);
 
-  return null;
+  return <MeasurementLabels map={map} />;
 }

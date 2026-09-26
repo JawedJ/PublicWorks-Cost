@@ -64,9 +64,9 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 - [x] P1.4 Component list panel (select, zoom to, rename, duplicate, hide/show, delete)
 - [x] P1.5 Freeform draw tools: polygon, rectangle, circle/ellipse, freehand, line/polyline, point; project area
 - [x] P1.7 Editing: move, rotate, scale, vertex edit, holes, duplicate, mirror, delete
-- [ ] P1.8 Multi-section buildings: split/merge sections, per-section storeys and roof
+- [x] P1.8 Multi-section buildings: split/merge sections, per-section storeys and roof
 - [x] P1.14 `measure.ts` (Turf) + unit tests; per-component, per-section, and project totals — **merge early, B's engine depends on it**
-- [ ] P1.15 Live measurement labels + measurements panel + metric/imperial toggle
+- [x] P1.15 Live measurement labels + measurements panel + metric/imperial toggle
 - [ ] P1.6 Add menu incl. "Custom…" elements and custom park features (name + shape; the pricing choice form is B's `CustomPricingForm` — mount a placeholder until it exists)
 
 ### S2 → S3 — Rendering, layout & estimate on the map · Core

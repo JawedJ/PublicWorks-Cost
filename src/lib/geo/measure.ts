@@ -70,7 +70,9 @@ export function measureComponent(component: Component): Measurements {
   return m;
 }
 
-export function measureProject(project: Project): ProjectMeasurements {
+export function measureProject(
+  project: Pick<Project, "components" | "areaBoundary">,
+): ProjectMeasurements {
   const components: Record<string, Measurements> = {};
   const totals: ProjectMeasurements["totals"] = {
     roadLengthM: 0,

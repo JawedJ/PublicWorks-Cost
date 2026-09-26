@@ -131,6 +131,38 @@
         "rotate": "Faire pivoter (Maj : pas de 15°)",
         "scale": "Redimensionner (Maj conserve les proportions)"
       }
+    },
+    "inspector": {
+      "measurements": "Mesures",
+      "units": "Unités",
+      "metric": "Métrique",
+      "imperial": "Impérial",
+      "length": "Longueur",
+      "area": "Superficie",
+      "perimeter": "Périmètre",
+      "footprint": "Emprise au sol",
+      "gfa": "Surface de plancher brute",
+      "features": "Éléments placés",
+      "notDrawn": "Pas encore dessiné",
+      "sections": "Sections",
+      "sectionN": "Section {n}",
+      "storeys": "{n} ét.",
+      "fewerStoreys": "Un étage de moins",
+      "moreStoreys": "Un étage de plus",
+      "roof": "Toit",
+      "roofs": {
+        "flat": "Plat",
+        "pitched": "En pente",
+        "green": "Végétalisé"
+      },
+      "deleteSection": "Supprimer la section",
+      "mergeAll": "Fusionner",
+      "mergeFailed": "Ces sections ne se touchent pas; impossible de les fusionner en une seule forme.",
+      "totals": "Totaux du projet",
+      "roadLength": "Longueur de route",
+      "parkArea": "Superficie de parc",
+      "buildingGfa": "Surface de plancher des bâtiments",
+      "projectArea": "Superficie du projet"
     }
   },
   "estimate": {

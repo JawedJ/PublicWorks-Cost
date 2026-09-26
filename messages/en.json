@@ -131,6 +131,38 @@
         "rotate": "Rotate (Shift snaps to 15°)",
         "scale": "Resize (Shift keeps proportions)"
       }
+    },
+    "inspector": {
+      "measurements": "Measurements",
+      "units": "Units",
+      "metric": "Metric",
+      "imperial": "Imperial",
+      "length": "Length",
+      "area": "Area",
+      "perimeter": "Perimeter",
+      "footprint": "Footprint",
+      "gfa": "Gross floor area",
+      "features": "Placed features",
+      "notDrawn": "Not drawn yet",
+      "sections": "Sections",
+      "sectionN": "Section {n}",
+      "storeys": "{n}F",
+      "fewerStoreys": "One storey less",
+      "moreStoreys": "One storey more",
+      "roof": "Roof",
+      "roofs": {
+        "flat": "Flat",
+        "pitched": "Pitched",
+        "green": "Green"
+      },
+      "deleteSection": "Delete section",
+      "mergeAll": "Merge",
+      "mergeFailed": "These sections don't touch, so they can't be merged into one shape.",
+      "totals": "Project totals",
+      "roadLength": "Road length",
+      "parkArea": "Park area",
+      "buildingGfa": "Building floor area",
+      "projectArea": "Project area"
     }
   },
   "estimate": {

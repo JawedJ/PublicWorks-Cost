@@ -1,6 +1,7 @@
 import type { StateCreator } from "zustand";
 import type {
   AnyFeature,
+  BuildingSection,
   Component,
   ComponentGeometry,
   ComponentType,
@@ -20,6 +21,7 @@ import {
   holeTarget,
   withElementShape,
   withHole,
+  withMergedSections,
   withoutElement,
   withPrimaryMoved,
   transformGeometry,
@@ -131,6 +133,16 @@ export type DesignSlice = DesignSnapshot & {
   ) => void;
   /** Flips a whole component about its centre. */
   mirrorComponent: (id: string, axis: "vertical" | "horizontal") => void;
+  /** Changes a building section's storeys, roof, floor height or use. */
+  updateSection: (
+    componentId: string,
+    sectionId: string,
+    patch: Partial<
+      Pick<BuildingSection, "storeys" | "roof" | "floorHeightM" | "use">
+    >,
+  ) => void;
+  /** Merges sections into one polygon (only if they touch or overlap). Returns false if they can't merge. */
+  mergeSections: (componentId: string, sectionIds: string[]) => boolean;
   /** Deletes a building section or placed feature (not the last section). */
   removeElement: (componentId: string, ref: ElementRef) => void;
   /** Removes geometry, returning the component to 'planned'. */
@@ -302,6 +314,23 @@ export const createDesignSlice: StateCreator<Store, [], [], DesignSlice> = (
         id,
         transformGeometry(c.geometry, mirrorAbout(centre, axis), true),
       );
+    },
+    updateSection: (componentId, sectionId, patch) => {
+      const g = get().components.find((c) => c.id === componentId)?.geometry;
+      if (!g?.sections?.some((s) => s.id === sectionId)) return;
+      get().setComponentGeometry(componentId, {
+        ...g,
+        sections: g.sections.map((s) =>
+          s.id === sectionId ? { ...s, ...patch } : s,
+        ),
+      });
+    },
+    mergeSections: (componentId, sectionIds) => {
+      const g = get().components.find((c) => c.id === componentId)?.geometry;
+      const next = g && withMergedSections(g, sectionIds);
+      if (!next) return false;
+      get().setComponentGeometry(componentId, next);
+      return true;
     },
     removeElement: (componentId, ref) => {
       const g = get().components.find((c) => c.id === componentId)?.geometry;
