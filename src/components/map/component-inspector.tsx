@@ -10,6 +10,7 @@ import { intlLocale, type Locale } from "@/lib/i18n/routing";
 import { RoofTypeSchema, type Component } from "@/lib/schemas";
 import { useStore } from "@/lib/store/store";
 import { cn } from "@/lib/utils";
+import { useDesignWarnings } from "./warning-markers";
 
 // Measurements for the selected component (P1.15), per-section storeys and roof
 // for buildings (P1.8), and project totals. Units toggle metric/imperial.
@@ -174,6 +175,9 @@ function Sections({ component }: { component: Component }) {
 
 export function ComponentInspector() {
   const t = useTranslations("design.inspector");
+  const tWarn = useTranslations("design.warnings");
+  const warnings = useDesignWarnings();
+  const selectComponent = useStore((s) => s.selectComponent);
   const locale = intlLocale[useLocale() as Locale];
   const units = useStore((s) => s.unitSystem);
   const components = useStore((s) => s.components);
@@ -228,6 +232,26 @@ export function ComponentInspector() {
             <p className="text-muted-foreground">{t("notDrawn")}</p>
           )}
           {selected.type === "building" && <Sections component={selected} />}
+        </div>
+      )}
+      {warnings.length > 0 && (
+        <div>
+          <h4 className="mb-1 text-xs font-semibold text-amber-700 dark:text-amber-400">
+            {t("warningsTitle", { n: warnings.length })}
+          </h4>
+          <ul className="max-h-28 space-y-1 overflow-y-auto">
+            {warnings.map((w) => (
+              <li key={w.id}>
+                <button
+                  type="button"
+                  className="text-left hover:underline"
+                  onClick={() => selectComponent(w.componentIds[0] ?? null)}
+                >
+                  {tWarn(w.code, w.values)}
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
       <div>

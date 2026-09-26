@@ -85,9 +85,9 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 
 ### S3 → S4 — 3D and context
 - [x] P1.18 3D map view: every building section extruded to its own height · Core
-- [ ] P1.16 Advisory cross-component warnings (overlaps, outside park/area, unusual values) · Core
+- [x] P1.16 Advisory cross-component warnings (overlaps, outside park/area, unusual values) · Core
 - [ ] P1.17 `/api/geo/snap` (OSRM, cache, timeout) + "Snap to streets" with fallback · Stretch
-- [ ] P5.1 Map snapshot capture helper for B's PDF export · Core
+- [x] P5.1 Map snapshot capture helper for B's PDF export · Core
 - [ ] P6.1 `/api/geo/context` (Overpass) with cache/timeout/fallback · Stretch
 - [ ] P6.2 Site tab + map overlays with buffer rings · Stretch
 - [ ] P9.1 Road cross-section SVG per road, opens on selection, clickable · Stretch

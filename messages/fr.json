@@ -195,7 +195,16 @@
       "roadLength": "Longueur de route",
       "parkArea": "Superficie de parc",
       "buildingGfa": "Surface de plancher des bâtiments",
-      "projectArea": "Superficie du projet"
+      "projectArea": "Superficie du projet",
+      "warningsTitle": "{n, plural, one {# avertissement de conception} other {# avertissements de conception}}"
+    },
+    "warnings": {
+      "overlap": "« {a} » chevauche « {b} ».",
+      "featureOutside": "Un élément de « {name} » est hors du parc.",
+      "outsideArea": "« {name} » dépasse la zone du projet.",
+      "tallBuilding": "« {name} » compte {storeys} étages, inhabituel pour ce type.",
+      "longRoad": "« {name} » mesure {km} km. Est-ce voulu?",
+      "tinyPark": "« {name} » ne fait que {m2} m²."
     }
   },
   "estimate": {

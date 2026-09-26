@@ -19,6 +19,7 @@ import { DRAW_LAYER_PREFIX, justFinishedDrawing } from "./draw-controller";
 import { useMap } from "./map-context";
 import { FlagMarkers } from "./flag-markers";
 import { PlanLayers } from "./plan-layers";
+import { WarningMarkers } from "./warning-markers";
 import { MeasurementLabels } from "./measurement-labels";
 import { HANDLE_CLASS } from "./transform-handles";
 
@@ -449,6 +450,7 @@ export function ComponentLayers() {
       <PlanLayers map={map} beforeId="pw-area" />
       <MeasurementLabels map={map} />
       <FlagMarkers map={map} estimate={estimate} />
+      <WarningMarkers map={map} />
     </>
   );
 }

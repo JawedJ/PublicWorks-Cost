@@ -195,7 +195,16 @@
       "roadLength": "Road length",
       "parkArea": "Park area",
       "buildingGfa": "Building floor area",
-      "projectArea": "Project area"
+      "projectArea": "Project area",
+      "warningsTitle": "{n, plural, one {# design warning} other {# design warnings}}"
+    },
+    "warnings": {
+      "overlap": "“{a}” overlaps “{b}”.",
+      "featureOutside": "A feature of “{name}” is outside the park.",
+      "outsideArea": "“{name}” extends outside the project area.",
+      "tallBuilding": "“{name}” has {storeys} storeys, unusual for this type.",
+      "longRoad": "“{name}” is {km} km long. Is that intended?",
+      "tinyPark": "“{name}” is only {m2} m²."
     }
   },
   "estimate": {
