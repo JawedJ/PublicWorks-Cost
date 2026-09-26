@@ -56,6 +56,7 @@ export function applyDraft(draft: ProjectDraft): string[] {
       params: c.features?.length
         ? { ...c.params, [PLANNED_FEATURES_PARAM]: c.features.join(",") }
         : c.params,
+      ...(c.customPricing && { customPricing: c.customPricing }),
       paramMeta: Object.fromEntries(
         Object.keys(c.params).map((k) => [
           k,

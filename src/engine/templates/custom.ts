@@ -40,8 +40,12 @@ export type CustomBasis = {
 const BUILDING_PREFIX = "building:";
 const CUSTOM_UNITS = new Set(["m", "m2", "each"]);
 
+const basesCache = new WeakMap<RefData, CustomBasis[]>();
+
 /** Every basis a custom element can be matched to: building rates, park features, unit prices. */
 export function customBases(refData: RefData): CustomBasis[] {
+  const hit = basesCache.get(refData);
+  if (hit) return hit;
   const out: CustomBasis[] = [];
   for (const [id, b] of Object.entries(refData.buildingCosts.subtypes)) {
     out.push({
@@ -74,7 +78,27 @@ export function customBases(refData: RefData): CustomBasis[] {
       typical: i.price.typical,
     });
   }
+  basesCache.set(refData, out);
   return out;
+}
+
+/** When nothing matches by name: general site landscaping per m² (wide band, low confidence). */
+export const GENERIC_BASIS_ID = "site_landscaping";
+
+/**
+ * Price for a custom element nobody has priced yet: the best match by name, else
+ * the generic basis. Plain code; the engine uses it so nothing is silently $0.
+ */
+export function autoPricing(
+  name: string,
+  refData: RefData,
+): Extract<CustomPricing, { mode: "matched" }> | undefined {
+  const bases = customBases(refData);
+  const b =
+    suggestBasis(name, bases) ?? bases.find((x) => x.id === GENERIC_BASIS_ID);
+  return (
+    b && { mode: "matched", basisId: b.id, unit: b.unit, suggestedByAi: false }
+  );
 }
 
 function findBasis(refData: RefData, id: string): CustomBasis | undefined {
@@ -126,6 +150,9 @@ const STOP = new Set([
   "and",
   "per",
   "floor",
+  // Would match sewer "maintenance hole" or nothing useful ("18 hole golf course").
+  "hole",
+  "course",
 ]);
 
 const words = (s: string) =>
@@ -171,6 +198,9 @@ export function customLine(
   refData: RefData,
   elementRef?: QuantityLine["elementRef"],
 ): QuantityLine | null {
+  // Not priced by anyone yet: match automatically (flagged for review).
+  const auto = !pricing;
+  pricing ??= autoPricing(name, refData);
   if (!pricing) return null;
   const quantity = quantityFor(pricing.unit, m);
   if (quantity <= 0) return null;
@@ -189,9 +219,14 @@ export function customLine(
     typical = basis.typical;
     low = typical * CUSTOM_BAND.low;
     high = typical * CUSTOM_BAND.high;
+    const how = auto
+      ? L("Auto-matched by name to ", "Associé automatiquement à ")
+      : pricing.suggestedByAi
+        ? L("Matched by AI to ", "Associé par l'IA à ")
+        : L("Matched to ", "Associé à ");
     source = basis.source
-      ? t(L("Matched to ", "Associé à "), basis.label, " — ", basis.source)
-      : t(L("Matched to ", "Associé à "), basis.label);
+      ? t(how, basis.label, " — ", basis.source)
+      : t(how, basis.label);
   }
   return {
     localId,
@@ -227,22 +262,45 @@ export const customTemplate: ComponentTemplate = {
     );
     return line ? [line] : [];
   },
-  flags: ({ component }) =>
-    component.customPricing
-      ? []
-      : [
-          {
-            code: "custom_not_priced",
-            severity: "warning",
-            title: L(
-              "Custom element has no price",
-              "Élément personnalisé sans prix",
-            ),
-            explanation: L(
-              "Choose a matched cost basis or enter your own rate.",
-              "Choisissez une base de coût ou saisissez votre propre taux.",
-            ),
-            componentIds: [component.id],
-          },
-        ],
+  flags: ({ component, refData }) => {
+    const p = component.customPricing;
+    if (p && !(p.mode === "matched" && p.suggestedByAi)) return [];
+    const matched = p ?? autoPricing(component.name, refData);
+    const basis = matched && findBasis(refData, matched.basisId);
+    if (!basis)
+      return [
+        {
+          code: "custom_not_priced",
+          severity: "warning",
+          title: L(
+            "Custom element has no price",
+            "Élément personnalisé sans prix",
+          ),
+          explanation: L(
+            "Choose a matched cost basis or enter your own rate.",
+            "Choisissez une base de coût ou saisissez votre propre taux.",
+          ),
+          componentIds: [component.id],
+        },
+      ];
+    return [
+      {
+        code: "custom_auto_priced",
+        severity: "warning",
+        title: L(
+          "Custom element priced automatically",
+          "Élément personnalisé chiffré automatiquement",
+        ),
+        explanation: t(
+          L("Priced as ", "Chiffré comme "),
+          basis.label,
+          L(
+            " (closest match in the cost data; low confidence). Confirm or change it in Inputs.",
+            " (correspondance la plus proche; confiance faible). Confirmez ou modifiez-le dans Paramètres.",
+          ),
+        ),
+        componentIds: [component.id],
+      },
+    ];
+  },
 };

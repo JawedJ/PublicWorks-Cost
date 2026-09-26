@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { keywordParse } from "@/components/landing/keyword-parse";
-import { parkFeatures } from "@/data";
+import { parkFeatures, refData } from "@/data";
+import { autoPricing, customBases } from "@/engine/templates/custom";
 import { templates } from "@/engine/templates";
 import {
   type BuildListItem,
@@ -25,6 +26,8 @@ const SIZE_HINTS: Partial<Record<ComponentType, ParamDefinition[]>> = {
   park: [hint("areaM2", "m²", 1, 5_000_000)],
   road: [hint("lengthM", "m", 1, 50_000)],
   parking: [hint("areaM2", "m²", 1, 500_000)],
+  // Sizes the generated shape, which is what a custom element is priced from.
+  custom: [hint("areaM2", "m²", 1, 50_000_000)],
 };
 
 function hint(
@@ -66,6 +69,8 @@ const AiDraftSchema = z.object({
       sourcePhrase: z.string(),
       spatialHint: z.string(),
       features: z.array(z.string()),
+      /** Custom only: id of the closest cost basis; "" otherwise. */
+      costBasis: z.string(),
       params: z.array(
         z.object({ id: z.string(), value: z.string(), evidence: z.string() }),
       ),
@@ -99,6 +104,13 @@ function catalogText(): string {
     .join("\n\n");
 }
 
+/** Cost bases a custom item can be matched to (ids and labels only, no prices). */
+function basisText(): string {
+  return customBases(refData)
+    .map((b) => `- ${b.id}: ${b.label.en} (per ${b.unit})`)
+    .join("\n");
+}
+
 const SYSTEM = `You turn a municipal infrastructure request into a build list for a cost estimating tool.
 Rules:
 - List every component mentioned. Use only the types, subtypes, and param ids in the catalog below.
@@ -108,7 +120,7 @@ Rules:
 - Building amenities are params of that building, not components: pool → indoorPool, gym → gymnasium, rink → iceRink, kitchen → commercialKitchen, basement or underground parking → basement, bays → apparatusBays, elevators → extraElevators. Set every one the prompt mentions.
 - Surface parking ("a parking lot", "parking for 40 cars") is its own component: type parking, subtype surface_lot, stalls = the number of cars/spaces, areaM2 if an area is given. Underground parking is not a lot: it's basement on the building.
 - Park amenities are features of their park, not components: put their ids in that park's features. If no park is mentioned, add one for them. Other types: features = [].
-- Anything not in the catalog → type "custom", subtype "custom", keeping its name.
+- Anything not in the catalog → type "custom", subtype "custom", keeping its name. For custom items also set costBasis to the id of the closest cost basis below (what it would mostly be built as, e.g. a golf course → site_landscaping, a bandshell → shade_structure, a warehouse → building:maintenance_facility), and always set the areaM2 param to a realistic size for it (e.g. an 18-hole golf course is about 600000). Other types: costBasis = "".
 - Never output costs or prices.
 - Resolve relative dates ("next spring") from today's date.
 - name: short project name. municipality, startDate (YYYY-MM-DD), spatialHint: empty string if not stated.
@@ -116,6 +128,8 @@ Rules:
 
 Catalog:
 `;
+
+const BASES_HEADER = "\n\nCost bases for custom items (costBasis ids):\n";
 
 function coerce(def: ParamDefinition, raw: string): ParamValue | undefined {
   const v = raw.trim();
@@ -173,6 +187,22 @@ export function toProjectDraft(
       params[p.id] = value;
       if (p.evidence) evidence[p.id] = p.evidence;
     }
+    // Custom: the AI's basis if it's a real one, else matched by name in code.
+    const basis =
+      c.type === "custom"
+        ? customBases(refData).find((b) => b.id === c.costBasis.trim())
+        : undefined;
+    const customPricing =
+      c.type !== "custom"
+        ? undefined
+        : basis
+          ? {
+              mode: "matched" as const,
+              basisId: basis.id,
+              unit: basis.unit,
+              suggestedByAi: true,
+            }
+          : autoPricing(c.name, refData);
     const item: BuildListItem = {
       type: c.type,
       subtype,
@@ -184,6 +214,7 @@ export function toProjectDraft(
       ...(c.type === "park" && {
         features: c.features.filter((f) => f in parkFeatures.features),
       }),
+      ...(customPricing && { customPricing }),
     };
     return expand(item, c.count);
   });
@@ -225,7 +256,7 @@ export async function parsePrompt(
   if (hit) return hit;
   try {
     const raw = await provider.generateStructured({
-      system: SYSTEM + catalogText(),
+      system: SYSTEM + catalogText() + BASES_HEADER + basisText(),
       prompt: `Today: ${new Date().toISOString().slice(0, 10)}\nLanguage: ${locale}\nRequest: ${prompt}`,
       schema: AiDraftSchema,
       // Extraction, not reasoning: the lite model is fast enough and keeps the landing snappy.

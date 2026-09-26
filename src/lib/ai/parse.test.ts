@@ -15,6 +15,7 @@ const raw = {
       sourcePhrase: "two local streets",
       spatialHint: "",
       features: ["playground"],
+      costBasis: "",
       params: [{ id: "notARealParam", value: "3", evidence: "x" }],
     },
     {
@@ -25,6 +26,7 @@ const raw = {
       sourcePhrase: "a park with a playground",
       spatialHint: "",
       features: ["playground", "splash_pad", "moon_base"],
+      costBasis: "",
       params: [],
     },
     {
@@ -35,6 +37,7 @@ const raw = {
       sourcePhrase: "a two-storey library",
       spatialHint: "next to the park",
       features: [],
+      costBasis: "",
       params: [{ id: "storeys", value: "2", evidence: "two-storey" }],
     },
     {
@@ -45,6 +48,7 @@ const raw = {
       sourcePhrase: "",
       spatialHint: "",
       features: [],
+      costBasis: "",
       params: [],
     },
   ],
@@ -73,6 +77,49 @@ describe("toProjectDraft", () => {
     );
     expect(odd).toHaveLength(20);
     expect(odd[0]!.subtype).not.toBe("spaceport");
+  });
+
+  const custom = (name: string, costBasis: string) =>
+    toProjectDraft(
+      {
+        ...raw,
+        components: [
+          {
+            type: "custom" as const,
+            subtype: "custom",
+            name,
+            count: 1,
+            sourcePhrase: "",
+            spatialHint: "",
+            features: [],
+            costBasis,
+            params: [{ id: "areaM2", value: "600000", evidence: "18 hole" }],
+          },
+        ],
+      },
+      "en",
+    ).components[0]!;
+
+  it("prices custom items with the AI's basis and keeps the size hint", () => {
+    const golf = custom("18 hole golf course", "site_landscaping");
+    expect(golf.customPricing).toEqual({
+      mode: "matched",
+      basisId: "site_landscaping",
+      unit: "m2",
+      suggestedByAi: true,
+    });
+    expect(golf.params.areaM2).toBe(600000);
+  });
+
+  it("falls back to a name match, then the generic basis, for unknown basis ids", () => {
+    const pool = custom("Outdoor swimming pool", "made_up");
+    expect(pool.customPricing).toMatchObject({
+      basisId: "building:aquatic_centre",
+      suggestedByAi: false,
+    });
+    expect(custom("Golf course", "").customPricing).toMatchObject({
+      basisId: "site_landscaping",
+    });
   });
 });
 

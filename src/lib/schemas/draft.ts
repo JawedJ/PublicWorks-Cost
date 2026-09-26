@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { ComponentTypeSchema, ParamValueSchema } from "./common";
+import { CustomPricingSchema } from "./geometry";
 
 // SPEC 9.1: the build list parsed from the landing prompt. Params use catalog ids only;
 // the AI never produces costs.
@@ -17,6 +18,8 @@ export const BuildListItemSchema = z.object({
   sourcePhrase: z.string().optional(),
   /** Parks only: park feature kinds mentioned (e.g. "playground"); placed when the layout is generated. */
   features: z.array(z.string()).optional(),
+  /** Custom items only: the cost basis picked when parsing (AI or name match). */
+  customPricing: CustomPricingSchema.optional(),
 });
 export type BuildListItem = z.infer<typeof BuildListItemSchema>;
 

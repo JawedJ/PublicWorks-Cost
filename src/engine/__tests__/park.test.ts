@@ -139,7 +139,7 @@ describe("park quantities (SPEC 6.2)", () => {
     expect(q.irrigation!.quantity).toBe(400);
   });
 
-  it("prices matched kinds like a skate park by drawn area and skips custom features", () => {
+  it("prices matched kinds like a skate park by drawn area; unpriced custom features are auto-matched", () => {
     const q = byId(
       derive(
         [
@@ -154,7 +154,7 @@ describe("park quantities (SPEC 6.2)", () => {
       ),
     );
     expect(q["feature:sk"]!.quantity).toBe(800);
-    expect(q["feature:cu"]).toBeUndefined();
+    expect(q["feature:cu"]!.quantity).toBe(400);
   });
 
   it("uses seed instead of sod when asked", () => {

@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { refData } from "@/data";
-import { customBases, customLine, suggestBasis } from "../templates/custom";
+import {
+  customBases,
+  customLine,
+  customTemplate,
+  suggestBasis,
+} from "../templates/custom";
 import { structureTemplate } from "../templates/structure";
 import { byId, makeCtx } from "./helpers";
 
@@ -63,6 +68,59 @@ describe("custom elements (SPEC 6.5)", () => {
     )!;
     if (line.price.kind !== "direct") throw new Error();
     expect(line.price.price.typical).toBe(1100);
+  });
+
+  it("never leaves an unpriced element at $0: auto-matches by name, else generic", () => {
+    const golf = customLine(
+      "x",
+      "18 hole golf course",
+      undefined,
+      { areaM2: 600000 },
+      refData,
+    )!;
+    if (golf.price.kind !== "direct") throw new Error();
+    expect(golf.quantity).toBe(600000);
+    expect(golf.price.source.en).toMatch(
+      /^Auto-matched by name to Site landscaping/,
+    );
+    expect(golf.price.lowConfidence).toBe(true);
+    const pool = customLine(
+      "x",
+      "Outdoor pool",
+      undefined,
+      { areaM2: 500 },
+      refData,
+    )!;
+    expect(pool.price.kind === "direct" && pool.price.source.en).toMatch(
+      /Aquatic centre/,
+    );
+  });
+
+  it("flags auto and AI matches for review, not confirmed ones", () => {
+    const flags = (customPricing?: Parameters<typeof customLine>[2]) =>
+      customTemplate
+        .flags({
+          component: { id: "c", name: "Golf course", customPricing },
+          refData,
+        } as unknown as Parameters<typeof customTemplate.flags>[0])
+        .map((f) => f.code);
+    expect(flags()).toEqual(["custom_auto_priced"]);
+    expect(
+      flags({
+        mode: "matched",
+        basisId: "sod",
+        unit: "m2",
+        suggestedByAi: true,
+      }),
+    ).toEqual(["custom_auto_priced"]);
+    expect(
+      flags({
+        mode: "matched",
+        basisId: "sod",
+        unit: "m2",
+        suggestedByAi: false,
+      }),
+    ).toEqual([]);
   });
 });
 
