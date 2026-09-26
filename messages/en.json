@@ -72,8 +72,9 @@
       "unavailable": "Site context isn’t available right now (OpenStreetMap lookup failed). Try again later.",
       "summary": "Nearby: {schools} schools, {hospitals} hospitals, {water} waterways, {rail} rail lines (OpenStreetMap)."
     },
-    "rotateMode": "Rotate mode: drag anywhere on the map to turn it",
-    "rotateHint": "Drag anywhere to rotate the map. Click the rotate button or press Esc when done."
+    "rotateMode": "Rotate mode: drag on the map to turn it (and tilt it in the 3D map)",
+    "rotateHint": "Drag left or right to turn the map. Click the rotate button or press Esc when done.",
+    "rotateHint3d": "Drag left or right to turn, up or down to tilt. Click the rotate button or press Esc when done."
   },
   "design": {
     "components": {

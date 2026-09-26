@@ -28,6 +28,7 @@ export function MapView({ children }: { children?: React.ReactNode }) {
   const setMap = useSetMap();
   const loadedMap = useMap();
   const unitSystem = useStore((s) => s.unitSystem);
+  const viewMode = useStore((s) => s.viewMode);
   const [basemap, setBasemap] = useState<BasemapId>("streets");
   const [failed, setFailed] = useState(false);
   const [rotating, setRotating] = useState(false);
@@ -121,7 +122,11 @@ export function MapView({ children }: { children?: React.ReactNode }) {
         </p>
       )}
       {rotating && loadedMap && (
-        <RotateOverlay map={loadedMap} hint={t("rotateHint")} />
+        <RotateOverlay
+          map={loadedMap}
+          tilt={viewMode === "map3d"}
+          hint={t(viewMode === "map3d" ? "rotateHint3d" : "rotateHint")}
+        />
       )}
       <div className="absolute right-12 bottom-8">
         <BasemapToggle value={basemap} onChange={changeBasemap} />
@@ -132,39 +137,42 @@ export function MapView({ children }: { children?: React.ReactNode }) {
 }
 
 /**
- * Covers the map while rotate mode is on (so drawing and selection pause): dragging
- * anywhere turns the map around its centre, following the pointer like a dial.
+ * Covers the map while rotate mode is on (so drawing and selection pause). Dragging
+ * left/right turns the map; in the 3D map, dragging up/down tilts it.
  */
-function RotateOverlay({ map, hint }: { map: MapLibreMap; hint: string }) {
-  const start = useRef<{ angle: number; bearing: number } | null>(null);
-  const angleAt = (el: HTMLElement, e: React.PointerEvent) => {
-    const r = el.getBoundingClientRect();
-    return (
-      (Math.atan2(
-        e.clientY - (r.top + r.height / 2),
-        e.clientX - (r.left + r.width / 2),
-      ) *
-        180) /
-      Math.PI
-    );
-  };
+function RotateOverlay({
+  map,
+  tilt,
+  hint,
+}: {
+  map: MapLibreMap;
+  tilt: boolean;
+  hint: string;
+}) {
+  const start = useRef<{
+    x: number;
+    y: number;
+    bearing: number;
+    pitch: number;
+  } | null>(null);
   return (
     <div
       className="absolute inset-0 z-[1] cursor-grab touch-none active:cursor-grabbing"
       onPointerDown={(e) => {
         e.currentTarget.setPointerCapture(e.pointerId);
         start.current = {
-          angle: angleAt(e.currentTarget, e),
+          x: e.clientX,
+          y: e.clientY,
           bearing: map.getBearing(),
+          pitch: map.getPitch(),
         };
       }}
       onPointerMove={(e) => {
-        if (!start.current) return;
-        // Turning clockwise on screen turns the map clockwise (bearing decreases).
-        map.setBearing(
-          start.current.bearing -
-            (angleAt(e.currentTarget, e) - start.current.angle),
-        );
+        const s = start.current;
+        if (!s) return;
+        // Dragging right turns the map clockwise; dragging up tilts it further.
+        map.setBearing(s.bearing - (e.clientX - s.x) * 0.4);
+        if (tilt) map.setPitch(s.pitch - (e.clientY - s.y) * 0.3);
       }}
       onPointerUp={() => (start.current = null)}
       // Scroll still zooms while rotating.
