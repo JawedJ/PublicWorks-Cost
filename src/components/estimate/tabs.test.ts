@@ -13,13 +13,16 @@ import { LineItemsTab } from "./line-items-tab";
 function render(el: ReactElement) {
   const errors: string[] = [];
   const html = renderToStaticMarkup(
-    createElement(NextIntlClientProvider, {
-      locale: "en",
-      messages,
-      timeZone: "America/Toronto",
-      onError: (e) => errors.push(e.message),
-      children: el,
-    }),
+    createElement(
+      NextIntlClientProvider,
+      {
+        locale: "en",
+        messages,
+        timeZone: "America/Toronto",
+        onError: (e) => errors.push(e.message),
+      },
+      el,
+    ),
   );
   return { html, errors };
 }
