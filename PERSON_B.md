@@ -6,17 +6,18 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Current state
 
-- **Current task:** P2.5 (StatCan BCPI script)
+- **Current task:** P2.6 (CanadaBuys awards script)
 - **Status:** not started   <!-- not started | in progress | blocked | at sync point -->
-- **Next action:** P2.5 `scripts/fetch-statcan-bcpi.ts` → `src/data/public/statcan-bcpi.json` + schema; map `referenceCma` values ("Toronto", "Ottawa") to the table's exact series names. Then P2.6 CanadaBuys.
+- **Next action:** P2.6 `scripts/fetch-canadabuys.ts` → `src/data/public/canadabuys-awards.json` + schema (read the CanadaBuys data dictionary for column names); then P2.7 `pnpm data:refresh`.
 - **Blockers / needs from A:** none
-- **Last updated:** 2026-09-26 (P2.4 done)
+- **Last updated:** 2026-09-26 (P2.5 done)
 
 ## Handoff notes
 
 > Where an unfinished task stopped, gotchas, things to verify. Replace each session.
 
 - P2.1 schemas are merged to `main`.
+- P2.5: `pnpm data:bcpi` runs `scripts/fetch-statcan-bcpi.ts` with plain `node` (Node 26 strips types; `scripts/package.json` sets ESM). Scripts can't use the `@/` alias. `statcanBcpi` from `@/data`: series keyed by `geo` × `type` × `division`, points `["2026Q2", 108.9]` oldest first. A few type × division combos aren't published (e.g. Ottawa single-detached earthwork); the engine must fall back to the composite division.
 - P2.2–P2.4: `refData` from `@/data` is ready for the engine. Overrun lookup: prefer the entry matching type + subtype + class, else type + class (no subtype).
 - B.2: `projectSlice` holds `project: ProjectInfo` (the Project minus `components`/`areaBoundary`, which are A's). `selectProject(state)` rebuilds the full `Project`; it returns a new object each call, so don't pass it straight to `useStore(...)` in a component (use `getState()`, `useShallow`, or memoize in `useEstimate`). Param/override edits call A's `updateComponent` (one undo step each). `DEFAULT_REGION = "ontario_average"` must exist in `regional-factors.json` (P2.4). Questions state is deferred to P7.5, when the question schema exists.
 - P0.5: every API route uses `jsonRoute({ name, body, rateLimit }, handler)` from `@/lib/api`. Errors are `{ error: { code, message, issues?, retryAfterSeconds? } }`; the client maps `code` to next-intl strings (use `readApiError(res)`). Limits per route family live in `rateLimiters` (`ai` 10/min, `geo` 60/min, `export` 10/min per IP, per server instance). Throw `new ApiError("upstream_timeout" | "upstream_error", ...)` from provider code.
@@ -46,7 +47,7 @@ While A scaffolds, draft these locally; commit right after A's scaffold lands on
 - [x] P2.2 Seed data: `unit-prices.json`
 - [x] P2.3 Seed data: `building-costs.json` (incl. housing subtypes), `park-features.json`, `structures.json`
 - [x] P2.4 Seed data: `regional-factors.json` (incl. reference CMA per region), `overrun-reference.json`
-- [ ] P2.5 Script `fetch-statcan-bcpi.ts` → `src/data/public/statcan-bcpi.json` + schema
+- [x] P2.5 Script `fetch-statcan-bcpi.ts` → `src/data/public/statcan-bcpi.json` + schema
 - [ ] P2.6 Script `fetch-canadabuys.ts` → `src/data/public/canadabuys-awards.json` + schema
 - [ ] P2.7 `pnpm data:refresh`; commit generated files
 - [ ] P2.8 Component type: road + tests
@@ -127,4 +128,5 @@ Flags only; never block, never change the estimate. Do Waterloo first (demo city
 | API route conventions (zod body validation, error format, per-IP rate limiter) | `src/lib/api/` (`route.ts`, `errors.ts`, `rate-limit.ts`, `api.test.ts`) | Import from `@/lib/api`; shared with A's `/api/geo/*` routes |
 | Project store slice (project meta, settings, scenarios, param/override helpers) | `src/lib/store/projectSlice.ts` (+ test) | `selectProject(state)` gives the full `Project` |
 | Seed data (sample prices, SPEC 8) | `src/data/*.json`, loaded and validated in `src/data/index.ts` (+ `__tests__/seed-data.test.ts`) | `import { refData } from "@/data"` for the engine (or each file by name); 22 Ontario regions, 28 overrun reference entries (lognormal, mu set so P(factor > 1) = probabilityOfOverrun); 102 unit-price items, 11 building subtypes, 17 park feature kinds, 16 structure items, priceYear 2025; mobilization is a % in the engine, not a unit price |
+| StatCan BCPI (real data) | `scripts/fetch-statcan-bcpi.ts` → `src/data/public/statcan-bcpi.json`; schema `src/lib/schemas/public-data.ts`; tests `src/data/__tests__/public-data.test.ts` | `pnpm data:bcpi`; Statistics Canada Open Licence |
 | Northgate fixtures (sample project + estimate for A's views) | `src/lib/fixtures/` | `import { northgateProject, northgateEstimate } from "@/lib/fixtures"` |

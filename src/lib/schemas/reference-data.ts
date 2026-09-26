@@ -140,7 +140,7 @@ export const RegionalFactorsFileSchema = z.object({
       key: z.string().min(1),
       name: LocalizedTextSchema,
       factor: z.number().positive(),
-      /** Nearest CMA published in StatCan table 18-10-0289-01. */
+      /** Nearest CMA published in StatCan table 18-10-0289-01, as a geography key in statcan-bcpi.json. */
       referenceCma: z.string().min(1),
       remote: z.boolean().default(false),
     }),
