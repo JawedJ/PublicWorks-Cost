@@ -310,7 +310,12 @@
     "flagCount": "{count} components",
     "durationHeading": "Construction time",
     "durationMonths": "About {months} months",
-    "durationRange": "Likely {low}–{high} months. Sets escalation to the construction midpoint and winter work."
+    "durationRange": "Likely {low}–{high} months. Sets escalation to the construction midpoint and winter work.",
+    "level": {
+      "low": "Low",
+      "moderate": "Moderate",
+      "high": "High"
+    }
   },
   "visuals": {
     "crossSection": {

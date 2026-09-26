@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Measurements, PlacedFeature } from "@/lib/schemas";
+import { refData } from "@/data";
 import { parkTemplate } from "../templates/park";
 import { byId, checkCatalog, makeCtx, missingPrices } from "./helpers";
 
@@ -93,7 +94,9 @@ describe("park quantities (SPEC 6.2)", () => {
     expect(pg.quantity).toBe(1);
     expect(pg.elementRef).toEqual({ featureId: "pg" });
     if (pg.price.kind !== "direct") throw new Error("expected a direct price");
-    expect(pg.price.price.typical).toBeCloseTo(285_000 * 1.15);
+    expect(pg.price.price.typical).toBeCloseTo(
+      refData.parkFeatures.features.playground!.tiers.medium!.typical * 1.15,
+    );
     expect(pg.price.description.en).toBe(
       "Playground (Medium), enhanced accessibility (+15%)",
     );

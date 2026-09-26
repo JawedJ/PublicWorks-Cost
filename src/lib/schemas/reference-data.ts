@@ -46,6 +46,8 @@ export const UnitPriceItemSchema = z.object({
   price: PriceRangeSchema,
   priceCategory: PriceCategorySchema,
   category: LineItemCategorySchema,
+  /** Real published source (scripts/build-real-prices.ts); absent = sample price. */
+  source: LocalizedTextSchema.optional(),
 });
 export type UnitPriceItem = z.infer<typeof UnitPriceItemSchema>;
 
@@ -110,6 +112,8 @@ export const ParkFeaturesFileSchema = z.object({
       priceCategory: PriceCategorySchema,
       /** Keyed by tier (e.g. small / medium / large, or surface type); use 'default' when untiered. */
       tiers: z.record(z.string(), PriceRangeSchema),
+      /** Real published source (scripts/build-real-prices.ts); absent = sample price. */
+      source: LocalizedTextSchema.optional(),
     }),
   ),
 });

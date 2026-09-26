@@ -337,6 +337,14 @@ export function computeEstimate(
           pOverride !== undefined
             ? L("Entered by user", "Saisi par l'utilisateur")
             : (d?.source ??
+              (p?.source &&
+                t(
+                  p.source,
+                  L(
+                    ", adjusted for region and date",
+                    ", ajusté pour la région et la date",
+                  ),
+                )) ??
               L(
                 `Sample Ontario unit price, ${priceYear}, adjusted for region and date`,
                 `Prix unitaire ontarien type (échantillon), ${priceYear}, ajusté pour la région et la date`,

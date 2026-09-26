@@ -17,7 +17,9 @@
     "data:refresh": "pnpm data:bcpi && pnpm data:canadabuys && pnpm data:zoning && pnpm data:durations",
     "copy:maplibre": "mkdir -p public/maplibre && cp node_modules/maplibre-gl/dist/maplibre-gl-worker.mjs node_modules/maplibre-gl/dist/maplibre-gl-shared.mjs public/maplibre/",
     "data:zoning": "node scripts/fetch-waterloo-zoning.ts",
-    "data:durations": "node scripts/fetch-durations.ts"
+    "data:durations": "node scripts/fetch-durations.ts",
+    "data:prices": "node scripts/build-real-prices.ts",
+    "data:overrun": "node scripts/build-overrun-reference.ts"
   },
   "dependencies": {
     "@turf/area": "^7.4.0",

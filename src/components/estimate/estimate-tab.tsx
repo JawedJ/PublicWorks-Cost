@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -12,6 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { CLASS_RANGE } from "@/engine";
+import { cn } from "@/lib/utils";
 import type { ScopedEstimate } from "@/lib/estimate/scope";
 import type { Component, Estimate } from "@/lib/schemas";
 import {
@@ -34,6 +36,24 @@ const money = new Intl.NumberFormat("en-CA", {
 });
 const pct = (n: number) => Math.round(n);
 
+type Level = "low" | "moderate" | "high";
+/** Contingency as % of base: under 10% is low, 20% and over is high. */
+const contingencyLevel = (p: number): Level =>
+  p < 10 ? "low" : p < 20 ? "moderate" : "high";
+/** Typical overrun size (the chance of some overrun is high for almost every project). */
+const overrunLevel = (p: number): Level =>
+  p < 5 ? "low" : p < 15 ? "moderate" : "high";
+const LEVEL_TEXT: Record<Level, string> = {
+  low: "text-chart-3",
+  moderate: "text-warning",
+  high: "text-destructive",
+};
+const LEVEL_BADGE: Record<Level, string> = {
+  low: "bg-chart-3/15 text-chart-3",
+  moderate: "bg-warning/15 text-warning",
+  high: "bg-destructive/15 text-destructive",
+};
+
 type Props = {
   estimate: Estimate;
   scoped: ScopedEstimate;
@@ -50,6 +70,8 @@ export function EstimateTab({ estimate, scoped, components, region }: Props) {
   );
   const range = CLASS_RANGE[scoped.estimateClass];
   const whole = !scoped.component;
+  const contingency = contingencyLevel(estimate.recommendedContingency.pct);
+  const overrun = overrunLevel(estimate.overrunRisk.typicalOverrunPct);
 
   return (
     <div className="flex flex-col gap-4">
@@ -93,9 +115,14 @@ export function EstimateTab({ estimate, scoped, components, region }: Props) {
                 <ShieldCheck />
                 {t("contingencyHeading")}
               </CardDescription>
-              <CardTitle className="text-2xl tabular-nums">
+              <CardTitle
+                className={cn("text-2xl tabular-nums", LEVEL_TEXT[contingency])}
+              >
                 {money.format(estimate.recommendedContingency.amount)}
               </CardTitle>
+              <CardAction>
+                <LevelBadge level={contingency} />
+              </CardAction>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground">
               {t("contingencyPct", {
@@ -110,9 +137,14 @@ export function EstimateTab({ estimate, scoped, components, region }: Props) {
                 <TrendingUp />
                 {t("overrunHeading")}
               </CardDescription>
-              <CardTitle className="text-2xl tabular-nums">
+              <CardTitle
+                className={cn("text-2xl tabular-nums", LEVEL_TEXT[overrun])}
+              >
                 {pct(estimate.overrunRisk.probabilityOfOverrun * 100)}%
               </CardTitle>
+              <CardAction>
+                <LevelBadge level={overrun} />
+              </CardAction>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground">
               {t("overrunTypical", {
@@ -147,6 +179,15 @@ export function EstimateTab({ estimate, scoped, components, region }: Props) {
         <p className="text-xs text-muted-foreground">{t("componentNote")}</p>
       )}
     </div>
+  );
+}
+
+function LevelBadge({ level }: { level: Level }) {
+  const t = useTranslations("estimate");
+  return (
+    <Badge variant="outline" className={cn("border-none", LEVEL_BADGE[level])}>
+      {t(`level.${level}`)}
+    </Badge>
   );
 }
 

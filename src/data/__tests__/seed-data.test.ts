@@ -140,8 +140,21 @@ describe("all seed files", () => {
     for (const [name, file] of Object.entries(refData)) {
       // Building base rates are Altus Group 2026; the file's other values are still sample.
       const year = name === "buildingCosts" ? 2026 : 2025;
-      expect(file.meta).toMatchObject({ sample: true, priceYear: year });
+      // The overrun reference is built from published research (not sample).
+      const sample = name !== "overrunReference";
+      expect(file.meta).toMatchObject({ sample, priceYear: year });
     }
+  });
+
+  it("cites a source for every real road and park price", () => {
+    const real = refData.unitPrices.items.filter((i) => i.source);
+    expect(real.length).toBeGreaterThan(20);
+    for (const i of real)
+      expect(i.source!.en).toMatch(/^Alberta Transportation/);
+    for (const f of Object.values(refData.parkFeatures.features).filter(
+      (f) => f.source,
+    ))
+      expect(f.source!.en).toMatch(/Orangeville/);
   });
 
   it("cites a source for every building rate", () => {
@@ -215,9 +228,10 @@ describe("overrun-reference.json", () => {
           !e.subtype &&
           e.estimateClass === cls,
       )!;
-    expect(pick("D").probabilityOfOverrun).toBeGreaterThan(
-      pick("A").probabilityOfOverrun,
-    );
+    // Published data: the chance of overrun is similar; its size shrinks as scope firms up.
+    const mean = (e: { mu: number; sigma: number }) =>
+      Math.exp(e.mu + e.sigma ** 2 / 2);
+    expect(mean(pick("D"))).toBeGreaterThan(mean(pick("A")));
     expect(pick("D").sigma).toBeGreaterThan(pick("A").sigma);
   });
 });

@@ -424,7 +424,7 @@ function deriveQuantities(ctx: TemplateContext): QuantityLine[] {
         category: "park_features",
         priceCategory: item.priceCategory,
         price: scale(range, factor),
-        source: SAMPLE_SOURCE,
+        source: item.source ?? SAMPLE_SOURCE,
       },
       quantity,
       unit: item.unit,
