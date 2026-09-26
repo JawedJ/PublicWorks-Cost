@@ -15,7 +15,7 @@ import { useStore } from "@/lib/store/store";
 
 const SOURCE = "pw-labels";
 
-function anchor(c: Component): Position | null {
+export function anchor(c: Component): Position | null {
   const g = c.geometry?.primary.geometry;
   if (!g) return null;
   if (g.type === "Point") return g.coordinates;

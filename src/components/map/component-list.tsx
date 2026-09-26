@@ -5,6 +5,7 @@ import {
   Building2,
   Copy,
   Ellipsis,
+  FilePlus,
   Eye,
   EyeOff,
   Pencil,
@@ -96,6 +97,19 @@ export function ComponentList() {
             ({components.length})
           </span>
         </h2>
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          aria-label={t("newProject")}
+          title={t("newProject")}
+          disabled={components.length === 0}
+          onClick={() => {
+            if (!window.confirm(t("newProjectConfirm"))) return;
+            useStore.getState().newProject({ name: t("untitled") });
+          }}
+        >
+          <FilePlus />
+        </Button>
         <Button
           variant="ghost"
           size="icon-sm"

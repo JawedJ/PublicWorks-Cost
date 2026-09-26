@@ -1,6 +1,8 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { useEffect } from "react";
+import { useStore } from "@/lib/store/store";
 import { EstimatePanel } from "@/components/estimate/estimate-panel";
 import { ComponentLayers } from "./component-layers";
 import { ComponentInspector } from "./component-inspector";
@@ -15,8 +17,22 @@ import { TransformHandles } from "./transform-handles";
 import { ViewSwitcher } from "./view-switcher";
 
 /** Workspace layout: component list and view on the left (~60%), estimate panel on the right. */
+/** Warns before leaving the page with a design in progress (projects aren't saved; SPEC 15). */
+function useUnsavedWarning() {
+  const hasWork = useStore(
+    (s) => s.components.length > 0 || s.areaBoundary !== null,
+  );
+  useEffect(() => {
+    if (!hasWork) return;
+    const onLeave = (e: BeforeUnloadEvent) => e.preventDefault();
+    window.addEventListener("beforeunload", onLeave);
+    return () => window.removeEventListener("beforeunload", onLeave);
+  }, [hasWork]);
+}
+
 export function WorkspaceShell() {
   const t = useTranslations("map");
+  useUnsavedWarning();
   const tDesign = useTranslations("design");
 
   return (

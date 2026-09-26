@@ -78,7 +78,10 @@
       "copyName": "{name} (copie)",
       "delete": "Supprimer",
       "undo": "Annuler",
-      "redo": "Rétablir"
+      "redo": "Rétablir",
+      "newProject": "Nouveau projet",
+      "newProjectConfirm": "Commencer un nouveau projet? La conception actuelle sera effacée. Téléchargez d’abord le fichier du projet pour la conserver.",
+      "untitled": "Projet sans titre"
     },
     "listLabel": "Liste des composantes",
     "draw": {

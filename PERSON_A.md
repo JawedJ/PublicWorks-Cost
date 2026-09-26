@@ -78,10 +78,10 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 - [x] P3.2 Workspace layout: view (left) + B's `<EstimatePanel/>` (right); view switcher 2D plan / 3D map
 - [x] P3.3 Shared selection across views, component list, and line items; hover tooltips with cost (from `useEstimate`, fixture until live)
 - [x] P3.4 "Colour by cost" toggle on map views
-- [ ] P3.9a Flag markers on the map (B owns the flags list)
+- [x] P3.9a Flag markers on the map (B owns the flags list)
 - [ ] P7.4 Creation flow navigation: Describe → Review build list (B's screen) → Locate → Draw each planned component (checklist) → Questions (B's panel) → Estimate
 - [ ] P4.5 Landing page: prompt box (calls B's parse), blank map option, demo cards, open project file button (B's loader)
-- [ ] P4.3 Unsaved-changes `beforeunload` warning; "New project" reset
+- [x] P4.3 Unsaved-changes `beforeunload` warning; "New project" reset
 
 ### S3 → S4 — 3D and context
 - [x] P1.18 3D map view: every building section extruded to its own height · Core

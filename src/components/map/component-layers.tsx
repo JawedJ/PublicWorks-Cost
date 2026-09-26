@@ -16,6 +16,7 @@ import type { AnyFeature, Component, PolygonFeature } from "@/lib/schemas";
 import { useStore } from "@/lib/store/store";
 import { DRAW_LAYER_PREFIX, justFinishedDrawing } from "./draw-controller";
 import { useMap } from "./map-context";
+import { FlagMarkers } from "./flag-markers";
 import { MeasurementLabels } from "./measurement-labels";
 import { HANDLE_CLASS } from "./transform-handles";
 
@@ -408,5 +409,10 @@ export function ComponentLayers() {
     ]);
   }, [map, selectedId, components]);
 
-  return <MeasurementLabels map={map} />;
+  return (
+    <>
+      <MeasurementLabels map={map} />
+      <FlagMarkers map={map} estimate={estimate} />
+    </>
+  );
 }

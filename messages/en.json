@@ -78,7 +78,10 @@
       "copyName": "{name} (copy)",
       "delete": "Delete",
       "undo": "Undo",
-      "redo": "Redo"
+      "redo": "Redo",
+      "newProject": "New project",
+      "newProjectConfirm": "Start a new project? The current design will be cleared. Download the project file first if you want to keep it.",
+      "untitled": "Untitled project"
     },
     "listLabel": "Component list",
     "draw": {
