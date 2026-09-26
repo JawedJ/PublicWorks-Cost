@@ -52,7 +52,7 @@ export function WorkspaceShell() {
 
   return (
     <MapProvider>
-      <div className="flex min-h-0 flex-1 flex-col lg:h-full lg:flex-none lg:flex-row">
+      <div className="flex min-h-0 flex-1 flex-col lg:h-[calc(100dvh-3.5rem)] lg:flex-none lg:flex-row">
         <div className="flex shrink-0 flex-col lg:min-h-0 lg:min-w-0 lg:flex-1 lg:flex-row">
           <section
             aria-label={t("viewLabel")}
@@ -84,7 +84,7 @@ export function WorkspaceShell() {
                 ? undefined
                 : ({ "--list-w": `${listWidth}px` } as CSSProperties)
             }
-            className={`relative max-h-72 overflow-x-hidden overflow-y-auto border-t bg-card lg:order-1 lg:max-h-none lg:overflow-visible lg:shrink-0 lg:border-t-0 lg:border-r ${
+            className={`relative max-h-72 overflow-x-hidden overflow-y-auto border-t bg-card lg:order-1 lg:max-h-none lg:shrink-0 lg:overflow-visible lg:border-t-0 lg:border-r ${
               listWidth === null ? "lg:w-64 xl:w-72" : "lg:w-(--list-w)"
             }`}
           >
@@ -95,7 +95,7 @@ export function WorkspaceShell() {
               onResize={(w) => setListWidth(clamp(w, 200, 480))}
             />
             {/* On desktop the whole panel scrolls as one column when it doesn't fit. */}
-            <div className="flex flex-col lg:h-full lg:overflow-x-hidden lg:overflow-y-auto">
+            <div className="relative flex flex-col lg:h-full lg:overflow-x-hidden lg:overflow-y-auto lg:overscroll-contain">
               <ComponentList />
               <ComponentInspector />
             </div>
@@ -121,7 +121,8 @@ export function WorkspaceShell() {
               setPanelWidth(clamp(w, 280, window.innerWidth * 0.6))
             }
           />
-          <div className="flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto">
+          {/* `relative` so absolutely positioned content (e.g. sr-only text) stays inside the scroll area. */}
+          <div className="relative flex min-h-0 flex-1 flex-col overflow-x-hidden overflow-y-auto overscroll-contain">
             <EstimatePanel />
           </div>
         </aside>
