@@ -5,8 +5,8 @@ import type { Estimate, LineItem } from "@/lib/schemas";
 import { useStore } from "@/lib/store/store";
 
 // P3.8: estimate visuals, drawn with plain divs (no chart library).
-// Per-component breakdown, cost distribution, category breakdown, drivers
-// tornado, per-unit metrics.
+// Per-component breakdown, cost distribution, category breakdown and
+// per-unit metrics.
 
 const compact = new Intl.NumberFormat("en-CA", {
   style: "currency",
@@ -192,48 +192,6 @@ export function CategoryBreakdown({ lineItems }: { lineItems: LineItem[] }) {
       <p className="mt-1 text-xs text-muted-foreground">
         {t("byCategoryNote")}
       </p>
-    </div>
-  );
-}
-
-/** Tornado: how much the project P50 moves when each driver swings low/high. */
-export function DriversTornado({ drivers }: { drivers: Estimate["drivers"] }) {
-  const t = useTranslations("charts");
-  if (drivers.length === 0) return null;
-  const max =
-    Math.max(
-      ...drivers.map((d) =>
-        Math.max(Math.abs(d.impactLow), Math.abs(d.impactHigh)),
-      ),
-    ) || 1;
-  const w = (v: number) => `${(Math.abs(v) / max) * 50}%`;
-  return (
-    <div>
-      <Heading>{t("drivers")}</Heading>
-      <ul className="flex flex-col gap-1.5 text-sm">
-        {drivers.map((d) => (
-          <li key={d.id}>
-            <p className="flex justify-between text-xs">
-              <span>{d.label.en}</span>
-              <span className="text-muted-foreground figures">
-                {compact.format(d.impactLow)} / +{compact.format(d.impactHigh)}
-              </span>
-            </p>
-            <div className="relative h-2.5">
-              <span className="absolute inset-y-0 left-1/2 w-px bg-foreground/30" />
-              <span
-                className="absolute inset-y-0 right-1/2 rounded-l-full bg-emerald-500/60"
-                style={{ width: w(d.impactLow) }}
-              />
-              <span
-                className="absolute inset-y-0 left-1/2 rounded-r-full bg-rose-500/60"
-                style={{ width: w(d.impactHigh) }}
-              />
-            </div>
-          </li>
-        ))}
-      </ul>
-      <p className="mt-1 text-xs text-muted-foreground">{t("driversNote")}</p>
     </div>
   );
 }

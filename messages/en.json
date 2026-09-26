@@ -424,8 +424,6 @@
     "distributionNote": "5,000 simulated outcomes. The shaded middle is the likely range (P10–P90).",
     "byCategory": "Where the money goes",
     "byCategoryNote": "Direct construction cost by category, before soft costs, escalation and taxes.",
-    "drivers": "What moves the total most",
-    "driversNote": "Change in the project P50 when each driver comes in low (green) or high (red).",
     "perUnit": "Cost per unit",
     "units": {
       "perM": "per m of road",

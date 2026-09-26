@@ -170,5 +170,5 @@ Task ids (e.g. `P1.3`) are used in commit messages and the SPEC.md Change log.
 
 ## Environment & deployment
 
-- **Production URL:** —
+- **Production URL:** Vercel project `hackathon-aqeeljawed/publicworkscost`, auto-deploys on push to `main` (production alias not recorded)
 - **Env vars configured in Vercel:** —

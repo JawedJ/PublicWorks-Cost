@@ -48,7 +48,7 @@ describe("estimate panel tabs", () => {
       if (!id) {
         expect(html).toContain("Overrun risk");
         expect(html).toContain("Range of outcomes");
-        expect(html).toContain("What moves the total most");
+        expect(html).not.toContain("What moves the total most");
       }
     });
 

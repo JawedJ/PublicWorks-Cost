@@ -8,7 +8,6 @@ import {
   CategoryBreakdown,
   ComponentBreakdown,
   DistributionChart,
-  DriversTornado,
   PerUnitMetrics,
 } from "./charts";
 import { FlagsList } from "./flags-list";
@@ -117,7 +116,6 @@ export function EstimateTab({ estimate, scoped, components, region }: Props) {
 
       {whole && <DistributionChart distribution={estimate.distribution} />}
       <CategoryBreakdown lineItems={scoped.lineItems} />
-      {whole && <DriversTornado drivers={estimate.drivers} />}
 
       <FlagsList flags={scoped.flags} names={whole ? names : undefined} />
 
