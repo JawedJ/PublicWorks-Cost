@@ -284,7 +284,7 @@ Derivation examples:
 
 ### 6.3 Buildings (freeform sections + storeys)
 
-Subtypes: public buildings `community_centre`, `library`, `fire_station`, `police_station`, `municipal_office`, `school` (rough), `hospital` (rough); and public/affordable housing `house` (single-detached), `townhouse_block`, `low_rise_apartment`, `mid_rise_apartment`.
+Subtypes: public buildings `community_centre`, `library`, `fire_station`, `police_station`, `municipal_office`, `school` (rough), `secondary_school` (rough), `hospital` (rough), `ice_arena`, `aquatic_centre`, `performing_arts`, `museum_gallery`, `medical_clinic`, `maintenance_facility`; and public/affordable housing `house` (single-detached), `townhouse_block`, `low_rise_apartment`, `mid_rise_apartment`.
 
 A building is one or more **sections**, each a freeform footprint with its own storeys and roof type, so users can design anything from a simple box to an L-shaped library with a taller wing, a courtyard school, or a stepped apartment building. Sections can be drawn directly, or **procedurally generated** from the building's type and size (see section 11) and then freely edited. The site polygon is optional: if not drawn, a site is generated as the combined footprint plus a default setback buffer for site-work quantities.
 
@@ -312,7 +312,7 @@ Derivation: unit-based pricing from `structures.json` plus traffic control, in-w
 ### 6.5 Custom elements (anything the catalog doesn't know)
 
 Users can add a **custom component** or a **custom park feature** for anything: a skate park, amphitheatre, public art installation, boardwalk, retaining wall, outdoor rink, and so on. They name it, draw it as any shape (point, line, or polygon), and choose how it's priced:
-- **Matched:** the app suggests the closest known cost basis (the AI may propose a match from the name, e.g. "boardwalk → trail, timber surface, premium"; the user confirms), priced per m², per m, or per unit from seed data, with a wider uncertainty band.
+- **Matched:** the app suggests the closest known cost basis (a keyword match from the name today, e.g. "community pool" → aquatic centre; the AI may later propose a match from the name, e.g. "boardwalk → trail, timber surface, premium"; the user confirms), priced per m², per m, or per unit from seed data, with a wider uncertainty band. Bases include every building rate (real Altus 2026, per m² of the drawn area), park features, and unit prices.
 - **Own rate:** the user enters a rate per m², per m, per unit, or a lump sum, with optional low/high values.
 
 Custom elements are always marked in the estimate as lower-confidence, carry wider ranges in the Monte Carlo, and lower the component's estimate class. They are never blocked.
@@ -766,3 +766,4 @@ One line per change to this spec: `YYYY-MM-DD P#.#: what changed and why`. Newes
 - 2026-09-26 P7.2 [B]: Parse uses the fast Gemini model (Flash-Lite; the thinking Flash model was >20 s). Park amenities in the prompt come back as `features` (park feature kinds) on the park build-list item, not as separate components; today's date is sent so relative start dates resolve.
 - 2026-09-26 i18n [B, per the human]: French dropped; the app is English only (section 17). No French strings, translations, reports, AI output, or language toggle. Existing `fr` plumbing (routing, `fr.json`, `{ en, fr }` text) stays but is unused; nothing is ripped out. P10.1 dropped.
 - 2026-09-26 Data [B, per the human]: Building base rates replaced with real Altus Group 2026 Canadian Cost Guide benchmarks (GTA/Ottawa average, $/sq ft → $/m²); each subtype carries its source, and building BCPI escalation starts from that file's own price year (2026). Everything else remains sample data; the sample-data badge stays.
+- 2026-09-26 B.3 [B, per the human]: Seven more building subtypes from the Altus 2026 rows (ice arena, aquatic centre, secondary school, performing arts, museum/gallery, medical clinic, maintenance facility) with typologies. Custom elements can be matched to any building rate (`building:<subtype>` basis ids), park features, or unit prices, with a keyword suggestion from the name; the pricing form lives in the Inputs tab (custom components and custom park features).

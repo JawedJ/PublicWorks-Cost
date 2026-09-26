@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { refData } from "@/data";
-import { customLine } from "../templates/custom";
+import { customBases, customLine, suggestBasis } from "../templates/custom";
 import { structureTemplate } from "../templates/structure";
 import { byId, makeCtx } from "./helpers";
 
@@ -63,5 +63,46 @@ describe("custom elements (SPEC 6.5)", () => {
     )!;
     if (line.price.kind !== "direct") throw new Error();
     expect(line.price.price.typical).toBe(1100);
+  });
+});
+
+describe("custom element matching", () => {
+  const bases = customBases(refData);
+
+  it("prices a custom element matched to a real building rate", () => {
+    const line = customLine(
+      "custom",
+      "Community pool",
+      {
+        mode: "matched",
+        basisId: "building:aquatic_centre",
+        unit: "m2",
+        suggestedByAi: false,
+      },
+      { areaM2: 2000 },
+      refData,
+    );
+    const rate = refData.buildingCosts.subtypes.aquatic_centre!.perM2.typical;
+    expect(line!.quantity).toBe(2000);
+    expect(line!.price.kind === "direct" && line!.price.price.typical).toBe(
+      rate,
+    );
+    expect(line!.price.kind === "direct" && line!.price.source.en).toContain(
+      "Altus Group 2026",
+    );
+  });
+
+  it("suggests a basis from the name", () => {
+    const pick = (name: string) => suggestBasis(name, bases)?.id;
+    expect(pick("Community pool")).toBe("building:aquatic_centre");
+    expect(pick("Hockey arena")).toBe("building:ice_arena");
+    expect(pick("Municipal works yard")).toBe("building:maintenance_facility");
+    expect(pick("Skate park")).toBe("skate_park");
+    expect(pick("Xyzzy")).toBeUndefined();
+  });
+
+  it("only offers units a custom element can use", () => {
+    expect(bases.every((b) => ["m", "m2", "each"].includes(b.unit))).toBe(true);
+    expect(new Set(bases.map((b) => b.id)).size).toBe(bases.length);
   });
 });

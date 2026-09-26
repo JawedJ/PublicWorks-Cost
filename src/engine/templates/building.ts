@@ -667,7 +667,11 @@ function flags(ctx: TemplateContext): TemplateFlag[] {
   const ids = [component.id];
   const sections = sectionInfo(ctx);
 
-  if (component.subtype === "school" || component.subtype === "hospital") {
+  if (
+    component.subtype === "school" ||
+    component.subtype === "secondary_school" ||
+    component.subtype === "hospital"
+  ) {
     out.push({
       code: "program_driven_cost",
       severity: "warning",
@@ -781,6 +785,28 @@ export const buildingTemplate: ComponentTemplate = {
       id: "mid_rise_apartment",
       label: L("Mid-rise apartment", "Immeuble de hauteur moyenne"),
     },
+    { id: "ice_arena", label: L("Ice arena", "Ice arena") },
+    { id: "aquatic_centre", label: L("Aquatic centre", "Aquatic centre") },
+    {
+      id: "secondary_school",
+      label: L("Secondary school (rough)", "Secondary school (rough)"),
+    },
+    {
+      id: "performing_arts",
+      label: L("Performing arts centre", "Performing arts centre"),
+    },
+    {
+      id: "museum_gallery",
+      label: L("Museum or gallery", "Museum or gallery"),
+    },
+    { id: "medical_clinic", label: L("Medical clinic", "Medical clinic") },
+    {
+      id: "maintenance_facility",
+      label: L(
+        "Works yard / maintenance building",
+        "Works yard / maintenance building",
+      ),
+    },
   ],
   paramCatalog,
   subtypeDefaults: {
@@ -795,6 +821,13 @@ export const buildingTemplate: ComponentTemplate = {
     townhouse_block: { ffeIncluded: false },
     low_rise_apartment: { ffeIncluded: false },
     mid_rise_apartment: { ffeIncluded: false },
+    ice_arena: { parkingStalls: 150 },
+    aquatic_centre: { parkingStalls: 120 },
+    secondary_school: { gymnasium: true, parkingStalls: 120 },
+    performing_arts: { parkingStalls: 150 },
+    museum_gallery: { parkingStalls: 40 },
+    medical_clinic: { parkingStalls: 50 },
+    maintenance_facility: { parkingStalls: 40 },
   },
   deriveQuantities,
   flags,

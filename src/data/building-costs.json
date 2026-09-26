@@ -180,6 +180,118 @@
         "en": "Altus Group 2026 Canadian Cost Guide, p. 5: Condominiums/Apartments - up to 12 storeys, GTA and Ottawa average ($252–$355/sq ft)",
         "fr": "Altus Group 2026 Canadian Cost Guide, p. 5: Condominiums/Apartments - up to 12 storeys, GTA and Ottawa average ($252–$355/sq ft)"
       }
+    },
+    "ice_arena": {
+      "label": {
+        "en": "Ice arena",
+        "fr": "Ice arena"
+      },
+      "perM2": {
+        "low": 3794,
+        "typical": 4871,
+        "high": 5947
+      },
+      "uncertaintyMultiplier": 1,
+      "source": {
+        "en": "Altus Group 2026 Canadian Cost Guide, p. 6: Ice arena, GTA and Ottawa average ($352–$552/sq ft)",
+        "fr": "Altus Group 2026 Canadian Cost Guide, p. 6: Ice arena, GTA and Ottawa average ($352–$552/sq ft)"
+      }
+    },
+    "aquatic_centre": {
+      "label": {
+        "en": "Aquatic centre",
+        "fr": "Aquatic centre"
+      },
+      "perM2": {
+        "low": 6378,
+        "typical": 7831,
+        "high": 9284
+      },
+      "uncertaintyMultiplier": 1,
+      "source": {
+        "en": "Altus Group 2026 Canadian Cost Guide, p. 6: Community aquatic facility, GTA and Ottawa average ($592–$862/sq ft)",
+        "fr": "Altus Group 2026 Canadian Cost Guide, p. 6: Community aquatic facility, GTA and Ottawa average ($592–$862/sq ft)"
+      }
+    },
+    "secondary_school": {
+      "label": {
+        "en": "Secondary school (rough)",
+        "fr": "Secondary school (rough)"
+      },
+      "perM2": {
+        "low": 4306,
+        "typical": 5409,
+        "high": 6512
+      },
+      "uncertaintyMultiplier": 1.5,
+      "source": {
+        "en": "Altus Group 2026 Canadian Cost Guide, p. 6: Secondary school, GTA and Ottawa average ($400–$605/sq ft)",
+        "fr": "Altus Group 2026 Canadian Cost Guide, p. 6: Secondary school, GTA and Ottawa average ($400–$605/sq ft)"
+      }
+    },
+    "performing_arts": {
+      "label": {
+        "en": "Performing arts centre",
+        "fr": "Performing arts centre"
+      },
+      "perM2": {
+        "low": 8423,
+        "typical": 10266,
+        "high": 12109
+      },
+      "uncertaintyMultiplier": 1,
+      "source": {
+        "en": "Altus Group 2026 Canadian Cost Guide, p. 6: Performing arts building, GTA and Ottawa average ($782–$1,125/sq ft)",
+        "fr": "Altus Group 2026 Canadian Cost Guide, p. 6: Performing arts building, GTA and Ottawa average ($782–$1,125/sq ft)"
+      }
+    },
+    "museum_gallery": {
+      "label": {
+        "en": "Museum or gallery",
+        "fr": "Museum or gallery"
+      },
+      "perM2": {
+        "low": 6862,
+        "typical": 8692,
+        "high": 10522
+      },
+      "uncertaintyMultiplier": 1,
+      "source": {
+        "en": "Altus Group 2026 Canadian Cost Guide, p. 6: Museum/gallery, GTA and Ottawa average ($638–$978/sq ft)",
+        "fr": "Altus Group 2026 Canadian Cost Guide, p. 6: Museum/gallery, GTA and Ottawa average ($638–$978/sq ft)"
+      }
+    },
+    "medical_clinic": {
+      "label": {
+        "en": "Medical clinic",
+        "fr": "Medical clinic"
+      },
+      "perM2": {
+        "low": 5032,
+        "typical": 6418,
+        "high": 7804
+      },
+      "uncertaintyMultiplier": 1,
+      "source": {
+        "en": "Altus Group 2026 Canadian Cost Guide, p. 6: Medical clinic/treatment centre, GTA and Ottawa average ($468–$725/sq ft)",
+        "fr": "Altus Group 2026 Canadian Cost Guide, p. 6: Medical clinic/treatment centre, GTA and Ottawa average ($468–$725/sq ft)"
+      }
+    },
+    "maintenance_facility": {
+      "label": {
+        "en": "Works yard / maintenance building",
+        "fr": "Works yard / maintenance building"
+      },
+      "perM2": {
+        "low": 5839,
+        "typical": 6418,
+        "high": 6997
+      },
+      "uncertaintyMultiplier": 1,
+      "source": {
+        "en": "Altus Group 2026 Canadian Cost Guide, p. 6: Facilities maintenance building, GTA and Ottawa average ($542–$650/sq ft)",
+        "fr": "Altus Group 2026 Canadian Cost Guide, p. 6: Facilities maintenance building, GTA and Ottawa average ($542–$650/sq ft)"
+      }
     }
   },
   "qualityFactors": {

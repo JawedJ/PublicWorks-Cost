@@ -367,6 +367,41 @@
       "ai_prompt": "From prompt",
       "ai_document": "From document",
       "site_context": "From site"
-    }
+    },
+    "customFeature": "Custom feature"
+  },
+  "customPricing": {
+    "mode": "How is this priced?",
+    "modes": {
+      "matched": "Match a known cost",
+      "own_rate": "My own rate"
+    },
+    "basis": "Cost basis",
+    "chooseBasis": "Choose what this is most like…",
+    "groups": {
+      "building": "Buildings (Altus Group 2026)",
+      "park": "Park features (sample)",
+      "unit_price": "Unit prices (sample)"
+    },
+    "suggested": "Suggested from the name:",
+    "matchedNote": "Priced per {unit} of the drawn shape, with a wider range (−30% / +60%) because it's a match, not a quote.",
+    "rate": "Rate ($)",
+    "unit": "Per",
+    "low": "Low (optional)",
+    "high": "High (optional)",
+    "perUnit": {
+      "m2": "m² of drawn area",
+      "m": "metre of drawn length",
+      "each": "each",
+      "lump": "lump sum"
+    },
+    "units": {
+      "m2": "m²",
+      "m": "m",
+      "each": "each"
+    },
+    "bandError": "Low must be at or below the rate, and high at or above it.",
+    "ownNote": "Without low/high, the range is −30% / +60% of your rate. Your rate is marked as user-entered.",
+    "apply": "Use this rate"
   }
 }

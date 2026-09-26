@@ -11,6 +11,7 @@ import type {
   ParamValue,
 } from "@/lib/schemas";
 import { useStore } from "@/lib/store/store";
+import { CustomPricingForm } from "./custom-pricing-form";
 import { NumberInput } from "./number-input";
 
 // P3.11: parameters per component. Values from the prompt, a document or the site
@@ -65,6 +66,10 @@ function ComponentInputs({
     (a, b) => b.costImpact - a.costImpact,
   );
   const subtype = tpl.subtypes.find((s) => s.id === c.subtype)?.label.en;
+  const updateComponent = useStore((s) => s.updateComponent);
+  // Custom park features are priced like custom components (SPEC 6.5).
+  const customFeatures =
+    c.geometry?.features.filter((f) => f.kind === "custom") ?? [];
 
   return (
     <section className="flex flex-col gap-2">
@@ -72,7 +77,13 @@ function ComponentInputs({
         {showName && <h3 className="font-medium">{c.name}</h3>}
         {subtype && <p className="text-xs text-muted-foreground">{subtype}</p>}
       </header>
-      {defs.length === 0 ? (
+      {c.type === "custom" ? (
+        <CustomPricingForm
+          name={c.name}
+          pricing={c.customPricing}
+          onChange={(customPricing) => updateComponent(c.id, { customPricing })}
+        />
+      ) : defs.length === 0 ? (
         <p className="text-sm text-muted-foreground">{t("none")}</p>
       ) : (
         <ul className="flex flex-col divide-y">
@@ -81,6 +92,28 @@ function ComponentInputs({
           ))}
         </ul>
       )}
+      {customFeatures.map((f) => (
+        <div key={f.id} className="flex flex-col gap-1">
+          <p className="text-sm font-medium">
+            {f.customLabel ?? t("customFeature")}
+          </p>
+          <CustomPricingForm
+            name={f.customLabel ?? ""}
+            pricing={f.customPricing}
+            onChange={(customPricing) =>
+              c.geometry &&
+              updateComponent(c.id, {
+                geometry: {
+                  ...c.geometry,
+                  features: c.geometry.features.map((x) =>
+                    x.id === f.id ? { ...x, customPricing } : x,
+                  ),
+                },
+              })
+            }
+          />
+        </div>
+      ))}
     </section>
   );
 }

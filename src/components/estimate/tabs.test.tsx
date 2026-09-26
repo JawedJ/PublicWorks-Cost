@@ -57,4 +57,23 @@ describe("estimate panel tabs", () => {
     for (const c of northgateProject.components) expect(html).toContain(c.name);
     expect(html).not.toMatch(/>(Default|You)</);
   });
+
+  it("Inputs tab shows the pricing form for a custom element", () => {
+    const pool = {
+      ...northgateProject.components[0]!,
+      id: "pool",
+      type: "custom" as const,
+      subtype: "custom",
+      name: "Community pool",
+      params: {},
+      paramMeta: {},
+    };
+    const { html, errors } = render(
+      <InputsTab components={[pool]} componentId={null} />,
+    );
+    expect(errors).toEqual([]);
+    expect(html).toContain("Match a known cost");
+    expect(html).toContain("Suggested from the name:");
+    expect(html).toContain("Aquatic centre");
+  });
 });

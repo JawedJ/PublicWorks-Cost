@@ -26,6 +26,142 @@ function quantityFor(
   return 1;
 }
 
+/** A known cost a custom element can be matched to (SPEC 6.5). */
+export type CustomBasis = {
+  /** `building:<subtype>`, a park feature kind, or a unit-prices.json id. */
+  id: string;
+  group: "building" | "park" | "unit_price";
+  label: LocalizedText;
+  unit: "m" | "m2" | "each";
+  typical: number;
+  source?: LocalizedText;
+};
+
+const BUILDING_PREFIX = "building:";
+const CUSTOM_UNITS = new Set(["m", "m2", "each"]);
+
+/** Every basis a custom element can be matched to: building rates, park features, unit prices. */
+export function customBases(refData: RefData): CustomBasis[] {
+  const out: CustomBasis[] = [];
+  for (const [id, b] of Object.entries(refData.buildingCosts.subtypes)) {
+    out.push({
+      id: BUILDING_PREFIX + id,
+      group: "building",
+      label: t(b.label, L(" (per m² of floor area)", " (par m² de plancher)")),
+      unit: "m2",
+      typical: b.perM2.typical,
+      source: b.source,
+    });
+  }
+  for (const [id, f] of Object.entries(refData.parkFeatures.features)) {
+    const typical = Object.values(f.tiers)[0]?.typical;
+    if (typical === undefined || !CUSTOM_UNITS.has(f.unit)) continue;
+    out.push({
+      id,
+      group: "park",
+      label: f.label,
+      unit: f.unit as CustomBasis["unit"],
+      typical,
+    });
+  }
+  for (const i of refData.unitPrices.items) {
+    if (!CUSTOM_UNITS.has(i.unit)) continue;
+    out.push({
+      id: i.id,
+      group: "unit_price",
+      label: i.description,
+      unit: i.unit as CustomBasis["unit"],
+      typical: i.price.typical,
+    });
+  }
+  return out;
+}
+
+function findBasis(refData: RefData, id: string): CustomBasis | undefined {
+  return customBases(refData).find((b) => b.id === id);
+}
+
+/** Words that point at a basis even when the label doesn't share them. */
+const SYNONYMS: Record<string, string> = {
+  pool: "aquatic",
+  swimming: "aquatic",
+  natatorium: "aquatic",
+  arena: "arena",
+  hockey: "arena",
+  theatre: "performing",
+  theater: "performing",
+  auditorium: "performing",
+  concert: "performing",
+  gallery: "gallery",
+  museum: "museum",
+  clinic: "clinic",
+  health: "clinic",
+  yard: "maintenance",
+  depot: "maintenance",
+  garage: "maintenance",
+  boardwalk: "trail",
+  path: "trail",
+  pathway: "trail",
+  skate: "skate",
+  gazebo: "shade",
+  pavilion: "shade",
+  court: "court",
+  garden: "garden",
+  rink: "rink",
+};
+
+/** Generic words that say little about the cost basis. */
+const STOP = new Set([
+  "community",
+  "municipal",
+  "public",
+  "new",
+  "centre",
+  "center",
+  "city",
+  "town",
+  "building",
+  "area",
+  "the",
+  "and",
+  "per",
+  "floor",
+]);
+
+const words = (s: string) =>
+  s
+    .toLowerCase()
+    .split(/[^a-z]+/)
+    .filter((w) => w.length >= 3 && !STOP.has(w))
+    .map((w) => (w.endsWith("s") && w.length > 4 ? w.slice(0, -1) : w));
+
+/** Best keyword match for a custom element's name, or null. Plain code, no AI. */
+export function suggestBasis(
+  name: string,
+  bases: CustomBasis[],
+): CustomBasis | null {
+  // Synonym hits count double: "pool" → aquatic is a stronger signal than a shared word.
+  const weight = new Map<string, number>();
+  for (const w of words(name)) {
+    weight.set(w, Math.max(weight.get(w) ?? 0, 1));
+    const syn = SYNONYMS[w];
+    if (syn) weight.set(syn, 2);
+  }
+  let best: CustomBasis | null = null;
+  let bestScore = 0;
+  for (const b of bases) {
+    const score = words(b.label.en).reduce(
+      (sum, w) => sum + (weight.get(w) ?? 0),
+      0,
+    );
+    if (score > bestScore) {
+      best = b;
+      bestScore = score;
+    }
+  }
+  return best;
+}
+
 /** One line for a custom component or custom park feature, or null if it can't be priced. */
 export function customLine(
   localId: string,
@@ -48,21 +184,14 @@ export function customLine(
     high = pricing.high ?? typical * CUSTOM_BAND.high;
     source = L("User-entered rate", "Taux saisi par l'utilisateur");
   } else {
-    const unitItem = refData.unitPrices.items.find(
-      (i) => i.id === pricing.basisId,
-    );
-    const park = refData.parkFeatures.features[pricing.basisId];
-    const basis =
-      unitItem?.price.typical ??
-      (park ? Object.values(park.tiers)[0]?.typical : undefined);
-    if (basis === undefined) return null;
-    typical = basis;
-    low = basis * CUSTOM_BAND.low;
-    high = basis * CUSTOM_BAND.high;
-    source = t(
-      L("Matched to ", "Associé à "),
-      unitItem?.description ?? park!.label,
-    );
+    const basis = findBasis(refData, pricing.basisId);
+    if (!basis) return null;
+    typical = basis.typical;
+    low = typical * CUSTOM_BAND.low;
+    high = typical * CUSTOM_BAND.high;
+    source = basis.source
+      ? t(L("Matched to ", "Associé à "), basis.label, " — ", basis.source)
+      : t(L("Matched to ", "Associé à "), basis.label);
   }
   return {
     localId,

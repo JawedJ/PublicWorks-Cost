@@ -1,3 +1,4 @@
+import { buildingTemplate } from "@/engine/templates/building";
 import { describe, expect, it } from "vitest";
 import {
   buildingCosts,
@@ -66,21 +67,9 @@ describe("unit-prices.json", () => {
 });
 
 describe("building-costs.json", () => {
-  it("has every building subtype in SPEC 6.3", () => {
+  it("has a cost for every building subtype in the engine", () => {
     expect(Object.keys(buildingCosts.subtypes).sort()).toEqual(
-      [
-        "community_centre",
-        "library",
-        "fire_station",
-        "police_station",
-        "municipal_office",
-        "school",
-        "hospital",
-        "house",
-        "townhouse_block",
-        "low_rise_apartment",
-        "mid_rise_apartment",
-      ].sort(),
+      buildingTemplate.subtypes.map((s) => s.id).sort(),
     );
   });
 
