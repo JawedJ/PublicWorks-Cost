@@ -6,15 +6,23 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Current state
 
-- **Current task:** P1.7
+- **Current task:** P9.1 (road cross-section), then P1.17 snap to streets
 - **Status:** in progress   <!-- not started | in progress | blocked | at sync point -->
-- **Next action:** P1.7 editing (move, rotate, scale, vertex edit, holes, duplicate, mirror, delete). Likely Terra Draw's select mode: load the selected component's shapes into Terra Draw for editing, write back on `finish` with one `setComponentGeometry` per drag.
-- **Blockers / needs from B:** none.
-- **Last updated:** 2026-09-26 (P1.5 merged to `main`)
+- **Next action:** Remaining Core items depend on B: P7.4 creation flow (needs B's parse + build-list screen). Stretch left: P9.1, P1.17, P6.1–P6.2, P9.2–P9.5.
+- **Blockers / needs from B:** see Requests below (measure import swap, AI parse to replace the landing keyword fallback, zoning schema).
+- **Last updated:** 2026-09-26 (P1.7–P1.16, P3.2–P3.4, P3.9a, P4.3, P4.5, P5.1 merged to `main`)
 
 ## Handoff notes
 
 > Where an unfinished task stopped, gotchas, things to verify. Replace each session.
+
+- **Pace (per the human, 2026-09-26):** fast MVP. Batch tasks, verify main functionality only (checks + one smoke screenshot), log rough edges here instead of polishing.
+- Editing (P1.7): selected component's shapes are copied into Terra Draw select mode (`draw-controller.tsx`, ids `<componentId>|p|s|f`). Only outlines go to Terra Draw (it rejects holes); `withElementShape` puts holes back. Clicks on shapes are picked by `pickElement` (Terra Draw's own click selection is off). Move/rotate/scale of the whole component are MapLibre markers (`transform-handles.tsx`) with live preview (`previewComponentGeometry` + `endGeometryPreview` = one undo step). Known rough edges: rotated shapes scale in the axis-aligned frame; Terra Draw's grab distance is its 40 px default (grabs corners on small shapes); the Terra Draw overlay fill covers holes.
+- Section split (P1.8) not implemented; merge unions all sections (tallest wins).
+- Plan rendering (P1.11–13): `src/lib/render/plan.ts` builds one GeoJSON with a `layer` property; `plan-layers.tsx` styles it under the interactive `pw-*` layers, which are transparent (`plan` property) unless Colour by cost is on. Metric widths use a zoom-exponential expression (must be the outermost expression; no `max()` around it).
+- `useEstimate()` is called twice (EstimatePanel and ComponentLayers) → two engine runs per change. Fine for now; B could move the estimate into the store.
+- Landing prompt uses a TEMPORARY keyword parser (`src/components/landing/keyword-parse.ts`) until B's `/api/ai/parse`; it creates planned components with size hints `gfaOverrideM2`, `storeys`, `areaM2`, `lengthM` that smart start / Generate layout read.
+- `captureMapSnapshot` / `useMapSnapshot` (`src/components/map/snapshot.ts`) not yet exercised in a browser.
 
 - Next.js is **16.3** (Middleware is now `src/proxy.ts`; read `node_modules/next/dist/docs/` before using Next APIs, see `AGENTS.md`).
 - `pnpm typecheck` runs `next typegen` first (needed for the global `PageProps` / `LayoutProps` types).
@@ -38,6 +46,12 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 - Open requests from B (see `PERSON_B.md`, both "not needed before S3"): `updateComponents(patches)` as one undo step in `designSlice`, and a toggleable zoning map layer from `project.zoningContext` (schema coming in B's Z.1). B's `projectSlice` (B.2) is now on `main`.
 
 ## Requests to Person B
+
+- Swap `approxMeasureProject` for `measureProject` from `@/lib/geo/measure` in `useEstimate.ts` (it's on main, same contract, geodesic).
+- Replace the landing keyword fallback with your parse call when P7.2 lands (`src/components/landing/landing-start.tsx`, `start()`); keep the size-hint param ids above or tell me yours.
+- Optional: keep the estimate in the store (or a context) so the map and the panel share one computation.
+- Custom elements have no pricing form yet: mount your `CustomPricingForm` wherever suits (e.g. inputs tab); the Add menu creates `custom` components/features with just a name.
+- `updateComponents(patches)` is on main (your P7.5 request).
 
 - B.2: component params/paramMeta/overrides live on the components in `designSlice`. Edit them with `updateComponent(id, { params, paramMeta, overrides })` so they share undo history; keep project meta, settings, and scenarios in `projectSlice`. Opening a project file should call `loadDesign({ components, areaBoundary })`.
 
