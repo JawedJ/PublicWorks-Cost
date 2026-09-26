@@ -30,10 +30,10 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 
 ### Before S1 (first hour) — Foundation · Core
 - [x] P0.1 Scaffold Next.js (App Router) + TypeScript strict + pnpm
-- [ ] P0.2 Tailwind + shadcn/ui + Public Sans + design tokens (light/dark)
-- [ ] P0.3 next-intl with `/en` and `/fr` routing, `messages/en.json`, `messages/fr.json`
+- [x] P0.2 Tailwind + shadcn/ui + Public Sans + design tokens (light/dark)
+- [x] P0.3 next-intl with `/en` and `/fr` routing, `messages/en.json`, `messages/fr.json`
 - [ ] P0.4 Zustand, zod, Vitest, ESLint, Prettier; scripts `typecheck`, `lint`, `test`
-- [ ] P0.6 App layout shell (top bar, language toggle, sample-data badge)
+- [x] P0.6 App layout shell (top bar, language toggle, sample-data badge)
 - [ ] P0.7 `.env.example`, `README.md`, `DEPLOY.md`
 - [ ] P0.8 Deploy placeholder to Vercel (record URL below)
 - [ ] A.1 Create `src/lib/store/store.ts` with `designSlice.ts` (selection contract included) and an empty `projectSlice.ts` stub for B; merge to `main` **as early as possible** so B can build on it

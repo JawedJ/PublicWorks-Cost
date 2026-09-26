@@ -1,0 +1,28 @@
+{
+  "common": {
+    "appName": "PublicWorks Cost",
+    "tagline": "Map-based cost estimating for Canadian public infrastructure",
+    "sampleData": "Sample data",
+    "sampleDataNotice": "All prices and reference data are illustrative sample values, not real cost data."
+  },
+  "layout": {
+    "skipToContent": "Skip to main content",
+    "language": "Language",
+    "switchToLocale": "Français",
+    "switchToLocaleLabel": "Passer au français",
+    "newProject": "New project",
+    "downloadProjectFile": "Download project file",
+    "untitledProject": "Untitled project",
+    "projectName": "Project name",
+    "comingSoon": "Coming soon"
+  },
+  "landing": {
+    "title": "Estimate public infrastructure on a map",
+    "intro": "Describe what you want to build, lay it out on a map, and get a transparent cost range with risks and drivers.",
+    "startBlank": "Start with a blank map"
+  },
+  "map": {
+    "workspaceTitle": "Workspace",
+    "placeholder": "The map workspace will appear here."
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "common": {
+    "appName": "PublicWorks Cost",
+    "tagline": "Estimation des coûts sur carte pour les infrastructures publiques canadiennes",
+    "sampleData": "Données d’exemple",
+    "sampleDataNotice": "Tous les prix et données de référence sont des valeurs d’exemple illustratives, et non des données de coûts réelles."
+  },
+  "layout": {
+    "skipToContent": "Passer au contenu principal",
+    "language": "Langue",
+    "switchToLocale": "English",
+    "switchToLocaleLabel": "Switch to English",
+    "newProject": "Nouveau projet",
+    "downloadProjectFile": "Télécharger le fichier de projet",
+    "untitledProject": "Projet sans titre",
+    "projectName": "Nom du projet",
+    "comingSoon": "Bientôt disponible"
+  },
+  "landing": {
+    "title": "Estimez vos infrastructures publiques sur une carte",
+    "intro": "Décrivez ce que vous voulez construire, dessinez-le sur une carte et obtenez une fourchette de coûts transparente, avec risques et facteurs de coût.",
+    "startBlank": "Commencer avec une carte vierge"
+  },
+  "map": {
+    "workspaceTitle": "Espace de travail",
+    "placeholder": "L’espace de travail cartographique apparaîtra ici."
+  }
+}
