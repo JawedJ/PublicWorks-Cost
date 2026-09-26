@@ -499,4 +499,22 @@ describe("designSlice editing", () => {
     s().generateLayout([-80.5, 43.45], 2);
     expect(s().components.find((c) => c.id === id)!.geometry).toBe(lib);
   });
+
+  it("updates several components as one undo step", () => {
+    const [a, b] = s().addComponents([
+      { type: "road", subtype: "r", name: "A" },
+      { type: "road", subtype: "r", name: "B" },
+    ]);
+    const before = s().past.length;
+    s().updateComponents([
+      { id: a!, patch: { params: { lanes: 4 } } },
+      { id: b!, patch: { params: { lanes: 4 } } },
+    ]);
+    expect(s().past.length).toBe(before + 1);
+    expect(s().components.every((c) => c.params.lanes === 4)).toBe(true);
+    s().undo();
+    expect(s().components.every((c) => c.params.lanes === undefined)).toBe(
+      true,
+    );
+  });
 });

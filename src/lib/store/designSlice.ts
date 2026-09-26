@@ -111,6 +111,13 @@ export type DesignSlice = DesignSnapshot & {
     id: string,
     patch: Partial<Omit<Component, "id" | "type" | "status">>,
   ) => void;
+  /** Applies several component patches as one undo step (e.g. "apply to all similar"). */
+  updateComponents: (
+    patches: {
+      id: string;
+      patch: Partial<Omit<Component, "id" | "type" | "status">>;
+    }[],
+  ) => void;
   /**
    * Sets a component's geometry and marks it drawn. Edits by the user (the default)
    * turn a generated component into a user one; the layout generator passes 'generated'.
@@ -304,6 +311,15 @@ export const createDesignSlice: StateCreator<Store, [], [], DesignSlice> = (
       const created = inputs.map(createComponent);
       commit({ components: [...get().components, ...created] });
       return created.map((c) => c.id);
+    },
+    updateComponents: (patches) => {
+      const byId = new Map(patches.map((p) => [p.id, p.patch]));
+      if (!get().components.some((c) => byId.has(c.id))) return;
+      commit({
+        components: get().components.map((c) =>
+          byId.has(c.id) ? { ...c, ...byId.get(c.id) } : c,
+        ),
+      });
     },
     updateComponent: (id, patch) =>
       mapComponent(id, (c) => ({ ...c, ...patch })),
