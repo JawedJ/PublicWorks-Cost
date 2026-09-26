@@ -6,6 +6,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { parkFeatures } from "@/data";
 import { templates } from "@/engine/templates";
+import { capitalizeDraft } from "./build-list";
 import {
   type BuildListItem,
   ComponentTypeSchema,
@@ -30,7 +31,7 @@ const input =
 export function BuildListReview({ initial, source, onConfirm, onBack }: Props) {
   const t = useTranslations("buildList");
   const locale = useLocale() as "en" | "fr";
-  const [draft, setDraft] = useState(initial);
+  const [draft, setDraft] = useState(() => capitalizeDraft(initial));
   const items = draft.components;
 
   const setItems = (components: BuildListItem[]) =>
@@ -248,7 +249,7 @@ export function BuildListReview({ initial, source, onConfirm, onBack }: Props) {
         <Button
           type="button"
           disabled={!draft.name.trim() || items.length === 0}
-          onClick={() => onConfirm(draft)}
+          onClick={() => onConfirm(capitalizeDraft(draft))}
         >
           {t("continue")}
         </Button>

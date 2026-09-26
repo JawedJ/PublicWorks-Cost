@@ -73,7 +73,7 @@ describe("road params from the site lookup (P6.3)", () => {
       roadClass: "collector",
       sidewalkSides: 1,
     });
-    expect(s[0]!.evidence).toBe("OpenStreetMap: lanes=4 on Weber Street");
+    expect(s[0]!.evidence).toBe("Map data: lanes=4 on Weber Street");
     // Not a road → nothing.
     expect(
       siteParamSuggestions(byName("Northgate Park"), p.siteContext),

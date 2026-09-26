@@ -183,8 +183,8 @@ function demolitionLines(ctx: TemplateContext): QuantityLine[] {
     L(" existing building(s), ", " bâtiment(s) existant(s), "),
     e.floorAreaM2,
     L(
-      " m² floor area (OpenStreetMap footprints × storeys)",
-      " m² de plancher (emprises OpenStreetMap × étages)",
+      " m² floor area (footprints × storeys)",
+      " m² de plancher (emprises × étages)",
     ),
   );
   return [

@@ -209,11 +209,7 @@ export async function buildReportPdf(
     doc.rect(MARGIN + (inner - w) / 2, y, w, h);
     y += h + 12;
     doc.setFontSize(8).setTextColor(...MUTED);
-    doc.text(
-      "Site plan as drawn. Basemap © OpenStreetMap contributors.",
-      MARGIN,
-      y,
-    );
+    doc.text("Site plan as drawn.", MARGIN, y);
     y += 14;
   }
   if (r.sampleData) {
@@ -348,14 +344,35 @@ export async function buildReportPdf(
   }
 
   heading("Assumptions");
-  table(
-    ["Setting", "Value"],
-    r.settings.map((s) => [s.label, s.value]),
-  );
-  table(
-    ["Component", "Parameter", "Value", "Source"],
-    r.assumptions.map((a) => [a.component, a.parameter, a.value, a.source]),
-  );
+  // Compact: settings on one line, then one entry per component with its inputs.
+  para(r.settings.map((s) => `${s.label}: ${s.value}`).join("  ·  "), 9);
+  const byComponent = new Map<string, string[]>();
+  for (const a of r.assumptions)
+    byComponent.set(a.component, [
+      ...(byComponent.get(a.component) ?? []),
+      `${a.parameter}: ${a.value}`,
+    ]);
+  for (const [name, items] of byComponent) {
+    ensure(26);
+    doc
+      .setFont("helvetica", "bold")
+      .setFontSize(9.5)
+      .setTextColor(...INK);
+    doc.text(clean(`• ${name}`), MARGIN, y);
+    y += 12;
+    doc.setFont("helvetica", "normal").setFontSize(9);
+    const lines = doc.splitTextToSize(
+      clean(items.join("; ")),
+      inner - 10,
+    ) as string[];
+    for (const line of lines) {
+      ensure(12);
+      doc.text(line, MARGIN + 10, y);
+      y += 12;
+    }
+    y += 4;
+  }
+  y += 6;
 
   heading("Data sources");
   for (const s of r.sources) para(`- ${s}`, 9);

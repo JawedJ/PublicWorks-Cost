@@ -97,7 +97,7 @@ const fmt = new Intl.NumberFormat("en-CA", { maximumFractionDigits: 0 });
 /** Why the demolition question is asked, with what the site lookup found. */
 function existingReason(c: QuestionsRequest["components"][number]) {
   const e = c.existing!;
-  return `OpenStreetMap shows ${e.count} existing building${e.count === 1 ? "" : "s"} (about ${fmt.format(e.floorAreaM2)} m² of floor area) where ${c.name} goes. Demolition and abatement are priced unless you keep them.`;
+  return `The map shows ${e.count} existing building${e.count === 1 ? "" : "s"} (about ${fmt.format(e.floorAreaM2)} m² of floor area) where ${c.name} goes. Demolition and abatement are priced unless you keep them.`;
 }
 
 /** Every unanswered param, one per type + param ("soil for all roads"), best first. */

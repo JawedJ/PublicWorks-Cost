@@ -170,14 +170,14 @@ export function siteParamSuggestions(
     out.push({
       paramId: "lanes",
       value: lanes,
-      evidence: `OpenStreetMap: lanes=${tags.lanes}${where}`,
+      evidence: `Map data: lanes=${tags.lanes}${where}`,
     });
   const cls = tags.highway ? HIGHWAY_CLASS[tags.highway] : undefined;
   if (cls)
     out.push({
       paramId: "roadClass",
       value: cls,
-      evidence: `OpenStreetMap: highway=${tags.highway}${where}`,
+      evidence: `Map data: highway=${tags.highway}${where}`,
     });
   const sidewalk = tags.sidewalk;
   const sides =
@@ -192,7 +192,7 @@ export function siteParamSuggestions(
     out.push({
       paramId: "sidewalkSides",
       value: sides,
-      evidence: `OpenStreetMap: sidewalk=${sidewalk}${where}`,
+      evidence: `Map data: sidewalk=${sidewalk}${where}`,
     });
   return out;
 }

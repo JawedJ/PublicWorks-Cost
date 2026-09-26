@@ -140,7 +140,7 @@ describe("site context auto-fill (P6.3)", () => {
     expect(after.params.lanes).toBe(3);
     expect(after.paramMeta.lanes).toEqual({
       source: "site_context",
-      evidence: "OpenStreetMap: lanes=3 on Weber Street",
+      evidence: "Map data: lanes=3 on Weber Street",
     });
     expect(after.params.sidewalkSides).toBe(2);
     expect(after.paramMeta.sidewalkSides?.source).toBe("user");

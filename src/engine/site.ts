@@ -251,7 +251,6 @@ export function siteAllowances(
       Math.round(near.distanceM),
       L(" m from ", " m de "),
       near.name ?? L("it", "celui-ci"),
-      L(" (OpenStreetMap)", " (OpenStreetMap)"),
     );
     lines.push({
       id: `${c.id}:site-${r.kind}`,
@@ -313,7 +312,7 @@ export function siteAllowances(
           "Une rivière ou un ruisseau se trouve à moins de 100 m. Vérifiez la zone réglementée de l'office de protection de la nature ; un permis peut être requis. ",
         ),
         Math.round(water.distanceM),
-        L(" m away (OpenStreetMap).", " m (OpenStreetMap)."),
+        L(" m away.", " m."),
       ),
       componentIds: [c.id],
     });
