@@ -42,3 +42,31 @@ export function formatArea(
     ? `${num(locale, m2 / 10_000, 2)} ha`
     : `${num(locale, m2)} m²`;
 }
+
+/** Words around the measurements in tooltips (translated by the caller). */
+export type MeasureWords = { footprint: string; floorArea: string };
+
+/**
+ * A shape's key measurements for a tooltip: length for lines, area for areas;
+ * buildings give footprint and floor area.
+ */
+export function formatMeasurements(
+  m: {
+    lengthM?: number;
+    areaM2?: number;
+    footprintM2?: number;
+    grossFloorAreaM2?: number;
+  },
+  units: UnitSystem,
+  locale: string,
+  words: MeasureWords,
+): string {
+  if (m.footprintM2 !== undefined && m.grossFloorAreaM2 !== undefined)
+    return [
+      `${formatArea(m.footprintM2, units, locale)} ${words.footprint}`,
+      `${formatArea(m.grossFloorAreaM2, units, locale)} ${words.floorArea}`,
+    ].join(" · ");
+  if (m.lengthM !== undefined) return formatLength(m.lengthM, units, locale);
+  if (m.areaM2 !== undefined) return formatArea(m.areaM2, units, locale);
+  return "";
+}

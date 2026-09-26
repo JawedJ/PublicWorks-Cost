@@ -67,8 +67,10 @@ export function toolsForType(type: ComponentType): DrawTool[] {
       return LINE_TOOLS;
     case "park":
     case "building":
-    case "parking":
       return SHAPE_TOOLS;
+    case "parking":
+      // Parking lots are rectangles (per the human); rotate them with the handles.
+      return ["rectangle"];
     case "structure":
       // A pin, or a drawn span for bridges.
       return ["point", "line"];

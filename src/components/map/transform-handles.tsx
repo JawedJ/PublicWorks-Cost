@@ -67,11 +67,24 @@ function isTiny(box: Box) {
 type Gesture = {
   kind: HandleKind;
   componentId: string;
+  /** Scale keeps proportions (a rotated parking lot would otherwise skew out of a rectangle). */
+  keepShape: boolean;
   before: ComponentGeometry;
   box: Box;
   start: Position;
   latest: ComponentGeometry;
 };
+
+/** Whether the main shape's edges run along the map axes (an unrotated rectangle). */
+function axisAligned(g: ComponentGeometry): boolean {
+  const geom = g.primary.geometry;
+  if (geom.type !== "Polygon") return true;
+  const ring = geom.coordinates[0]!;
+  return ring.slice(1).every((p, i) => {
+    const q = ring[i]!;
+    return Math.abs(p[0] - q[0]) < 1e-7 || Math.abs(p[1] - q[1]) < 1e-7;
+  });
+}
 
 /** The transform a handle dragged from `g.start` to `now` applies. */
 function transformFor(g: Gesture, now: Position, shift: boolean): PositionFn {
@@ -218,6 +231,7 @@ export function TransformHandles() {
       gesture.current = {
         kind,
         componentId: c.id,
+        keepShape: c.type === "parking" && !axisAligned(c.geometry),
         before: c.geometry,
         box: b,
         start: [lng, lat],
@@ -229,7 +243,7 @@ export function TransformHandles() {
       const g = gesture.current;
       if (!g) return;
       const { lng, lat } = m.getLngLat();
-      const fn = transformFor(g, [lng, lat], shiftDown.current);
+      const fn = transformFor(g, [lng, lat], shiftDown.current || g.keepShape);
       g.latest = transformGeometry(g.before, fn);
       if (frame) return;
       frame = requestAnimationFrame(() => {

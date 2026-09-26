@@ -81,6 +81,10 @@
         "institutional": "Institutional",
         "other": "Other"
       }
+    },
+    "measureWords": {
+      "footprint": "footprint",
+      "floorArea": "floor area"
     }
   },
   "design": {

@@ -1,9 +1,13 @@
 "use client";
 
-import type { Map as MapLibreMap, MapMouseEvent } from "maplibre-gl";
+import type { Map as MapLibreMap, MapMouseEvent, Popup } from "maplibre-gl";
+import { useLocale } from "next-intl";
 import type { GeoJSONStoreFeatures, TerraDraw } from "terra-draw";
 import { useEffect, useRef, useState } from "react";
 import type { DrawTool } from "@/lib/geo/drawing";
+import { formatArea, formatLength } from "@/lib/geo/format";
+import { areaM2, lengthM } from "@/lib/geo/measure";
+import { intlLocale, type Locale } from "@/lib/i18n/routing";
 import { editableElements, pickElement, type ElementRef } from "@/lib/geo/edit";
 import { mapColors } from "@/lib/render/colors";
 import {
@@ -71,7 +75,11 @@ function parseEditId(
 const round = (n: number) => Number(n.toFixed(PRECISION));
 
 /** A shape as Terra Draw can edit it: outline only (holes are kept by the store), rounded. */
-function toEditFeature(id: string, shape: AnyFeature): GeoJSONStoreFeatures {
+function toEditFeature(
+  id: string,
+  shape: AnyFeature,
+  rectangle = false,
+): GeoJSONStoreFeatures {
   const g = shape.geometry;
   const geometry =
     g.type === "Point"
@@ -87,8 +95,9 @@ function toEditFeature(id: string, shape: AnyFeature): GeoJSONStoreFeatures {
               g.coordinates[0]!.map((p) => p.slice(0, 2).map(round)),
             ],
           };
-  const mode =
-    g.type === "Point"
+  const mode = rectangle
+    ? "rectangle"
+    : g.type === "Point"
       ? "point"
       : g.type === "LineString"
         ? "linestring"
@@ -203,6 +212,7 @@ async function createDraw(map: MapLibreMap): Promise<TerraDraw> {
         flags: {
           polygon: editFlags,
           linestring: editFlags,
+          rectangle: { feature: { draggable: true } },
           point: { feature: { draggable: true } },
         },
         // Delete, rotate and scale are handled by the edit bar and transform handles.
@@ -278,7 +288,9 @@ function syncEditFeatures(draw: TerraDraw, c: Component | undefined) {
   const wanted = new Map(
     (c ? editableElements(c) : []).map(({ ref, shape }) => {
       const id = editId(c!.id, ref);
-      return [id, toEditFeature(id, shape)] as const;
+      // A parking lot's outline stays a rectangle: moved whole, no vertex edits.
+      const rect = c!.type === "parking" && ref.role === "primary";
+      return [id, toEditFeature(id, shape, rect)] as const;
     }),
   );
   const existing = new Map(ownFeatures(draw).map((f) => [String(f.id), f]));
@@ -314,6 +326,27 @@ function selectInDraw(draw: TerraDraw, c: Component) {
       : undefined;
   const id = (wanted && ids.includes(wanted) ? wanted : undefined) ?? ids[0];
   if (id) draw.selectFeature(id);
+}
+
+/** The size of the shape being drawn (area, or length for lines), or "" if none yet. */
+function drawingSize(draw: TerraDraw, locale: string): string {
+  const shapes = draw.getSnapshot().filter((f) => !parseEditId(String(f.id)));
+  const units = useStore.getState().unitSystem;
+  const poly = shapes.findLast((f) => f.geometry.type === "Polygon");
+  const line = shapes.findLast((f) => f.geometry.type === "LineString");
+  try {
+    if (poly) {
+      const a = areaM2(poly as AnyFeature);
+      return a > 0 ? formatArea(a, units, locale) : "";
+    }
+    if (line) {
+      const l = lengthM(line as AnyFeature);
+      return l > 0 ? formatLength(l, units, locale) : "";
+    }
+  } catch {
+    // A shape mid-edit Turf can't measure yet.
+  }
+  return "";
 }
 
 /** Runs Terra Draw for the store's current `drawing` request, or edits the selected component. Renders nothing. */
@@ -447,6 +480,46 @@ export function DrawController() {
       draw.clear();
     }
   }, [drawing, editing, generation]);
+
+  // While drawing, the shape's area (or length) follows the cursor.
+  const locale = intlLocale[useLocale() as Locale];
+  useEffect(() => {
+    if (!map || !drawing) return;
+    let tip: Popup | null = null;
+    let cancelled = false;
+    let at: MapMouseEvent["lngLat"] | null = null;
+    const update = async () => {
+      const draw = drawRef.current;
+      const text = draw?.enabled && at ? drawingSize(draw, locale) : "";
+      if (!text) return void tip?.remove();
+      if (!tip) {
+        const { Popup } = await import("maplibre-gl");
+        if (cancelled) return;
+        tip = new Popup({
+          closeButton: false,
+          closeOnClick: false,
+          offset: [14, 14],
+          anchor: "top-left",
+          className: "pw-tooltip",
+        });
+      }
+      tip.setLngLat(at!).setText(text).addTo(map);
+    };
+    const onMove = (e: MapMouseEvent) => {
+      at = e.lngLat;
+      void update();
+    };
+    const onChange = () => void update();
+    const draw = drawRef.current;
+    map.on("mousemove", onMove);
+    draw?.on("change", onChange);
+    return () => {
+      cancelled = true;
+      map.off("mousemove", onMove);
+      draw?.off("change", onChange);
+      tip?.remove();
+    };
+  }, [map, drawing, generation, locale]);
 
   // Escape cancels drawing, or clears the selection.
   useEffect(() => {

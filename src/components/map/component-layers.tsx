@@ -10,6 +10,8 @@ import type {
 import { useEffect, useMemo, useRef } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { componentBounds } from "@/lib/geo/bounds";
+import { formatMeasurements } from "@/lib/geo/format";
+import { measureComponent } from "@/lib/geo/measure";
 import { useEstimate } from "@/lib/estimate/useEstimate";
 import { intlLocale, type Locale } from "@/lib/i18n/routing";
 import { componentColor, mapColors } from "@/lib/render/colors";
@@ -280,7 +282,12 @@ export function ComponentLayers() {
   const locale = intlLocale[useLocale() as Locale];
   const tooltip = useRef<Popup | null>(null);
   const costRef = useRef<CostInfo | null>(null);
-  const labels = useRef({ money: (n: number) => String(n), noCost: "" });
+  const labels = useRef({
+    money: (n: number) => String(n),
+    noCost: "",
+    locale: "en-CA",
+    measureWords: { footprint: "", floorArea: "" },
+  });
   useEffect(() => {
     const fmt = new Intl.NumberFormat(locale, {
       style: "currency",
@@ -288,7 +295,15 @@ export function ComponentLayers() {
       notation: "compact",
       maximumFractionDigits: 1,
     });
-    labels.current = { money: (n) => fmt.format(n), noCost: t("noCost") };
+    labels.current = {
+      money: (n) => fmt.format(n),
+      noCost: t("noCost"),
+      locale,
+      measureWords: {
+        footprint: t("measureWords.footprint"),
+        floorArea: t("measureWords.floorArea"),
+      },
+    };
   }, [locale, t]);
   const components = useStore((s) => s.components);
   const areaBoundary = useStore((s) => s.areaBoundary);
@@ -382,9 +397,16 @@ export function ComponentLayers() {
       const c = useStore.getState().components.find((x) => x.id === id);
       if (!c) return void tooltip.current?.remove();
       const info = costRef.current?.get(c.id);
-      const text = info
-        ? `${c.name} · ${labels.current.money(info.p50)} · ${Math.round(info.share * 100)}%`
-        : `${c.name} · ${labels.current.noCost}`;
+      const size = formatMeasurements(
+        measureComponent(c),
+        useStore.getState().unitSystem,
+        labels.current.locale,
+        labels.current.measureWords,
+      );
+      const cost = info
+        ? `${labels.current.money(info.p50)} · ${Math.round(info.share * 100)}%`
+        : labels.current.noCost;
+      const text = [c.name, size, cost].filter(Boolean).join(" · ");
       if (!tooltip.current) {
         const { Popup } = await import("maplibre-gl");
         tooltip.current = new Popup({

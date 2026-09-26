@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatArea, formatLength } from "./format";
+import { formatArea, formatLength, formatMeasurements } from "./format";
 
 describe("format", () => {
   it("formats metric lengths and areas", () => {
@@ -16,5 +16,26 @@ describe("format", () => {
   });
   it("uses the French decimal comma", () => {
     expect(formatLength(1520, "metric", "fr-CA")).toBe("1,52 km");
+  });
+});
+
+describe("formatMeasurements", () => {
+  const words = { footprint: "footprint", floorArea: "floor area" };
+  it("gives buildings footprint and floor area, lines length, areas area", () => {
+    expect(
+      formatMeasurements(
+        { areaM2: 2000, footprintM2: 1200, grossFloorAreaM2: 2400 },
+        "metric",
+        "en-CA",
+        words,
+      ),
+    ).toBe("1,200 m² footprint · 2,400 m² floor area");
+    expect(formatMeasurements({ lengthM: 420 }, "metric", "en-CA", words)).toBe(
+      "420 m",
+    );
+    expect(
+      formatMeasurements({ areaM2: 15000 }, "metric", "en-CA", words),
+    ).toBe("1.5 ha");
+    expect(formatMeasurements({}, "metric", "en-CA", words)).toBe("");
   });
 });
