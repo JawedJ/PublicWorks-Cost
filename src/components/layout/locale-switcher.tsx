@@ -10,7 +10,8 @@ export function LocaleSwitcher() {
   const t = useTranslations("layout");
   const locale = useLocale();
   const pathname = usePathname();
-  const other = routing.locales.find((l) => l !== locale) ?? routing.defaultLocale;
+  const other =
+    routing.locales.find((l) => l !== locale) ?? routing.defaultLocale;
 
   return (
     <Button variant="ghost" size="sm" asChild>
