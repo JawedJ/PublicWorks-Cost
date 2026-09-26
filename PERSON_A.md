@@ -6,11 +6,11 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Current state
 
-- **Current task:** P1.2
-- **Status:** in progress   <!-- not started | in progress | blocked | at sync point -->
-- **Next action:** P1.2 geocoding search with fly-to.
-- **Blockers / needs from B:** P1.3 needs B's schemas (`Component`, `ComponentGeometry`) on `main`.
-- **Last updated:** 2026-09-26
+- **Current task:** P1.3
+- **Status:** not started   <!-- not started | in progress | blocked | at sync point -->
+- **Next action:** P1.3: add components (from B's `src/lib/schemas` `Component` / `ComponentGeometry`) to `designSlice.ts`: add/remove/duplicate, planned/drawn, user/generated, undo/redo. Then P1.4 component list panel.
+- **Blockers / needs from B:** none (B's schemas are on `main` as of P2.1).
+- **Last updated:** 2026-09-26 (P1.1 + P1.2 merged to `main` and live on Vercel)
 
 ## Handoff notes
 
@@ -22,6 +22,8 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 - Dark mode follows the OS; a `.dark` / `.light` class on `<html>` forces it. Map colours are tokens: `water`, `park`, `pavement`, `building`, `warning`, `sample`. Use the `figures` utility for tabular numerals.
 - Store: `designSlice` currently has selection, view mode, colour by cost, units. Components + undo/redo come in P1.3 once B's schemas exist.
 - MapLibre 6: its CSS sets `position: relative` on the container, so size it with `h-full w-full`, not `absolute inset-0`. The worker must be served from `/maplibre/` (see `setWorkerUrl` in `map-view.tsx`).
+- Commits: plain `P1.3 [A]: …` messages under the user's name, **no Co-Authored-By trailer**.
+- Visual checks: no Chrome on this Mac. Use Playwright Chromium (already downloaded to `~/Library/Caches/ms-playwright`): in a scratch folder `pnpm add playwright`, then a script that opens `http://localhost:3123/en/workspace` (after `pnpm build && pnpm start -p 3123`) with launch args `--use-angle=swiftshader --enable-unsafe-swiftshader` and takes a screenshot.
 - `TopBar` accepts `children` for workspace actions (New project, Download project file) to be added later.
 
 ## Requests to Person B
