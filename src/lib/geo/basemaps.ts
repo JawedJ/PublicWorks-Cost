@@ -16,6 +16,3 @@ export function basemapStyleUrl(id: BasemapId): string {
   const map = id === "satellite" ? "hybrid" : "streets-v2";
   return `https://api.maptiler.com/maps/${map}/style.json?key=${maptilerKey}`;
 }
-
-/** Default view: Kitchener–Waterloo, Ontario. */
-export const defaultView = { lng: -80.4928, lat: 43.4513, zoom: 13 };

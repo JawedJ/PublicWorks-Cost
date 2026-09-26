@@ -3,7 +3,11 @@
 import { ArrowRight, Loader2, Map as MapIcon, Sparkles } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
-import { applyDraft, requestParse } from "@/components/build-list/build-list";
+import {
+  applyDraft,
+  locateMunicipality,
+  requestParse,
+} from "@/components/build-list/build-list";
 import { BuildListReview } from "@/components/build-list/build-list-review";
 import { OpenProjectButton } from "@/components/project-file/project-file-buttons";
 import { Button } from "@/components/ui/button";
@@ -42,6 +46,7 @@ export function LandingStart() {
         source={parsed.source}
         onConfirm={(d) => {
           applyDraft(d);
+          void locateMunicipality(locale);
           router.push("/workspace");
         }}
         onBack={() => setParsed(null)}

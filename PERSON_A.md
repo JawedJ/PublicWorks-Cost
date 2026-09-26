@@ -161,6 +161,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 | UI primitives | `src/components/ui/button.tsx`, `dropdown-menu.tsx` (shadcn) | |
 | Pages | `src/app/[locale]/page.tsx` (landing placeholder), `src/app/[locale]/workspace/page.tsx` | |
 | Place search | `src/components/map/geocoder.tsx`, `src/lib/geo/geocode.ts` (+ test) | MapTiler search-as-you-type (Canada, current language); Photon (OSM) without a key; suggestions as you type from 2 characters; 6 s timeout |
+| Municipality → map & region | `src/components/build-list/build-list.ts` (`locateMunicipality`), `src/lib/geo/region.ts` (+ test), `src/components/map/map-view.tsx` | On build-list confirm the municipality is geocoded; the map opens at / flies to `project.location`; region set by place-name match (Ontario regions only), else unchanged |
 | Map | `src/components/map/map-view.tsx`, `map-context.tsx` (`useMap()`), `basemap-toggle.tsx`, `workspace-shell.tsx`; `src/lib/geo/basemaps.ts` | MapTiler streets/hybrid, OpenFreeMap positron without key; worker copied to `public/maplibre` by `pnpm copy:maplibre` (runs in dev/build) |
 
 ## Environment

@@ -4,11 +4,7 @@ import "maplibre-gl/dist/maplibre-gl.css";
 import type { Map as MapLibreMap, ScaleControl } from "maplibre-gl";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
-import {
-  basemapStyleUrl,
-  defaultView,
-  type BasemapId,
-} from "@/lib/geo/basemaps";
+import { basemapStyleUrl, type BasemapId } from "@/lib/geo/basemaps";
 import { useStore } from "@/lib/store/store";
 import { BasemapToggle } from "./basemap-toggle";
 import { useMap, useSetMap } from "./map-context";
@@ -29,6 +25,11 @@ export function MapView({ children }: { children?: React.ReactNode }) {
   const loadedMap = useMap();
   const unitSystem = useStore((s) => s.unitSystem);
   const viewMode = useStore((s) => s.viewMode);
+  const location = useStore((s) => s.project.location);
+  const projectId = useStore((s) => s.project.id);
+  // The location the map was opened at or last moved to, and for which project.
+  const shownLocation = useRef(location);
+  const shownProject = useRef(projectId);
   const [basemap, setBasemap] = useState<BasemapId>("streets");
   const [failed, setFailed] = useState(false);
   const [rotating, setRotating] = useState(false);
@@ -46,8 +47,9 @@ export function MapView({ children }: { children?: React.ReactNode }) {
       map = new maplibregl.Map({
         container: containerRef.current,
         style: basemapStyleUrl("streets"),
-        center: [defaultView.lng, defaultView.lat],
-        zoom: defaultView.zoom,
+        // Where the project is (its municipality, once found; SPEC 12 step 3).
+        center: [shownLocation.current.lng, shownLocation.current.lat],
+        zoom: shownLocation.current.zoom,
         attributionControl: { compact: true },
         locale: {
           "NavigationControl.ZoomIn": t("zoomIn"),
@@ -89,6 +91,20 @@ export function MapView({ children }: { children?: React.ReactNode }) {
     // The map is created once; locale-dependent labels don't recreate it.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setMap]);
+
+  // The project moved (e.g. its municipality was found after the map opened): follow it.
+  // Another project opened here instead is framed by its components (ComponentLayers).
+  useEffect(() => {
+    if (!loadedMap || location === shownLocation.current) return;
+    const sameProject = projectId === shownProject.current;
+    shownLocation.current = location;
+    shownProject.current = projectId;
+    if (!sameProject) return;
+    loadedMap.flyTo({
+      center: [location.lng, location.lat],
+      zoom: location.zoom,
+    });
+  }, [loadedMap, location, projectId]);
 
   useEffect(() => {
     scaleRef.current?.setUnit(unitSystem);
