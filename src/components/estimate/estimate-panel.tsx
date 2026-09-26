@@ -1,20 +1,26 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { scopeEstimate } from "@/lib/estimate/scope";
 import { useEstimate } from "@/lib/estimate/useEstimate";
 import { useStore } from "@/lib/store/store";
 import { EstimateTab } from "./estimate-tab";
+import { LineItemsTab } from "./line-items-tab";
+
+const TABS = ["estimate", "lineItems"] as const;
+type Tab = (typeof TABS)[number];
 
 // Right panel. A mounts it in the workspace layout (P3.2).
 // Scope (P3.5) = the shared selection: whole project, or the selected component.
-// Tabs: Estimate (P3.6); Line items (P3.10) and Inputs (P3.11) come next.
+// Tabs: Estimate (P3.6), Line items (P3.10); Inputs (P3.11) comes next.
 
 export function EstimatePanel() {
   const t = useTranslations("estimate");
   const { estimate, computing } = useEstimate();
   const selectComponent = useStore((s) => s.selectComponent);
   const selectedId = useStore((s) => s.selectedComponentId);
+  const [tab, setTab] = useState<Tab>("estimate");
 
   if (!estimate || estimate.components.length === 0) {
     return (
@@ -42,7 +48,37 @@ export function EstimatePanel() {
           ))}
         </select>
       </label>
-      <EstimateTab estimate={estimate} scoped={scoped} />
+      <div
+        role="tablist"
+        aria-label={t("tabs.label")}
+        className="flex gap-1 border-b"
+      >
+        {TABS.map((id) => (
+          <button
+            key={id}
+            type="button"
+            role="tab"
+            id={`tab-${id}`}
+            aria-selected={tab === id}
+            aria-controls={`panel-${id}`}
+            className={`-mb-px border-b-2 px-3 py-1.5 text-sm ${
+              tab === id
+                ? "border-primary font-medium"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            }`}
+            onClick={() => setTab(id)}
+          >
+            {t(`tabs.${id}`)}
+          </button>
+        ))}
+      </div>
+      <div role="tabpanel" id={`panel-${tab}`} aria-labelledby={`tab-${tab}`}>
+        {tab === "estimate" ? (
+          <EstimateTab estimate={estimate} scoped={scoped} />
+        ) : (
+          <LineItemsTab estimate={estimate} scoped={scoped} />
+        )}
+      </div>
     </section>
   );
 }

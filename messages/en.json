@@ -242,6 +242,11 @@
       "high": "High",
       "warning": "Warning",
       "info": "Info"
+    },
+    "tabs": {
+      "label": "Estimate views",
+      "estimate": "Estimate",
+      "lineItems": "Line items"
     }
   },
   "visuals": {
@@ -293,5 +298,47 @@
       "custom": "Custom element"
     },
     "features": "Features"
+  },
+  "lineItems": {
+    "empty": "No line items for this scope yet.",
+    "note": "Edit a quantity or unit price to override it. Overrides replace the calculated value and are marked; reset to go back.",
+    "projectLevel": "Project-wide items",
+    "resetAll": "Reset all",
+    "reset": "Reset",
+    "item": "Item",
+    "quantity": "Quantity",
+    "unitPrice": "Unit price",
+    "total": "Total",
+    "editQuantity": "Quantity for {item}",
+    "editUnitPrice": "Unit price for {item}",
+    "lowConfidence": "Low confidence",
+    "units": {
+      "m": "m",
+      "m2": "m²",
+      "m3": "m³",
+      "ha": "ha",
+      "t": "t",
+      "each": "each",
+      "lump": "lump sum",
+      "month": "month"
+    },
+    "categories": {
+      "earthworks": "Earthworks",
+      "paving": "Paving",
+      "concrete": "Concrete",
+      "watermain": "Watermain",
+      "sewer": "Sewers",
+      "lighting": "Lighting",
+      "landscaping": "Landscaping",
+      "park_features": "Park features",
+      "building": "Building",
+      "site_works": "Site works",
+      "structures": "Structures",
+      "traffic_control": "Traffic control",
+      "demolition": "Demolition",
+      "custom": "Custom",
+      "mobilization": "Mobilization",
+      "general": "General"
+    }
   }
 }

@@ -6,9 +6,9 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Current state
 
-- **Current task:** P3.10 line items tab (P3.6, P3.9b done)
+- **Current task:** P4.1–P4.2 project files (P3.6, P3.9b, P3.10 done)
 - **Status:** not started   <!-- not started | in progress | blocked | at sync point -->
-- **Next action:** P3.10, then P4.1–P4.2 project files, P3.7/P3.8/P3.11/B.3, then zoning (Waterloo only: Z.1, Z.2, Z.5, Z.6).
+- **Next action:** P4.1–P4.2 project files, then P3.7/P3.8/P3.11/B.3, then zoning (Waterloo only: Z.1, Z.2, Z.5, Z.6).
 - **Blockers / needs from A:** none
 - **Last updated:** 2026-09-26 (P3.6 Estimate tab)
 
@@ -16,7 +16,8 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 > Where an unfinished task stopped, gotchas, things to verify. Replace each session.
 
-- P3.6: `<EstimateTab estimate scoped/>` in `src/components/estimate/estimate-tab.tsx`, rendered by `EstimatePanel` under the scope selector (no tab bar yet; add it with P3.10). Shows P50 + a P10–P90 bar with the P50 marker, class badge with accuracy range (`CLASS_RANGE` now exported from `@/engine`) and up to 5 improvement hints (click selects that component), and for the whole project: contingency and overrun risk cards plus the per-component list. Component scope shows its share instead. `scopeEstimate` now also returns `hints`. P3.9b: `<FlagsList flags names?/>` in `flags-list.tsx`: severity-sorted (high → info) with icon, explanation, cost effect; for the whole project it names the component(s) (or "Whole project") and clicking a single-component flag scopes the panel to it.
+- P3.10: `EstimatePanel` now has a tab bar (Estimate, Line items; add Inputs in P3.11 to `TABS`). `<LineItemsTab>` in `line-items-tab.tsx`: grouped by component (estimate order, project-level items last, read-only), then category (schema order); quantity and unit price edit in place (blur/Enter commits, Escape cancels) via `setOverride(componentId, kind, localId)` where `localId` = line id minus `${componentId}:`; overridden cells are highlighted with a Reset link, plus "Reset all" per component. Strings under `lineItems`. `tabs.test.ts` renders both tabs with Northgate through `renderToStaticMarkup` and fails on missing strings.
+- P3.6: `<EstimateTab estimate scoped/>` in `src/components/estimate/estimate-tab.tsx`. Shows P50 + a P10–P90 bar with the P50 marker, class badge with accuracy range (`CLASS_RANGE` now exported from `@/engine`) and up to 5 improvement hints (click selects that component), and for the whole project: contingency and overrun risk cards plus the per-component list. Component scope shows its share instead. `scopeEstimate` now also returns `hints`. P3.9b: `<FlagsList flags names?/>` in `flags-list.tsx`: severity-sorted (high → info) with icon, explanation, cost effect; for the whole project it names the component(s) (or "Whole project") and clicking a single-component flag scopes the panel to it.
 - P7.1–P7.3 (first pass, "get A unblocked"): `src/lib/ai/` has the `AIProvider` interface, `AIUnavailableError`, `noneProvider`, and a REST `createGeminiProvider` (JSON schema from zod, validated, 1 retry, 20 s timeout, 429 → `rate_limited`). `getAIProvider()` reads env; no key → none. `parsePrompt()` in `src/lib/ai/parse.ts` validates types/subtypes/params against the engine catalogs + A's size hints (`storeys`, `areaM2`, `lengthM`; `gfaOverrideM2` is a real param), expands counts (max 20), caches AI results in memory, and falls back to A's `keywordParse`. Route `POST /api/ai/parse` `{ prompt, locale }` → `ParseResponse` (`src/lib/schemas/draft.ts`). Client: `requestParse()` (never throws; local fallback) + `applyDraft()` in `src/components/build-list/build-list.ts`, `<BuildListReview>` in `build-list-review.tsx`, strings under `buildList`. Tested live with Gemini: parse uses the fast model (`GEMINI_MODEL_FAST`, default `gemini-flash-lite-latest`, ~2–3 s); `gemini-flash-latest` (3.8 Flash, thinking) took >20 s. Today's date is passed in so "next spring" resolves. Park amenities come back as `features` (park-features.json kinds) on the park item. **Not done yet (polish):** AnthropicProvider; spatial hints are text only; features aren't placed by `applyDraft` (needs A's layout); keyword fallback splits "streets with watermains and sewers" into separate components.
 - P3.5: scope = A's `selectedComponentId` (no separate state). Tabs get scoped range, class, line items and flags from `scopeEstimate(estimate, selectedId)` in `src/lib/estimate/scope.ts`; an unknown id falls back to whole project. Contingency and the component list show only for the whole project.
 - P2.1 schemas are merged to `main`.
@@ -80,7 +81,7 @@ While A scaffolds, draft these locally; commit right after A's scaffold lands on
 - [ ] P3.7 Market evidence card: StatCan price trend, matched CanadaBuys awards with links, optional municipal tenders, sources footnote
 - [ ] P3.8 Per-component breakdown, distribution chart, category breakdown, drivers tornado, per-unit metrics
 - [x] P3.9b Flags list in the panel (A owns the map markers)
-- [ ] P3.10 Line items tab: grouped editable table, sources, overrides, reset
+- [x] P3.10 Line items tab: grouped editable table, sources, overrides, reset
 - [ ] P3.11 Inputs tab: parameters per component with source badges; P50 and share for A's component list
 - [ ] B.3 `CustomPricingForm` for custom elements (matched / own rate), mounted by A's Add menu
 - [~] P7.1 AI provider interface + GeminiProvider (default), AnthropicProvider, NoneProvider; zod structured output, retry, timeout, 429 handling, per-IP rate limit, caching
@@ -142,6 +143,6 @@ Flags only; never block, never change the estimate. Do Waterloo first (demo city
 | CanadaBuys awards (real data, evidence only) | `scripts/fetch-canadabuys.ts` → `src/data/public/canadabuys-awards.json`; schema in `src/lib/schemas/public-data.ts` | `pnpm data:canadabuys`; `pnpm data:refresh` runs all public data scripts; OGL-Canada |
 | Cost engine: component templates | `src/engine/types.ts`, `params.ts`, `text.ts`, `index.ts` (`computeEstimate`), `escalation.ts`, `rng.ts`, `templates/*.ts`; tests in `src/engine/__tests__/` | Pure TS, SPEC 6–7 |
 | Northgate fixtures (sample project + estimate for A's views) | `src/lib/fixtures/` | `import { northgateProject, northgateEstimate } from "@/lib/fixtures"` |
-| Estimate panel + scope selector (whole project / one component), Estimate tab (range bar, class + hints, contingency, overrun risk), flags list | `src/components/estimate/estimate-panel.tsx`, `estimate-tab.tsx`, `flags-list.tsx`, `src/lib/estimate/scope.ts` (+ test), `useEstimate.ts` | Scope follows the shared selection |
+| Estimate panel + scope selector (whole project / one component), Estimate tab (range bar, class + hints, contingency, overrun risk), flags list, Line items tab (editable overrides) | `src/components/estimate/estimate-panel.tsx`, `estimate-tab.tsx`, `flags-list.tsx`, `line-items-tab.tsx`, `tabs.test.ts`, `src/lib/estimate/scope.ts` (+ test), `useEstimate.ts` | Scope follows the shared selection |
 | AI provider + prompt parse (build list) | `src/lib/ai/` (`provider.ts`, `gemini.ts`, `parse.ts` + test, `index.ts`), `src/app/api/ai/parse/route.ts`, `src/lib/schemas/draft.ts` | No key → keyword fallback |
 | Build list review (creation flow step 2) | `src/components/build-list/` | A mounts it in P7.4 |
