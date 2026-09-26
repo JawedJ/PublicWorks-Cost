@@ -16,7 +16,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -114,6 +114,22 @@ export function DrawToolbar() {
   const [customName, setCustomName] = useState("");
 
   const planned = selected?.status === "planned" ? selected : undefined;
+  // Selecting an undrawn component points the toolbar at it and starts drawing it.
+  const [pointedAt, setPointedAt] = useState<string | undefined>();
+  if (planned?.id !== pointedAt) {
+    setPointedAt(planned?.id);
+    if (planned) setChoice({ kind: "planned" });
+  }
+  useEffect(() => {
+    if (!planned) return;
+    const store = useStore.getState();
+    if (store.drawing || store.smartPlacing) return;
+    const target = { kind: "planned", componentId: planned.id } as const;
+    const first = toolsForTarget(target, store.components)[0];
+    if (first) store.startDrawing({ target, tool: first });
+    // Only when a different planned component becomes selected.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [planned?.id]);
   const building =
     selected?.type === "building" && selected.geometry ? selected : undefined;
   const holed = selected && holeTarget(selected) ? selected : undefined;

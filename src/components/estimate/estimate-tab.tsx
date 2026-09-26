@@ -107,15 +107,15 @@ export function EstimateTab({ estimate, scoped, components, region }: Props) {
 
       {whole && <ComponentBreakdown estimate={estimate} />}
 
+      {whole && <DistributionChart distribution={estimate.distribution} />}
+      <CategoryBreakdown lineItems={scoped.lineItems} />
+
       <MarketEvidenceCard
         estimate={estimate}
         components={components}
         componentId={scoped.component?.componentId ?? null}
         region={region}
       />
-
-      {whole && <DistributionChart distribution={estimate.distribution} />}
-      <CategoryBreakdown lineItems={scoped.lineItems} />
 
       <FlagsList flags={scoped.flags} names={whole ? names : undefined} />
 
