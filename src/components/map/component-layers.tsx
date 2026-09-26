@@ -17,6 +17,7 @@ import { useStore } from "@/lib/store/store";
 import { DRAW_LAYER_PREFIX, justFinishedDrawing } from "./draw-controller";
 import { useMap } from "./map-context";
 import { FlagMarkers } from "./flag-markers";
+import { PlanLayers } from "./plan-layers";
 import { MeasurementLabels } from "./measurement-labels";
 import { HANDLE_CLASS } from "./transform-handles";
 
@@ -69,6 +70,10 @@ function toFeatures(
         color: cost
           ? costColor(cost.get(c.id)?.share ?? 0, maxShare)
           : componentColor[c.type],
+        // Drawn by the procedural plan instead (roads, parks, features, sections); still clickable.
+        plan:
+          !cost &&
+          (role !== "primary" || c.type === "road" || c.type === "park"),
         ...extra,
       },
     });
@@ -133,7 +138,14 @@ function addLayers(map: MapLibreMap) {
       filter: ["all", isPolygon, ["!=", ["get", "role"], "section"]],
       paint: {
         "fill-color": ["get", "color"],
-        "fill-opacity": ["case", ["==", ["get", "role"], "feature"], 0.5, 0.3],
+        "fill-opacity": [
+          "case",
+          ["get", "plan"],
+          0,
+          ["==", ["get", "role"], "feature"],
+          0.5,
+          0.3,
+        ],
       },
     },
     beforeId,
@@ -144,7 +156,10 @@ function addLayers(map: MapLibreMap) {
       type: "fill",
       source: SOURCE,
       filter: ["all", isPolygon, ["==", ["get", "role"], "section"]],
-      paint: { "fill-color": ["get", "color"], "fill-opacity": 0.85 },
+      paint: {
+        "fill-color": ["get", "color"],
+        "fill-opacity": ["case", ["get", "plan"], 0, 0.85],
+      },
     },
     beforeId,
   );
@@ -154,7 +169,11 @@ function addLayers(map: MapLibreMap) {
       type: "line",
       source: SOURCE,
       filter: isPolygon,
-      paint: { "line-color": ["get", "color"], "line-width": 1.2 },
+      paint: {
+        "line-color": ["get", "color"],
+        "line-width": 1.2,
+        "line-opacity": ["case", ["get", "plan"], 0, 1],
+      },
     },
     beforeId,
   );
@@ -177,7 +196,7 @@ function addLayers(map: MapLibreMap) {
           19,
           ["case", ["==", ["get", "role"], "primary"], 60, 4],
         ],
-        "line-opacity": 0.85,
+        "line-opacity": ["case", ["get", "plan"], 0, 0.85],
       },
     },
     beforeId,
@@ -411,6 +430,7 @@ export function ComponentLayers() {
 
   return (
     <>
+      <PlanLayers map={map} beforeId="pw-area" />
       <MeasurementLabels map={map} />
       <FlagMarkers map={map} estimate={estimate} />
     </>
