@@ -71,6 +71,9 @@ export function SmartPlacer() {
       useStore
         .getState()
         .placeSmart([e.lngLat.lng, e.lngLat.lat], nearestStreetBearing(map, e));
+      // Placed from far out it would be a dot: zoom in so it can be seen and edited.
+      if (map.getZoom() < 15)
+        map.easeTo({ center: e.lngLat, zoom: 16, duration: 600 });
     };
     map.once("click", onClick);
     return () => {

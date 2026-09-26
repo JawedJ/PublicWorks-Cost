@@ -452,7 +452,7 @@ export const createDesignSlice: StateCreator<Store, [], [], DesignSlice> = (
         !toolsForTarget(drawing.target, get().components).includes(drawing.tool)
       )
         return;
-      set({ drawing, drawNotice: null });
+      set({ drawing, drawNotice: null, smartPlacing: null });
     },
     cancelDrawing: () => set({ drawing: null }),
 

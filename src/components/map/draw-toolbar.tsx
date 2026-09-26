@@ -3,32 +3,26 @@
 import {
   ChevronDown,
   Circle,
+  CircleDashed,
+  Frame,
   Lasso,
+  Layers,
   Magnet,
   MapPin,
   Pentagon,
   Plus,
-  WandSparkles,
+  Search,
   Signature,
   Spline,
   Square,
+  Trees,
+  WandSparkles,
   X,
   type LucideIcon,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import {
   ALL_TOOLS,
   toolsForTarget,
@@ -41,6 +35,7 @@ import { templates } from "@/engine/templates";
 import type { Component, ComponentType } from "@/lib/schemas";
 import { useStore } from "@/lib/store/store";
 import { cn } from "@/lib/utils";
+import { typeIcon } from "./type-icons";
 
 /** The ellipse tool: a circle icon squashed sideways. */
 function EllipseIcon(props: React.ComponentProps<LucideIcon>) {
@@ -63,16 +58,16 @@ const toolIcon: Record<DrawTool, LucideIcon | typeof EllipseIcon> = {
   point: MapPin,
 };
 
-/** Types offered in the Add menu, in order. */
+/** Types offered in the Add picker, in order. */
 const TYPES: Exclude<ComponentType, "custom">[] = [
-  "road",
-  "park",
   "building",
-  "structure",
+  "park",
+  "road",
   "parking",
+  "structure",
 ];
 
-/** What the Add menu has chosen; turned into a `DrawTarget` against the current selection. */
+/** What the Add picker has chosen; turned into a `DrawTarget` against the current selection. */
 type Choice =
   | { kind: "new"; type: ComponentType; subtype: string }
   | { kind: "custom" }
@@ -83,20 +78,33 @@ type Choice =
   | { kind: "section" }
   | { kind: "hole" };
 
-const DEFAULT_CHOICE: Choice = {
-  kind: "new",
-  type: "road",
-  subtype: "road_reconstruction",
-};
+function TypeIcon({ type }: { type: ComponentType }) {
+  const I = typeIcon[type];
+  return <I />;
+}
 
-/** Components that can hold placed features (a park's playground, a building's parking). */
+/** Components that can hold placed features (a park's playground). */
 function featureHost(c: Component | undefined) {
   return c?.geometry && (c.type === "park" || c.type === "building")
     ? c
     : undefined;
 }
 
-/** The Add menu: pick what to draw (any type and subtype, park features, custom elements), then a shape tool. */
+type PickerItem = {
+  key: string;
+  label: string;
+  group: string;
+  icon: LucideIcon | typeof EllipseIcon;
+  choice: Choice;
+};
+
+/**
+ * Adding things to the design (P1.5, reworked for ease of use): one "Add" button
+ * opens a searchable picker. Buildings, parks, lots and structures drop with one
+ * click on the map at a typical size (then reshape freely); roads, custom elements
+ * and parts of a selected component start drawing. While adding, a compact bar
+ * shows what is being added, the other ways to draw it, and cancel.
+ */
 export function DrawToolbar() {
   const t = useTranslations("design.draw");
   const locale = useLocale() as "en" | "fr";
@@ -110,8 +118,13 @@ export function DrawToolbar() {
   const selected = useStore((s) =>
     s.components.find((c) => c.id === s.selectedComponentId),
   );
-  const [choice, setChoice] = useState<Choice>(DEFAULT_CHOICE);
+  const [choice, setChoice] = useState<Choice | null>(null);
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  /** A custom element or feature waiting for its name. */
+  const [naming, setNaming] = useState<Choice | null>(null);
   const [customName, setCustomName] = useState("");
+  const panel = useRef<HTMLDivElement>(null);
 
   const planned = selected?.status === "planned" ? selected : undefined;
   // Selecting an undrawn component points the toolbar at it and starts drawing it.
@@ -130,6 +143,30 @@ export function DrawToolbar() {
     // Only when a different planned component becomes selected.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [planned?.id]);
+
+  // Back to the plain "Add" button once the shape is placed or cancelled.
+  const busy = Boolean(drawing || smartPlacing);
+  const wasBusy = useRef(false);
+  useEffect(() => {
+    if (wasBusy.current && !busy) setChoice(null);
+    wasBusy.current = busy;
+  }, [busy]);
+
+  // Close the picker on a click outside it or Esc.
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      if (!panel.current?.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    document.addEventListener("mousedown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
   const building =
     selected?.type === "building" && selected.geometry ? selected : undefined;
   const holed = selected && holeTarget(selected) ? selected : undefined;
@@ -147,7 +184,7 @@ export function DrawToolbar() {
     )[kind]?.label[locale] ?? kind;
   const name = customName.trim();
 
-  function targetFor(c: Choice): DrawTarget | null {
+  function targetFor(c: Choice, customLabel = name): DrawTarget | null {
     switch (c.kind) {
       case "area":
         return { kind: "area" };
@@ -173,17 +210,22 @@ export function DrawToolbar() {
             }
           : null;
       case "customFeature":
-        return host && name
+        return host && customLabel
           ? {
               kind: "feature",
               componentId: host.id,
               featureKind: "custom",
-              customLabel: name,
+              customLabel,
             }
           : null;
       case "custom":
-        return name
-          ? { kind: "new", type: "custom", subtype: "custom", name }
+        return customLabel
+          ? {
+              kind: "new",
+              type: "custom",
+              subtype: "custom",
+              name: customLabel,
+            }
           : null;
       case "new": {
         const n = components.filter((x) => x.subtype === c.subtype).length + 1;
@@ -197,23 +239,6 @@ export function DrawToolbar() {
     }
   }
 
-  const needsName = choice.kind === "custom" || choice.kind === "customFeature";
-  // A contextual choice falls back to a new road when its component is no longer selected.
-  const contextual = !needsName && !targetFor(choice);
-  const active = contextual ? DEFAULT_CHOICE : choice;
-  const target = targetFor(active);
-  const smartTarget =
-    target &&
-    (target.kind === "new" || target.kind === "planned") &&
-    !(target.kind === "new" && target.type === "custom") &&
-    !(target.kind === "planned" && planned?.type === "custom")
-      ? target
-      : null;
-  const tools = toolsForTarget(
-    target ?? { kind: "new", type: "custom", subtype: "custom", name: "" },
-    components,
-  );
-
   function label(c: Choice): string {
     switch (c.kind) {
       case "area":
@@ -225,237 +250,377 @@ export function DrawToolbar() {
       case "hole":
         return t("targets.hole", { name: holed?.name ?? "" });
       case "feature":
-        return t("targets.feature", {
-          feature: featureLabel(c.featureKind),
-          name: host?.name ?? "",
-        });
+        return featureLabel(c.featureKind);
       case "customFeature":
-        return t("targets.customFeature", { name: host?.name ?? "" });
+        return name || t("targets.customFeatureShort");
       case "custom":
-        return t("targets.custom");
+        return name || t("targets.customShort");
       case "new":
-        return t("targets.new", { type: subtypeLabel(c.type, c.subtype) });
+        return subtypeLabel(c.type, c.subtype);
     }
   }
 
-  /** Choosing an item starts drawing it with its first tool (unless it needs a name first). */
-  function choose(c: Choice) {
-    setChoice(c);
-    if (c.kind === "custom" || c.kind === "customFeature") return;
-    const tgt = targetFor(c);
+  const iconFor = (c: Choice): React.ReactNode => {
+    switch (c.kind) {
+      case "new":
+        return <TypeIcon type={c.type} />;
+      case "planned":
+        return planned ? <TypeIcon type={planned.type} /> : <Plus />;
+      case "custom":
+        return <TypeIcon type="custom" />;
+      case "feature":
+      case "customFeature":
+        return <Trees />;
+      case "section":
+        return <Layers />;
+      case "hole":
+        return <CircleDashed />;
+      case "area":
+        return <Frame />;
+    }
+  };
+
+  // The active choice, if its component is still selected.
+  const active = choice && targetFor(choice) ? choice : null;
+  const target = active ? targetFor(active) : (drawing?.target ?? null);
+  const smartTarget =
+    target &&
+    (target.kind === "new" || target.kind === "planned") &&
+    !(target.kind === "new" && target.type === "custom") &&
+    !(target.kind === "planned" && planned?.type === "custom")
+      ? target
+      : null;
+  const tools = target ? toolsForTarget(target, components) : [];
+  const isRoad =
+    target &&
+    ((target.kind === "new" && target.type === "road") ||
+      (target.kind === "planned" && planned?.type === "road"));
+
+  /** Starts adding: one click on the map for known types (not roads), else drawing. */
+  function begin(c: Choice, customLabel?: string) {
+    const tgt = targetFor(c, customLabel);
     if (!tgt) return;
-    const first = toolsForTarget(tgt, components)[0];
-    if (first) useStore.getState().startDrawing({ target: tgt, tool: first });
+    setChoice(c);
+    setOpen(false);
+    setQuery("");
+    const store = useStore.getState();
+    const oneClick =
+      (tgt.kind === "new" && tgt.type !== "custom" && tgt.type !== "road") ||
+      false;
+    if (oneClick) {
+      store.startSmartPlacing(tgt as Extract<DrawTarget, { kind: "new" }>);
+      return;
+    }
+    const first = toolsForTarget(tgt, store.components)[0];
+    if (first) store.startDrawing({ target: tgt, tool: first });
   }
 
+  function pick(item: PickerItem) {
+    if (item.choice.kind === "custom" || item.choice.kind === "customFeature") {
+      setNaming(item.choice);
+      setCustomName("");
+      return;
+    }
+    begin(item.choice);
+  }
+
+  const items = useMemo<PickerItem[]>(() => {
+    const out: PickerItem[] = [];
+    const ctx = selected ? t("addTo", { name: selected.name }) : "";
+    if (planned)
+      out.push({
+        key: "planned",
+        label: t("targets.planned", { name: planned.name }),
+        group: ctx,
+        icon: typeIcon[planned.type],
+        choice: { kind: "planned" },
+      });
+    if (building)
+      out.push({
+        key: "section",
+        label: t("pick.section"),
+        group: ctx,
+        icon: Layers,
+        choice: { kind: "section" },
+      });
+    if (holed)
+      out.push({
+        key: "hole",
+        label: t("pick.hole"),
+        group: ctx,
+        icon: CircleDashed,
+        choice: { kind: "hole" },
+      });
+    if (host) {
+      for (const kind of Object.keys(parkFeatures.features))
+        out.push({
+          key: `feature:${kind}`,
+          label: featureLabel(kind),
+          group: ctx,
+          icon: Trees,
+          choice: { kind: "feature", featureKind: kind },
+        });
+      out.push({
+        key: "customFeature",
+        label: t("pick.customFeature"),
+        group: ctx,
+        icon: Trees,
+        choice: { kind: "customFeature" },
+      });
+    }
+    for (const type of TYPES)
+      for (const st of templates[type].subtypes)
+        out.push({
+          key: `${type}:${st.id}`,
+          label: st.label[locale],
+          group: t(`groups.${type}`),
+          icon: typeIcon[type],
+          choice: { kind: "new", type, subtype: st.id },
+        });
+    out.push({
+      key: "custom",
+      label: t("pick.custom"),
+      group: t("groups.other"),
+      icon: typeIcon.custom,
+      choice: { kind: "custom" },
+    });
+    out.push({
+      key: "area",
+      label: t("targets.area"),
+      group: t("groups.other"),
+      icon: Frame,
+      choice: { kind: "area" },
+    });
+    return out;
+    // Labels depend on the selection and locale only.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selected?.id, selected?.name, planned, building, holed, host, locale]);
+
+  const q = query.trim().toLowerCase();
+  const shown = q
+    ? items.filter((i) => `${i.label} ${i.group}`.toLowerCase().includes(q))
+    : items;
+  const groups = [...new Set(shown.map((i) => i.group))];
+
   return (
-    <div className="w-fit max-w-[calc(100vw-6rem)] rounded-md border bg-card p-1.5 text-sm shadow-sm">
-      <div className="flex flex-wrap items-center gap-1">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+    <div ref={panel} className="relative w-fit text-sm">
+      <div className="flex flex-wrap items-center gap-1 rounded-md border bg-card p-1.5 shadow-sm">
+        {!active && !busy ? (
+          <Button
+            size="sm"
+            onClick={() => setOpen(!open)}
+            aria-expanded={open}
+            aria-haspopup="dialog"
+          >
+            <Plus /> {t("add")}
+            <ChevronDown className="opacity-60" />
+          </Button>
+        ) : (
+          <>
             <Button
               variant="outline"
               size="sm"
-              disabled={Boolean(drawing)}
-              aria-label={t("whatLabel", { current: label(active) })}
               className="max-w-56"
+              title={t("changeWhat")}
+              onClick={() => setOpen(!open)}
             >
-              <Plus />
-              <span className="truncate">{label(active)}</span>
-              <ChevronDown />
+              {active ? iconFor(active) : <Plus />}
+              <span className="truncate">
+                {active ? label(active) : t("adding")}
+              </span>
+              <ChevronDown className="opacity-60" />
             </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="start"
-            className="max-h-[70vh] overflow-y-auto"
-          >
-            <DropdownMenuLabel>{t("newComponent")}</DropdownMenuLabel>
-            {TYPES.map((type) => (
-              <DropdownMenuSub key={type}>
-                <DropdownMenuSubTrigger>
-                  {t(`types.${type}`)}
-                </DropdownMenuSubTrigger>
-                <DropdownMenuSubContent>
-                  {templates[type].subtypes.map((st) => (
-                    <DropdownMenuItem
-                      key={st.id}
-                      onSelect={() =>
-                        choose({ kind: "new", type, subtype: st.id })
-                      }
-                    >
-                      {st.label[locale]}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuSubContent>
-              </DropdownMenuSub>
-            ))}
-            <DropdownMenuItem onSelect={() => choose({ kind: "custom" })}>
-              {t("targets.custom")}
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onSelect={() => choose({ kind: "area" })}>
-              {t("targets.area")}
-            </DropdownMenuItem>
-            {(planned || building || holed || host) && (
-              <DropdownMenuSeparator />
-            )}
-            {planned && (
-              <DropdownMenuItem onSelect={() => choose({ kind: "planned" })}>
-                {label({ kind: "planned" })}
-              </DropdownMenuItem>
-            )}
-            {host && (
-              <DropdownMenuSub>
-                <DropdownMenuSubTrigger>
-                  {t("targets.featureMenu", { name: host.name })}
-                </DropdownMenuSubTrigger>
-                <DropdownMenuSubContent className="max-h-[60vh] overflow-y-auto">
-                  {Object.keys(parkFeatures.features).map((kind) => (
-                    <DropdownMenuItem
-                      key={kind}
-                      onSelect={() =>
-                        choose({ kind: "feature", featureKind: kind })
-                      }
-                    >
-                      {featureLabel(kind)}
-                    </DropdownMenuItem>
-                  ))}
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onSelect={() => choose({ kind: "customFeature" })}
-                  >
-                    {t("targets.customFeature", { name: host.name })}
-                  </DropdownMenuItem>
-                </DropdownMenuSubContent>
-              </DropdownMenuSub>
-            )}
-            {building && (
-              <DropdownMenuItem onSelect={() => choose({ kind: "section" })}>
-                {label({ kind: "section" })}
-              </DropdownMenuItem>
-            )}
-            {holed && (
-              <DropdownMenuItem onSelect={() => choose({ kind: "hole" })}>
-                {label({ kind: "hole" })}
-              </DropdownMenuItem>
-            )}
-          </DropdownMenuContent>
-        </DropdownMenu>
-        {needsName && !drawing && (
-          <input
-            autoFocus
-            value={customName}
-            onChange={(e) => setCustomName(e.target.value)}
-            placeholder={t("customNamePlaceholder")}
-            aria-label={t("customNameLabel")}
-            className="h-7 w-44 rounded-md border bg-background px-2 text-sm"
-          />
-        )}
-        <div role="group" aria-label={t("toolsLabel")} className="flex">
-          {ALL_TOOLS.filter((tool) => tools.includes(tool)).map((tool) => {
-            const Icon = toolIcon[tool];
-            const on = drawing?.tool === tool;
-            return (
+            {smartTarget && (
               <Button
-                key={tool}
-                variant={on ? "default" : "ghost"}
-                size="icon-sm"
-                aria-pressed={on}
-                aria-label={t(`tools.${tool}`)}
-                title={t(`tools.${tool}`)}
-                disabled={!target}
-                onClick={() => {
-                  const store = useStore.getState();
-                  if (on) store.cancelDrawing();
-                  else if (drawing)
-                    store.startDrawing({ target: drawing.target, tool });
-                  else if (target) store.startDrawing({ target, tool });
-                }}
+                variant={smartPlacing ? "default" : "ghost"}
+                size="sm"
+                aria-pressed={Boolean(smartPlacing)}
+                title={t("tools.smart")}
+                onClick={() =>
+                  useStore
+                    .getState()
+                    .startSmartPlacing(smartPlacing ? null : smartTarget)
+                }
               >
-                <Icon />
+                <WandSparkles /> {t("oneClick")}
               </Button>
-            );
-          })}
-        </div>
-        {tools.includes("line") &&
-          target &&
-          ((target.kind === "new" && target.type === "road") ||
-            (target.kind === "planned" && planned?.type === "road")) && (
+            )}
+            {tools.length > 0 && (
+              <div
+                role="group"
+                aria-label={t("toolsLabel")}
+                className="flex items-center border-l pl-1"
+              >
+                {ALL_TOOLS.filter((tool) => tools.includes(tool)).map(
+                  (tool) => {
+                    const ToolIcon = toolIcon[tool];
+                    const on = drawing?.tool === tool;
+                    return (
+                      <Button
+                        key={tool}
+                        variant={on ? "default" : "ghost"}
+                        size="icon-sm"
+                        aria-pressed={on}
+                        aria-label={t(`tools.${tool}`)}
+                        title={t(`tools.${tool}`)}
+                        onClick={() => {
+                          if (!target) return;
+                          const store = useStore.getState();
+                          if (on) store.cancelDrawing();
+                          else store.startDrawing({ target, tool });
+                        }}
+                      >
+                        <ToolIcon />
+                      </Button>
+                    );
+                  },
+                )}
+              </div>
+            )}
+            {isRoad && tools.includes("line") && (
+              <Button
+                variant={snapToStreets ? "default" : "ghost"}
+                size="icon-sm"
+                aria-pressed={snapToStreets}
+                aria-label={t("tools.snap")}
+                title={t("tools.snap")}
+                onClick={() =>
+                  useStore.getState().setSnapToStreets(!snapToStreets)
+                }
+              >
+                <Magnet />
+              </Button>
+            )}
             <Button
-              variant={snapToStreets ? "default" : "ghost"}
+              variant="ghost"
               size="icon-sm"
-              aria-pressed={snapToStreets}
-              aria-label={t("tools.snap")}
-              title={t("tools.snap")}
-              onClick={() =>
-                useStore.getState().setSnapToStreets(!snapToStreets)
-              }
+              aria-label={t("cancel")}
+              title={t("cancel")}
+              onClick={() => {
+                const store = useStore.getState();
+                store.cancelDrawing();
+                store.startSmartPlacing(null);
+                setChoice(null);
+              }}
             >
-              <Magnet />
+              <X />
             </Button>
-          )}
-        {smartTarget && (
-          <Button
-            variant={smartPlacing ? "default" : "ghost"}
-            size="icon-sm"
-            aria-pressed={Boolean(smartPlacing)}
-            aria-label={t("tools.smart")}
-            title={t("tools.smart")}
-
-            onClick={() =>
-              useStore
-                .getState()
-                .startSmartPlacing(smartPlacing ? null : smartTarget)
-            }
-          >
-            <WandSparkles />
-          </Button>
+          </>
         )}
       </div>
-      {smartPlacing && (
-        <div
-          role="status"
-          className="mt-1.5 flex items-start gap-2 border-t px-1 pt-1.5 text-xs text-muted-foreground"
-        >
-          <p className="max-w-72 flex-1">
-            {t("hints.smart")} {t("hints.cancel")}
-          </p>
-          <Button
-            variant="ghost"
-            size="icon-xs"
-            aria-label={t("cancel")}
-            title={t("cancel")}
-            onClick={() => useStore.getState().startSmartPlacing(null)}
-          >
-            <X />
-          </Button>
-        </div>
-      )}
-      {!drawing && drawNotice && (
+
+      {(smartPlacing || drawing) && !open && (
         <p
           role="status"
-          className="mt-1.5 max-w-72 border-t px-1 pt-1.5 text-xs text-muted-foreground"
+          className="mt-1 max-w-80 rounded-md border bg-card px-2 py-1.5 text-xs text-muted-foreground shadow-sm"
+        >
+          {smartPlacing ? t("hints.smartShort") : t(`hints.${drawing!.tool}`)}{" "}
+          {t("hints.cancel")}
+        </p>
+      )}
+      {!busy && drawNotice && (
+        <p
+          role="status"
+          className="mt-1 max-w-80 rounded-md border bg-card px-2 py-1.5 text-xs text-muted-foreground shadow-sm"
         >
           {t(`notices.${drawNotice}`)}
         </p>
       )}
-      {drawing && (
+
+      {open && (
         <div
-          role="status"
-          className="mt-1.5 flex items-start gap-2 border-t px-1 pt-1.5 text-xs text-muted-foreground"
+          role="dialog"
+          aria-label={t("pickerLabel")}
+          className="absolute top-full left-0 z-20 mt-1 flex max-h-[65vh] w-80 flex-col overflow-hidden rounded-md border bg-card shadow-lg"
         >
-          <p className="max-w-72 flex-1">
-            {t(`hints.${drawing.tool}`)} {t("hints.cancel")}
-          </p>
-          <Button
-            variant="ghost"
-            size="icon-xs"
-            aria-label={t("cancel")}
-            title={t("cancel")}
-            onClick={() => useStore.getState().cancelDrawing()}
-          >
-            <X />
-          </Button>
+          {naming ? (
+            <form
+              className="flex flex-col gap-2 p-3"
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (!name) return;
+                const c = naming;
+                setNaming(null);
+                begin(c, name);
+              }}
+            >
+              <label className="text-xs font-medium">
+                {naming.kind === "customFeature"
+                  ? t("customFeatureNameLabel", { name: host?.name ?? "" })
+                  : t("customNameLabel")}
+              </label>
+              <input
+                autoFocus
+                value={customName}
+                onChange={(e) => setCustomName(e.target.value)}
+                placeholder={t("customNamePlaceholder")}
+                className="h-8 rounded-md border bg-background px-2 text-sm"
+              />
+              <div className="flex justify-end gap-2">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setNaming(null)}
+                >
+                  {t("back")}
+                </Button>
+                <Button type="submit" size="sm" disabled={!name}>
+                  {t("startDrawing")}
+                </Button>
+              </div>
+            </form>
+          ) : (
+            <>
+              <div className="flex items-center gap-2 border-b px-2">
+                <Search className="size-4 text-muted-foreground" />
+                <input
+                  autoFocus
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && shown[0]) pick(shown[0]);
+                  }}
+                  placeholder={t("searchPlaceholder")}
+                  aria-label={t("searchLabel")}
+                  className="h-9 flex-1 bg-transparent text-sm outline-none"
+                />
+              </div>
+              <div className="overflow-y-auto py-1">
+                {groups.map((g) => (
+                  <div key={g} className="py-1">
+                    <p className="px-3 pt-1 pb-0.5 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
+                      {g}
+                    </p>
+                    {shown
+                      .filter((i) => i.group === g)
+                      .map((i) => {
+                        const ItemIcon = i.icon;
+                        return (
+                          <button
+                            key={i.key}
+                            type="button"
+                            onClick={() => pick(i)}
+                            className="flex w-full items-center gap-2 px-3 py-1.5 text-left hover:bg-muted focus-visible:bg-muted focus-visible:outline-none"
+                          >
+                            <ItemIcon className="size-4 shrink-0 text-muted-foreground" />
+                            <span className="truncate">{i.label}</span>
+                          </button>
+                        );
+                      })}
+                  </div>
+                ))}
+                {shown.length === 0 && (
+                  <p className="px-3 py-3 text-xs text-muted-foreground">
+                    {t("noMatches")}
+                  </p>
+                )}
+              </div>
+              <p className="border-t px-3 py-1.5 text-[11px] text-muted-foreground">
+                {t("pickerHint")}
+              </p>
+            </>
+          )}
         </div>
       )}
     </div>

@@ -1,8 +1,6 @@
 "use client";
 
 import {
-  Bridge,
-  Building2,
   Copy,
   Ellipsis,
   FilePlus,
@@ -10,16 +8,11 @@ import {
   EyeOff,
   Pencil,
   Redo2,
-  Route,
   Scan,
-  Shapes,
   Shuffle,
   Sparkles,
-  SquareParking,
   Trash2,
-  Trees,
   Undo2,
-  type LucideIcon,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -35,20 +28,12 @@ import { useEstimate } from "@/lib/estimate/useEstimate";
 import { northgateProject } from "@/lib/fixtures";
 import { componentBounds, featureBounds } from "@/lib/geo/bounds";
 import { intlLocale, type Locale } from "@/lib/i18n/routing";
-import type { Component, ComponentType } from "@/lib/schemas";
+import type { Component } from "@/lib/schemas";
 import { useStore } from "@/lib/store/store";
 import { cn } from "@/lib/utils";
 import { readSurroundings } from "./read-surroundings";
 import { useMap } from "./map-context";
-
-const typeIcon: Record<ComponentType, LucideIcon> = {
-  road: Route,
-  park: Trees,
-  building: Building2,
-  structure: Bridge,
-  parking: SquareParking,
-  custom: Shapes,
-};
+import { typeIcon } from "./type-icons";
 
 /** Undo/redo with Ctrl/Cmd+Z and Ctrl/Cmd+Shift+Z (or Ctrl+Y), except while typing. */
 function useUndoShortcuts() {

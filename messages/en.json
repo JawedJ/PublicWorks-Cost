@@ -141,7 +141,9 @@
         "feature": "{feature} in “{name}”",
         "featureMenu": "Add a feature to “{name}”",
         "customFeature": "Custom feature in “{name}”…",
-        "custom": "Custom element…"
+        "custom": "Custom element…",
+        "customShort": "Custom element",
+        "customFeatureShort": "Custom feature"
       },
       "tools": {
         "polygon": "Polygon",
@@ -165,7 +167,8 @@
         "freehandLine": "Click to start, move to draw, and click again to finish.",
         "point": "Click to place it.",
         "cancel": "Press Esc to cancel.",
-        "smart": "Click the map to place a typical starting shape, facing the nearest street."
+        "smart": "Click the map to place a typical starting shape, facing the nearest street.",
+        "smartShort": "Click the map where it goes. It faces the nearest street; reshape it after."
       },
       "notices": {
         "holeOutside": "That hole wasn’t added: draw it inside the shape, clear of other holes."
@@ -178,7 +181,34 @@
         "parking": "Parking lot"
       },
       "customNamePlaceholder": "Name it, e.g. skate park",
-      "customNameLabel": "Name of the custom element"
+      "customNameLabel": "Name of the custom element",
+      "add": "Add",
+      "adding": "Adding",
+      "changeWhat": "Choose something else to add",
+      "oneClick": "Click to place",
+      "pickerLabel": "Add to the design",
+      "searchLabel": "Search what to add",
+      "searchPlaceholder": "Search: library, splash pad, culvert…",
+      "noMatches": "Nothing matches. Try “Custom element” under Other.",
+      "pickerHint": "Buildings, parks, lots and structures drop at a typical size with one click; reshape them after. Roads and custom elements are drawn.",
+      "addTo": "Add to “{name}”",
+      "customFeatureNameLabel": "Name the feature in “{name}”",
+      "back": "Back",
+      "startDrawing": "Start drawing",
+      "pick": {
+        "section": "Another section (different height)",
+        "hole": "Cut a hole (courtyard)",
+        "customFeature": "Custom feature…",
+        "custom": "Custom element…"
+      },
+      "groups": {
+        "building": "Buildings",
+        "park": "Parks",
+        "road": "Roads and pipes",
+        "parking": "Parking",
+        "structure": "Structures",
+        "other": "Other"
+      }
     },
     "edit": {
       "label": "Edit “{name}”",
