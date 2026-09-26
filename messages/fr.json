@@ -60,7 +60,15 @@
       "map3d": "Carte 3D",
       "colourByCost": "Couleur selon le coût"
     },
-    "noCost": "Pas encore de coût"
+    "noCost": "Pas encore de coût",
+    "site": {
+      "title": "Contexte du site",
+      "check": "Vérifier les environs",
+      "recheck": "Vérifier de nouveau",
+      "checking": "Vérification…",
+      "unavailable": "Le contexte du site n’est pas disponible pour l’instant (échec de la recherche OpenStreetMap). Réessayez plus tard.",
+      "summary": "À proximité : {schools} écoles, {hospitals} hôpitaux, {water} cours d’eau, {rail} voies ferrées (OpenStreetMap)."
+    }
   },
   "design": {
     "components": {

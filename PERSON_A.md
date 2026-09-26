@@ -102,8 +102,8 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 - [x] P1.16 Advisory cross-component warnings (overlaps, outside park/area, unusual values) · Core
 - [x] P1.17 `/api/geo/snap` (OSRM, cache, timeout) + "Snap to streets" with fallback · Stretch
 - [x] P5.1 Map snapshot capture helper for B's PDF export · Core
-- [ ] P6.1 `/api/geo/context` (Overpass) with cache/timeout/fallback · Stretch
-- [ ] P6.2 Site tab + map overlays with buffer rings · Stretch
+- [x] P6.1 `/api/geo/context` (Overpass) with cache/timeout/fallback · Stretch
+- [x] P6.2 Site tab + map overlays with buffer rings · Stretch
 - [x] P9.1 Road cross-section SVG per road, opens on selection, clickable · Stretch
 - [ ] P9.2 3D site scene in the view switcher; positioned from map coordinates; shared selection · Stretch
 - [ ] P9.3 3D elements: buildings · Stretch

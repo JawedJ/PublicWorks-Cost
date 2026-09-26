@@ -11,6 +11,7 @@ import { RoofTypeSchema, type Component } from "@/lib/schemas";
 import { useStore } from "@/lib/store/store";
 import { cn } from "@/lib/utils";
 import { RoadCrossSection } from "@/components/visuals/road-cross-section";
+import { SiteContextPanel } from "./site-context";
 import { useDesignWarnings } from "./warning-markers";
 
 // Measurements for the selected component (P1.15), per-section storeys and roof
@@ -258,6 +259,7 @@ export function ComponentInspector() {
           </ul>
         </div>
       )}
+      <SiteContextPanel />
       <div>
         <h4 className="mb-1 text-xs font-semibold">{t("totals")}</h4>
         <dl className="space-y-0.5">

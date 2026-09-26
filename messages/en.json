@@ -60,7 +60,15 @@
       "map3d": "3D map",
       "colourByCost": "Colour by cost"
     },
-    "noCost": "No cost yet"
+    "noCost": "No cost yet",
+    "site": {
+      "title": "Site context",
+      "check": "Check nearby",
+      "recheck": "Check again",
+      "checking": "Checking…",
+      "unavailable": "Site context isn’t available right now (OpenStreetMap lookup failed). Try again later.",
+      "summary": "Nearby: {schools} schools, {hospitals} hospitals, {water} waterways, {rail} rail lines (OpenStreetMap)."
+    }
   },
   "design": {
     "components": {
