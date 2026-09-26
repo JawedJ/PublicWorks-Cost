@@ -6,6 +6,7 @@ import type {
 } from "@/lib/schemas";
 import { bool, num, resolveDefinitions, str } from "../params";
 import { L, t } from "../text";
+import { customLine } from "./custom";
 import type {
   ComponentTemplate,
   QuantityLine,
@@ -435,7 +436,22 @@ function deriveQuantities(ctx: TemplateContext): QuantityLine[] {
   // --- Placed features; track the area they cover so lawn isn't double counted ---
   let coveredM2 = 0;
   for (const f of features) {
-    if (f.kind === "custom") continue; // P2.12
+    if (f.kind === "custom") {
+      const m = ctx.measurements.features[f.id] ?? {};
+      const line = customLine(
+        `feature:${f.id}`,
+        f.customLabel ?? "Custom",
+        f.customPricing,
+        m,
+        ctx.refData,
+        { featureId: f.id },
+      );
+      if (line) {
+        lines.push(line);
+        if (isPolygon(f)) coveredM2 += m.areaM2 ?? 0;
+      }
+      continue;
+    }
     const fp = resolveDefinitions(featureParamCatalog[f.kind] ?? [], f.params);
     const m = ctx.measurements.features[f.id] ?? {};
     const areaM2 = round(m.areaM2 ?? 0);
