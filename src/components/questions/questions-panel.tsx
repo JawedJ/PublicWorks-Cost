@@ -153,7 +153,7 @@ function QuestionCard({
     answerQuestion(ids, def.id, def.type === "number" ? Number(value) : value);
 
   return (
-    <li className="flex flex-col gap-2 rounded-lg border p-3 text-sm">
+    <li className="flex flex-col gap-2 rounded-2xl border bg-card p-4 text-sm">
       <div>
         <p className="font-medium">{label}</p>
         <p className="text-xs text-muted-foreground">
