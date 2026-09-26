@@ -1,0 +1,724 @@
+{
+  "schemaVersion": 1,
+  "id": "3f2b8c1e-6d4a-4f7b-9a2e-5c1d8e7f6a01",
+  "name": "Northgate neighbourhood hub",
+  "description": "A new neighbourhood hub in the north end: two new local streets with watermains and sewers, a park with a playground and splash pad, a two-storey library, and a fire station, starting spring 2027.",
+  "municipality": "Waterloo",
+  "region": "waterloo_region",
+  "location": {
+    "lng": -80.527399,
+    "lat": 43.500898,
+    "zoom": 16
+  },
+  "areaBoundary": {
+    "type": "Feature",
+    "properties": null,
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [
+        [
+          [-80.530248, 43.499012],
+          [-80.524551, 43.499012],
+          [-80.524551, 43.502875],
+          [-80.530248, 43.502875],
+          [-80.530248, 43.499012]
+        ]
+      ]
+    }
+  },
+  "components": [
+    {
+      "id": "c-northgate-ave",
+      "name": "Northgate Avenue",
+      "type": "road",
+      "subtype": "road_reconstruction",
+      "status": "drawn",
+      "origin": "user",
+      "geometry": {
+        "primary": {
+          "type": "Feature",
+          "properties": null,
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [-80.53, 43.5],
+              [-80.528266, 43.500045],
+              [-80.526532, 43.500045],
+              [-80.524799, 43.5]
+            ]
+          }
+        },
+        "features": []
+      },
+      "params": {
+        "lanes": 2,
+        "laneWidthM": 3.5,
+        "parkingLanes": 1,
+        "roadClass": "local",
+        "sidewalkSides": 2,
+        "sidewalkWidthM": 1.8,
+        "curbs": true,
+        "watermain": true,
+        "watermainDiameterMm": 200,
+        "stormSewer": true,
+        "stormDiameterMm": 450,
+        "sanitarySewer": true,
+        "streetlighting": true,
+        "excavationDepthM": 0.6,
+        "soilCondition": "unknown",
+        "trafficStaging": "full_closure",
+        "servicesPer100m": 8
+      },
+      "paramMeta": {
+        "lanes": {
+          "source": "default"
+        },
+        "laneWidthM": {
+          "source": "default"
+        },
+        "parkingLanes": {
+          "source": "default"
+        },
+        "roadClass": {
+          "source": "ai_prompt",
+          "evidence": "two new local streets"
+        },
+        "sidewalkSides": {
+          "source": "default"
+        },
+        "sidewalkWidthM": {
+          "source": "default"
+        },
+        "curbs": {
+          "source": "default"
+        },
+        "watermain": {
+          "source": "ai_prompt",
+          "evidence": "with watermains and sewers"
+        },
+        "watermainDiameterMm": {
+          "source": "default"
+        },
+        "stormSewer": {
+          "source": "ai_prompt",
+          "evidence": "with watermains and sewers"
+        },
+        "stormDiameterMm": {
+          "source": "default"
+        },
+        "sanitarySewer": {
+          "source": "ai_prompt",
+          "evidence": "with watermains and sewers"
+        },
+        "streetlighting": {
+          "source": "default"
+        },
+        "excavationDepthM": {
+          "source": "default"
+        },
+        "soilCondition": {
+          "source": "default"
+        },
+        "trafficStaging": {
+          "source": "default"
+        },
+        "servicesPer100m": {
+          "source": "default"
+        }
+      },
+      "overrides": {
+        "quantities": {},
+        "unitPrices": {}
+      },
+      "visible": true
+    },
+    {
+      "id": "c-library-lane",
+      "name": "Library Lane",
+      "type": "road",
+      "subtype": "road_reconstruction",
+      "status": "drawn",
+      "origin": "user",
+      "geometry": {
+        "primary": {
+          "type": "Feature",
+          "properties": null,
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [-80.527399, 43.500045],
+              [-80.527399, 43.502695]
+            ]
+          }
+        },
+        "features": []
+      },
+      "params": {
+        "lanes": 2,
+        "laneWidthM": 3.5,
+        "parkingLanes": 0,
+        "roadClass": "local",
+        "sidewalkSides": 2,
+        "sidewalkWidthM": 1.8,
+        "curbs": true,
+        "watermain": true,
+        "watermainDiameterMm": 200,
+        "stormSewer": true,
+        "stormDiameterMm": 450,
+        "sanitarySewer": true,
+        "streetlighting": true,
+        "excavationDepthM": 0.6,
+        "soilCondition": "unknown",
+        "trafficStaging": "full_closure",
+        "servicesPer100m": 8
+      },
+      "paramMeta": {
+        "lanes": {
+          "source": "default"
+        },
+        "laneWidthM": {
+          "source": "default"
+        },
+        "parkingLanes": {
+          "source": "default"
+        },
+        "roadClass": {
+          "source": "ai_prompt",
+          "evidence": "two new local streets"
+        },
+        "sidewalkSides": {
+          "source": "default"
+        },
+        "sidewalkWidthM": {
+          "source": "default"
+        },
+        "curbs": {
+          "source": "default"
+        },
+        "watermain": {
+          "source": "ai_prompt",
+          "evidence": "with watermains and sewers"
+        },
+        "watermainDiameterMm": {
+          "source": "default"
+        },
+        "stormSewer": {
+          "source": "ai_prompt",
+          "evidence": "with watermains and sewers"
+        },
+        "stormDiameterMm": {
+          "source": "default"
+        },
+        "sanitarySewer": {
+          "source": "ai_prompt",
+          "evidence": "with watermains and sewers"
+        },
+        "streetlighting": {
+          "source": "default"
+        },
+        "excavationDepthM": {
+          "source": "default"
+        },
+        "soilCondition": {
+          "source": "default"
+        },
+        "trafficStaging": {
+          "source": "default"
+        },
+        "servicesPer100m": {
+          "source": "default"
+        }
+      },
+      "overrides": {
+        "quantities": {},
+        "unitPrices": {}
+      },
+      "visible": true
+    },
+    {
+      "id": "c-northgate-park",
+      "name": "Northgate Park",
+      "type": "park",
+      "subtype": "neighbourhood_park",
+      "status": "drawn",
+      "origin": "user",
+      "geometry": {
+        "primary": {
+          "type": "Feature",
+          "properties": null,
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [-80.527152, 43.50018],
+                [-80.525294, 43.50018],
+                [-80.525294, 43.501078],
+                [-80.527152, 43.501078],
+                [-80.527152, 43.50018]
+              ]
+            ]
+          }
+        },
+        "features": [
+          {
+            "id": "f-playground",
+            "kind": "playground",
+            "geometry": {
+              "type": "Feature",
+              "properties": null,
+              "geometry": {
+                "type": "Point",
+                "coordinates": [-80.526656, 43.500539]
+              }
+            },
+            "params": {
+              "sizeTier": "medium",
+              "accessibility": "enhanced"
+            }
+          },
+          {
+            "id": "f-splash-pad",
+            "kind": "splash_pad",
+            "geometry": {
+              "type": "Feature",
+              "properties": null,
+              "geometry": {
+                "type": "Point",
+                "coordinates": [-80.526037, 43.500808]
+              }
+            },
+            "params": {
+              "sizeTier": "small"
+            }
+          },
+          {
+            "id": "f-trail",
+            "kind": "trail",
+            "geometry": {
+              "type": "Feature",
+              "properties": null,
+              "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                  [-80.527028, 43.500269],
+                  [-80.525418, 43.500269],
+                  [-80.525418, 43.500988],
+                  [-80.527028, 43.500988],
+                  [-80.527028, 43.500269]
+                ]
+              }
+            },
+            "params": {
+              "widthM": 2.5,
+              "surface": "asphalt",
+              "lighting": false
+            }
+          }
+        ]
+      },
+      "params": {
+        "irrigation": false,
+        "fenceFraction": 0.3,
+        "treeCount": 40
+      },
+      "paramMeta": {
+        "irrigation": {
+          "source": "default"
+        },
+        "fenceFraction": {
+          "source": "default"
+        },
+        "treeCount": {
+          "source": "user"
+        }
+      },
+      "overrides": {
+        "quantities": {},
+        "unitPrices": {}
+      },
+      "visible": true
+    },
+    {
+      "id": "c-library",
+      "name": "Northgate Branch Library",
+      "type": "building",
+      "subtype": "library",
+      "status": "drawn",
+      "origin": "user",
+      "geometry": {
+        "primary": {
+          "type": "Feature",
+          "properties": null,
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [-80.529505, 43.500225],
+                [-80.527647, 43.500225],
+                [-80.527647, 43.501123],
+                [-80.529505, 43.501123],
+                [-80.529505, 43.500225]
+              ]
+            ]
+          }
+        },
+        "sections": [
+          {
+            "id": "s-library-main",
+            "footprint": {
+              "type": "Feature",
+              "properties": null,
+              "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                  [
+                    [-80.529257, 43.500449],
+                    [-80.528762, 43.500449],
+                    [-80.528762, 43.500674],
+                    [-80.529257, 43.500674],
+                    [-80.529257, 43.500449]
+                  ]
+                ]
+              }
+            },
+            "storeys": 2,
+            "floorHeightM": 4.5,
+            "roof": "flat",
+            "use": "library stacks"
+          },
+          {
+            "id": "s-library-wing",
+            "footprint": {
+              "type": "Feature",
+              "properties": null,
+              "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                  [
+                    [-80.528762, 43.500449],
+                    [-80.528514, 43.500449],
+                    [-80.528514, 43.500584],
+                    [-80.528762, 43.500584],
+                    [-80.528762, 43.500449]
+                  ]
+                ]
+              }
+            },
+            "storeys": 1,
+            "floorHeightM": 4.0,
+            "roof": "green",
+            "use": "community room"
+          }
+        ],
+        "features": [
+          {
+            "id": "f-library-parking",
+            "kind": "parking",
+            "geometry": {
+              "type": "Feature",
+              "properties": null,
+              "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                  [
+                    [-80.52839, 43.500314],
+                    [-80.527771, 43.500314],
+                    [-80.527771, 43.50053],
+                    [-80.52839, 43.50053],
+                    [-80.52839, 43.500314]
+                  ]
+                ]
+              }
+            },
+            "params": {
+              "surface": "asphalt"
+            }
+          }
+        ]
+      },
+      "params": {
+        "quality": "standard",
+        "sustainability": "high_performance",
+        "basement": false,
+        "parkingStalls": 40,
+        "ffeIncluded": true,
+        "siteServicing": "average"
+      },
+      "paramMeta": {
+        "quality": {
+          "source": "user"
+        },
+        "sustainability": {
+          "source": "user"
+        },
+        "basement": {
+          "source": "default"
+        },
+        "parkingStalls": {
+          "source": "default"
+        },
+        "ffeIncluded": {
+          "source": "user"
+        },
+        "siteServicing": {
+          "source": "default"
+        }
+      },
+      "overrides": {
+        "quantities": {},
+        "unitPrices": {}
+      },
+      "visible": true
+    },
+    {
+      "id": "c-fire-station",
+      "name": "Fire Station 7",
+      "type": "building",
+      "subtype": "fire_station",
+      "status": "drawn",
+      "origin": "user",
+      "geometry": {
+        "primary": {
+          "type": "Feature",
+          "properties": null,
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [-80.529257, 43.499147],
+                [-80.528142, 43.499147],
+                [-80.528142, 43.499775],
+                [-80.529257, 43.499775],
+                [-80.529257, 43.499147]
+              ]
+            ]
+          }
+        },
+        "sections": [
+          {
+            "id": "s-fire-bays",
+            "footprint": {
+              "type": "Feature",
+              "properties": null,
+              "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                  [
+                    [-80.529071, 43.499326],
+                    [-80.5287, 43.499326],
+                    [-80.5287, 43.499596],
+                    [-80.529071, 43.499596],
+                    [-80.529071, 43.499326]
+                  ]
+                ]
+              }
+            },
+            "storeys": 1,
+            "floorHeightM": 6.5,
+            "roof": "flat",
+            "use": "apparatus bays"
+          },
+          {
+            "id": "s-fire-quarters",
+            "footprint": {
+              "type": "Feature",
+              "properties": null,
+              "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                  [
+                    [-80.5287, 43.499371],
+                    [-80.52839, 43.499371],
+                    [-80.52839, 43.499551],
+                    [-80.5287, 43.499551],
+                    [-80.5287, 43.499371]
+                  ]
+                ]
+              }
+            },
+            "storeys": 2,
+            "floorHeightM": 3.5,
+            "roof": "pitched",
+            "use": "crew quarters"
+          }
+        ],
+        "features": []
+      },
+      "params": {
+        "quality": "standard",
+        "sustainability": "code_minimum",
+        "basement": false,
+        "apparatusBays": 3,
+        "ffeIncluded": true,
+        "siteServicing": "average"
+      },
+      "paramMeta": {
+        "quality": {
+          "source": "default"
+        },
+        "sustainability": {
+          "source": "default"
+        },
+        "basement": {
+          "source": "default"
+        },
+        "apparatusBays": {
+          "source": "ai_prompt",
+          "evidence": "a fire station"
+        },
+        "ffeIncluded": {
+          "source": "default"
+        },
+        "siteServicing": {
+          "source": "default"
+        }
+      },
+      "overrides": {
+        "quantities": {},
+        "unitPrices": {}
+      },
+      "visible": true
+    },
+    {
+      "id": "c-creek-culvert",
+      "name": "Laurel Creek culvert",
+      "type": "structure",
+      "subtype": "culvert_replacement",
+      "status": "drawn",
+      "origin": "user",
+      "geometry": {
+        "primary": {
+          "type": "Feature",
+          "properties": null,
+          "geometry": {
+            "type": "Point",
+            "coordinates": [-80.527399, 43.502246]
+          }
+        },
+        "features": []
+      },
+      "params": {
+        "spanM": 3.0,
+        "lengthM": 24,
+        "material": "precast_concrete_box",
+        "depthOfCoverM": 1.5,
+        "roadClass": "local",
+        "fishHabitat": true
+      },
+      "paramMeta": {
+        "spanM": {
+          "source": "default"
+        },
+        "lengthM": {
+          "source": "default"
+        },
+        "material": {
+          "source": "default"
+        },
+        "depthOfCoverM": {
+          "source": "default"
+        },
+        "roadClass": {
+          "source": "ai_prompt",
+          "evidence": "local streets"
+        },
+        "fishHabitat": {
+          "source": "site_context",
+          "evidence": "Laurel Creek (OSM waterway=stream)"
+        }
+      },
+      "overrides": {
+        "quantities": {},
+        "unitPrices": {}
+      },
+      "visible": true
+    }
+  ],
+  "settings": {
+    "startDate": "2027-04-01",
+    "durationMonths": 18,
+    "escalationRate": 0.04,
+    "taxRate": 0.0176,
+    "contingencyMode": "recommended",
+    "locale": "en"
+  },
+  "scenarios": [
+    {
+      "id": "baseline",
+      "name": "Baseline",
+      "componentOverrides": {},
+      "addedComponents": [],
+      "removedComponentIds": [],
+      "shocks": {
+        "asphalt": 0,
+        "concrete": 0,
+        "steel": 0,
+        "pipe": 0,
+        "lumber": 0,
+        "labour": 0
+      }
+    },
+    {
+      "id": "scn-fire-later",
+      "name": "Fire station phased a year later",
+      "notes": "Fire station moves to the following year's capital budget.",
+      "componentOverrides": {},
+      "addedComponents": [],
+      "removedComponentIds": ["c-fire-station"],
+      "shocks": {
+        "asphalt": 0,
+        "concrete": 0,
+        "steel": 0,
+        "pipe": 0,
+        "lumber": 0,
+        "labour": 0
+      }
+    }
+  ],
+  "activeScenarioId": "baseline",
+  "siteContext": {
+    "source": "demo_snapshot",
+    "fetchedAt": "2026-09-26T12:00:00Z",
+    "features": [
+      {
+        "id": "osm-way-laurel-creek",
+        "kind": "waterway",
+        "name": "Laurel Creek",
+        "geometry": {
+          "type": "Feature",
+          "properties": null,
+          "geometry": {
+            "type": "LineString",
+            "coordinates": [
+              [-80.528514, 43.502425],
+              [-80.527399, 43.502246],
+              [-80.526037, 43.502111]
+            ]
+          }
+        },
+        "tags": {
+          "waterway": "stream"
+        }
+      },
+      {
+        "id": "osm-node-northgate-ps",
+        "kind": "school",
+        "name": "Northgate Public School",
+        "geometry": {
+          "type": "Feature",
+          "properties": null,
+          "geometry": {
+            "type": "Point",
+            "coordinates": [-80.525913, 43.499461]
+          }
+        },
+        "tags": {
+          "amenity": "school"
+        }
+      }
+    ]
+  },
+  "documents": [],
+  "createdAt": "2026-09-26T12:00:00Z",
+  "updatedAt": "2026-09-26T12:00:00Z"
+}

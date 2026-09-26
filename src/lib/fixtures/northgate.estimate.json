@@ -1,0 +1,2104 @@
+{
+  "components": [
+    {
+      "componentId": "c-northgate-ave",
+      "name": "Northgate Avenue",
+      "type": "road",
+      "directCost": 1852129,
+      "p10": 2201000.0,
+      "p50": 2617000.0,
+      "p90": 3179000.0,
+      "estimateClass": "C",
+      "share": 0.0536,
+      "improvementHints": [
+        {
+          "componentId": "c-northgate-ave",
+          "paramId": "soilCondition",
+          "label": {
+            "en": "Soil condition along Northgate Avenue",
+            "fr": "État du sol le long de l'avenue Northgate"
+          }
+        }
+      ]
+    },
+    {
+      "componentId": "c-library-lane",
+      "name": "Library Lane",
+      "type": "road",
+      "directCost": 1274800,
+      "p10": 1515000.0,
+      "p50": 1801000.0,
+      "p90": 2188000.0,
+      "estimateClass": "C",
+      "share": 0.0369,
+      "improvementHints": [
+        {
+          "componentId": "c-library-lane",
+          "paramId": "soilCondition",
+          "label": {
+            "en": "Soil condition along Library Lane",
+            "fr": "État du sol le long de Library Lane"
+          }
+        }
+      ]
+    },
+    {
+      "componentId": "c-northgate-park",
+      "name": "Northgate Park",
+      "type": "park",
+      "directCost": 1154550,
+      "p10": 1372000.0,
+      "p50": 1631000.0,
+      "p90": 1982000.0,
+      "estimateClass": "C",
+      "share": 0.0334,
+      "improvementHints": [
+        {
+          "componentId": "c-northgate-park",
+          "paramId": "irrigation",
+          "label": {
+            "en": "Will the park be irrigated?",
+            "fr": "Le parc sera-t-il irrigué?"
+          }
+        }
+      ]
+    },
+    {
+      "componentId": "c-library",
+      "name": "Northgate Branch Library",
+      "type": "building",
+      "directCost": 14983000,
+      "p10": 17806000.0,
+      "p50": 21169000.0,
+      "p90": 25720000.0,
+      "estimateClass": "C",
+      "share": 0.4332,
+      "improvementHints": [
+        {
+          "componentId": "c-library",
+          "paramId": "basement",
+          "label": {
+            "en": "Does the library have a basement?",
+            "fr": "La bibliothèque a-t-elle un sous-sol?"
+          }
+        }
+      ]
+    },
+    {
+      "componentId": "c-fire-station",
+      "name": "Fire Station 7",
+      "type": "building",
+      "directCost": 13589000,
+      "p10": 15252000.0,
+      "p50": 19738000.0,
+      "p90": 26018000.0,
+      "estimateClass": "D",
+      "share": 0.4039,
+      "improvementHints": [
+        {
+          "componentId": "c-fire-station",
+          "paramId": "quality",
+          "label": {
+            "en": "Fire station quality level",
+            "fr": "Niveau de qualité de la caserne"
+          }
+        },
+        {
+          "componentId": "c-fire-station",
+          "paramId": "sustainability",
+          "label": {
+            "en": "Fire station sustainability target",
+            "fr": "Cible de durabilité de la caserne"
+          }
+        }
+      ]
+    },
+    {
+      "componentId": "c-creek-culvert",
+      "name": "Laurel Creek culvert",
+      "type": "structure",
+      "directCost": 714000,
+      "p10": 801000.0,
+      "p50": 1037000.0,
+      "p90": 1367000.0,
+      "estimateClass": "D",
+      "share": 0.0212,
+      "improvementHints": [
+        {
+          "componentId": "c-creek-culvert",
+          "paramId": "spanM",
+          "label": {
+            "en": "Culvert span",
+            "fr": "Portée du ponceau"
+          }
+        },
+        {
+          "componentId": "c-creek-culvert",
+          "paramId": "lengthM",
+          "label": {
+            "en": "Culvert length",
+            "fr": "Longueur du ponceau"
+          }
+        }
+      ]
+    }
+  ],
+  "undrawnComponents": 0,
+  "lineItems": [
+    {
+      "id": "ave-excavation",
+      "componentId": "c-northgate-ave",
+      "category": "earthworks",
+      "description": {
+        "en": "Excavation and removal",
+        "fr": "Excavation et enlèvement"
+      },
+      "quantity": 2369,
+      "unit": "m3",
+      "quantitySource": {
+        "en": "3948 m² × 0.6 m depth",
+        "fr": "3948 m² × 0,6 m de profondeur"
+      },
+      "unitPrice": {
+        "low": 27.2,
+        "typical": 32,
+        "high": 41.6
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "labour",
+      "total": 75808,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "ave-granular",
+      "componentId": "c-northgate-ave",
+      "category": "paving",
+      "description": {
+        "en": "Granular A and B base",
+        "fr": "Fondation granulaire A et B"
+      },
+      "quantity": 1777,
+      "unit": "m3",
+      "quantitySource": {
+        "en": "3948 m² × 0.45 m",
+        "fr": "3948 m² × 0,45 m"
+      },
+      "unitPrice": {
+        "low": 40.8,
+        "typical": 48,
+        "high": 62.4
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "general",
+      "total": 85296,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "ave-asphalt",
+      "componentId": "c-northgate-ave",
+      "category": "paving",
+      "description": {
+        "en": "Asphalt HL3/HL8",
+        "fr": "Enrobé HL3/HL8"
+      },
+      "quantity": 853,
+      "unit": "t",
+      "quantitySource": {
+        "en": "3948 m² × 90 mm × 2.4 t/m³",
+        "fr": "3948 m² × 90 mm × 2,4 t/m³"
+      },
+      "unitPrice": {
+        "low": 123.25,
+        "typical": 145,
+        "high": 188.5
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "asphalt",
+      "total": 123685,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "ave-curb",
+      "componentId": "c-northgate-ave",
+      "category": "concrete",
+      "description": {
+        "en": "Concrete curb and gutter",
+        "fr": "Bordure et caniveau en béton"
+      },
+      "quantity": 840,
+      "unit": "m",
+      "quantitySource": {
+        "en": "420 m × 2 sides",
+        "fr": "420 m × 2 côtés"
+      },
+      "unitPrice": {
+        "low": 80.75,
+        "typical": 95,
+        "high": 123.5
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "concrete",
+      "total": 79800,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "ave-sidewalk",
+      "componentId": "c-northgate-ave",
+      "category": "concrete",
+      "description": {
+        "en": "Concrete sidewalk 1.8 m",
+        "fr": "Trottoir en béton 1,8 m"
+      },
+      "quantity": 1512,
+      "unit": "m2",
+      "quantitySource": {
+        "en": "420 m × 1.8 m × 2 sides",
+        "fr": "420 m × 1,8 m × 2 côtés"
+      },
+      "unitPrice": {
+        "low": 102.0,
+        "typical": 120,
+        "high": 156.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "concrete",
+      "total": 181440,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "ave-watermain",
+      "componentId": "c-northgate-ave",
+      "category": "watermain",
+      "description": {
+        "en": "Watermain 200 mm PVC",
+        "fr": "Conduite d'eau 200 mm PVC"
+      },
+      "quantity": 420,
+      "unit": "m",
+      "quantitySource": {
+        "en": "From drawn line: 420 m",
+        "fr": "Selon la ligne tracée : 420 m"
+      },
+      "unitPrice": {
+        "low": 527.0,
+        "typical": 620,
+        "high": 806.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "pipe",
+      "total": 260400,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "ave-hydrants",
+      "componentId": "c-northgate-ave",
+      "category": "watermain",
+      "description": {
+        "en": "Fire hydrant assembly",
+        "fr": "Borne d'incendie"
+      },
+      "quantity": 3,
+      "unit": "each",
+      "quantitySource": {
+        "en": "ceil(420 m / 150 m)",
+        "fr": "plafond(420 m / 150 m)"
+      },
+      "unitPrice": {
+        "low": 8075.0,
+        "typical": 9500,
+        "high": 12350.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "pipe",
+      "total": 28500,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "ave-storm",
+      "componentId": "c-northgate-ave",
+      "category": "sewer",
+      "description": {
+        "en": "Storm sewer 450 mm",
+        "fr": "Égout pluvial 450 mm"
+      },
+      "quantity": 420,
+      "unit": "m",
+      "quantitySource": {
+        "en": "From drawn line: 420 m",
+        "fr": "Selon la ligne tracée : 420 m"
+      },
+      "unitPrice": {
+        "low": 663.0,
+        "typical": 780,
+        "high": 1014.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "pipe",
+      "total": 327600,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "ave-catchbasins",
+      "componentId": "c-northgate-ave",
+      "category": "sewer",
+      "description": {
+        "en": "Catch basins",
+        "fr": "Puisards"
+      },
+      "quantity": 14,
+      "unit": "each",
+      "quantitySource": {
+        "en": "ceil(420 m / 60 m) × 2",
+        "fr": "plafond(420 m / 60 m) × 2"
+      },
+      "unitPrice": {
+        "low": 3570.0,
+        "typical": 4200,
+        "high": 5460.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "concrete",
+      "total": 58800,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "ave-sanitary",
+      "componentId": "c-northgate-ave",
+      "category": "sewer",
+      "description": {
+        "en": "Sanitary sewer 250 mm",
+        "fr": "Égout sanitaire 250 mm"
+      },
+      "quantity": 420,
+      "unit": "m",
+      "quantitySource": {
+        "en": "From drawn line: 420 m",
+        "fr": "Selon la ligne tracée : 420 m"
+      },
+      "unitPrice": {
+        "low": 586.5,
+        "typical": 690,
+        "high": 897.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "pipe",
+      "total": 289800,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "ave-maintenance-holes",
+      "componentId": "c-northgate-ave",
+      "category": "sewer",
+      "description": {
+        "en": "Maintenance holes",
+        "fr": "Regards"
+      },
+      "quantity": 10,
+      "unit": "each",
+      "quantitySource": {
+        "en": "ceil(420 m / 100 m) × 2 sewers",
+        "fr": "plafond(420 m / 100 m) × 2 égouts"
+      },
+      "unitPrice": {
+        "low": 9350.0,
+        "typical": 11000,
+        "high": 14300.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "concrete",
+      "total": 110000,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "ave-lighting",
+      "componentId": "c-northgate-ave",
+      "category": "lighting",
+      "description": {
+        "en": "Streetlights",
+        "fr": "Lampadaires"
+      },
+      "quantity": 12,
+      "unit": "each",
+      "quantitySource": {
+        "en": "ceil(420 m / 35 m)",
+        "fr": "plafond(420 m / 35 m)"
+      },
+      "unitPrice": {
+        "low": 6630.0,
+        "typical": 7800,
+        "high": 10140.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "steel",
+      "total": 93600,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "ave-sod",
+      "componentId": "c-northgate-ave",
+      "category": "landscaping",
+      "description": {
+        "en": "Boulevard topsoil and sod",
+        "fr": "Terre végétale et gazon du boulevard"
+      },
+      "quantity": 2100,
+      "unit": "m2",
+      "quantitySource": {
+        "en": "420 m × 2.5 m × 2 sides",
+        "fr": "420 m × 2,5 m × 2 côtés"
+      },
+      "unitPrice": {
+        "low": 11.9,
+        "typical": 14,
+        "high": 18.2
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "general",
+      "total": 29400,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "ave-traffic",
+      "componentId": "c-northgate-ave",
+      "category": "traffic_control",
+      "description": {
+        "en": "Traffic control",
+        "fr": "Signalisation de chantier"
+      },
+      "quantity": 6,
+      "unit": "month",
+      "quantitySource": {
+        "en": "6 months, full closure",
+        "fr": "6 mois, fermeture complète"
+      },
+      "unitPrice": {
+        "low": 15300.0,
+        "typical": 18000,
+        "high": 23400.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "labour",
+      "total": 108000,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "lane-excavation",
+      "componentId": "c-library-lane",
+      "category": "earthworks",
+      "description": {
+        "en": "Excavation and removal",
+        "fr": "Excavation et enlèvement"
+      },
+      "quantity": 1239,
+      "unit": "m3",
+      "quantitySource": {
+        "en": "2065 m² × 0.6 m depth",
+        "fr": "2065 m² × 0,6 m de profondeur"
+      },
+      "unitPrice": {
+        "low": 27.2,
+        "typical": 32,
+        "high": 41.6
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "labour",
+      "total": 39648,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "lane-granular",
+      "componentId": "c-library-lane",
+      "category": "paving",
+      "description": {
+        "en": "Granular A and B base",
+        "fr": "Fondation granulaire A et B"
+      },
+      "quantity": 929,
+      "unit": "m3",
+      "quantitySource": {
+        "en": "2065 m² × 0.45 m",
+        "fr": "2065 m² × 0,45 m"
+      },
+      "unitPrice": {
+        "low": 40.8,
+        "typical": 48,
+        "high": 62.4
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "general",
+      "total": 44592,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "lane-asphalt",
+      "componentId": "c-library-lane",
+      "category": "paving",
+      "description": {
+        "en": "Asphalt HL3/HL8",
+        "fr": "Enrobé HL3/HL8"
+      },
+      "quantity": 446,
+      "unit": "t",
+      "quantitySource": {
+        "en": "2065 m² × 90 mm × 2.4 t/m³",
+        "fr": "2065 m² × 90 mm × 2,4 t/m³"
+      },
+      "unitPrice": {
+        "low": 123.25,
+        "typical": 145,
+        "high": 188.5
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "asphalt",
+      "total": 64670,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "lane-curb",
+      "componentId": "c-library-lane",
+      "category": "concrete",
+      "description": {
+        "en": "Concrete curb and gutter",
+        "fr": "Bordure et caniveau en béton"
+      },
+      "quantity": 590,
+      "unit": "m",
+      "quantitySource": {
+        "en": "295 m × 2 sides",
+        "fr": "295 m × 2 côtés"
+      },
+      "unitPrice": {
+        "low": 80.75,
+        "typical": 95,
+        "high": 123.5
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "concrete",
+      "total": 56050,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "lane-sidewalk",
+      "componentId": "c-library-lane",
+      "category": "concrete",
+      "description": {
+        "en": "Concrete sidewalk 1.8 m",
+        "fr": "Trottoir en béton 1,8 m"
+      },
+      "quantity": 1062,
+      "unit": "m2",
+      "quantitySource": {
+        "en": "295 m × 1.8 m × 2 sides",
+        "fr": "295 m × 1,8 m × 2 côtés"
+      },
+      "unitPrice": {
+        "low": 102.0,
+        "typical": 120,
+        "high": 156.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "concrete",
+      "total": 127440,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "lane-watermain",
+      "componentId": "c-library-lane",
+      "category": "watermain",
+      "description": {
+        "en": "Watermain 200 mm PVC",
+        "fr": "Conduite d'eau 200 mm PVC"
+      },
+      "quantity": 295,
+      "unit": "m",
+      "quantitySource": {
+        "en": "From drawn line: 295 m",
+        "fr": "Selon la ligne tracée : 295 m"
+      },
+      "unitPrice": {
+        "low": 527.0,
+        "typical": 620,
+        "high": 806.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "pipe",
+      "total": 182900,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "lane-hydrants",
+      "componentId": "c-library-lane",
+      "category": "watermain",
+      "description": {
+        "en": "Fire hydrant assembly",
+        "fr": "Borne d'incendie"
+      },
+      "quantity": 2,
+      "unit": "each",
+      "quantitySource": {
+        "en": "ceil(295 m / 150 m)",
+        "fr": "plafond(295 m / 150 m)"
+      },
+      "unitPrice": {
+        "low": 8075.0,
+        "typical": 9500,
+        "high": 12350.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "pipe",
+      "total": 19000,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "lane-storm",
+      "componentId": "c-library-lane",
+      "category": "sewer",
+      "description": {
+        "en": "Storm sewer 450 mm",
+        "fr": "Égout pluvial 450 mm"
+      },
+      "quantity": 295,
+      "unit": "m",
+      "quantitySource": {
+        "en": "From drawn line: 295 m",
+        "fr": "Selon la ligne tracée : 295 m"
+      },
+      "unitPrice": {
+        "low": 663.0,
+        "typical": 780,
+        "high": 1014.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "pipe",
+      "total": 230100,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "lane-catchbasins",
+      "componentId": "c-library-lane",
+      "category": "sewer",
+      "description": {
+        "en": "Catch basins",
+        "fr": "Puisards"
+      },
+      "quantity": 10,
+      "unit": "each",
+      "quantitySource": {
+        "en": "ceil(295 m / 60 m) × 2",
+        "fr": "plafond(295 m / 60 m) × 2"
+      },
+      "unitPrice": {
+        "low": 3570.0,
+        "typical": 4200,
+        "high": 5460.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "concrete",
+      "total": 42000,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "lane-sanitary",
+      "componentId": "c-library-lane",
+      "category": "sewer",
+      "description": {
+        "en": "Sanitary sewer 250 mm",
+        "fr": "Égout sanitaire 250 mm"
+      },
+      "quantity": 295,
+      "unit": "m",
+      "quantitySource": {
+        "en": "From drawn line: 295 m",
+        "fr": "Selon la ligne tracée : 295 m"
+      },
+      "unitPrice": {
+        "low": 586.5,
+        "typical": 690,
+        "high": 897.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "pipe",
+      "total": 203550,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "lane-maintenance-holes",
+      "componentId": "c-library-lane",
+      "category": "sewer",
+      "description": {
+        "en": "Maintenance holes",
+        "fr": "Regards"
+      },
+      "quantity": 6,
+      "unit": "each",
+      "quantitySource": {
+        "en": "ceil(295 m / 100 m) × 2 sewers",
+        "fr": "plafond(295 m / 100 m) × 2 égouts"
+      },
+      "unitPrice": {
+        "low": 9350.0,
+        "typical": 11000,
+        "high": 14300.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "concrete",
+      "total": 66000,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "lane-lighting",
+      "componentId": "c-library-lane",
+      "category": "lighting",
+      "description": {
+        "en": "Streetlights",
+        "fr": "Lampadaires"
+      },
+      "quantity": 9,
+      "unit": "each",
+      "quantitySource": {
+        "en": "ceil(295 m / 35 m)",
+        "fr": "plafond(295 m / 35 m)"
+      },
+      "unitPrice": {
+        "low": 6630.0,
+        "typical": 7800,
+        "high": 10140.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "steel",
+      "total": 70200,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "lane-sod",
+      "componentId": "c-library-lane",
+      "category": "landscaping",
+      "description": {
+        "en": "Boulevard topsoil and sod",
+        "fr": "Terre végétale et gazon du boulevard"
+      },
+      "quantity": 1475,
+      "unit": "m2",
+      "quantitySource": {
+        "en": "295 m × 2.5 m × 2 sides",
+        "fr": "295 m × 2,5 m × 2 côtés"
+      },
+      "unitPrice": {
+        "low": 11.9,
+        "typical": 14,
+        "high": 18.2
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "general",
+      "total": 20650,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "lane-traffic",
+      "componentId": "c-library-lane",
+      "category": "traffic_control",
+      "description": {
+        "en": "Traffic control",
+        "fr": "Signalisation de chantier"
+      },
+      "quantity": 6,
+      "unit": "month",
+      "quantitySource": {
+        "en": "6 months, full closure",
+        "fr": "6 mois, fermeture complète"
+      },
+      "unitPrice": {
+        "low": 15300.0,
+        "typical": 18000,
+        "high": 23400.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "labour",
+      "total": 108000,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "park-grading",
+      "componentId": "c-northgate-park",
+      "category": "earthworks",
+      "description": {
+        "en": "Rough and fine grading",
+        "fr": "Nivellement"
+      },
+      "quantity": 15000,
+      "unit": "m2",
+      "quantitySource": {
+        "en": "From drawn polygon: 15,000 m²",
+        "fr": "Selon le polygone tracé : 15 000 m²"
+      },
+      "unitPrice": {
+        "low": 5.1,
+        "typical": 6,
+        "high": 7.8
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "labour",
+      "total": 90000,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "park-sod",
+      "componentId": "c-northgate-park",
+      "category": "landscaping",
+      "description": {
+        "en": "Topsoil and sod",
+        "fr": "Terre végétale et gazon"
+      },
+      "quantity": 13650,
+      "unit": "m2",
+      "quantitySource": {
+        "en": "15,000 m² − 1,350 m² hardscape and features",
+        "fr": "15 000 m² − 1 350 m² de surfaces dures"
+      },
+      "unitPrice": {
+        "low": 10.2,
+        "typical": 12,
+        "high": 15.6
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "general",
+      "total": 163800,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "park-trees",
+      "componentId": "c-northgate-park",
+      "category": "landscaping",
+      "description": {
+        "en": "Trees (60 mm caliper)",
+        "fr": "Arbres (calibre 60 mm)"
+      },
+      "quantity": 40,
+      "unit": "each",
+      "quantitySource": {
+        "en": "Tree count: 40 (user)",
+        "fr": "Nombre d'arbres : 40 (utilisateur)"
+      },
+      "unitPrice": {
+        "low": 637.5,
+        "typical": 750,
+        "high": 975.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "general",
+      "total": 30000,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "park-playground",
+      "componentId": "c-northgate-park",
+      "category": "park_features",
+      "description": {
+        "en": "Playground, medium, enhanced accessibility",
+        "fr": "Aire de jeux moyenne, accessibilité améliorée"
+      },
+      "quantity": 1,
+      "unit": "each",
+      "quantitySource": {
+        "en": "1 placed feature",
+        "fr": "1 élément placé"
+      },
+      "unitPrice": {
+        "low": 242250.0,
+        "typical": 285000,
+        "high": 370500.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "steel",
+      "total": 285000,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false,
+      "elementRef": {
+        "featureId": "f-playground"
+      }
+    },
+    {
+      "id": "park-splash-pad",
+      "componentId": "c-northgate-park",
+      "category": "park_features",
+      "description": {
+        "en": "Splash pad, small",
+        "fr": "Jeux d'eau, petit"
+      },
+      "quantity": 1,
+      "unit": "each",
+      "quantitySource": {
+        "en": "1 placed feature",
+        "fr": "1 élément placé"
+      },
+      "unitPrice": {
+        "low": 357000.0,
+        "typical": 420000,
+        "high": 546000.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "concrete",
+      "total": 420000,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false,
+      "elementRef": {
+        "featureId": "f-splash-pad"
+      }
+    },
+    {
+      "id": "park-trail",
+      "componentId": "c-northgate-park",
+      "category": "park_features",
+      "description": {
+        "en": "Asphalt trail 2.5 m",
+        "fr": "Sentier asphalté 2,5 m"
+      },
+      "quantity": 1050,
+      "unit": "m2",
+      "quantitySource": {
+        "en": "420 m drawn × 2.5 m",
+        "fr": "420 m tracés × 2,5 m"
+      },
+      "unitPrice": {
+        "low": 72.25,
+        "typical": 85,
+        "high": 110.5
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "asphalt",
+      "total": 89250,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false,
+      "elementRef": {
+        "featureId": "f-trail"
+      }
+    },
+    {
+      "id": "park-fencing",
+      "componentId": "c-northgate-park",
+      "category": "park_features",
+      "description": {
+        "en": "Perimeter fencing",
+        "fr": "Clôture périphérique"
+      },
+      "quantity": 150,
+      "unit": "m",
+      "quantitySource": {
+        "en": "500 m perimeter × 30%",
+        "fr": "500 m de périmètre × 30 %"
+      },
+      "unitPrice": {
+        "low": 93.5,
+        "typical": 110,
+        "high": 143.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "steel",
+      "total": 16500,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "park-furniture",
+      "componentId": "c-northgate-park",
+      "category": "park_features",
+      "description": {
+        "en": "Site furniture allowance",
+        "fr": "Allocation pour mobilier"
+      },
+      "quantity": 1,
+      "unit": "lump",
+      "quantitySource": {
+        "en": "Scaled to 1.5 ha",
+        "fr": "Proportionnel à 1,5 ha"
+      },
+      "unitPrice": {
+        "low": 51000.0,
+        "typical": 60000,
+        "high": 78000.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "general",
+      "total": 60000,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "lib-main",
+      "componentId": "c-library",
+      "category": "building",
+      "description": {
+        "en": "Library building, standard quality",
+        "fr": "Bibliothèque, qualité standard"
+      },
+      "quantity": 2000,
+      "unit": "m2",
+      "quantitySource": {
+        "en": "1,000 m² footprint × 2 storeys",
+        "fr": "1 000 m² d'emprise × 2 étages"
+      },
+      "unitPrice": {
+        "low": 4590.0,
+        "typical": 5400,
+        "high": 6750.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "general",
+      "total": 10800000,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false,
+      "elementRef": {
+        "sectionId": "s-library-main"
+      }
+    },
+    {
+      "id": "lib-wing",
+      "componentId": "c-library",
+      "category": "building",
+      "description": {
+        "en": "Library wing, standard quality",
+        "fr": "Aile de la bibliothèque, qualité standard"
+      },
+      "quantity": 300,
+      "unit": "m2",
+      "quantitySource": {
+        "en": "300 m² footprint × 1 storey",
+        "fr": "300 m² d'emprise × 1 étage"
+      },
+      "unitPrice": {
+        "low": 4590.0,
+        "typical": 5400,
+        "high": 6750.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "general",
+      "total": 1620000,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false,
+      "elementRef": {
+        "sectionId": "s-library-wing"
+      }
+    },
+    {
+      "id": "lib-sustainability",
+      "componentId": "c-library",
+      "category": "building",
+      "description": {
+        "en": "High-performance premium (5%)",
+        "fr": "Prime haute performance (5 %)"
+      },
+      "quantity": 2300,
+      "unit": "m2",
+      "quantitySource": {
+        "en": "2,300 m² GFA",
+        "fr": "2 300 m² de SHB"
+      },
+      "unitPrice": {
+        "low": 229.5,
+        "typical": 270,
+        "high": 351.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "general",
+      "total": 621000,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "lib-green-roof",
+      "componentId": "c-library",
+      "category": "building",
+      "description": {
+        "en": "Green roof premium",
+        "fr": "Prime toit vert"
+      },
+      "quantity": 300,
+      "unit": "m2",
+      "quantitySource": {
+        "en": "Wing roof area 300 m²",
+        "fr": "Toit de l'aile : 300 m²"
+      },
+      "unitPrice": {
+        "low": 221.0,
+        "typical": 260,
+        "high": 338.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "general",
+      "total": 78000,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false,
+      "elementRef": {
+        "sectionId": "s-library-wing"
+      }
+    },
+    {
+      "id": "lib-shape",
+      "componentId": "c-library",
+      "category": "building",
+      "description": {
+        "en": "Shape complexity (2 sections)",
+        "fr": "Complexité de forme (2 sections)"
+      },
+      "quantity": 1,
+      "unit": "lump",
+      "quantitySource": {
+        "en": "Perimeter/area vs rectangle, 2 heights",
+        "fr": "Périmètre/aire vs rectangle, 2 hauteurs"
+      },
+      "unitPrice": {
+        "low": 157250.0,
+        "typical": 185000,
+        "high": 240500.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "general",
+      "total": 185000,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "lib-parking",
+      "componentId": "c-library",
+      "category": "site_works",
+      "description": {
+        "en": "Parking lot, asphalt",
+        "fr": "Stationnement asphalté"
+      },
+      "quantity": 1200,
+      "unit": "m2",
+      "quantitySource": {
+        "en": "Drawn parking polygon: 1,200 m²",
+        "fr": "Stationnement tracé : 1 200 m²"
+      },
+      "unitPrice": {
+        "low": 97.75,
+        "typical": 115,
+        "high": 149.5
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "asphalt",
+      "total": 138000,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false,
+      "elementRef": {
+        "featureId": "f-library-parking"
+      }
+    },
+    {
+      "id": "lib-landscape",
+      "componentId": "c-library",
+      "category": "landscaping",
+      "description": {
+        "en": "Site landscaping",
+        "fr": "Aménagement paysager du site"
+      },
+      "quantity": 12500,
+      "unit": "m2",
+      "quantitySource": {
+        "en": "15,000 m² site − 1,300 m² footprint − 1,200 m² parking",
+        "fr": "15 000 m² − 1 300 m² d'emprise − 1 200 m² de stationnement"
+      },
+      "unitPrice": {
+        "low": 15.3,
+        "typical": 18,
+        "high": 23.4
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "general",
+      "total": 225000,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "lib-servicing",
+      "componentId": "c-library",
+      "category": "site_works",
+      "description": {
+        "en": "Site servicing, average",
+        "fr": "Viabilisation, moyenne"
+      },
+      "quantity": 1,
+      "unit": "lump",
+      "quantitySource": {
+        "en": "Site servicing complexity: average",
+        "fr": "Complexité : moyenne"
+      },
+      "unitPrice": {
+        "low": 297500.0,
+        "typical": 350000,
+        "high": 455000.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "pipe",
+      "total": 350000,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "lib-ffe",
+      "componentId": "c-library",
+      "category": "building",
+      "description": {
+        "en": "Furniture, fixtures and equipment",
+        "fr": "Mobilier et équipement"
+      },
+      "quantity": 2300,
+      "unit": "m2",
+      "quantitySource": {
+        "en": "2,300 m² GFA",
+        "fr": "2 300 m² de SHB"
+      },
+      "unitPrice": {
+        "low": 357.0,
+        "typical": 420,
+        "high": 546.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "general",
+      "total": 966000,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "fire-bays",
+      "componentId": "c-fire-station",
+      "category": "building",
+      "description": {
+        "en": "Fire station apparatus bays",
+        "fr": "Baies d'appareils de la caserne"
+      },
+      "quantity": 900,
+      "unit": "m2",
+      "quantitySource": {
+        "en": "900 m² footprint × 1 storey",
+        "fr": "900 m² d'emprise × 1 étage"
+      },
+      "unitPrice": {
+        "low": 5270.0,
+        "typical": 6200,
+        "high": 7750.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "general",
+      "total": 5580000,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false,
+      "elementRef": {
+        "sectionId": "s-fire-bays"
+      }
+    },
+    {
+      "id": "fire-quarters",
+      "componentId": "c-fire-station",
+      "category": "building",
+      "description": {
+        "en": "Fire station crew quarters",
+        "fr": "Quartiers de l'équipe"
+      },
+      "quantity": 1000,
+      "unit": "m2",
+      "quantitySource": {
+        "en": "500 m² footprint × 2 storeys",
+        "fr": "500 m² d'emprise × 2 étages"
+      },
+      "unitPrice": {
+        "low": 5015.0,
+        "typical": 5900,
+        "high": 7375.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "general",
+      "total": 5900000,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false,
+      "elementRef": {
+        "sectionId": "s-fire-quarters"
+      }
+    },
+    {
+      "id": "fire-bay-premium",
+      "componentId": "c-fire-station",
+      "category": "building",
+      "description": {
+        "en": "Apparatus bay premium (3 bays)",
+        "fr": "Prime pour 3 baies"
+      },
+      "quantity": 3,
+      "unit": "each",
+      "quantitySource": {
+        "en": "Apparatus bays: 3 (from prompt)",
+        "fr": "Baies : 3 (selon la description)"
+      },
+      "unitPrice": {
+        "low": 204000.0,
+        "typical": 240000,
+        "high": 312000.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "steel",
+      "total": 720000,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "fire-pitched-roof",
+      "componentId": "c-fire-station",
+      "category": "building",
+      "description": {
+        "en": "Pitched roof premium",
+        "fr": "Prime toit en pente"
+      },
+      "quantity": 500,
+      "unit": "m2",
+      "quantitySource": {
+        "en": "Quarters roof area 500 m²",
+        "fr": "Toit des quartiers : 500 m²"
+      },
+      "unitPrice": {
+        "low": 119.0,
+        "typical": 140,
+        "high": 182.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "lumber",
+      "total": 70000,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false,
+      "elementRef": {
+        "sectionId": "s-fire-quarters"
+      }
+    },
+    {
+      "id": "fire-apron",
+      "componentId": "c-fire-station",
+      "category": "site_works",
+      "description": {
+        "en": "Concrete apron and site paving",
+        "fr": "Tablier en béton et pavage"
+      },
+      "quantity": 1800,
+      "unit": "m2",
+      "quantitySource": {
+        "en": "Site − footprint − landscaping",
+        "fr": "Site − emprise − aménagement"
+      },
+      "unitPrice": {
+        "low": 140.25,
+        "typical": 165,
+        "high": 214.5
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "concrete",
+      "total": 297000,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "fire-servicing",
+      "componentId": "c-fire-station",
+      "category": "site_works",
+      "description": {
+        "en": "Site servicing, average",
+        "fr": "Viabilisation, moyenne"
+      },
+      "quantity": 1,
+      "unit": "lump",
+      "quantitySource": {
+        "en": "Site servicing complexity: average",
+        "fr": "Complexité : moyenne"
+      },
+      "unitPrice": {
+        "low": 255000.0,
+        "typical": 300000,
+        "high": 390000.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "pipe",
+      "total": 300000,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "fire-ffe",
+      "componentId": "c-fire-station",
+      "category": "building",
+      "description": {
+        "en": "Furniture, fixtures and equipment",
+        "fr": "Mobilier et équipement"
+      },
+      "quantity": 1900,
+      "unit": "m2",
+      "quantitySource": {
+        "en": "1,900 m² GFA",
+        "fr": "1 900 m² de SHB"
+      },
+      "unitPrice": {
+        "low": 323.0,
+        "typical": 380,
+        "high": 494.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "general",
+      "total": 722000,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "culvert-box",
+      "componentId": "c-creek-culvert",
+      "category": "structures",
+      "description": {
+        "en": "Precast concrete box culvert 3.0 m span",
+        "fr": "Ponceau en béton préfabriqué, portée 3,0 m"
+      },
+      "quantity": 24,
+      "unit": "m",
+      "quantitySource": {
+        "en": "Length: 24 m (default)",
+        "fr": "Longueur : 24 m (par défaut)"
+      },
+      "unitPrice": {
+        "low": 16800.0,
+        "typical": 21000,
+        "high": 29400.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "concrete",
+      "total": 504000,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "culvert-inwater",
+      "componentId": "c-creek-culvert",
+      "category": "structures",
+      "description": {
+        "en": "In-water work, dewatering and fish rescue",
+        "fr": "Travaux en eau, assèchement et sauvetage des poissons"
+      },
+      "quantity": 1,
+      "unit": "lump",
+      "quantitySource": {
+        "en": "Fish habitat: yes (site context)",
+        "fr": "Habitat du poisson : oui (contexte du site)"
+      },
+      "unitPrice": {
+        "low": 126000.0,
+        "typical": 180000,
+        "high": 288000.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "labour",
+      "total": 180000,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "culvert-traffic",
+      "componentId": "c-creek-culvert",
+      "category": "traffic_control",
+      "description": {
+        "en": "Traffic control during culvert work",
+        "fr": "Signalisation pendant les travaux du ponceau"
+      },
+      "quantity": 2,
+      "unit": "month",
+      "quantitySource": {
+        "en": "2 months, local road",
+        "fr": "2 mois, rue locale"
+      },
+      "unitPrice": {
+        "low": 12750.0,
+        "typical": 15000,
+        "high": 19500.0
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "labour",
+      "total": 30000,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    },
+    {
+      "id": "project-mobilization",
+      "componentId": null,
+      "category": "mobilization",
+      "description": {
+        "en": "Mobilization and general conditions (project)",
+        "fr": "Mobilisation et conditions générales (projet)"
+      },
+      "quantity": 1,
+      "unit": "lump",
+      "quantitySource": {
+        "en": "4% of direct cost, shared across 6 components",
+        "fr": "4 % du coût direct, réparti sur 6 composantes"
+      },
+      "unitPrice": {
+        "low": 1342699.16,
+        "typical": 1342699.16,
+        "high": 1342699.16
+      },
+      "unitPriceSource": {
+        "en": "Sample Ontario unit price, 2025, typical",
+        "fr": "Prix unitaire ontarien type (échantillon), 2025"
+      },
+      "priceCategory": "general",
+      "total": 1342699.16,
+      "isQuantityOverridden": false,
+      "isPriceOverridden": false,
+      "lowConfidence": false
+    }
+  ],
+  "subtotals": {
+    "earthworks": 205456,
+    "paving": 318243,
+    "concrete": 444730,
+    "watermain": 490800,
+    "sewer": 1327850,
+    "lighting": 163800,
+    "landscaping": 468850,
+    "traffic_control": 246000,
+    "park_features": 870750,
+    "building": 27262000,
+    "site_works": 1085000,
+    "structures": 684000,
+    "mobilization": 1342699.16
+  },
+  "directCost": 34910178.16,
+  "softCosts": {
+    "engineering": 3491017.82,
+    "contractAdmin": 1396407.13,
+    "permitsApprovals": 185000.0,
+    "projectManagement": 1047305.34,
+    "ffe": 1688000
+  },
+  "escalation": 4270413.27,
+  "escalationDetail": {
+    "bcpiFactor": 1.041,
+    "bcpiLabel": {
+      "en": "StatCan BCPI, Toronto, non-residential: +4.1% since 2025 Q2 (sample)",
+      "fr": "IPCB de StatCan, Toronto, non résidentiel : +4,1 % depuis le T2 2025 (échantillon)"
+    },
+    "isProxy": true,
+    "annualRate": 0.04,
+    "annualRateSource": "fallback_default"
+  },
+  "taxes": 797285.66,
+  "baseEstimate": 46097607.38,
+  "estimateClass": "D",
+  "classRange": {
+    "lowPct": -30,
+    "highPct": 50
+  },
+  "distribution": {
+    "p10": 42871000.0,
+    "p50": 48863000.0,
+    "p80": 54856000.0,
+    "p90": 58544000.0,
+    "histogram": [
+      {
+        "bin": 36878000.0,
+        "count": 30
+      },
+      {
+        "bin": 38492000.0,
+        "count": 76
+      },
+      {
+        "bin": 40105000.0,
+        "count": 165
+      },
+      {
+        "bin": 41718000.0,
+        "count": 305
+      },
+      {
+        "bin": 43332000.0,
+        "count": 485
+      },
+      {
+        "bin": 44945000.0,
+        "count": 660
+      },
+      {
+        "bin": 46559000.0,
+        "count": 774
+      },
+      {
+        "bin": 48172000.0,
+        "count": 770
+      },
+      {
+        "bin": 49785000.0,
+        "count": 660
+      },
+      {
+        "bin": 51399000.0,
+        "count": 485
+      },
+      {
+        "bin": 53012000.0,
+        "count": 305
+      },
+      {
+        "bin": 54626000.0,
+        "count": 165
+      },
+      {
+        "bin": 56239000.0,
+        "count": 76
+      },
+      {
+        "bin": 57852000.0,
+        "count": 30
+      },
+      {
+        "bin": 59466000.0,
+        "count": 10
+      },
+      {
+        "bin": 61079000.0,
+        "count": 3
+      },
+      {
+        "bin": 62693000.0,
+        "count": 1
+      },
+      {
+        "bin": 64306000.0,
+        "count": 0
+      },
+      {
+        "bin": 65920000.0,
+        "count": 0
+      },
+      {
+        "bin": 67533000.0,
+        "count": 0
+      }
+    ]
+  },
+  "recommendedContingency": {
+    "amount": 8758392.62,
+    "pct": 19.0
+  },
+  "overrunRisk": {
+    "probabilityOfOverrun": 0.62,
+    "typicalOverrunPct": 14,
+    "referenceNote": {
+      "en": "Sample reference: early-stage municipal building and road projects often exceed initial estimates.",
+      "fr": "Référence (échantillon) : les projets municipaux à un stade précoce dépassent souvent les estimations initiales."
+    }
+  },
+  "drivers": [
+    {
+      "id": "pc-general",
+      "label": {
+        "en": "General building prices",
+        "fr": "Prix généraux du bâtiment"
+      },
+      "impactLow": -1850000,
+      "impactHigh": 2600000
+    },
+    {
+      "id": "c-library:quality",
+      "label": {
+        "en": "Northgate Branch Library — quality level",
+        "fr": "Bibliothèque Northgate — niveau de qualité"
+      },
+      "componentId": "c-library",
+      "impactLow": -1400000,
+      "impactHigh": 2100000
+    },
+    {
+      "id": "c-fire-station:quality",
+      "label": {
+        "en": "Fire Station 7 — quality level",
+        "fr": "Caserne 7 — niveau de qualité"
+      },
+      "componentId": "c-fire-station",
+      "impactLow": -1150000,
+      "impactHigh": 1700000
+    },
+    {
+      "id": "pc-pipe",
+      "label": {
+        "en": "Pipe prices",
+        "fr": "Prix des conduites"
+      },
+      "impactLow": -420000,
+      "impactHigh": 610000
+    },
+    {
+      "id": "c-northgate-ave:soilCondition",
+      "label": {
+        "en": "Northgate Avenue — soil condition",
+        "fr": "Avenue Northgate — état du sol"
+      },
+      "componentId": "c-northgate-ave",
+      "impactLow": -90000,
+      "impactHigh": 520000
+    },
+    {
+      "id": "pc-concrete",
+      "label": {
+        "en": "Concrete prices",
+        "fr": "Prix du béton"
+      },
+      "impactLow": -300000,
+      "impactHigh": 450000
+    },
+    {
+      "id": "c-creek-culvert:spanM",
+      "label": {
+        "en": "Laurel Creek culvert — span",
+        "fr": "Ponceau du ruisseau Laurel — portée"
+      },
+      "componentId": "c-creek-culvert",
+      "impactLow": -160000,
+      "impactHigh": 380000
+    },
+    {
+      "id": "pc-labour",
+      "label": {
+        "en": "Labour rates",
+        "fr": "Taux de main-d'œuvre"
+      },
+      "impactLow": -210000,
+      "impactHigh": 320000
+    }
+  ],
+  "flags": [
+    {
+      "id": "flag-culvert-waterway",
+      "code": "waterway_permit",
+      "severity": "high",
+      "title": {
+        "en": "Conservation authority permit needed",
+        "fr": "Permis de l'office de protection de la nature requis"
+      },
+      "explanation": {
+        "en": "Laurel Creek is within 30 m of the culvert. Expect a Grand River Conservation Authority permit and an in-water work window (typically July–March closed for fish).",
+        "fr": "Le ruisseau Laurel est à moins de 30 m du ponceau. Prévoir un permis de l'Office de protection de la nature de la rivière Grand et une période restreinte pour les travaux en eau."
+      },
+      "costEffect": {
+        "en": "In-water work allowance included; schedule risk",
+        "fr": "Allocation pour travaux en eau incluse; risque d'échéancier"
+      },
+      "componentIds": ["c-creek-culvert"],
+      "location": {
+        "lng": -80.527399,
+        "lat": 43.502246
+      }
+    },
+    {
+      "id": "flag-school-ave",
+      "code": "school_nearby",
+      "severity": "warning",
+      "title": {
+        "en": "School within 200 m",
+        "fr": "École à moins de 200 m"
+      },
+      "explanation": {
+        "en": "Northgate Public School is near Northgate Avenue. Plan traffic management and restricted work hours around school times.",
+        "fr": "L'école publique Northgate est près de l'avenue Northgate. Prévoir la gestion de la circulation et des heures de travail restreintes."
+      },
+      "componentIds": ["c-northgate-ave", "c-fire-station"],
+      "location": {
+        "lng": -80.525913,
+        "lat": 43.499461
+      }
+    },
+    {
+      "id": "flag-winter",
+      "code": "winter_work",
+      "severity": "info",
+      "title": {
+        "en": "Construction overlaps winter",
+        "fr": "Les travaux chevauchent l'hiver"
+      },
+      "explanation": {
+        "en": "An 18-month schedule from April 2027 includes December–March. A winter premium applies to earthworks, concrete and paving; paving is typically deferred to spring.",
+        "fr": "Un échéancier de 18 mois à partir d'avril 2027 inclut décembre à mars. Une prime hivernale s'applique; le pavage est généralement reporté au printemps."
+      },
+      "componentIds": [
+        "c-northgate-ave",
+        "c-library-lane",
+        "c-library",
+        "c-fire-station"
+      ]
+    },
+    {
+      "id": "flag-soil-unknown",
+      "code": "missing_high_impact_input",
+      "severity": "info",
+      "title": {
+        "en": "Soil conditions unknown",
+        "fr": "Conditions du sol inconnues"
+      },
+      "explanation": {
+        "en": "Both streets use the default 'unknown' soil condition. A geotechnical report would narrow the range.",
+        "fr": "Les deux rues utilisent la valeur par défaut « inconnue ». Un rapport géotechnique réduirait l'écart."
+      },
+      "componentIds": ["c-northgate-ave", "c-library-lane"]
+    }
+  ],
+  "perUnitMetrics": {
+    "perM": 4373.33,
+    "perM2GFA": 6802.86
+  },
+  "sampleData": true,
+  "seed": 20270401,
+  "computedAt": "2026-09-26T12:00:00Z"
+}
