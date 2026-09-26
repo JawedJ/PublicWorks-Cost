@@ -36,7 +36,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 - [x] P0.6 App layout shell (top bar, language toggle, sample-data badge)
 - [ ] P0.7 `.env.example`, `README.md`, `DEPLOY.md`
 - [ ] P0.8 Deploy placeholder to Vercel (record URL below)
-- [ ] A.1 Create `src/lib/store/store.ts` with `designSlice.ts` (selection contract included) and an empty `projectSlice.ts` stub for B; merge to `main` **as early as possible** so B can build on it
+- [x] A.1 Create `src/lib/store/store.ts` with `designSlice.ts` (selection contract included) and an empty `projectSlice.ts` stub for B; merge to `main` **as early as possible** so B can build on it
 
 ### S1 → S2 — Map & drawing · Core
 - [ ] P1.1 Workspace page with MapLibre, basemap (MapTiler, OpenFreeMap fallback), controls
