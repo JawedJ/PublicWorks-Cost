@@ -274,7 +274,8 @@
     "shareChip": "Share",
     "p50Note": "P50: as likely to come in under as over",
     "components": "Components",
-    "emptyTitle": "No estimate yet"
+    "emptyTitle": "No estimate yet",
+    "flagCount": "{count} components"
   },
   "visuals": {
     "crossSection": {
@@ -444,7 +445,8 @@
       "perM2GFA": "per m² of building floor"
     },
     "outcomes": "Outcomes",
-    "cost": "Cost"
+    "cost": "Cost",
+    "legend": "Component types"
   },
   "evidence": {
     "title": "Market evidence",

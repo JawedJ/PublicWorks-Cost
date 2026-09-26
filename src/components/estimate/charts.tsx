@@ -24,7 +24,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import type { Estimate, LineItem } from "@/lib/schemas";
+import type { ComponentType, Estimate, LineItem } from "@/lib/schemas";
 import { useStore } from "@/lib/store/store";
 
 // P3.8: estimate visuals with shadcn Chart (Recharts): per-component breakdown,
@@ -42,8 +42,15 @@ const money = new Intl.NumberFormat("en-CA", {
   maximumFractionDigits: 0,
 });
 
-/** Component colour by position: the five chart tokens, repeating. */
-const chartColor = (i: number) => `var(--chart-${(i % 5) + 1})`;
+/** Component colour by type, so all buildings (or roads…) share a colour. */
+export const TYPE_COLOR: Record<ComponentType, string> = {
+  road: "var(--chart-1)",
+  building: "var(--chart-2)",
+  park: "var(--chart-3)",
+  structure: "var(--chart-4)",
+  parking: "var(--chart-5)",
+  custom: "var(--muted-foreground)",
+};
 
 const formatMoney = (v: unknown) => compact.format(Number(v));
 
@@ -51,11 +58,14 @@ const formatMoney = (v: unknown) => compact.format(Number(v));
 export function ComponentBreakdown({ estimate }: { estimate: Estimate }) {
   const t = useTranslations("charts");
   const tEst = useTranslations("estimate");
+  const tType = useTranslations("buildList.types");
   const selectComponent = useStore((s) => s.selectComponent);
   const data = estimate.components.map((c) => ({
     name: c.name,
     p50: c.p50,
+    type: c.type,
   }));
+  const types = [...new Set(estimate.components.map((c) => c.type))];
   const config = { p50: { label: "P50" } } satisfies ChartConfig;
 
   return (
@@ -93,13 +103,28 @@ export function ComponentBreakdown({ estimate }: { estimate: Estimate }) {
             />
             <Bar dataKey="p50" radius={6}>
               {data.map((d, i) => (
-                <Cell key={d.name} fill={chartColor(i)} />
+                <Cell key={i} fill={TYPE_COLOR[d.type]} />
               ))}
             </Bar>
           </BarChart>
         </ChartContainer>
+        <ul
+          aria-label={t("legend")}
+          className="flex flex-wrap gap-x-4 gap-y-1 px-2 text-xs text-muted-foreground"
+        >
+          {types.map((type) => (
+            <li key={type} className="flex items-center gap-1.5">
+              <span
+                aria-hidden
+                className="size-2 rounded-full"
+                style={{ background: TYPE_COLOR[type] }}
+              />
+              {tType(type)}
+            </li>
+          ))}
+        </ul>
         <ul className="flex flex-col">
-          {estimate.components.map((c, i) => (
+          {estimate.components.map((c) => (
             <li key={c.componentId}>
               <Button
                 variant="ghost"
@@ -110,7 +135,7 @@ export function ComponentBreakdown({ estimate }: { estimate: Estimate }) {
                   <span
                     aria-hidden
                     className="size-2 shrink-0 rounded-full"
-                    style={{ background: chartColor(i) }}
+                    style={{ background: TYPE_COLOR[c.type] }}
                   />
                   <span className="truncate">{c.name}</span>
                 </span>

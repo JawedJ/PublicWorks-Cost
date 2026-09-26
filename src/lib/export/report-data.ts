@@ -1,4 +1,5 @@
 import { templates } from "@/engine/templates";
+import { groupFlags } from "@/lib/estimate/group-flags";
 import type {
   Component,
   Estimate,
@@ -69,6 +70,13 @@ export type ReportModel = {
     title: string;
     explanation: string;
     costEffect: string;
+    where: string;
+  }[];
+  /** Same issue on several components → one row (the PDF uses these). */
+  flagGroups: {
+    severity: string;
+    title: string;
+    details: string;
     where: string;
   }[];
   settings: { label: string; value: string }[];
@@ -293,6 +301,36 @@ export function buildReport(
             ? "Project-wide"
             : f.componentIds.map(nameOf).join(", "),
       })),
+    flagGroups: groupFlags(estimate.flags).map((g) => ({
+      severity: SEVERITY[g.severity],
+      title: g.title,
+      details: [
+        g.explanation,
+        g.costEffect,
+        ...(g.items.length > 1 || g.items.some((i) => i.detail)
+          ? g.items.map((i) =>
+              [
+                `- ${i.componentIds.length ? i.componentIds.map(nameOf).join(", ") : "Project-wide"}:`,
+                i.detail,
+                i.costEffect,
+              ]
+                .filter(Boolean)
+                .join(" "),
+            )
+          : []),
+      ]
+        .filter(Boolean)
+        .join("\n"),
+      where: [
+        ...new Set(
+          g.items.flatMap((i) =>
+            i.componentIds.length
+              ? i.componentIds.map(nameOf)
+              : ["Project-wide"],
+          ),
+        ),
+      ].join(", "),
+    })),
     settings,
     assumptions,
     lineItems: estimate.lineItems.map((l) => ({

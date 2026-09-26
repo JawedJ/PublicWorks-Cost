@@ -11,12 +11,13 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
+import { groupFlags } from "@/lib/estimate/group-flags";
 import type { Flag } from "@/lib/schemas";
 
 // P3.9b: flags list in the panel, most severe first. A owns the map markers (P3.9a).
 // Collapsed by default so it doesn't crowd the panel. Read-only explanations.
+// The same issue on several components is one entry listing each of them.
 
-const ORDER = { high: 0, warning: 1, info: 2 } as const;
 const ICON = { high: OctagonAlert, warning: TriangleAlert, info: Info };
 const BADGE = {
   high: "destructive",
@@ -33,10 +34,12 @@ type Props = {
 export function FlagsList({ flags, names }: Props) {
   const t = useTranslations("estimate");
   if (flags.length === 0) return null;
-  const sorted = [...flags].sort(
-    (a, b) => ORDER[a.severity] - ORDER[b.severity],
-  );
-  const high = sorted.filter((f) => f.severity === "high").length;
+  const groups = groupFlags(flags);
+  const high = groups.filter((g) => g.severity === "high").length;
+  const nameList = (ids: string[]) =>
+    ids.length === 0
+      ? t("projectWide")
+      : ids.map((id) => names?.get(id) ?? id).join(", ");
 
   return (
     <Card size="sm">
@@ -46,7 +49,7 @@ export function FlagsList({ flags, names }: Props) {
             <AccordionTrigger className="py-0">
               <span className="flex items-center gap-2">
                 {t("flags")}
-                <Badge variant="secondary">{flags.length}</Badge>
+                <Badge variant="secondary">{groups.length}</Badge>
                 {high > 0 && (
                   <Badge variant="destructive">
                     {high} {t("severity.high")}
@@ -55,31 +58,55 @@ export function FlagsList({ flags, names }: Props) {
               </span>
             </AccordionTrigger>
             <AccordionContent className="flex flex-col gap-2 pt-3">
-              {sorted.map((f) => {
-                const Icon = ICON[f.severity];
-                const where = names
-                  ? f.componentIds.length === 0
-                    ? t("projectWide")
-                    : f.componentIds.map((id) => names.get(id) ?? id).join(", ")
-                  : null;
+              {groups.map((g) => {
+                const Icon = ICON[g.severity];
+                const listed =
+                  g.items.length > 1 || g.items.some((i) => i.detail);
                 return (
                   <Alert
-                    key={f.id}
-                    variant={f.severity === "high" ? "destructive" : "default"}
+                    key={g.id}
+                    variant={g.severity === "high" ? "destructive" : "default"}
                   >
                     <Icon />
                     <AlertTitle className="flex flex-wrap items-center gap-2">
-                      {f.title.en}
-                      <Badge variant={BADGE[f.severity]}>
-                        {t(`severity.${f.severity}`)}
+                      {g.title}
+                      <Badge variant={BADGE[g.severity]}>
+                        {t(`severity.${g.severity}`)}
                       </Badge>
+                      {g.items.length > 1 && (
+                        <Badge variant="outline">
+                          {t("flagCount", { count: g.items.length })}
+                        </Badge>
+                      )}
                     </AlertTitle>
                     <AlertDescription className="flex flex-col gap-1">
-                      <span>{f.explanation.en}</span>
-                      {f.costEffect && (
-                        <span className="font-medium">{f.costEffect.en}</span>
+                      {g.explanation && <span>{g.explanation}</span>}
+                      {g.costEffect && (
+                        <span className="font-medium">{g.costEffect}</span>
                       )}
-                      {where && <span className="text-xs">{where}</span>}
+                      {listed ? (
+                        <ul className="flex list-disc flex-col gap-1 pl-4 text-xs">
+                          {g.items.map((i, n) => (
+                            <li key={n}>
+                              {names && (
+                                <span className="font-medium">
+                                  {nameList(i.componentIds)}
+                                  {(i.detail || i.costEffect) && ": "}
+                                </span>
+                              )}
+                              {[i.detail, i.costEffect]
+                                .filter(Boolean)
+                                .join(" ")}
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        names && (
+                          <span className="text-xs">
+                            {nameList(g.items[0]!.componentIds)}
+                          </span>
+                        )
+                      )}
                     </AlertDescription>
                   </Alert>
                 );

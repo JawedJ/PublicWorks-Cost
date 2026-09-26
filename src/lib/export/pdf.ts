@@ -331,16 +331,11 @@ export async function buildReportPdf(
   }
 
   heading("Flags and required approvals");
-  if (r.flags.length === 0) para("No flags raised.", 9, MUTED);
+  if (r.flagGroups.length === 0) para("No flags raised.", 9, MUTED);
   else
     table(
       ["Severity", "Flag", "Details", "Applies to"],
-      groupFlags(r.flags).map((f) => [
-        f.severity,
-        f.title,
-        [f.explanation, f.costEffect].filter(Boolean).join(" "),
-        f.where,
-      ]),
+      r.flagGroups.map((f) => [f.severity, f.title, f.details, f.where]),
       { widths: { 0: 52, 1: 110, 3: 100 } },
     );
 
@@ -383,16 +378,4 @@ export async function buildReportPdf(
   }
 
   return doc.output("blob");
-}
-
-/** Same flag on several components (e.g. "Near a school") → one row. */
-function groupFlags(flags: ReportModel["flags"]): ReportModel["flags"] {
-  const out = new Map<string, ReportModel["flags"][number]>();
-  for (const f of flags) {
-    const key = `${f.severity}|${f.title}`;
-    const seen = out.get(key);
-    if (!seen) out.set(key, { ...f });
-    else if (!seen.where.includes(f.where)) seen.where += `, ${f.where}`;
-  }
-  return [...out.values()];
 }
