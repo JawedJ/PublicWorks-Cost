@@ -9,6 +9,7 @@ import { ComponentSchema } from "./component";
 import { PolygonFeatureSchema } from "./geojson";
 import { ScenarioSchema } from "./scenario";
 import { SiteContextSchema } from "./site-context";
+import { ZoningContextSchema } from "./zoning";
 
 /** Bump when the Project shape changes incompatibly; project files carry it (SPEC 15). */
 export const CURRENT_SCHEMA_VERSION = 1;
@@ -61,6 +62,8 @@ export const ProjectSchema = z
     scenarios: z.array(ScenarioSchema).min(1),
     activeScenarioId: z.string().min(1),
     siteContext: SiteContextSchema.optional(),
+    /** Zone of each building (SPEC 8.3); advisory flags only. */
+    zoningContext: ZoningContextSchema.optional(),
     /** Metadata only; file contents are never stored. */
     documents: z.array(
       z.object({

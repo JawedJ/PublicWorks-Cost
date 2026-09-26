@@ -6,6 +6,7 @@ import {
   type Project,
   type ProjectSettings,
   type SiteContext,
+  type ZoningContext,
 } from "@/lib/schemas";
 import { siteParamSuggestions } from "@/engine/site-params";
 import { newId } from "./designSlice";
@@ -52,6 +53,8 @@ export type ProjectSlice = {
   updateProjectInfo: (patch: ProjectInfoPatch) => void;
   updateSettings: (patch: Partial<ProjectSettings>) => void;
   setSiteContext: (siteContext: SiteContext | undefined) => void;
+  /** Stores the zone lookup for the buildings (SPEC 8.3). */
+  setZoningContext: (zoningContext: ZoningContext | undefined) => void;
   setActiveScenario: (scenarioId: string) => void;
 
   /** Sets one parameter and records where the value came from. One undo step. */
@@ -197,6 +200,8 @@ export const createProjectSlice: StateCreator<Store, [], [], ProjectSlice> = (
         .filter((p) => p !== null);
       if (patches.length) get().updateComponents(patches);
     },
+
+    setZoningContext: (zoningContext) => updateInfo({ zoningContext }),
 
     setActiveScenario: (scenarioId) => {
       if (!get().project.scenarios.some((s) => s.id === scenarioId)) return;

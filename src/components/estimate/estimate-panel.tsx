@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { scopeEstimate } from "@/lib/estimate/scope";
 import { useEstimate } from "@/lib/estimate/useEstimate";
+import { useZoningLookup } from "@/lib/zoning/useZoningLookup";
 import { useStore } from "@/lib/store/store";
 import { EstimateTab } from "./estimate-tab";
 import { QuestionsPanel } from "@/components/questions/questions-panel";
@@ -20,6 +21,8 @@ type Tab = (typeof TABS)[number];
 export function EstimatePanel() {
   const t = useTranslations("estimate");
   const { estimate, computing } = useEstimate();
+  // Zoning (SPEC 8.3) is looked up in the background while the workspace is open.
+  useZoningLookup();
   const selectComponent = useStore((s) => s.selectComponent);
   const selectedId = useStore((s) => s.selectedComponentId);
   const components = useStore((s) => s.components);

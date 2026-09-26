@@ -16,6 +16,7 @@ import type {
   Scenario,
 } from "@/lib/schemas";
 import { bcpiEscalation, trailingAnnualRate } from "./escalation";
+import { zoningFlags } from "./zoning";
 import { resolveParams } from "./params";
 import { createRng, normal, normalCdf, percentile, triangular } from "./rng";
 import { templates } from "./templates";
@@ -520,6 +521,11 @@ export function computeEstimate(
     .slice(0, 8);
 
   // --- Project flags ---
+  for (const f of zoningFlags(
+    drawn.filter((c) => c.type === "building"),
+    project.zoningContext,
+  ))
+    addFlag(f);
   const undrawn = all.filter((c) => c.status === "planned");
   if (undrawn.length > 0) {
     addFlag({
