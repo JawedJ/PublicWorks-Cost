@@ -73,8 +73,8 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 - [x] P1.13 Roads along any path at true width with markings, curbs, sidewalks, cycle lanes
 - [x] P1.11 Procedural 2D rendering: roofs from actual section shapes, height shading, storeys badges, original SVG icon set
 - [x] P1.12 Procedural park rendering: grass fill, seeded tree scatter, fitted field markings, parking stalls, custom feature hatch
-- [ ] P1.9 `src/data/typologies.json` (you own this one data file) + smart-start shape for a known type
-- [ ] P1.10 Generate starting layout (seeded): roads → buildings fronting roads → parks; spatial hints; no overlaps; Regenerate
+- [x] P1.9 `src/data/typologies.json` (you own this one data file) + smart-start shape for a known type
+- [x] P1.10 Generate starting layout (seeded): roads → buildings fronting roads → parks; spatial hints; no overlaps; Regenerate
 - [x] P3.2 Workspace layout: view (left) + B's `<EstimatePanel/>` (right); view switcher 2D plan / 3D map
 - [x] P3.3 Shared selection across views, component list, and line items; hover tooltips with cost (from `useEstimate`, fixture until live)
 - [x] P3.4 "Colour by cost" toggle on map views

@@ -13,6 +13,7 @@ import { EditToolbar } from "./edit-toolbar";
 import { Geocoder } from "./geocoder";
 import { MapProvider } from "./map-context";
 import { MapView } from "./map-view";
+import { SmartPlacer } from "./smart-placer";
 import { TransformHandles } from "./transform-handles";
 import { ViewSwitcher } from "./view-switcher";
 
@@ -47,6 +48,7 @@ export function WorkspaceShell() {
               <ComponentLayers />
               <DrawController />
               <TransformHandles />
+              <SmartPlacer />
               <div className="absolute top-3 left-3 z-10 flex flex-col items-start gap-2">
                 <Geocoder />
                 <DrawToolbar />

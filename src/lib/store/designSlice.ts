@@ -6,6 +6,7 @@ import type {
   ComponentGeometry,
   ComponentType,
   PolygonFeature,
+  Position,
 } from "@/lib/schemas";
 import {
   geometryForType,
@@ -15,6 +16,7 @@ import {
   withFeature,
   withSection,
   type Drawing,
+  type DrawTarget,
 } from "@/lib/geo/drawing";
 import {
   componentCentre,
@@ -27,6 +29,10 @@ import {
   transformGeometry,
   type ElementRef,
 } from "@/lib/geo/edit";
+import {
+  generateLayout as generateLayoutFor,
+  smartGeometry,
+} from "@/lib/geo/generate";
 import { mirrorAbout, translateFeature } from "@/lib/geo/transform";
 import type { Store } from "./store";
 
@@ -81,6 +87,10 @@ export type DesignSlice = DesignSnapshot & {
   future: DesignSnapshot[];
   /** The shape being drawn on the map, or `null` when not drawing. */
   drawing: Drawing | null;
+  /** Waiting for a map click to drop a smart-start shape for this target (P1.9). */
+  smartPlacing: Extract<DrawTarget, { kind: "new" | "planned" }> | null;
+  /** Seed of the last generated layout; Regenerate uses the next one. */
+  layoutSeed: number;
   /** Why the last finished shape was not applied (shown by the draw toolbar). */
   drawNotice: "holeOutside" | null;
 
@@ -165,6 +175,16 @@ export type DesignSlice = DesignSnapshot & {
    * shape doesn't fit the target.
    */
   finishDrawing: (shape: AnyFeature) => string | null;
+
+  /** Waits for a map click to drop a smart-start shape (or stops waiting with `null`). */
+  startSmartPlacing: (target: DesignSlice["smartPlacing"]) => void;
+  /** Drops the procedurally generated starting shape at `centre`, facing `bearingDeg`. One undo step. */
+  placeSmart: (centre: Position, bearingDeg?: number) => string | null;
+  /**
+   * Places every planned component (and re-places generated ones that weren't edited)
+   * around `centre` as one undo step. Returns how many were placed.
+   */
+  generateLayout: (centre: Position, seed?: number) => number;
 
   undo: () => void;
   redo: () => void;
@@ -262,6 +282,8 @@ export const createDesignSlice: StateCreator<Store, [], [], DesignSlice> = (
     future: [],
     drawing: null,
     drawNotice: null,
+    smartPlacing: null,
+    layoutSeed: 1,
 
     selectComponent: (componentId) =>
       set({
@@ -456,6 +478,54 @@ export const createDesignSlice: StateCreator<Store, [], [], DesignSlice> = (
       get().setComponentGeometry(c.id, geometry);
       get().selectComponent(c.id);
       return c.id;
+    },
+
+    startSmartPlacing: (smartPlacing) => set({ smartPlacing, drawing: null }),
+    placeSmart: (centre, bearingDeg = 0) => {
+      const target = get().smartPlacing;
+      set({ smartPlacing: null });
+      if (!target) return null;
+      if (target.kind === "new") {
+        const id = get().addComponent({
+          type: target.type,
+          subtype: target.subtype,
+          name: target.name,
+          geometry: smartGeometry(
+            { type: target.type, subtype: target.subtype, params: {} },
+            centre,
+            bearingDeg,
+          ),
+        });
+        get().selectComponent(id);
+        return id;
+      }
+      const c = get().components.find((x) => x.id === target.componentId);
+      if (!c) return null;
+      get().setComponentGeometry(c.id, smartGeometry(c, centre, bearingDeg));
+      get().selectComponent(c.id);
+      return c.id;
+    },
+    generateLayout: (centre, seed) => {
+      const layoutSeed = seed ?? get().layoutSeed;
+      const targets = get().components.filter(
+        (c) => c.status === "planned" || c.origin === "generated",
+      );
+      if (!targets.length) return 0;
+      const placed = generateLayoutFor(targets, centre, layoutSeed);
+      set({ layoutSeed });
+      commit({
+        components: get().components.map((c) =>
+          placed[c.id]
+            ? {
+                ...c,
+                geometry: placed[c.id],
+                status: "drawn",
+                origin: "generated",
+              }
+            : c,
+        ),
+      });
+      return Object.keys(placed).length;
     },
 
     undo: () => {

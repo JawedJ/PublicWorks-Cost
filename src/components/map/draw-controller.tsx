@@ -34,6 +34,10 @@ const modeName: Record<DrawTool, string> = {
 
 /** When the last shape finished; the click that finishes a shape must not also select on the map. */
 let lastFinishAt = 0;
+/** Marks a shape as just placed, so the same click doesn't also select on the map. */
+export function markJustFinished() {
+  lastFinishAt = performance.now();
+}
 export function justFinishedDrawing(): boolean {
   return performance.now() - lastFinishAt < 400;
 }
@@ -412,7 +416,8 @@ export function DrawController() {
       if (el?.closest("input, textarea, [contenteditable=true], [role=menu]"))
         return;
       const store = useStore.getState();
-      if (store.drawing) store.cancelDrawing();
+      if (store.smartPlacing) store.startSmartPlacing(null);
+      else if (store.drawing) store.cancelDrawing();
       else store.selectComponent(null);
     };
     window.addEventListener("keydown", onKey);

@@ -13,6 +13,8 @@ import {
   Route,
   Scan,
   Shapes,
+  Shuffle,
+  Sparkles,
   Trash2,
   Trees,
   Undo2,
@@ -70,6 +72,27 @@ export function ComponentList() {
   const canUndo = useStore((s) => s.past.length > 0);
   const canRedo = useStore((s) => s.future.length > 0);
   const undo = useStore((s) => s.undo);
+  const canGenerate = useStore((s) =>
+    s.components.some((c) => c.status === "planned"),
+  );
+  const canRegenerate = useStore((s) =>
+    s.components.some((c) => c.origin === "generated" && c.status === "drawn"),
+  );
+
+  function layout(regenerate: boolean) {
+    const store = useStore.getState();
+    const area = store.areaBoundary && featureBounds(store.areaBoundary);
+    const centre = area
+      ? ([(area[0] + area[2]) / 2, (area[1] + area[3]) / 2] as [number, number])
+      : map
+        ? (map.getCenter().toArray() as [number, number])
+        : null;
+    if (!centre) return;
+    store.generateLayout(
+      centre,
+      regenerate ? store.layoutSeed + 1 : store.layoutSeed,
+    );
+  }
   const redo = useStore((s) => s.redo);
   useUndoShortcuts();
 
@@ -97,6 +120,17 @@ export function ComponentList() {
             ({components.length})
           </span>
         </h2>
+        {(canGenerate || canRegenerate) && (
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label={canGenerate ? t("generate") : t("regenerate")}
+            title={canGenerate ? t("generate") : t("regenerate")}
+            onClick={() => layout(!canGenerate)}
+          >
+            {canGenerate ? <Sparkles /> : <Shuffle />}
+          </Button>
+        )}
         <Button
           variant="ghost"
           size="icon-sm"

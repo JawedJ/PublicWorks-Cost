@@ -470,4 +470,33 @@ describe("designSlice editing", () => {
     const apart = s().components[0]!.geometry!.sections!.map((x) => x.id);
     expect(s().mergeSections(id, apart)).toBe(false);
   });
+
+  it("drops a smart-start shape and generates a layout in one undo step", () => {
+    s().startSmartPlacing({
+      kind: "new",
+      type: "building",
+      subtype: "library",
+      name: "Library 1",
+    });
+    const id = s().placeSmart([-80.5, 43.45], 0)!;
+    expect(
+      s().components.find((c) => c.id === id)!.geometry!.sections,
+    ).toHaveLength(1);
+    s().addComponents([
+      { type: "road", subtype: "road_reconstruction", name: "Main" },
+      { type: "park", subtype: "neighbourhood_park", name: "Park" },
+    ]);
+    const before = s().past.length;
+    expect(s().generateLayout([-80.5, 43.45])).toBe(2);
+    expect(s().past.length).toBe(before + 1);
+    expect(
+      s().components.filter(
+        (c) => c.origin === "generated" && c.status === "drawn",
+      ),
+    ).toHaveLength(2);
+    // The user-drawn library isn't moved by a regenerate.
+    const lib = s().components.find((c) => c.id === id)!.geometry;
+    s().generateLayout([-80.5, 43.45], 2);
+    expect(s().components.find((c) => c.id === id)!.geometry).toBe(lib);
+  });
 });

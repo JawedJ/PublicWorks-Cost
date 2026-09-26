@@ -81,7 +81,9 @@
       "redo": "Redo",
       "newProject": "New project",
       "newProjectConfirm": "Start a new project? The current design will be cleared. Download the project file first if you want to keep it.",
-      "untitled": "Untitled project"
+      "untitled": "Untitled project",
+      "generate": "Generate starting layout",
+      "regenerate": "Regenerate layout (new arrangement)"
     },
     "listLabel": "Component list",
     "draw": {
@@ -109,7 +111,8 @@
         "freehand": "Freehand shape",
         "line": "Line",
         "freehandLine": "Freehand line",
-        "point": "Point"
+        "point": "Point",
+        "smart": "Smart start: click the map to drop a typical shape"
       },
       "hints": {
         "polygon": "Click to add corners. Click the first corner again to finish.",
@@ -120,7 +123,8 @@
         "line": "Click to add points. Click the last point again to finish.",
         "freehandLine": "Click to start, move to draw, and click again to finish.",
         "point": "Click to place it.",
-        "cancel": "Press Esc to cancel."
+        "cancel": "Press Esc to cancel.",
+        "smart": "Click the map to place a typical starting shape, facing the nearest street."
       },
       "notices": {
         "holeOutside": "That hole wasn’t added: draw it inside the shape, clear of other holes."

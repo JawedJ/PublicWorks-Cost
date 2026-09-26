@@ -7,6 +7,7 @@ import {
   MapPin,
   Pentagon,
   Plus,
+  WandSparkles,
   Signature,
   Spline,
   Square,
@@ -100,6 +101,7 @@ export function DrawToolbar() {
   const components = useStore((s) => s.components);
   const drawing = useStore((s) => s.drawing);
   const drawNotice = useStore((s) => s.drawNotice);
+  const smartPlacing = useStore((s) => s.smartPlacing);
   const selectedSectionId = useStore((s) => s.selectedElement?.sectionId);
   const selectedFeatureId = useStore((s) => s.selectedElement?.featureId);
   const selected = useStore((s) =>
@@ -181,6 +183,13 @@ export function DrawToolbar() {
   const contextual = !needsName && !targetFor(choice);
   const active = contextual ? DEFAULT_CHOICE : choice;
   const target = targetFor(active);
+  const smartTarget =
+    target &&
+    (target.kind === "new" || target.kind === "planned") &&
+    !(target.kind === "new" && target.type === "custom") &&
+    !(target.kind === "planned" && planned?.type === "custom")
+      ? target
+      : null;
   const tools = toolsForTarget(
     target ?? { kind: "new", type: "custom", subtype: "custom", name: "" },
     components,
@@ -349,7 +358,43 @@ export function DrawToolbar() {
             );
           })}
         </div>
+        {smartTarget && (
+          <Button
+            variant={smartPlacing ? "default" : "ghost"}
+            size="icon-sm"
+            aria-pressed={Boolean(smartPlacing)}
+            aria-label={t("tools.smart")}
+            title={t("tools.smart")}
+
+            onClick={() =>
+              useStore
+                .getState()
+                .startSmartPlacing(smartPlacing ? null : smartTarget)
+            }
+          >
+            <WandSparkles />
+          </Button>
+        )}
       </div>
+      {smartPlacing && (
+        <div
+          role="status"
+          className="mt-1.5 flex items-start gap-2 border-t px-1 pt-1.5 text-xs text-muted-foreground"
+        >
+          <p className="max-w-72 flex-1">
+            {t("hints.smart")} {t("hints.cancel")}
+          </p>
+          <Button
+            variant="ghost"
+            size="icon-xs"
+            aria-label={t("cancel")}
+            title={t("cancel")}
+            onClick={() => useStore.getState().startSmartPlacing(null)}
+          >
+            <X />
+          </Button>
+        </div>
+      )}
       {!drawing && drawNotice && (
         <p
           role="status"

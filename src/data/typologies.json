@@ -1,0 +1,67 @@
+{
+  "meta": {
+    "sample": true,
+    "notes": "Typical sizes and proportions used only to generate starting shapes and layouts (SPEC 11). Not cost data."
+  },
+  "building": {
+    "community_centre": {
+      "gfaM2": 3000,
+      "storeys": 2,
+      "aspect": 1.6,
+      "setbackM": 12
+    },
+    "library": { "gfaM2": 2400, "storeys": 2, "aspect": 1.4, "setbackM": 10 },
+    "fire_station": {
+      "gfaM2": 1800,
+      "storeys": 2,
+      "aspect": 1.8,
+      "setbackM": 15
+    },
+    "police_station": {
+      "gfaM2": 2500,
+      "storeys": 2,
+      "aspect": 1.5,
+      "setbackM": 12
+    },
+    "municipal_office": {
+      "gfaM2": 4000,
+      "storeys": 3,
+      "aspect": 1.5,
+      "setbackM": 10
+    },
+    "school": { "gfaM2": 6000, "storeys": 2, "aspect": 2.0, "setbackM": 20 },
+    "hospital": { "gfaM2": 20000, "storeys": 5, "aspect": 1.6, "setbackM": 20 },
+    "house": { "gfaM2": 200, "storeys": 2, "aspect": 1.3, "setbackM": 6 },
+    "townhouse_block": {
+      "gfaM2": 900,
+      "storeys": 3,
+      "aspect": 4.0,
+      "setbackM": 6
+    },
+    "low_rise_apartment": {
+      "gfaM2": 3600,
+      "storeys": 4,
+      "aspect": 2.5,
+      "setbackM": 8
+    },
+    "mid_rise_apartment": {
+      "gfaM2": 9000,
+      "storeys": 8,
+      "aspect": 2.2,
+      "setbackM": 8
+    }
+  },
+  "park": {
+    "neighbourhood_park": { "areaM2": 12000, "aspect": 1.5 },
+    "community_park": { "areaM2": 40000, "aspect": 1.6 },
+    "plaza": { "areaM2": 2500, "aspect": 1.3 }
+  },
+  "road": {
+    "road_reconstruction": { "lengthM": 400 },
+    "road_resurfacing": { "lengthM": 400 },
+    "sidewalk_cycling": { "lengthM": 400 },
+    "watermain_replacement": { "lengthM": 300 },
+    "sewer_replacement": { "lengthM": 300 }
+  },
+  "custom": { "custom": { "areaM2": 600, "aspect": 1.2 } }
+}

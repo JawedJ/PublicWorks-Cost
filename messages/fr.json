@@ -81,7 +81,9 @@
       "redo": "Rétablir",
       "newProject": "Nouveau projet",
       "newProjectConfirm": "Commencer un nouveau projet? La conception actuelle sera effacée. Téléchargez d’abord le fichier du projet pour la conserver.",
-      "untitled": "Projet sans titre"
+      "untitled": "Projet sans titre",
+      "generate": "Générer une disposition de départ",
+      "regenerate": "Régénérer la disposition (nouvel agencement)"
     },
     "listLabel": "Liste des composantes",
     "draw": {
@@ -109,7 +111,8 @@
         "freehand": "Forme à main levée",
         "line": "Ligne",
         "freehandLine": "Ligne à main levée",
-        "point": "Point"
+        "point": "Point",
+        "smart": "Départ intelligent : cliquez sur la carte pour déposer une forme type"
       },
       "hints": {
         "polygon": "Cliquez pour ajouter des sommets. Cliquez de nouveau sur le premier sommet pour terminer.",
@@ -120,7 +123,8 @@
         "line": "Cliquez pour ajouter des points. Cliquez de nouveau sur le dernier point pour terminer.",
         "freehandLine": "Cliquez pour commencer, déplacez pour dessiner, puis cliquez pour terminer.",
         "point": "Cliquez pour le placer.",
-        "cancel": "Appuyez sur Échap pour annuler."
+        "cancel": "Appuyez sur Échap pour annuler.",
+        "smart": "Cliquez sur la carte pour placer une forme de départ type, orientée vers la rue la plus proche."
       },
       "notices": {
         "holeOutside": "Ce vide n’a pas été ajouté : dessinez-le à l’intérieur de la forme, sans toucher les autres vides."
