@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseMaptiler, parseNominatim } from "./geocode";
+import { parseMaptiler, parsePhoton } from "./geocode";
 
 describe("geocode parsers", () => {
   it("parses MapTiler features", () => {
@@ -25,18 +25,47 @@ describe("geocode parsers", () => {
     ]);
   });
 
-  it("parses Nominatim results and reorders the bounding box", () => {
-    const out = parseNominatim([
-      {
-        place_id: 42,
-        display_name: "Waterloo, Ontario, Canada",
-        lat: "43.46",
-        lon: "-80.52",
-        boundingbox: ["43.41", "43.53", "-80.62", "-80.47"],
-      },
+  it("parses Photon results: builds labels, reorders the extent, drops duplicates and non-Canadian places", () => {
+    const feature = (props: Record<string, unknown>) => ({
+      type: "Feature",
+      geometry: { type: "Point", coordinates: [-79.37, 43.65] },
+      properties: { osm_type: "W", osm_id: 1, ...props },
+    });
+    const out = parsePhoton({
+      type: "FeatureCollection",
+      features: [
+        feature({
+          housenumber: "123",
+          street: "Queen Street East",
+          city: "Toronto",
+          state: "Ontario",
+          countrycode: "CA",
+          extent: [-79.375, 43.654, -79.373, 43.653],
+        }),
+        feature({
+          osm_id: 2,
+          housenumber: "123",
+          street: "Queen Street East",
+          city: "Toronto",
+          state: "Ontario",
+          countrycode: "CA",
+        }),
+        feature({ osm_id: 3, name: "Buffalo", countrycode: "US" }),
+        feature({
+          osm_id: 4,
+          name: "Toronto",
+          city: "Toronto",
+          state: "Ontario",
+        }),
+      ],
+    });
+    expect(out.map((r) => r.label)).toEqual([
+      "123 Queen Street East, Toronto, Ontario",
+      "Toronto, Ontario",
     ]);
-    expect(out[0].center).toEqual([-80.52, 43.46]);
-    expect(out[0].bbox).toEqual([-80.62, 43.41, -80.47, 43.53]);
+    expect(out[0]!.id).toBe("W1");
+    expect(out[0]!.center).toEqual([-79.37, 43.65]);
+    expect(out[0]!.bbox).toEqual([-79.375, 43.653, -79.373, 43.654]);
   });
 
   it("rejects malformed responses", () => {

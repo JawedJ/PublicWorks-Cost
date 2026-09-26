@@ -111,7 +111,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 | Store | `src/lib/store/store.ts`, `designSlice.ts` (+ test), `projectSlice.ts` (B's stub) | selection contract; components, project area, undo/redo, duplicate |
 | Geometry transforms | `src/lib/geo/transform.ts` | `translateFeature` in metres (duplicate offset) |
 | Pages | `src/app/[locale]/page.tsx` (landing placeholder), `src/app/[locale]/workspace/page.tsx` | |
-| Place search | `src/components/map/geocoder.tsx`, `src/lib/geo/geocode.ts` (+ test) | MapTiler search-as-you-type (Canada, current language); Nominatim on Enter without a key; 6 s timeout |
+| Place search | `src/components/map/geocoder.tsx`, `src/lib/geo/geocode.ts` (+ test) | MapTiler search-as-you-type (Canada, current language); Photon (OSM) without a key; suggestions as you type from 2 characters; 6 s timeout |
 | Map | `src/components/map/map-view.tsx`, `map-context.tsx` (`useMap()`), `basemap-toggle.tsx`, `workspace-shell.tsx`; `src/lib/geo/basemaps.ts` | MapTiler streets/hybrid, OpenFreeMap positron without key; worker copied to `public/maplibre` by `pnpm copy:maplibre` (runs in dev/build) |
 
 ## Environment

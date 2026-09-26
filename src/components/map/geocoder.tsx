@@ -8,8 +8,8 @@ import { cn } from "@/lib/utils";
 import { useMap } from "./map-context";
 
 const maptilerKey = process.env.NEXT_PUBLIC_MAPTILER_KEY || undefined;
-// Search-as-you-type only with MapTiler; Nominatim is searched on Enter.
-const autocomplete = Boolean(maptilerKey);
+const MIN_CHARS = 2;
+const DEBOUNCE_MS = 250;
 
 type Status = "idle" | "loading" | "done" | "error";
 
@@ -53,12 +53,9 @@ export function Geocoder() {
 
   // Debounced search-as-you-type.
   useEffect(() => {
-    if (!autocomplete || query === chosenRef.current) return;
-    if (query.trim().length < 3) {
-      abortRef.current?.abort();
-      return;
-    }
-    const timer = setTimeout(() => runSearch(query), 300);
+    if (query === chosenRef.current) return;
+    if (query.trim().length < MIN_CHARS) return;
+    const timer = setTimeout(() => runSearch(query), DEBOUNCE_MS);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
@@ -120,7 +117,12 @@ export function Geocoder() {
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
-            if (!e.target.value) setOpen(false);
+            if (e.target.value.trim().length < MIN_CHARS) {
+              abortRef.current?.abort();
+              setResults([]);
+              setStatus("idle");
+              setOpen(false);
+            }
           }}
           onKeyDown={onKeyDown}
           onFocus={() => results.length && setOpen(true)}
