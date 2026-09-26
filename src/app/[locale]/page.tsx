@@ -1,8 +1,7 @@
 import { useTranslations } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { use } from "react";
-import { Button } from "@/components/ui/button";
-import { Link } from "@/lib/i18n/navigation";
+import { LandingStart } from "@/components/landing/landing-start";
 import type { Locale } from "@/lib/i18n/routing";
 
 export default function LandingPage({ params }: PageProps<"/[locale]">) {
@@ -16,11 +15,7 @@ export default function LandingPage({ params }: PageProps<"/[locale]">) {
         {t("title")}
       </h1>
       <p className="text-lg text-muted-foreground">{t("intro")}</p>
-      <div>
-        <Button asChild size="lg">
-          <Link href="/workspace">{t("startBlank")}</Link>
-        </Button>
-      </div>
+      <LandingStart />
     </div>
   );
 }

@@ -80,7 +80,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 - [x] P3.4 "Colour by cost" toggle on map views
 - [x] P3.9a Flag markers on the map (B owns the flags list)
 - [ ] P7.4 Creation flow navigation: Describe → Review build list (B's screen) → Locate → Draw each planned component (checklist) → Questions (B's panel) → Estimate
-- [ ] P4.5 Landing page: prompt box (calls B's parse), blank map option, demo cards, open project file button (B's loader)
+- [x] P4.5 Landing page: prompt box (calls B's parse), blank map option, demo cards, open project file button (B's loader)
 - [x] P4.3 Unsaved-changes `beforeunload` warning; "New project" reset
 
 ### S3 → S4 — 3D and context

@@ -19,7 +19,18 @@
   "landing": {
     "title": "Estimez vos infrastructures publiques sur une carte",
     "intro": "Décrivez ce que vous voulez construire, dessinez-le sur une carte et obtenez une fourchette de coûts transparente, avec risques et facteurs de coût.",
-    "startBlank": "Commencer avec une carte vierge"
+    "startBlank": "Commencer avec une carte vierge",
+    "promptLabel": "Décrivez l’ensemble du projet",
+    "promptPlaceholder": "p. ex. Une bibliothèque de deux étages de 2 400 m², un parc de 1,5 ha avec jeux d’eau et 400 m de nouvelle route",
+    "example1": "Une bibliothèque de deux étages, un parc de quartier et une route de 400 m",
+    "example2": "3 rangées de maisons en bande, un immeuble de faible hauteur et un parc de 1 ha",
+    "example3": "Une caserne de pompiers et un remplacement de ponceau",
+    "startPrompt": "Planifier sur la carte",
+    "nothingFound": "Aucune route, aucun parc, bâtiment ou ouvrage trouvé dans cette description. Nommez-les, ou commencez avec une carte vierge.",
+    "untitled": "Projet sans titre",
+    "sampleTitle": "Projet exemple : Northgate (Waterloo)",
+    "sampleBody": "Deux routes, un parc, une bibliothèque de quartier, une caserne et un ponceau, avec une estimation. Données d’exemple.",
+    "openSample": "Ouvrir l’exemple"
   },
   "map": {
     "workspaceTitle": "Espace de travail",
@@ -83,7 +94,8 @@
       "newProjectConfirm": "Commencer un nouveau projet? La conception actuelle sera effacée. Téléchargez d’abord le fichier du projet pour la conserver.",
       "untitled": "Projet sans titre",
       "generate": "Générer une disposition de départ",
-      "regenerate": "Régénérer la disposition (nouvel agencement)"
+      "regenerate": "Régénérer la disposition (nouvel agencement)",
+      "plannedHint": "{n, plural, one {# composante} other {# composantes}} à placer. Trouvez l’emplacement avec la recherche, puis générez une disposition de départ (✨ ci-dessus), ou sélectionnez-en une et dessinez-la."
     },
     "listLabel": "Liste des composantes",
     "draw": {

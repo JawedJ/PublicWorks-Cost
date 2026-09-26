@@ -19,7 +19,18 @@
   "landing": {
     "title": "Estimate public infrastructure on a map",
     "intro": "Describe what you want to build, lay it out on a map, and get a transparent cost range with risks and drivers.",
-    "startBlank": "Start with a blank map"
+    "startBlank": "Start with a blank map",
+    "promptLabel": "Describe the whole build",
+    "promptPlaceholder": "e.g. A two-storey 2,400 m² library, a 1.5 ha park with a splash pad, and 400 m of new road",
+    "example1": "A two-storey library, a neighbourhood park, and a 400 m road",
+    "example2": "3 townhouse blocks, a low-rise apartment and a 1 ha park",
+    "example3": "A fire station and a culvert replacement",
+    "startPrompt": "Plan it on the map",
+    "nothingFound": "No roads, parks, buildings or structures found in that description. Try naming them, or start with a blank map.",
+    "untitled": "Untitled project",
+    "sampleTitle": "Sample project: Northgate (Waterloo)",
+    "sampleBody": "Two roads, a park, a branch library, a fire station and a culvert, with an estimate. Sample data.",
+    "openSample": "Open the sample"
   },
   "map": {
     "workspaceTitle": "Workspace",
@@ -83,7 +94,8 @@
       "newProjectConfirm": "Start a new project? The current design will be cleared. Download the project file first if you want to keep it.",
       "untitled": "Untitled project",
       "generate": "Generate starting layout",
-      "regenerate": "Regenerate layout (new arrangement)"
+      "regenerate": "Regenerate layout (new arrangement)",
+      "plannedHint": "{n, plural, one {# component} other {# components}} still to place. Find the location with search, then Generate a starting layout (✨ above), or select one and draw it."
     },
     "listLabel": "Component list",
     "draw": {

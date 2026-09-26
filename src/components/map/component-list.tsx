@@ -92,6 +92,20 @@ export function ComponentList() {
       centre,
       regenerate ? store.layoutSeed + 1 : store.layoutSeed,
     );
+    const all = useStore
+      .getState()
+      .components.map(componentBounds)
+      .filter((b): b is NonNullable<typeof b> => b !== null);
+    if (all.length)
+      map?.fitBounds(
+        [
+          Math.min(...all.map((b) => b[0])),
+          Math.min(...all.map((b) => b[1])),
+          Math.max(...all.map((b) => b[2])),
+          Math.max(...all.map((b) => b[3])),
+        ],
+        { padding: 60 },
+      );
   }
   const redo = useStore((s) => s.redo);
   useUndoShortcuts();
@@ -165,6 +179,13 @@ export function ComponentList() {
           <Redo2 />
         </Button>
       </div>
+      {canGenerate && (
+        <p className="border-b bg-muted/50 px-3 py-2 text-xs text-muted-foreground">
+          {t("plannedHint", {
+            n: components.filter((c) => c.status === "planned").length,
+          })}
+        </p>
+      )}
       {components.length === 0 ? (
         <div className="space-y-3 p-3 text-sm text-muted-foreground">
           <p>{t("empty")}</p>

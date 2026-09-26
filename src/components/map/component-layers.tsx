@@ -9,6 +9,7 @@ import type {
 } from "maplibre-gl";
 import { useEffect, useMemo, useRef } from "react";
 import { useLocale, useTranslations } from "next-intl";
+import { componentBounds } from "@/lib/geo/bounds";
 import { useEstimate } from "@/lib/estimate/useEstimate";
 import { intlLocale, type Locale } from "@/lib/i18n/routing";
 import { componentColor, mapColors } from "@/lib/render/colors";
@@ -323,6 +324,21 @@ export function ComponentLayers() {
   useEffect(() => {
     if (!map) return;
     addLayers(map);
+    // Opening a project (e.g. the sample from the landing page): show all of it.
+    const all = useStore
+      .getState()
+      .components.map(componentBounds)
+      .filter((b): b is NonNullable<typeof b> => b !== null);
+    if (all.length)
+      map.fitBounds(
+        [
+          Math.min(...all.map((b) => b[0])),
+          Math.min(...all.map((b) => b[1])),
+          Math.max(...all.map((b) => b[2])),
+          Math.max(...all.map((b) => b[3])),
+        ],
+        { padding: 60, duration: 0 },
+      );
     const onStyle = () => addLayers(map);
     map.on("style.load", onStyle);
 
