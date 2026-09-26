@@ -46,7 +46,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 
 ### S1 → S2 — Map & drawing · Core
 - [x] P1.1 Workspace page with MapLibre, basemap (MapTiler, OpenFreeMap fallback), controls
-- [ ] P1.2 Geocoding search with fly-to
+- [x] P1.2 Geocoding search with fly-to
 - [ ] P1.3 Store: multiple components (planned/drawn, user/generated), selection, undo/redo
 - [ ] P1.4 Component list panel (select, zoom to, rename, duplicate, hide/show, delete)
 - [ ] P1.5 Freeform draw tools: polygon, rectangle, circle/ellipse, freehand, line/polyline, point; project area
@@ -107,6 +107,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 | Design tokens | `src/app/globals.css` | light/dark, map colours, `figures` utility |
 | Store | `src/lib/store/store.ts`, `designSlice.ts` (+ test), `projectSlice.ts` (B's stub) | selection contract |
 | Pages | `src/app/[locale]/page.tsx` (landing placeholder), `src/app/[locale]/workspace/page.tsx` | |
+| Place search | `src/components/map/geocoder.tsx`, `src/lib/geo/geocode.ts` (+ test) | MapTiler search-as-you-type (Canada, current language); Nominatim on Enter without a key; 6 s timeout |
 | Map | `src/components/map/map-view.tsx`, `map-context.tsx` (`useMap()`), `basemap-toggle.tsx`, `workspace-shell.tsx`; `src/lib/geo/basemaps.ts` | MapTiler streets/hybrid, OpenFreeMap positron without key; worker copied to `public/maplibre` by `pnpm copy:maplibre` (runs in dev/build) |
 
 ## Environment

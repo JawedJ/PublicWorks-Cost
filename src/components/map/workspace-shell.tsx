@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { Geocoder } from "./geocoder";
 import { MapProvider } from "./map-context";
 import { MapView } from "./map-view";
 
@@ -15,7 +16,11 @@ export function WorkspaceShell() {
           aria-label={t("viewLabel")}
           className="relative h-[60vh] shrink-0 lg:h-auto lg:flex-[3]"
         >
-          <MapView />
+          <MapView>
+            <div className="absolute top-3 left-3 z-10">
+              <Geocoder />
+            </div>
+          </MapView>
         </section>
         <aside
           aria-label={t("panelLabel")}

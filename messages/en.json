@@ -35,6 +35,13 @@
       "label": "Basemap",
       "streets": "Map",
       "satellite": "Satellite"
+    },
+    "search": {
+      "label": "Search for a municipality or address",
+      "placeholder": "Search a city or address…",
+      "results": "Search results",
+      "noResults": "No places found in Canada.",
+      "error": "Search is unavailable right now. Pan the map instead."
     }
   }
 }
