@@ -6,10 +6,10 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Current state
 
-- **Current task:** P0.8
-- **Status:** blocked   <!-- not started | in progress | blocked | at sync point -->
-- **Next action:** Human imports the repo into Vercel (DEPLOY.md), then record the URL below. Meanwhile start P1.1 (MapLibre workspace).
-- **Blockers / needs from B:** P0.8 needs the human's Vercel account. P1.3 needs B's schemas (`Component`, `ComponentGeometry`) on `main`.
+- **Current task:** P1.1
+- **Status:** at sync point   <!-- not started | in progress | blocked | at sync point -->
+- **Next action:** S1 check with B, then P1.1 (MapLibre workspace).
+- **Blockers / needs from B:** P1.3 needs B's schemas (`Component`, `ComponentGeometry`) on `main`.
 - **Last updated:** 2026-09-26
 
 ## Handoff notes
@@ -40,7 +40,7 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 - [x] P0.4 Zustand, zod, Vitest, ESLint, Prettier; scripts `typecheck`, `lint`, `test`
 - [x] P0.6 App layout shell (top bar, language toggle, sample-data badge)
 - [x] P0.7 `.env.example`, `README.md`, `DEPLOY.md`
-- [!] P0.8 Deploy placeholder to Vercel (record URL below)
+- [x] P0.8 Deploy placeholder to Vercel (record URL below)
 - [x] A.1 Create `src/lib/store/store.ts` with `designSlice.ts` (selection contract included) and an empty `projectSlice.ts` stub for B; merge to `main` **as early as possible** so B can build on it
 
 ### S1 → S2 — Map & drawing · Core
@@ -109,4 +109,5 @@ Legend: `[ ]` todo · `[~]` in progress · `[x]` done · `[!]` blocked · `[-]` 
 
 ## Environment
 
-- **Vercel URL:** —
+- **Vercel URL:** https://publicworkscost.vercel.app (dashboard: https://vercel.com/hackathon-aqeeljawed/publicworkscost)
+- **Env vars configured in Vercel:** none yet (add `NEXT_PUBLIC_MAPTILER_KEY`, `GEMINI_API_KEY`, `AI_PROVIDER` before P1.1 / P7)
