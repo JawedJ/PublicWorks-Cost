@@ -220,5 +220,26 @@
     "scope": "Showing",
     "wholeProject": "Whole project",
     "shareOfProject": "{pct}% of project P50"
+  },
+  "visuals": {
+    "crossSection": {
+      "title": "Cross-section",
+      "label": "Road cross-section, {width} m wide",
+      "total": "{width} m right-of-way · {road} m roadway",
+      "parts": {
+        "sidewalk": "Sidewalk",
+        "boulevard": "Boulevard",
+        "curb": "Curb and gutter",
+        "parking": "Parking lane",
+        "bike": "Painted bike lane",
+        "lane": "Travel lane",
+        "track": "Cycle track"
+      },
+      "pipes": {
+        "watermain": "Watermain",
+        "storm": "Storm sewer",
+        "sanitary": "Sanitary sewer"
+      }
+    }
   }
 }

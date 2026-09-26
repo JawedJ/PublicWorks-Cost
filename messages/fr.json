@@ -220,5 +220,26 @@
     "scope": "Affichage",
     "wholeProject": "Projet complet",
     "shareOfProject": "{pct} % du P50 du projet"
+  },
+  "visuals": {
+    "crossSection": {
+      "title": "Coupe transversale",
+      "label": "Coupe de la route, {width} m de large",
+      "total": "Emprise de {width} m · chaussée de {road} m",
+      "parts": {
+        "sidewalk": "Trottoir",
+        "boulevard": "Terre-plein",
+        "curb": "Bordure et caniveau",
+        "parking": "Voie de stationnement",
+        "bike": "Bande cyclable",
+        "lane": "Voie de circulation",
+        "track": "Piste cyclable"
+      },
+      "pipes": {
+        "watermain": "Conduite d’eau",
+        "storm": "Égout pluvial",
+        "sanitary": "Égout sanitaire"
+      }
+    }
   }
 }
