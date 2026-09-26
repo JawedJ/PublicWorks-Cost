@@ -239,7 +239,6 @@
     "overrunHeading": "Overrun risk",
     "overrunChance": "{pct}% chance of going over",
     "overrunTypical": "Similar projects typically run {pct}% over budget",
-    "byComponent": "By component",
     "projectWide": "Whole project",
     "severity": {
       "high": "High",
@@ -403,5 +402,40 @@
     "bandError": "Low must be at or below the rate, and high at or above it.",
     "ownNote": "Without low/high, the range is −30% / +60% of your rate. Your rate is marked as user-entered.",
     "apply": "Use this rate"
+  },
+  "charts": {
+    "byComponent": "By component (P50)",
+    "byComponentLabel": "Share of the project P50 by component",
+    "distribution": "Range of outcomes",
+    "distributionLabel": "Simulated project cost: P10 {p10}, P50 {p50}, P90 {p90}",
+    "distributionNote": "5,000 simulated outcomes. The shaded middle is the likely range (P10–P90).",
+    "byCategory": "Where the money goes",
+    "byCategoryNote": "Direct construction cost by category, before soft costs, escalation and taxes.",
+    "drivers": "What moves the total most",
+    "driversNote": "Change in the project P50 when each driver comes in low (green) or high (red).",
+    "perUnit": "Cost per unit",
+    "units": {
+      "perM": "per m of road",
+      "perM2": "per m² of park",
+      "perM2GFA": "per m² of building floor"
+    }
+  },
+  "evidence": {
+    "title": "Market evidence",
+    "perSqft": "/sq ft",
+    "perM": "/m",
+    "altusRange": "Altus 2026 range for {basis}: {low}–{high}{unit}",
+    "position": {
+      "below": "below the range",
+      "within": "within the range",
+      "above": "above the range"
+    },
+    "buildingNote": "Building only, comparable to Altus. All-in with site works, parking and extras: {allIn}/sq ft.",
+    "roadNote": "All-in per metre of road. Altus covers road servicing for development; our scope may add watermains and sewers.",
+    "trend": "Statistics Canada: prices for {type} in {geo} changed {change} over the last 4 quarters.",
+    "trendFlat": "Statistics Canada: prices for {type} in {geo} were flat over the last 4 quarters.",
+    "statcan": "BCPI, {quarter}",
+    "awardsHeading": "Recent federal contracts in Ontario (CanadaBuys):",
+    "footnote": "Sources: Altus Group 2026 Canadian Cost Guide (retrieved {altusDate}), Statistics Canada table 18-10-0289-01 (released {statcanDate}), CanadaBuys award notices (retrieved {canadabuysDate}). Evidence informs judgement; it doesn't change the estimate."
   }
 }

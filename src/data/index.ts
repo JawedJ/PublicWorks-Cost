@@ -1,6 +1,7 @@
 import {
   BcpiFileSchema,
   BuildingCostsFileSchema,
+  AltusBenchmarksFileSchema,
   CanadaBuysFileSchema,
   OverrunReferenceFileSchema,
   ParkFeaturesFileSchema,
@@ -10,6 +11,7 @@ import {
   UnitPricesFileSchema,
   type BcpiFile,
   type BuildingCostsFile,
+  type AltusBenchmarksFile,
   type CanadaBuysFile,
   type OverrunReferenceFile,
   type ParkFeaturesFile,
@@ -24,6 +26,7 @@ import parkFeaturesJson from "./park-features.json";
 import regionalFactorsJson from "./regional-factors.json";
 import structuresJson from "./structures.json";
 import canadabuysAwardsJson from "./public/canadabuys-awards.json";
+import altusBenchmarksJson from "./altus-benchmarks.json";
 import statcanBcpiJson from "./public/statcan-bcpi.json";
 import unitPricesJson from "./unit-prices.json";
 
@@ -61,3 +64,7 @@ export const statcanBcpi: BcpiFile = BcpiFileSchema.parse(statcanBcpiJson);
 /** CanadaBuys federal construction awards in Ontario. Market evidence only. */
 export const canadabuysAwards: CanadaBuysFile =
   CanadaBuysFileSchema.parse(canadabuysAwardsJson);
+
+/** Altus Group 2026 road benchmarks ($/m). Cross-check in the market evidence card only. */
+export const altusBenchmarks: AltusBenchmarksFile =
+  AltusBenchmarksFileSchema.parse(altusBenchmarksJson);

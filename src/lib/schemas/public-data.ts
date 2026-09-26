@@ -83,3 +83,25 @@ export const CanadaBuysFileSchema = z.object({
   awards: z.array(CanadaBuysAwardSchema),
 });
 export type CanadaBuysFile = z.infer<typeof CanadaBuysFileSchema>;
+
+// --- altus-benchmarks.json (hand-transcribed; cross-check only, SPEC 8.2) ---
+
+const PerMRangeSchema = z.tuple([z.number().positive(), z.number().positive()]);
+
+export const AltusBenchmarksFileSchema = z.object({
+  meta: z.object({
+    title: z.string(),
+    page: z.int().positive(),
+    notes: z.string(),
+    url: z.url(),
+    retrievedAt: z.iso.date(),
+  }),
+  roads: z.array(
+    z.object({
+      id: z.string().min(1),
+      label: z.string().min(1),
+      perM: z.object({ gta: PerMRangeSchema, ottawa: PerMRangeSchema }),
+    }),
+  ),
+});
+export type AltusBenchmarksFile = z.infer<typeof AltusBenchmarksFileSchema>;

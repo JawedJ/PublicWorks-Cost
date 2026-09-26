@@ -3,9 +3,17 @@
 import { useTranslations } from "next-intl";
 import { CLASS_RANGE } from "@/engine";
 import type { ScopedEstimate } from "@/lib/estimate/scope";
-import type { Estimate } from "@/lib/schemas";
+import type { Component, Estimate } from "@/lib/schemas";
 import { useStore } from "@/lib/store/store";
+import {
+  CategoryBreakdown,
+  ComponentBreakdown,
+  DistributionChart,
+  DriversTornado,
+  PerUnitMetrics,
+} from "./charts";
 import { FlagsList } from "./flags-list";
+import { MarketEvidenceCard } from "./market-evidence-card";
 
 // P3.6: Estimate tab. Headline range, class badge with improvement hints,
 // contingency and overrun risk (whole project), per-component list, flags.
@@ -18,9 +26,16 @@ const money = new Intl.NumberFormat("en-CA", {
 });
 const pct = (n: number) => Math.round(n);
 
-type Props = { estimate: Estimate; scoped: ScopedEstimate };
+type Props = {
+  estimate: Estimate;
+  scoped: ScopedEstimate;
+  /** Design components (for measurements in the market evidence card). */
+  components: Component[];
+  /** Project region key (for the StatCan trend). */
+  region: string;
+};
 
-export function EstimateTab({ estimate, scoped }: Props) {
+export function EstimateTab({ estimate, scoped, components, region }: Props) {
   const t = useTranslations("estimate");
   const selectComponent = useStore((s) => s.selectComponent);
   const names = new Map(
@@ -117,34 +132,22 @@ export function EstimateTab({ estimate, scoped }: Props) {
         </p>
       )}
 
-      {whole && (
-        <div>
-          <h3 className="mb-1 text-sm font-medium">{t("byComponent")}</h3>
-          <ul className="flex flex-col divide-y text-sm">
-            {estimate.components.map((c) => (
-              <li key={c.componentId}>
-                <button
-                  type="button"
-                  className="flex w-full justify-between gap-2 py-2 text-left hover:bg-muted/50"
-                  onClick={() => selectComponent(c.componentId)}
-                >
-                  <span>{c.name}</span>
-                  <span className="figures">
-                    {money.format(c.p50)} · {pct(c.share * 100)}%
-                  </span>
-                </button>
-              </li>
-            ))}
-          </ul>
-          {estimate.undrawnComponents > 0 && (
-            <p className="mt-1 text-sm text-muted-foreground">
-              {t("undrawn", { count: estimate.undrawnComponents })}
-            </p>
-          )}
-        </div>
-      )}
+      {whole && <ComponentBreakdown estimate={estimate} />}
+
+      <MarketEvidenceCard
+        estimate={estimate}
+        components={components}
+        componentId={scoped.component?.componentId ?? null}
+        region={region}
+      />
+
+      {whole && <DistributionChart distribution={estimate.distribution} />}
+      <CategoryBreakdown lineItems={scoped.lineItems} />
+      {whole && <DriversTornado drivers={estimate.drivers} />}
 
       <FlagsList flags={scoped.flags} names={whole ? names : undefined} />
+
+      {whole && <PerUnitMetrics metrics={estimate.perUnitMetrics} />}
 
       {!whole && (
         <p className="text-xs text-muted-foreground">{t("componentNote")}</p>

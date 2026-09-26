@@ -428,8 +428,9 @@ Two official Canadian open datasets are pulled by **build-time scripts**, filter
 ### 8.2 Market evidence card
 
 In the Estimate tab, a **"Market evidence"** card shows real public data related to the selected scope, instantly, from the committed files:
+- **Benchmark check:** each building's cost per sq ft (building only, and all-in) against the Altus Group 2026 range for its type, and each road's cost per metre against Altus's local/arterial road range (`src/data/altus-benchmarks.json`, not used by the engine), marked below / within / above.
 - **Price trend:** "Construction prices for non-residential buildings (Toronto CMA) rose X% over the last 4 quarters (Statistics Canada, 2026 Q2)."
-- **Comparable public contracts:** up to 5 CanadaBuys awards matched by keyword and category to the selected component types (e.g. a road → paving/road awards in Ontario), each with title, buyer, value, year, and a link to the notice.
+- **Comparable public contracts:** up to 3 CanadaBuys awards (most recent first) matched by keyword and category to the selected component types (e.g. a road → paving/road awards in Ontario), each with title, buyer, value, year, and a link to the notice.
 - **Local tenders (optional):** entries from `src/data/public/municipal-tenders.json` if present (hand-curated or AI-extracted from public council reports, each with a source link and a "verified" flag); unverified entries are labelled.
 - A footnote stating sources, dates, and that evidence informs judgement but doesn't change the estimate.
 
@@ -767,3 +768,4 @@ One line per change to this spec: `YYYY-MM-DD P#.#: what changed and why`. Newes
 - 2026-09-26 i18n [B, per the human]: French dropped; the app is English only (section 17). No French strings, translations, reports, AI output, or language toggle. Existing `fr` plumbing (routing, `fr.json`, `{ en, fr }` text) stays but is unused; nothing is ripped out. P10.1 dropped.
 - 2026-09-26 Data [B, per the human]: Building base rates replaced with real Altus Group 2026 Canadian Cost Guide benchmarks (GTA/Ottawa average, $/sq ft → $/m²); each subtype carries its source, and building BCPI escalation starts from that file's own price year (2026). Everything else remains sample data; the sample-data badge stays.
 - 2026-09-26 B.3 [B, per the human]: Seven more building subtypes from the Altus 2026 rows (ice arena, aquatic centre, secondary school, performing arts, museum/gallery, medical clinic, maintenance facility) with typologies. Custom elements can be matched to any building rate (`building:<subtype>` basis ids), park features, or unit prices, with a keyword suggestion from the name; the pricing form lives in the Inputs tab (custom components and custom park features).
+- 2026-09-26 P3.7/P3.8 [B, per the human]: Market evidence card leads with a benchmark check against Altus 2026 (building $/sq ft, road $/m); CanadaBuys list trimmed to 3 recent awards; local tenders skipped (no data). Charts are plain HTML/CSS bars (no chart library).
