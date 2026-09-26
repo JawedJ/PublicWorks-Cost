@@ -6,9 +6,9 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Current state
 
-- **Current task:** Z.1 zoning (Waterloo only); P3.7, P3.8, B.3 done (P3.6, P3.9b, P3.10, P3.11, P4.1–P4.2 done)
+- **Current task:** S4 core: exports (P5.2–P5.4), demos (P4.4, P7.8); P6.3, P7.5 done (P3.6, P3.9b, P3.10, P3.11, P4.1–P4.2 done)
 - **Status:** not started   <!-- not started | in progress | blocked | at sync point -->
-- **Next action:** zoning (Waterloo only: Z.1, Z.2, Z.5, Z.6).
+- **Next action:** exports, demo projects (needs A's drawn files), then zoning (Waterloo only: Z.1, Z.2, Z.5, Z.6).
 - **Blockers / needs from A:** none
 - **Last updated:** 2026-09-26 (P3.6 Estimate tab)
 
@@ -16,6 +16,7 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 > Where an unfinished task stopped, gotchas, things to verify. Replace each session.
 
+- P7.5: schemas in `src/lib/schemas/questions.ts`. `src/lib/questions/rank.ts` (pure, client + server): `candidates(req)` ranks unanswered params by costImpact × share, one per group (buildings by subtype, others by type) with `alsoApplies`; skips drawing-answered params and irrelevant special spaces; `fallbackQuestions`, `coerceAnswer`. `src/lib/ai/questions.ts` `askQuestions(req, provider)`: offers the top 20 candidates, the AI returns candidate ids + reason + suggested (validated/coerced), cached in memory; 429 → `ai_busy`. Route `POST /api/ai/questions`. Client `src/components/questions/`: `buildQuestionsRequest(estimate)` (drawn components + shares + site flag notes), `requestQuestions` (never throws), `answerQuestion(ids, paramId, value)` (one undo step, source `user`); `<QuestionsPanel>` is the panel's Questions tab (asks once on open, "Ask again", answered params disappear, scoped to the selected component). Live Gemini: ~2 s, sensible picks for Northgate.
 - P6.3: `src/engine/site.ts` (pure, tested): `siteFlags(component, siteContext, skipCodes)` → `waterway_permit` (≤30 m; high for structures; skipped if the template already raised `in_water_permit`), `rail_approval` (≤30 m), `near_school` / `near_hospital` (≤200 m), `floodplain` (inside), each with the nearest point as `location` for A's markers. Called per drawn component in `computeEstimate`. `siteParamSuggestions(road, siteContext)` reads the nearest OSM road within 15 m (`lanes`, `highway` → `roadClass`, `sidewalk` → `sidewalkSides`); `setSiteContext` applies them as `site_context` params (evidence = the OSM tag) only where the param is still default, in one undo step. Auto-fill runs when the lookup is stored, not when a road is drawn later.
 - P3.7: `src/lib/estimate/evidence.ts` (pure, tested): `benchmarks(estimate, components, scopeId)` (building-only and all-in $/sq ft vs the subtype's Altus range; road $/m vs `altus-benchmarks.json` by `roadClass`), `priceTrend(region)` (4-quarter BCPI non-residential change for the region's CMA), `comparableAwards(types)` (3 most recent CanadaBuys by tag). UI `market-evidence-card.tsx`. P3.8: `charts.tsx` (plain divs): `ComponentBreakdown` (stacked bar + list, replaces the old list), `DistributionChart`, `CategoryBreakdown` (scoped), `DriversTornado`, `PerUnitMetrics`; whole-project-only except category. `EstimateTab` now takes `components` and `region`. The Northgate estimate fixture still has the old sample building prices (tests only).
 - Real data: building base rates are Altus Group 2026 (GTA/Ottawa average, per-subtype `source`, price year 2026; SPEC Change log). B.3 added 7 more Altus building subtypes (+ typologies) and `<CustomPricingForm name pricing onChange/>` in `custom-pricing-form.tsx`, shown in the Inputs tab for custom components and for each custom park feature. `customBases(refData)` / `suggestBasis(name, bases)` in `src/engine/templates/custom.ts`; building bases use ids `building:<subtype>` (per m² of drawn area). Matched = wider band; own rate = user low/high or −30%/+60%.
@@ -103,7 +104,7 @@ Flags only; never block, never change the estimate. Do Waterloo first (demo city
 - [ ] Z.6 Zoning section on `/data` page and in flags list (source, by-law, date, limits)
 
 ### S3 → S4 — Questions, exports, demos
-- [ ] P7.5 `/api/ai/questions` across components + fallback + Questions panel · Core
+- [x] P7.5 `/api/ai/questions` across components + fallback + Questions panel · Core
 - [ ] P4.4 Three demo projects (A draws geometry in the app and downloads the project file; you add params, cached AI outputs, and scenarios) · Core
 - [ ] P7.8 Cached AI outputs for demo projects · Core
 - [ ] P5.2 PDF council report (template narrative, A's map snapshot), English · Core
@@ -141,6 +142,8 @@ Flags only; never block, never change the estimate. Do Waterloo first (demo city
 | Schemas (Project, Component, Geometry, Scenario, Measurements, Estimate, LineItem, Flag, reference data) | `src/lib/schemas/*.ts`, tests in `src/lib/schemas/__tests__/` | Import from `@/lib/schemas` (index re-exports all) |
 | API route conventions (zod body validation, error format, per-IP rate limiter) | `src/lib/api/` (`route.ts`, `errors.ts`, `rate-limit.ts`, `api.test.ts`) | Import from `@/lib/api`; shared with A's `/api/geo/*` routes |
 | Market evidence card (Altus benchmark, StatCan trend, CanadaBuys) and estimate charts | `src/lib/estimate/evidence.ts` (+ test), `src/components/estimate/market-evidence-card.tsx`, `charts.tsx`, `src/data/altus-benchmarks.json` | Evidence never feeds the engine |
+| Site flags + road auto-fill from OSM | `src/engine/site.ts` (+ `__tests__/site.test.ts`), `setSiteContext` in `projectSlice.ts` | Uses A's `/api/geo/context` |
+| Smart follow-up questions | `src/lib/questions/rank.ts`, `src/lib/ai/questions.ts`, `src/app/api/ai/questions/route.ts`, `src/components/questions/` | Questions tab in the panel |
 | Custom element pricing (matched incl. Altus building rates / own rate) | `src/components/estimate/custom-pricing-form.tsx`, `src/engine/templates/custom.ts` | In the Inputs tab |
 | Project files (download/open `.pwcost.json`) | `src/lib/project-file.ts` (+ test), `src/components/project-file/project-file-buttons.tsx` | A mounts the buttons |
 | Project store slice (project meta, settings, scenarios, param/override helpers) | `src/lib/store/projectSlice.ts` (+ test) | `selectProject(state)` gives the full `Project` |
