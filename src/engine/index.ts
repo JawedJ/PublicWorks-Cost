@@ -1,3 +1,4 @@
+import { siteAllowances, siteProximity } from "./site";
 import type {
   Component,
   ComponentType,
@@ -311,6 +312,16 @@ export function computeEstimate(
           lowConfidence: d?.lowConfidence ?? false,
         };
       });
+
+    // Site context (P6.3): allowances and permit flags for nearby schools, water, rail…
+    const site = siteAllowances(
+      c,
+      siteProximity(c, project.siteContext),
+      lines.reduce((s, l) => s + l.total, 0),
+      regionFactor * bcpi.factor,
+    );
+    lines.push(...site.lines);
+    for (const f of site.flags) addFlag(f);
 
     const direct = lines.reduce((s, l) => s + l.total, 0);
     const softPct = SOFT[c.type];

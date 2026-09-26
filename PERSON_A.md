@@ -32,7 +32,7 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 - `useEstimate()` is called twice (EstimatePanel and ComponentLayers) → two engine runs per change. Fine for now; B could move the estimate into the store.
 - Landing prompt uses a TEMPORARY keyword parser (`src/components/landing/keyword-parse.ts`) until B's `/api/ai/parse`; it creates planned components with size hints `gfaOverrideM2`, `storeys`, `areaM2`, `lengthM` that smart start / Generate layout read.
 - 3D site (P9.2–P9.5): `src/components/visuals/site-scene.tsx`, plain three.js + OrbitControls, rebuilt on every design/selection/colour change (fine at demo scale). Pipes are drawn under every road at fixed depths (not from params yet).
-- Site context (P6): `/api/geo/context` needs a User-Agent header for Overpass; overpass-api.de often 429/504s or takes >10 s, so the route tries it twice (12 s each) then the private.coffee mirror (unverified: didn't answer from the dev machine; overpass.osm.ch is Swiss-only). Oversized projects search a ~5 km box around their centre instead of failing. The water/rail buffer band uses round line joins (miter joins made long triangle spikes at bends). Result stored with B's `setSiteContext`; B's engine can turn it into flags (P6.3).
+- Site context (P6, reworked per the human): no button or map overlays. `SiteContextLookup` (`site-context.tsx`, mounted in `workspace-shell.tsx`) calls `/api/geo/context` 2 s after the design's bbox changes (key rounded to ~100 m); failures keep the previous result; a loaded project keeps its snapshot until it moves. The engine's `src/engine/site.ts` (P6.3, done by A per the human) adds allowance line items + flags (see SPEC change log). Overpass: overpass-api.de tried twice then private.coffee mirror (unverified); overpass.osm.ch is Swiss-only.
 - `captureMapSnapshot` / `useMapSnapshot` (`src/components/map/snapshot.ts`) not yet exercised in a browser.
 
 - Next.js is **16.3** (Middleware is now `src/proxy.ts`; read `node_modules/next/dist/docs/` before using Next APIs, see `AGENTS.md`).
@@ -57,6 +57,8 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 - Open requests from B (see `PERSON_B.md`, both "not needed before S3"): `updateComponents(patches)` as one undo step in `designSlice`, and a toggleable zoning map layer from `project.zoningContext` (schema coming in B's Z.1). B's `projectSlice` (B.2) is now on `main`.
 
 ## Requests to Person B
+
+- **P6.3 is done (by A, per the human):** `src/engine/site.ts` + tests, wired in `computeEstimate` after each component's lines. Please tick it in your list. Reports/PDF can show the `near_*` flags and `site-*` line items like any other.
 
 - Swap `approxMeasureProject` for `measureProject` from `@/lib/geo/measure` in `useEstimate.ts` (it's on main, same contract, geodesic).
 - Done: landing uses your parse + review (P7.4). Park features: I added one line to your `applyDraft` (`plannedFeatures` param); see handoff notes.

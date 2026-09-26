@@ -528,7 +528,7 @@ Right panel tabs:
 - **Estimate**: headline range (P10–P90 with P50 marked), per-component breakdown (stacked bar and table), market evidence card (section 8.2), estimate class badge with "how to improve accuracy" hints, recommended contingency, overrun risk card, cost distribution chart, category breakdown, drivers tornado, flags list, per-unit metrics.
 - **Line items**: editable table grouped by component, then category (quantity, unit price, total, sources, override indicators, reset to calculated).
 - **Inputs**: parameters of the selected component (or all, grouped by component), with source badges (Default / You / From prompt / From document / From site).
-- **Site**: site context results (nearby schools, hospitals, waterways, rail, existing road attributes) with map highlights.
+- **Site**: no separate tab or button; site context is looked up automatically in the background and appears as allowance line items and flags.
 - **Scenarios**: list, create/duplicate, what-if sliders, side-by-side comparison.
 - **Export**: PDF council report, Excel workbook, download project file.
 
@@ -559,7 +559,7 @@ A persistent top bar: project name (editable), "Download project file" button, "
 - **Live measurements**: while drawing and editing, show a floating label on the shape and a measurements panel for the selected component: length (m, km, ft), area (m², ha, ft², acres), perimeter, footprint and GFA, plus project totals (total road length, park area, building GFA, project area). Units toggle metric/imperial (metric primary).
 - **Live cost link**: measurement changes update the estimate within ~300 ms (debounced), with a subtle highlight on the changed total.
 - **Cross-component warnings** (section 6) shown live as map markers while drawing.
-- **Layers**: component geometry styled as above, site-context overlays (schools, hospitals, waterways, rail) with buffer rings, flags as map markers.
+- **Layers**: component geometry styled as above, flags as map markers. (Site context is not drawn on the map.)
 - **3D on map** view: every building section extruded to its own height (storeys × floor height) with type colours; park features and roads remain as 2D plan styling on the ground; tilt/rotate enabled.
 - Implementation guidance: generate render geometry client-side from the project store (Turf for insets, offsets, and point scattering; seeded RNG for scatter), then feed MapLibre GeoJSON sources with fill, line, `fill-pattern`, and symbol layers. Recompute only the changed component so edits stay instant.
 - Map snapshot capture for reports.
@@ -706,7 +706,7 @@ Complete one phase at a time. Each phase is broken into numbered tasks in `PROGR
 **Phase 5 — Reports & exports.** PDF council report (with map snapshot, template-based narrative for now), Excel workbook (English).
 *Done when:* all exports download correctly for each demo project in both languages.
 
-**Phase 6 — Site context & flags.** Overpass-based lookups (schools, hospitals, waterways, rail, existing road attributes where tagged), caching and fallback, Site tab, map overlays, flags integrated into the engine and reports.
+**Phase 6 — Site context & flags.** Overpass-based lookups (schools, hospitals, waterways, rail, existing road attributes where tagged), caching and fallback, automatic background lookup, allowances and flags integrated into the engine and reports.
 
 **Phase 7 — AI features.** Whole-build prompt parsing into a build list + build list review screen, drawing planned components from the build list, smart follow-up questions, document upload + extraction review, AI narrative in reports (with number check), all fallbacks, rate limiting, cached AI outputs for demos.
 *Done when:* the full describe → review build list → locate → draw each component → questions → estimate flow works with `AI_PROVIDER=gemini` and `AI_PROVIDER=none`.
@@ -769,3 +769,4 @@ One line per change to this spec: `YYYY-MM-DD P#.#: what changed and why`. Newes
 - 2026-09-26 Data [B, per the human]: Building base rates replaced with real Altus Group 2026 Canadian Cost Guide benchmarks (GTA/Ottawa average, $/sq ft → $/m²); each subtype carries its source, and building BCPI escalation starts from that file's own price year (2026). Everything else remains sample data; the sample-data badge stays.
 - 2026-09-26 B.3 [B, per the human]: Seven more building subtypes from the Altus 2026 rows (ice arena, aquatic centre, secondary school, performing arts, museum/gallery, medical clinic, maintenance facility) with typologies. Custom elements can be matched to any building rate (`building:<subtype>` basis ids), park features, or unit prices, with a keyword suggestion from the name; the pricing form lives in the Inputs tab (custom components and custom park features).
 - 2026-09-26 P3.7/P3.8 [B, per the human]: Market evidence card leads with a benchmark check against Altus 2026 (building $/sq ft, road $/m); CanadaBuys list trimmed to 3 recent awards; local tenders skipped (no data). Charts are plain HTML/CSS bars (no chart library).
+- 2026-09-26 P6.3 [A, per the human]: Site context is looked up automatically when the design's location changes (debounced, ~100 m key; a failed lookup keeps the previous result; a loaded project keeps its snapshot until it moves). No button, no map overlays. The engine (`src/engine/site.ts`) turns it into sourced allowance line items and flags: school/hospital within 200 m (+2% / +1.5% of direct, traffic control), waterway within 30 m (+2% + $15k conservation authority permit, high), 30–100 m (info), rail within 30 m ($25k proximity agreement). Allowances are sample engine rules.

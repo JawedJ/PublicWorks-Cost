@@ -15,6 +15,7 @@ import { EditToolbar } from "./edit-toolbar";
 import { Geocoder } from "./geocoder";
 import { MapProvider } from "./map-context";
 import { MapView } from "./map-view";
+import { SiteContextLookup } from "./site-context";
 import { SmartPlacer } from "./smart-placer";
 import { TransformHandles } from "./transform-handles";
 import { ViewSwitcher } from "./view-switcher";
@@ -52,6 +53,7 @@ export function WorkspaceShell() {
 
   return (
     <MapProvider>
+      <SiteContextLookup />
       <div className="flex min-h-0 flex-1 flex-col lg:h-[calc(100dvh-3.5rem)] lg:flex-none lg:flex-row">
         <div className="flex shrink-0 flex-col lg:min-h-0 lg:min-w-0 lg:flex-1 lg:flex-row">
           <section
