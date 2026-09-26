@@ -89,7 +89,7 @@ Stop at each sync point, merge to `main`, pull, and check the app together for 5
 | **S2 · +5h (5 PM)** | map, draw roads/parks/buildings, live measurements, component list | engine producing a full estimate from the fixture; public data scripts run | wire `useEstimate` to the live store: drawing changes the estimate |
 | **S3 · +10h (10 PM)** | 2D procedural rendering, generate layout, colour by cost, cost tooltips | estimate panel tabs, market evidence card, AI parse → build list, project files | full flow: prompt → build list → design → estimate |
 | **S4 · +16h (4 AM)** | 3D map extrusion; 3D site and cross-sections if time | questions, exports (PDF/Excel), demo projects' params | **feature freeze** — bugs and polish only after this |
-| **S5 · +20h (8 AM)** | mobile/accessibility pass, final deploy | French strings, error states, `/data` page | rehearse demo (SPEC section 23), record ≤5-min video by 11 AM, submit by 12 PM |
+| **S5 · +20h (8 AM)** | mobile/accessibility pass, final deploy | error states, `/data` page (French dropped, SPEC 17) | rehearse demo (SPEC section 23), record ≤5-min video by 11 AM, submit by 12 PM |
 
 If you're behind at a sync point, drop **Stretch** tasks first (marked in each person's file), never Core ones.
 

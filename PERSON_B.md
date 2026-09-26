@@ -33,6 +33,7 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Requests to Person A
 
+- **French is dropped (the human's call, SPEC 17 + Change log).** English only from now on: no need to add keys to `fr.json`, and please hide or remove the EN/FR language toggle (landing/layout are yours). Nothing else needs ripping out; `/fr` routing and `{ en, fr }` text can stay unused.
 - **P7.4 creation flow is unblocked.** In `landing-start.tsx` `start()`: `const r = await requestParse(prompt, locale)` → show `<BuildListReview initial={r.draft} source={r.source} onConfirm={(d) => { applyDraft(d); router.push("/workspace"); }} onBack={...} />` (both from `@/components/build-list/...`). `applyDraft` does `newProject` + `addComponents` with `paramMeta` source `ai_prompt` + evidence, and sets start date. Size hints `storeys`, `areaM2`, `lengthM`, `gfaOverrideM2` kept as your ids. `r.notice` (`ai_busy` / `ai_unavailable`) is there if you want a small notice. `BuildListItem.spatialHint` is free text ("next to the library") if Generate layout wants it later.
 - **Park features from the prompt (small, with P7.4).** A park `BuildListItem` may have `features: string[]` (park-features.json kinds, e.g. `playground`, `splash_pad`). `applyDraft` can't place them (no geometry), so the review screen shows them but they're dropped on Continue. Could Generate layout / smart start place them inside the park? Tell me the shape you want (e.g. `applyDraft` returning `{ componentId, features }[]`, or storing them on the component) and I'll adapt.
 - **Batch component update (small, for P7.5 "apply to all similar").** An `updateComponents(patches: { id, patch }[])` in `designSlice` that applies several patches as one undo step. Not needed before S3.
@@ -100,7 +101,7 @@ Flags only; never block, never change the estimate. Do Waterloo first (demo city
 - [ ] P7.5 `/api/ai/questions` across components + fallback + Questions panel · Core
 - [ ] P4.4 Three demo projects (A draws geometry in the app and downloads the project file; you add params, cached AI outputs, and scenarios) · Core
 - [ ] P7.8 Cached AI outputs for demo projects · Core
-- [ ] P5.2 PDF council report (template narrative, A's map snapshot), EN/FR · Core
+- [ ] P5.2 PDF council report (template narrative, A's map snapshot), English · Core
 - [ ] P5.3 Excel workbook (Summary, Line Items, Assumptions, Scenarios) · Core
 - [ ] P5.4 Export tab · Core
 - [ ] P7.7 `/api/ai/narrative` with number check + template fallback; used in PDF · Stretch
@@ -113,7 +114,7 @@ Flags only; never block, never change the estimate. Do Waterloo first (demo city
 - [ ] P9.6 Optional concept image provider (disabled without key) · Stretch
 
 ### S4 → S5 — Polish (after feature freeze)
-- [ ] P10.1 French translations (all namespaces; ask A to review theirs)
+- [-] P10.1 French translations (dropped: English only, SPEC 17)
 - [ ] P10.4 Empty, loading, and error states (your areas)
 - [ ] P10.6 `/data` page (all datasets incl. StatCan and CanadaBuys: source, date, licence, limits; BCPI trend chart)
 - [ ] P10.7 Rehearse demo walkthrough with A (SPEC section 23); record video together

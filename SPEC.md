@@ -34,7 +34,7 @@ PublicWorks Cost is a map-based, AI-assisted cost estimating web app for Canadia
 5. **Unlimited creative freedom.** Users can design any shape, layout, or combination: any footprint, any number of sections and heights, any park layout, any road path, and elements the catalog doesn't know. The app never forces fixed blocks. Anything the app places for the user is **procedurally generated from the user's own idea** (their prompt, parameters, and drawn shapes) and is always fully editable. The estimate adapts to whatever is designed, and becomes less certain (wider range) where the design goes beyond known cost data rather than refusing it.
 6. **Honest uncertainty.** Estimates are always shown as ranges (P10 / P50 / P90) tied to an estimate class, never as a single confident number.
 7. **Sample data is labelled.** All seed pricing and reference data is illustrative. The UI and every export carry a clear "sample data" notice until real data is loaded.
-8. **Built for Canada.** Metric units first (with ft² / ft shown alongside areas and lengths), CAD currency, Canadian regional factors, winter construction, English and French.
+8. **Built for Canada.** Metric units first (with ft² / ft shown alongside areas and lengths), CAD currency, Canadian regional factors, winter construction. English only (French dropped, see section 17).
 9. **Demo reliability.** The app must work smoothly in a live pitch: preloaded demo projects, graceful fallbacks when external services (AI, map snapping, site lookups) fail or are slow, and no dead ends.
 
 ---
@@ -62,7 +62,7 @@ Use current stable versions. Check official docs for current APIs rather than re
 | Persistence | **None.** No database, no file storage, no login. The project lives in browser memory for the session (see section 15) |
 | PDF reports | @react-pdf/renderer |
 | Excel export / import | SheetJS (`xlsx`) |
-| i18n | next-intl (English + French) |
+| i18n | next-intl (English only; `fr` plumbing left in place, unused) |
 | Public data | Statistics Canada Building Construction Price Indexes (table 18-10-0289-01) and CanadaBuys award/tender notices (open.canada.ca CSV feeds), fetched by build-time scripts into committed JSON (section 8.1) |
 | Tests | Vitest (engine, geometry, parsers); a light Playwright smoke test at the end is optional |
 | Deployment | Vercel |
@@ -482,7 +482,7 @@ Input: all drawn components with their params and sources, measurements, site co
 Input: uploaded PDF (geotechnical report, drawings, previous study). Send the PDF to the model as a document input through the provider interface. Output: parameter values from the catalogs, each assigned to the component(s) it applies to, with short evidence quotes and page numbers. Show the user a review screen to accept/reject each extracted value.
 
 ### 9.4 Report narrative — `/api/ai/narrative`
-Input: the computed `Estimate` + project summary + locale. Output: executive summary, key risks, recommendation paragraphs for the council report, in EN or FR. The prompt must instruct the model to use only numbers present in the input. After generation, check that every number in the text appears in the input data (allowing formatting differences); if not, regenerate once, then fall back to a template-based narrative.
+Input: the computed `Estimate` + project summary + locale. Output: executive summary, key risks, recommendation paragraphs for the council report, in English. The prompt must instruct the model to use only numbers present in the input. After generation, check that every number in the text appears in the input data (allowing formatting differences); if not, regenerate once, then fall back to a template-based narrative.
 
 ### 9.5 Concept render (optional, pluggable)
 An optional "Concept image" feature behind an `IMAGE_PROVIDER` interface, disabled unless an image-generation API key is configured. Images are always labelled "Illustrative concept — not a design drawing." Do not block any other feature on this.
@@ -496,7 +496,6 @@ An optional "Concept image" feature behind an `IMAGE_PROVIDER` interface, disabl
 - Smaller secondary option: "Start with a blank map".
 - Demo projects (3 cards) that open instantly.
 - "Open project file" button to load a previously downloaded project file.
-- Language toggle EN/FR.
 
 ### 10.2 Project creation flow
 
@@ -589,7 +588,7 @@ A persistent top bar: project name (editable), "Download project file" button, "
 
 ## 14. Exports
 
-- **PDF council report** (EN or FR): cover with project name, municipality, date, map snapshot; executive summary (AI narrative); estimate range and class; list of components with a map of each; cost breakdown by component and by category; risk and contingency; drivers; flags and required approvals; scenarios comparison (if any); assumptions and parameter sources; data sources and sample-data disclaimer.
+- **PDF council report** (English): cover with project name, municipality, date, map snapshot; executive summary (AI narrative); estimate range and class; list of components with a map of each; cost breakdown by component and by category; risk and contingency; drivers; flags and required approvals; scenarios comparison (if any); assumptions and parameter sources; data sources and sample-data disclaimer.
 - **Excel workbook**: sheets for Summary, Line Items (with sources), Assumptions, Scenarios.
 - **Project file**: download the full project as a `.pwcost.json` file (see section 15).
 
@@ -620,10 +619,10 @@ Opening a demo loads a fresh copy into the workspace; the bundled file is never 
 
 ## 17. Internationalization
 
-- All UI strings in `messages/en.json` and `messages/fr.json` via next-intl; locale in the URL (`/en`, `/fr`).
-- Component type labels, parameter labels, "why it matters" text, flags, and data descriptions have EN/FR.
-- Number and currency formatting via `Intl` for `en-CA` / `fr-CA`.
-- AI narrative generated in the selected locale.
+- **English only.** French is dropped: no French translations, reports, AI output, or language toggle.
+- All UI strings still go in `messages/en.json` via next-intl (no hard-coded UI text). New keys don't need to be added to `messages/fr.json`.
+- The existing French plumbing stays as-is and unused: `/fr` routing, `fr.json`, and the `{ en, fr }` text type in schemas and the engine. Don't spend time on it; new engine text may copy the English into `fr`.
+- Number and currency formatting via `Intl` for `en-CA`.
 
 ---
 
@@ -689,7 +688,7 @@ Provide `.env.example`. The app must start and be fully usable (with fallbacks) 
 Complete one phase at a time. Each phase is broken into numbered tasks in `PROGRESS.md`; follow the protocol in `CLAUDE.md` (update progress after every task, commit per task, stop at the end of each phase for review).
 
 **Phase 0 — Foundation.** Scaffold Next.js + TypeScript + Tailwind + shadcn/ui + next-intl (EN/FR routing) + Zustand + zod + Vitest. Design tokens and layout shell. `.env.example`, `README.md`, `PROGRESS.md`, `DEPLOY.md`. Deploy a placeholder to Vercel.
-*Done when:* the app runs locally and on Vercel in both locales.
+*Done when:* the app runs locally and on Vercel.
 
 **Phase 1 — Map, drawing & live measurements.** Workspace page with MapLibre, geocoding search, project store holding **multiple components**, component list with planned/drawn status, freeform drawing tools for every component (polygon, rectangle, circle, freehand, line, point), multi-section buildings with per-section storeys, custom elements, smart-start shapes and a procedural starting layout generated from the build list, unrestricted editing (rotate, scale, vertices, holes, split/merge sections), procedurally generated 2D plan rendering (roofs from actual shapes, scattered trees, fitted field markings, true-width roads with markings), select/edit/duplicate/delete/undo across components, cross-component warnings, live measurement labels and panel, units toggle, road snapping with fallback, extrusion of all buildings on map.
 *Done when:* a user can design any shapes and combinations (including multi-section buildings and custom elements), or generate a starting layout and edit it freely, with a recognizable 2D plan and correct live measurements (unit tests for measurement and generation helpers).
@@ -703,7 +702,7 @@ Complete one phase at a time. Each phase is broken into numbered tasks in `PROGR
 **Phase 4 — Project files, demo projects & landing.** Download/open project file with validation, unsaved-changes warning, three bundled demo projects, landing page.
 *Done when:* a project can be downloaded and reopened exactly, and each demo loads into the workspace.
 
-**Phase 5 — Reports & exports.** PDF council report (with map snapshot, template-based narrative for now), Excel workbook, EN/FR output.
+**Phase 5 — Reports & exports.** PDF council report (with map snapshot, template-based narrative for now), Excel workbook (English).
 *Done when:* all exports download correctly for each demo project in both languages.
 
 **Phase 6 — Site context & flags.** Overpass-based lookups (schools, hospitals, waterways, rail, existing road attributes where tagged), caching and fallback, Site tab, map overlays, flags integrated into the engine and reports.
@@ -715,7 +714,7 @@ Complete one phase at a time. Each phase is broken into numbered tasks in `PROGR
 
 **Phase 9 — 3D site scene & cross-sections.** Road cross-sections per road component, one 3D site scene with all components in position (added to the view switcher), clickable elements and cost heatmap, optional concept image provider.
 
-**Phase 10 — Polish & pitch readiness.** Complete French translations, accessibility pass, mobile layout, empty/error states, performance check, `/data` page, demo walkthrough rehearsal (section 23), final deploy.
+**Phase 10 — Polish & pitch readiness.** Accessibility pass, mobile layout, empty/error states, performance check, `/data` page, demo walkthrough rehearsal (section 23), final deploy.
 
 ---
 
@@ -728,7 +727,7 @@ Complete one phase at a time. Each phase is broken into numbered tasks in `PROGR
 5. Show the combined range, the per-component breakdown, overrun risk, contingency, drivers, and flags (e.g. the culvert's creek permit, a school near a street).
 6. In Estimate & visualize, switch between 2D plan, 3D map, and 3D site; click the library to see its cost; select a street to show its cross-section; turn on colour by cost.
 7. Create a scenario that removes the fire station and compare.
-8. Export the council report in French.
+8. Export the council report (PDF) and the Excel workbook.
 9. Open the "Maple Street renewal" demo to show a simpler single-street project.
 
 ---
@@ -765,3 +764,4 @@ One line per change to this spec: `YYYY-MM-DD P#.#: what changed and why`. Newes
 - 2026-09-26 P1.9/P1.10 [A]: Smart start and layout generation size shapes from component params `gfaOverrideM2` (or `gfaM2`), `storeys`, `areaM2`, `lengthM` when present (e.g. set by the prompt parser), else from `typologies.json`. Generated buildings get a site = footprint + typical setback. Layout: roads as a street grid through the centre (project-area centre or map centre), buildings fronting streets, then parks; Regenerate re-places only components still 'generated'.
 - 2026-09-26 P7.2 [B]: `ProjectDraft` / `BuildListItem` / `ParseResponse` schemas in `src/lib/schemas/draft.ts`. Build list params may also carry layout size hints (`storeys`, `areaM2`, `lengthM`) that aren't engine params; geometry replaces them once drawn. Counts are expanded into separate named items (max 20 each). Gemini is called via REST (no SDK dependency).
 - 2026-09-26 P7.2 [B]: Parse uses the fast Gemini model (Flash-Lite; the thinking Flash model was >20 s). Park amenities in the prompt come back as `features` (park feature kinds) on the park build-list item, not as separate components; today's date is sent so relative start dates resolve.
+- 2026-09-26 i18n [B, per the human]: French dropped; the app is English only (section 17). No French strings, translations, reports, AI output, or language toggle. Existing `fr` plumbing (routing, `fr.json`, `{ en, fr }` text) stays but is unused; nothing is ripped out. P10.1 dropped.

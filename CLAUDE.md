@@ -56,8 +56,8 @@ Run typecheck, lint, and all tests; fix failures; confirm the phase's "Done when
 - API keys are server-only. Never import them into client components.
 - No database, no persistence of projects, no share links. Projects live in memory; the only way to keep work is the downloadable project file (SPEC section 15). Don't add storage without the human's approval.
 - Validate every API route body with zod. Rate-limit AI and geo routes.
-- All user-facing strings go through next-intl (`messages/en.json`, `messages/fr.json`). No hard-coded UI text.
-- Metric units first, CAD currency, `en-CA` / `fr-CA` formatting via `Intl`.
+- All user-facing strings go through next-intl (`messages/en.json`). No hard-coded UI text. English only: French is dropped (SPEC 17), don't add to `messages/fr.json`.
+- Metric units first, CAD currency, `en-CA` formatting via `Intl`.
 - Seed data is sample data: keep the sample-data badge and disclaimers visible.
 - Public data (StatCan BCPI, CanadaBuys) is fetched only by the scripts in `scripts/` and committed as JSON; never call these services at runtime. CanadaBuys records are evidence only and never feed the cost engine. Always show source, date, and limits.
 
