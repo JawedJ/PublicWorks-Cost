@@ -47,6 +47,7 @@ export function EstimatePanel() {
   const selectedId = useStore((s) => s.selectedComponentId);
   const components = useStore((s) => s.components);
   const region = useStore((s) => s.project.region);
+  // Always opens on Estimate (per the human; no longer jumps to Questions).
   const [tab, setTab] = useState<Tab>("estimate");
   // Questions are generated in the background, once per project and set of
   // components (waiting for drawing to settle), not each time the tab opens.
@@ -58,15 +59,6 @@ export function EstimatePanel() {
     // Only the component set matters; answers and edits don't re-ask.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [componentKey]);
-  // Creation flow (P7.4, A): once the last planned component is placed, go to Questions.
-  const planned = components.filter((c) => c.status === "planned").length;
-  const [prevPlanned, setPrevPlanned] = useState(planned);
-  if (planned !== prevPlanned) {
-    setPrevPlanned(planned);
-    if (prevPlanned > 0 && planned === 0 && components.length > 0)
-      setTab("questions");
-  }
-
   if (!estimate || estimate.components.length === 0) {
     return (
       <section className="min-h-full bg-background p-4" aria-live="polite">
