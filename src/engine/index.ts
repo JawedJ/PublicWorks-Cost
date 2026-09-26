@@ -37,13 +37,15 @@ const WINTER_CATEGORIES: LineItemCategory[] = [
 const MOBILIZATION_PCT = 0.06;
 /** Correlation of line items within a price category. */
 const CATEGORY_CORRELATION = 0.6;
-const CLASS_RANGE: Record<EstimateClass, { lowPct: number; highPct: number }> =
-  {
-    D: { lowPct: -30, highPct: 50 },
-    C: { lowPct: -20, highPct: 30 },
-    B: { lowPct: -15, highPct: 20 },
-    A: { lowPct: -10, highPct: 15 },
-  };
+export const CLASS_RANGE: Record<
+  EstimateClass,
+  { lowPct: number; highPct: number }
+> = {
+  D: { lowPct: -30, highPct: 50 },
+  C: { lowPct: -20, highPct: 30 },
+  B: { lowPct: -15, highPct: 20 },
+  A: { lowPct: -10, highPct: 15 },
+};
 const CLASS_ORDER: EstimateClass[] = ["D", "C", "B", "A"];
 /** Soft costs as fractions of component direct cost (SPEC 7.5). */
 const SOFT: Record<

@@ -2,6 +2,7 @@ import type {
   ComponentEstimate,
   Estimate,
   Flag,
+  ImprovementHint,
   LineItem,
 } from "@/lib/schemas";
 
@@ -17,6 +18,8 @@ export type ScopedEstimate = {
   estimateClass: Estimate["estimateClass"];
   lineItems: LineItem[];
   flags: Flag[];
+  /** Answers that would raise the class (all components for the whole project). */
+  hints: ImprovementHint[];
 };
 
 export function scopeEstimate(
@@ -35,6 +38,7 @@ export function scopeEstimate(
       estimateClass: estimate.estimateClass,
       lineItems: estimate.lineItems,
       flags: estimate.flags,
+      hints: estimate.components.flatMap((c) => c.improvementHints),
     };
   }
   const id = component.componentId;
@@ -48,5 +52,6 @@ export function scopeEstimate(
     flags: estimate.flags.filter(
       (f) => f.componentIds.length === 0 || f.componentIds.includes(id),
     ),
+    hints: component.improvementHints,
   };
 }

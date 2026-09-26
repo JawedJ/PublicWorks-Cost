@@ -19,6 +19,7 @@ describe("scopeEstimate", () => {
     expect(s.component).toBe(c);
     expect([s.p10, s.p50, s.p90]).toEqual([c.p10, c.p50, c.p90]);
     expect(s.estimateClass).toBe(c.estimateClass);
+    expect(s.hints).toBe(c.improvementHints);
     expect(s.lineItems.length).toBeGreaterThan(0);
     expect(s.lineItems.every((l) => l.componentId === c.componentId)).toBe(
       true,
