@@ -60,7 +60,10 @@ const paramCatalog: ParamDefinition[] = [
   },
   {
     id: "curbs",
-    label: L("Concrete curbs around the lot", "Bordures de béton autour du stationnement"),
+    label: L(
+      "Concrete curbs around the lot",
+      "Bordures de béton autour du stationnement",
+    ),
     type: "boolean",
     default: true,
     costImpact: 2,
@@ -248,7 +251,10 @@ function flags(ctx: TemplateContext): TemplateFlag[] {
 export const parkingTemplate: ComponentTemplate = {
   type: "parking",
   subtypes: [
-    { id: "surface_lot", label: L("Surface parking lot", "Stationnement de surface") },
+    {
+      id: "surface_lot",
+      label: L("Surface parking lot", "Stationnement de surface"),
+    },
   ],
   paramCatalog,
   deriveQuantities,

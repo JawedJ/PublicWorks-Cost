@@ -67,12 +67,12 @@
       "componentId": "c-library",
       "name": "Northgate Branch Library",
       "type": "building",
-      "directCost": 14983000,
-      "p10": 17806000.0,
-      "p50": 21169000.0,
-      "p90": 25720000.0,
+      "directCost": 14845000.0,
+      "p10": 17642000.0,
+      "p50": 20974000.0,
+      "p90": 25483000.0,
       "estimateClass": "C",
-      "share": 0.4332,
+      "share": 0.4292,
       "improvementHints": [
         {
           "componentId": "c-library",
@@ -83,6 +83,18 @@
           }
         }
       ]
+    },
+    {
+      "componentId": "c-library-parking",
+      "name": "Library parking lot",
+      "type": "parking",
+      "directCost": 138000,
+      "p10": 164000.0,
+      "p50": 195000.0,
+      "p90": 237000.0,
+      "estimateClass": "C",
+      "share": 0.004,
+      "improvementHints": []
     },
     {
       "componentId": "c-fire-station",
@@ -1353,8 +1365,8 @@
       "lowConfidence": false
     },
     {
-      "id": "lib-parking",
-      "componentId": "c-library",
+      "id": "parking-lot",
+      "componentId": "c-library-parking",
       "category": "site_works",
       "description": {
         "en": "Parking lot, asphalt",
@@ -1379,10 +1391,7 @@
       "total": 138000,
       "isQuantityOverridden": false,
       "isPriceOverridden": false,
-      "lowConfidence": false,
-      "elementRef": {
-        "featureId": "f-library-parking"
-      }
+      "lowConfidence": false
     },
     {
       "id": "lib-landscape",

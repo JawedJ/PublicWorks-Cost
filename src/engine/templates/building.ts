@@ -97,19 +97,6 @@ const paramCatalog: ParamDefinition[] = [
     ),
   },
   {
-    id: "parkingStalls",
-    label: L("Surface parking stalls", "Places de stationnement en surface"),
-    type: "number",
-    default: 0,
-    min: 0,
-    max: 2000,
-    costImpact: 2,
-    why: L(
-      "Used when no parking area is drawn; about 30 m² each.",
-      "Utilisé si aucune aire n'est dessinée; environ 30 m² chacune.",
-    ),
-  },
-  {
     id: "demolitionM2",
     label: L("Existing building to demolish", "Bâtiment existant à démolir"),
     type: "number",
@@ -257,7 +244,6 @@ const SPECIAL_SPACES: {
   },
 ];
 
-const PARKING_STALL_M2 = 30;
 /** Basement cost per m² as a share of the building's $/m². */
 const BASEMENT_FACTOR = 0.7;
 /** Share of building cost in the envelope, which is what shape complexity affects. */
@@ -349,20 +335,6 @@ export function siteAreaM2(ctx: TemplateContext): {
   return {
     areaM2: footprint + perimeter * d + Math.PI * d * d,
     generated: true,
-  };
-}
-
-function parkingAreaM2(ctx: TemplateContext): {
-  areaM2: number;
-  drawn: boolean;
-} {
-  const drawn = (ctx.component.geometry?.features ?? [])
-    .filter((f) => f.kind === "parking")
-    .reduce((s, f) => s + (ctx.measurements.features[f.id]?.areaM2 ?? 0), 0);
-  if (drawn > 0) return { areaM2: drawn, drawn: true };
-  return {
-    areaM2: num(ctx.params, "parkingStalls") * PARKING_STALL_M2,
-    drawn: false,
   };
 }
 
@@ -578,8 +550,6 @@ function deriveQuantities(ctx: TemplateContext): QuantityLine[] {
   const site = siteAreaM2(ctx);
   const siteArea = round(site.areaM2);
   const footprint = round(sections.reduce((s, x) => s + x.footprintM2, 0));
-  const parking = parkingAreaM2(ctx);
-  const parkingArea = round(parking.areaM2);
   const siteSrc = site.generated
     ? t(
         siteArea,
@@ -605,34 +575,14 @@ function deriveQuantities(ctx: TemplateContext): QuantityLine[] {
       quantitySource: src,
     });
 
-  unit(
-    "parking",
-    "parking_lot_asphalt",
-    parkingArea,
-    "m2",
-    parking.drawn
-      ? t(parkingArea, L(" m² drawn", " m² dessinés"))
-      : t(
-          num(p, "parkingStalls"),
-          L(" stalls × ", " places × "),
-          PARKING_STALL_M2,
-          " m²",
-        ),
-  );
-  const landscape = Math.max(0, siteArea - footprint - parkingArea);
+  // Parking is its own component (a parking lot), not part of the building.
+  const landscape = Math.max(0, siteArea - footprint);
   unit(
     "landscaping",
     "site_landscaping",
     round(landscape),
     "m2",
-    t(
-      siteArea,
-      " − ",
-      footprint,
-      L(" footprint − ", " emprise − "),
-      parkingArea,
-      L(" parking", " stationnement"),
-    ),
+    t(siteArea, " − ", footprint, L(" m² footprint", " m² d'emprise")),
   );
   unit("stormwater", "stormwater_management_site", siteArea, "m2", siteSrc);
   unit(
@@ -687,26 +637,22 @@ function flags(ctx: TemplateContext): TemplateFlag[] {
 
   const site = siteAreaM2(ctx);
   const footprint = sections.reduce((s, x) => s + x.footprintM2, 0);
-  const parking = parkingAreaM2(ctx).areaM2;
-  if (!site.generated && footprint + parking > site.areaM2) {
+  if (!site.generated && footprint > site.areaM2) {
     out.push({
       code: "building_does_not_fit",
       severity: "warning",
       title: L(
-        "Building and parking don't fit the site",
-        "Le bâtiment et le stationnement n'entrent pas sur le terrain",
+        "Building doesn't fit the site",
+        "Le bâtiment n'entre pas sur le terrain",
       ),
       explanation: t(
-        L(
-          "Footprint and parking need ",
-          "L'emprise et le stationnement exigent ",
-        ),
-        Math.round(footprint + parking),
+        L("The footprint needs ", "L'emprise exige "),
+        Math.round(footprint),
         L(" m², but the site is ", " m², mais le terrain fait "),
         Math.round(site.areaM2),
         L(
-          " m². Consider structured parking, more storeys, or a larger site.",
-          " m². Envisagez un stationnement étagé, plus d'étages ou un terrain plus grand.",
+          " m². Consider more storeys or a larger site.",
+          " m². Envisagez plus d'étages ou un terrain plus grand.",
         ),
       ),
       componentIds: ids,
@@ -809,9 +755,8 @@ export const buildingTemplate: ComponentTemplate = {
     },
   ],
   paramCatalog,
-  // Amenities (gym, pool, rink, kitchen, sally port, council chamber) and surface parking
-  // are off unless the user or prompt adds them; parking is its own component
-  // (parking lot). Only typical sizes (e.g. fire station bays) default per subtype.
+  // Amenities (gym, pool, rink, kitchen, sally port, council chamber) are off
+  // unless the user or prompt adds them; parking is its own component (parking lot). Only typical sizes (e.g. fire station bays) default per subtype.
   subtypeDefaults: {
     community_centre: {},
     library: {},

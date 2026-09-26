@@ -271,6 +271,11 @@
     #fff;
 }
 .pw-tooltip .maplibregl-popup-content {
+  /* Theme colours, not MapLibre's white box (light text was unreadable on it). */
+  background: var(--popover);
+  color: var(--popover-foreground);
+  border: 1px solid var(--border);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.3);
   padding: 4px 8px;
   font-size: 12px;
   font-variant-numeric: tabular-nums;
@@ -278,4 +283,7 @@
 }
 .pw-tooltip {
   pointer-events: none;
+}
+.pw-tooltip .maplibregl-popup-tip {
+  display: none;
 }

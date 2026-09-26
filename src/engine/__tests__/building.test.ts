@@ -57,12 +57,6 @@ describe("building template (SPEC 6.3)", () => {
     expect(missingPrices(derive("library").lines)).toEqual([]);
   });
 
-  it("still prices parking stalls entered on the building", () => {
-    const q = byId(derive("library", { parkingStalls: 30 }).lines);
-    expect(q.parking!.quantity).toBe(900); // 30 stalls × 30 m²
-    expect(q.landscaping!.quantity).toBe(5000 - 1400 - 900);
-  });
-
   it("adds special spaces and scales to a GFA override", () => {
     const q = byId(derive("fire_station", { gfaOverrideM2: 4800 }).lines);
     expect(q["special:apparatus_bay"]!.quantity).toBe(3);

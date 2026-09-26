@@ -410,37 +410,12 @@
             "use": "community room"
           }
         ],
-        "features": [
-          {
-            "id": "f-library-parking",
-            "kind": "parking",
-            "geometry": {
-              "type": "Feature",
-              "properties": null,
-              "geometry": {
-                "type": "Polygon",
-                "coordinates": [
-                  [
-                    [-80.52839, 43.500314],
-                    [-80.527771, 43.500314],
-                    [-80.527771, 43.50053],
-                    [-80.52839, 43.50053],
-                    [-80.52839, 43.500314]
-                  ]
-                ]
-              }
-            },
-            "params": {
-              "surface": "asphalt"
-            }
-          }
-        ]
+        "features": []
       },
       "params": {
         "quality": "standard",
         "sustainability": "high_performance",
         "basement": false,
-        "parkingStalls": 40,
         "ffeIncluded": true,
         "siteServicing": "average"
       },
@@ -454,13 +429,50 @@
         "basement": {
           "source": "default"
         },
-        "parkingStalls": {
-          "source": "default"
-        },
         "ffeIncluded": {
           "source": "user"
         },
         "siteServicing": {
+          "source": "default"
+        }
+      },
+      "overrides": {
+        "quantities": {},
+        "unitPrices": {}
+      },
+      "visible": true
+    },
+    {
+      "id": "c-library-parking",
+      "name": "Library parking lot",
+      "type": "parking",
+      "subtype": "surface_lot",
+      "status": "drawn",
+      "origin": "user",
+      "geometry": {
+        "primary": {
+          "type": "Feature",
+          "properties": null,
+          "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+              [
+                [-80.52839, 43.500314],
+                [-80.527771, 43.500314],
+                [-80.527771, 43.50053],
+                [-80.52839, 43.50053],
+                [-80.52839, 43.500314]
+              ]
+            ]
+          }
+        },
+        "features": []
+      },
+      "params": {
+        "surface": "asphalt"
+      },
+      "paramMeta": {
+        "surface": {
           "source": "default"
         }
       },

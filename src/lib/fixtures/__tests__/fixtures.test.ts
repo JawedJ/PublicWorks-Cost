@@ -6,7 +6,7 @@ const componentIds = new Set(project.components.map((c) => c.id));
 describe("Northgate fixtures", () => {
   it("covers every Northgate component type in the project", () => {
     expect(new Set(project.components.map((c) => c.type))).toEqual(
-      new Set(["road", "park", "building", "structure"]),
+      new Set(["road", "park", "building", "structure", "parking"]),
     );
     expect(project.components.filter((c) => c.type === "road")).toHaveLength(2);
   });
