@@ -256,5 +256,28 @@
       "empty": "Dessinez ou générez des composantes pour les voir en 3D.",
       "hint": "Glissez pour pivoter, clic droit pour déplacer, molette pour zoomer. Cliquez pour sélectionner."
     }
+  },
+  "buildList": {
+    "projectName": "Nom du projet",
+    "municipality": "Municipalité",
+    "startDate": "Début des travaux",
+    "fallbackNote": "Assistant IA indisponible : cette liste vient d'une recherche par mots-clés. Vérifiez-la avant de continuer.",
+    "heading": "{count, plural, =0 {Liste des composants} one {Liste des composants (# composant)} other {Liste des composants (# composants)}}",
+    "empty": "Aucun composant. Ajoutez-en un pour continuer.",
+    "name": "Nom du composant",
+    "duplicate": "Dupliquer",
+    "remove": "Retirer",
+    "type": "Type",
+    "subtype": "Genre",
+    "add": "Ajouter un composant",
+    "back": "Retour",
+    "continue": "Continuer vers la carte",
+    "types": {
+      "road": "Route",
+      "park": "Parc",
+      "building": "Bâtiment",
+      "structure": "Structure",
+      "custom": "Élément personnalisé"
+    }
   }
 }

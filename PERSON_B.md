@@ -6,16 +6,17 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Current state
 
-- **Current task:** P3.6 Estimate tab
+- **Current task:** P3.6 Estimate tab (P7.1–P7.3 working enough for A's P7.4)
 - **Status:** not started   <!-- not started | in progress | blocked | at sync point -->
-- **Next action:** P3.6 → P3.9b → P3.10, then P7.1–P7.3 AI parse, P4.1–P4.2 project files, P3.7/P3.8/P3.11/B.3, then zoning (Waterloo only: Z.1, Z.2, Z.5, Z.6).
+- **Next action:** P3.6 → P3.9b → P3.10, then P4.1–P4.2 project files, P3.7/P3.8/P3.11/B.3, then zoning (Waterloo only: Z.1, Z.2, Z.5, Z.6).
 - **Blockers / needs from A:** none
-- **Last updated:** 2026-09-26 (P3.5 done)
+- **Last updated:** 2026-09-26 (P7.1–P7.3 first pass merged)
 
 ## Handoff notes
 
 > Where an unfinished task stopped, gotchas, things to verify. Replace each session.
 
+- P7.1–P7.3 (first pass, "get A unblocked"): `src/lib/ai/` has the `AIProvider` interface, `AIUnavailableError`, `noneProvider`, and a REST `createGeminiProvider` (JSON schema from zod, validated, 1 retry, 20 s timeout, 429 → `rate_limited`). `getAIProvider()` reads env; no key → none. `parsePrompt()` in `src/lib/ai/parse.ts` validates types/subtypes/params against the engine catalogs + A's size hints (`storeys`, `areaM2`, `lengthM`; `gfaOverrideM2` is a real param), expands counts (max 20), caches AI results in memory, and falls back to A's `keywordParse`. Route `POST /api/ai/parse` `{ prompt, locale }` → `ParseResponse` (`src/lib/schemas/draft.ts`). Client: `requestParse()` (never throws; local fallback) + `applyDraft()` in `src/components/build-list/build-list.ts`, `<BuildListReview>` in `build-list-review.tsx`, strings under `buildList`. **Not done yet (polish):** AnthropicProvider; not tested against real Gemini (no `.env.local` key yet: model default `gemini-flash-latest`, check `responseJsonSchema` works); spatial hints are text only; keyword fallback splits "streets with watermains and sewers" into separate components.
 - P3.5: scope = A's `selectedComponentId` (no separate state). Tabs get scoped range, class, line items and flags from `scopeEstimate(estimate, selectedId)` in `src/lib/estimate/scope.ts`; an unknown id falls back to whole project. Contingency and the component list show only for the whole project.
 - P2.1 schemas are merged to `main`.
 - P2.5: `pnpm data:bcpi` runs `scripts/fetch-statcan-bcpi.ts` with plain `node` (Node 26 strips types; `scripts/package.json` sets ESM). Scripts can't use the `@/` alias. `statcanBcpi` from `@/data`: series keyed by `geo` × `type` × `division`, points `["2026Q2", 108.9]` oldest first. A few type × division combos aren't published (e.g. Ottawa single-detached earthwork); the engine must fall back to the composite division.
@@ -32,6 +33,7 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Requests to Person A
 
+- **P7.4 creation flow is unblocked.** In `landing-start.tsx` `start()`: `const r = await requestParse(prompt, locale)` → show `<BuildListReview initial={r.draft} source={r.source} onConfirm={(d) => { applyDraft(d); router.push("/workspace"); }} onBack={...} />` (both from `@/components/build-list/...`). `applyDraft` does `newProject` + `addComponents` with `paramMeta` source `ai_prompt` + evidence, and sets start date. Size hints `storeys`, `areaM2`, `lengthM`, `gfaOverrideM2` kept as your ids. `r.notice` (`ai_busy` / `ai_unavailable`) is there if you want a small notice. `BuildListItem.spatialHint` is free text ("next to the library") if Generate layout wants it later.
 - **Batch component update (small, for P7.5 "apply to all similar").** An `updateComponents(patches: { id, patch }[])` in `designSlice` that applies several patches as one undo step. Not needed before S3.
 - **Zoning map layer (new, SPEC 8.3).** A toggleable layer showing zones inside the project area, coloured by zone family, with the zone code and by-law on click. Data: `project.zoningContext` (schema coming in Z.1, in `src/lib/schemas`). Also show zoning flags with your existing flag markers (P3.9a). Not needed before S3.
 
@@ -78,9 +80,9 @@ While A scaffolds, draft these locally; commit right after A's scaffold lands on
 - [ ] P3.10 Line items tab: grouped editable table, sources, overrides, reset
 - [ ] P3.11 Inputs tab: parameters per component with source badges; P50 and share for A's component list
 - [ ] B.3 `CustomPricingForm` for custom elements (matched / own rate), mounted by A's Add menu
-- [ ] P7.1 AI provider interface + GeminiProvider (default), AnthropicProvider, NoneProvider; zod structured output, retry, timeout, 429 handling, per-IP rate limit, caching
-- [ ] P7.2 `/api/ai/parse` → build list (types, counts, params, spatial hints) + keyword fallback
-- [ ] P7.3 Build list review screen (edit, remove, duplicate, add components)
+- [~] P7.1 AI provider interface + GeminiProvider (default), AnthropicProvider, NoneProvider; zod structured output, retry, timeout, 429 handling, per-IP rate limit, caching
+- [x] P7.2 `/api/ai/parse` → build list (types, counts, params, spatial hints) + keyword fallback
+- [x] P7.3 Build list review screen (edit, remove, duplicate, add components)
 - [ ] P4.1 Project file schema with `schemaVersion` + download (`.pwcost.json`)
 - [ ] P4.2 Open project file with zod validation and clear errors
 
@@ -138,3 +140,5 @@ Flags only; never block, never change the estimate. Do Waterloo first (demo city
 | Cost engine: component templates | `src/engine/types.ts`, `params.ts`, `text.ts`, `index.ts` (`computeEstimate`), `escalation.ts`, `rng.ts`, `templates/*.ts`; tests in `src/engine/__tests__/` | Pure TS, SPEC 6–7 |
 | Northgate fixtures (sample project + estimate for A's views) | `src/lib/fixtures/` | `import { northgateProject, northgateEstimate } from "@/lib/fixtures"` |
 | Estimate panel + scope selector (whole project / one component) | `src/components/estimate/estimate-panel.tsx`, `src/lib/estimate/scope.ts` (+ test), `useEstimate.ts` | Scope follows the shared selection |
+| AI provider + prompt parse (build list) | `src/lib/ai/` (`provider.ts`, `gemini.ts`, `parse.ts` + test, `index.ts`), `src/app/api/ai/parse/route.ts`, `src/lib/schemas/draft.ts` | No key → keyword fallback |
+| Build list review (creation flow step 2) | `src/components/build-list/` | A mounts it in P7.4 |

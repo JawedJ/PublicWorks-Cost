@@ -256,5 +256,28 @@
       "empty": "Draw or generate components to see them in 3D.",
       "hint": "Drag to orbit, right-drag to pan, scroll to zoom. Click to select."
     }
+  },
+  "buildList": {
+    "projectName": "Project name",
+    "municipality": "Municipality",
+    "startDate": "Construction start",
+    "fallbackNote": "AI assistant unavailable, so this list comes from keyword matching. Check it before continuing.",
+    "heading": "{count, plural, =0 {Build list} one {Build list (# component)} other {Build list (# components)}}",
+    "empty": "No components yet. Add one to continue.",
+    "name": "Component name",
+    "duplicate": "Duplicate",
+    "remove": "Remove",
+    "type": "Type",
+    "subtype": "Kind",
+    "add": "Add component",
+    "back": "Back",
+    "continue": "Continue to map",
+    "types": {
+      "road": "Road",
+      "park": "Park",
+      "building": "Building",
+      "structure": "Structure",
+      "custom": "Custom element"
+    }
   }
 }
