@@ -15,6 +15,43 @@ const STREET_KIND: Record<string, StreetKind> = {
   minor: "local",
 };
 
+/** Zoning families that count as open space (parks and open land, not protected areas). */
+const OPEN_SPACE = new Set(["Open Space"]);
+
+/**
+ * Land zoned open space around `centre` (Waterloo's zoning snapshot via
+ * /api/zoning/map), preferred by the layout. Empty elsewhere or on failure.
+ */
+async function openSpaceZones(centre: Position): Promise<Position[][]> {
+  const bbox = [
+    centre[0] - 0.015,
+    centre[1] - 0.011,
+    centre[0] + 0.015,
+    centre[1] + 0.011,
+  ];
+  try {
+    const res = await fetch("/api/zoning/map", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ bbox }),
+      signal: AbortSignal.timeout(4000),
+    });
+    if (!res.ok) return [];
+    const fc = (await res.json()) as GeoJSON.FeatureCollection;
+    return fc.features
+      .filter((f) => OPEN_SPACE.has(String(f.properties?.family ?? "")))
+      .flatMap((f) =>
+        f.geometry.type === "Polygon"
+          ? [f.geometry.coordinates[0] as Position[]]
+          : f.geometry.type === "MultiPolygon"
+            ? f.geometry.coordinates.map((p) => p[0] as Position[])
+            : [],
+      );
+  } catch {
+    return [];
+  }
+}
+
 /** Makes sure detailed tiles around `centre` are loaded (zoom 15), then reads them. */
 export async function readSurroundings(
   map: MapLibreMap,
@@ -69,6 +106,8 @@ export async function readSurroundings(
     blocked: [],
     waterways: [],
     keepClear: [],
+    parks: [],
+    preferred: await openSpaceZones(centre),
   };
   for (const f of read("transportation")) {
     const cls = String(f.properties.class ?? "");
@@ -82,5 +121,14 @@ export async function readSurroundings(
   for (const f of read("building")) out.blocked.push(...rings(f.geometry));
   for (const f of read("water")) out.blocked.push(...rings(f.geometry));
   for (const f of read("waterway")) out.waterways.push(...lines(f.geometry));
+  // Existing parks (never built over): the park layer, and park/garden landcover.
+  for (const f of read("park")) out.parks!.push(...rings(f.geometry));
+  for (const f of read("landcover"))
+    if (
+      /^(park|garden|playground|pitch|golf_course)$/.test(
+        String(f.properties.subclass ?? ""),
+      )
+    )
+      out.parks!.push(...rings(f.geometry));
   return out;
 }

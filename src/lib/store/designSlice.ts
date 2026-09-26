@@ -31,6 +31,7 @@ import {
 } from "@/lib/geo/edit";
 import {
   generateLayout as generateLayoutFor,
+  pickProjectArea,
   withPlannedFeatures,
   smartGeometry,
 } from "@/lib/geo/generate";
@@ -563,20 +564,42 @@ export const createDesignSlice: StateCreator<Store, [], [], DesignSlice> = (
         const g = c.geometry!.primary.geometry;
         return g.type === "LineString" ? [g.coordinates] : [];
       });
-      const boundary = get().areaBoundary?.geometry.coordinates[0];
+      const ground = surroundings && {
+        ...surroundings,
+        blocked: [...surroundings.blocked, ...shapes],
+        keepClear: [...surroundings.keepClear, ...lines],
+      };
+      // No project area yet: pick one first (sized for the build list, on open
+      // land), show it, and lay everything out inside it.
+      let areaBoundary = get().areaBoundary;
+      if (!areaBoundary) {
+        const ring = pickProjectArea(targets, centre, layoutSeed, ground);
+        if (ring)
+          areaBoundary = {
+            type: "Feature",
+            properties: {},
+            geometry: { type: "Polygon", coordinates: [ring] },
+          };
+      }
+      const boundary = areaBoundary?.geometry.coordinates[0];
+      const areaCentre: Position = boundary
+        ? [
+            boundary.slice(0, -1).reduce((a, p) => a + p[0], 0) /
+              (boundary.length - 1),
+            boundary.slice(0, -1).reduce((a, p) => a + p[1], 0) /
+              (boundary.length - 1),
+          ]
+        : centre;
       const placed = generateLayoutFor(
         targets,
-        centre,
+        areaCentre,
         layoutSeed,
-        surroundings && {
-          ...surroundings,
-          blocked: [...surroundings.blocked, ...shapes],
-          keepClear: [...surroundings.keepClear, ...lines],
-        },
+        ground,
         boundary,
       );
       set({ layoutSeed });
       commit({
+        areaBoundary,
         components: get().components.map((c) =>
           placed[c.id]
             ? {

@@ -19,7 +19,14 @@ export type Surroundings = {
   waterways: Position[][];
   /** Rail lines and the user's own roads: kept clear like streets. */
   keepClear: Position[][];
+  /** Existing parks: never built over. */
+  parks?: Position[][];
+  /** Land zoned open space (not already a park): preferred for the project. */
+  preferred?: Position[][];
 };
+
+/** How much a plot or area in open-space zoning is favoured, in metres of distance. */
+const PREFERRED_BONUS_M = 200;
 
 type Pt = [number, number];
 type Ring = Pt[];
@@ -273,7 +280,14 @@ export type Placement =
   | { kind: "area"; centre: Position; bearingDeg: number }
   | { kind: "point"; at: Position };
 
-type Obstacle = { box: Box; pts: Pt[]; closed: boolean; clear: number };
+type Obstacle = {
+  box: Box;
+  pts: Pt[];
+  closed: boolean;
+  clear: number;
+  /** An existing building: may be built over (and demolished) if nothing else fits in the project area. */
+  existing?: boolean;
+};
 
 const SEARCH_RADIUS_M = 900;
 
@@ -304,8 +318,12 @@ export function planSite(
 
   // Everything a new plot must stay clear of, with the clearance it needs.
   const obstacles = new ShapeIndex<Obstacle>();
-  const addObstacle = (pts: Pt[], closed: boolean, clear: number) =>
-    obstacles.add({ box: boxOf(pts, clear), pts, closed, clear });
+  const addObstacle = (
+    pts: Pt[],
+    closed: boolean,
+    clear: number,
+    existing = false,
+  ) => obstacles.add({ box: boxOf(pts, clear), pts, closed, clear, existing });
   for (const s of streets)
     addObstacle(s.line, false, STREET_HALF_WIDTH[s.kind]);
   for (const r of surroundings.keepClear.map(local).filter(within))
@@ -314,13 +332,26 @@ export function planSite(
   for (const b of surroundings.blocked.map(local).filter(within)) {
     const ring =
       b.length > 1 && dist(b[0]!, b[b.length - 1]!) < 0.01 ? b.slice(0, -1) : b;
-    if (ring.length >= 3) addObstacle(ring, true, 3);
+    if (ring.length >= 3) addObstacle(ring, true, 3, true);
   }
 
-  const fits = (poly: Ring) => {
-    if (area && !poly.every((p) => inRing(p, area))) return false;
-    for (const o of obstacles.near(boxOf(poly)))
+  for (const pk of (surroundings.parks ?? []).map(local).filter(within))
+    if (pk.length >= 3) addObstacle(pk, true, 2);
+  const preferred = new ShapeIndex<{ box: Box; ring: Ring }>();
+  for (const z of (surroundings.preferred ?? []).map(local).filter(within))
+    if (z.length >= 3) preferred.add({ box: boxOf(z), ring: z });
+  const inPreferred = (p: Pt) => {
+    for (const z of preferred.near({ x0: p[0], y0: p[1], x1: p[0], y1: p[1] }))
+      if (inRing(p, z.ring)) return true;
+    return false;
+  };
+
+  const fits = (poly: Ring, overExisting = false, anywhere = false) => {
+    if (area && !anywhere && !poly.every((p) => inRing(p, area))) return false;
+    for (const o of obstacles.near(boxOf(poly))) {
+      if (overExisting && o.existing) continue;
       if (shapeDist(poly, o.pts, o.closed) < o.clear) return false;
+    }
     return true;
   };
 
@@ -356,10 +387,22 @@ export function planSite(
       if (len < Math.min(80, item.lengthM)) return;
       const { s: at, d } = project(s.line, [0, 0]);
       if (d > SEARCH_RADIUS_M) return;
+      // Inside the project area: the share of the piece that would fall outside it.
+      let outside = 0;
+      if (area) {
+        const piece = Math.min(item.lengthM, len);
+        const s0 = Math.max(0, Math.min(len - piece, at - piece / 2));
+        const pts = slice(s.line, s0, s0 + piece);
+        const samples = [0.1, 0.3, 0.5, 0.7, 0.9].map(
+          (k) => along(pts, polylineLength(pts) * k).p,
+        );
+        outside = samples.filter((p) => !inRing(p, area)).length / 5;
+      }
       const score =
         d +
         (s.kind === want ? 0 : 120) +
         Math.max(0, item.lengthM - len) * 0.3 +
+        outside * 600 +
         rand() * 80;
       if (!best || score < best.score) best = { i, score, s: at };
     });
@@ -370,6 +413,8 @@ export function planSite(
     const len = polylineLength(line);
     const piece = Math.min(item.lengthM, len);
     const s0 = Math.max(0, Math.min(len - piece, at - piece / 2));
+    // Full requested length (the estimate depends on it), even if a bend takes
+    // it a little outside the project area.
     const part = slice(line, s0, s0 + piece);
     newRoads.push({ line: part, kind: streets[i]!.kind });
     out[item.id] = { kind: "line", line: part.map(fromLocal) };
@@ -400,9 +445,20 @@ export function planSite(
   const placedAreas: { role: string; ring: Ring; centre: Pt; size: number }[] =
     [];
 
-  const placeArea = (
+  const placeArea = (item: Extract<LayoutItem, { kind: "area" }>, anchor: Pt) =>
+    tryPlace(item, anchor, false) ??
+    // Nothing free in the project area: build over existing buildings (they get
+    // flagged and priced for demolition) rather than leave the area.
+    (area ? tryPlace(item, anchor, true) : null) ??
+    // Still no room: the nearest open land just outside the area (flagged as
+    // outside it), rather than the plain grid.
+    (area ? tryPlace(item, anchor, false, true) : null);
+
+  const tryPlace = (
     item: Extract<LayoutItem, { kind: "area" }>,
     anchor: Pt,
+    overExisting: boolean,
+    anywhere = false,
   ) => {
     const { widthM: w, depthM: d } = item;
     const jitter = () => rand() * 60;
@@ -416,29 +472,39 @@ export function planSite(
         return {
           c,
           t: f.t,
-          score: dist(c, anchor) - (f.onNewRoad ? 250 : 0) + jitter(),
+          score:
+            dist(c, anchor) -
+            (f.onNewRoad ? 250 : 0) -
+            (inPreferred(c) ? PREFERRED_BONUS_M : 0) +
+            jitter(),
         };
       })
       .sort((a, b) => a.score - b.score);
-    for (const cand of candidates.slice(0, 1500)) {
+    for (const cand of anywhere ? candidates : candidates.slice(0, 1500)) {
       const ring = rectAt(cand.c, w, d, cand.t);
-      if (!fits(ring)) continue;
+      if (!fits(ring, overExisting, anywhere)) continue;
       return { ring, c: cand.c, t: cand.t };
     }
     // Open ground away from streets (e.g. a big park behind a block).
     const open: { c: Pt; score: number }[] = [];
     for (let x = -SEARCH_RADIUS_M; x <= SEARCH_RADIUS_M; x += 30)
       for (let y = -SEARCH_RADIUS_M; y <= SEARCH_RADIUS_M; y += 30)
-        open.push({ c: [x, y], score: dist([x, y], anchor) + jitter() });
+        open.push({
+          c: [x, y],
+          score:
+            dist([x, y], anchor) -
+            (inPreferred([x, y]) ? PREFERRED_BONUS_M : 0) +
+            jitter(),
+        });
     open.sort((a, b) => a.score - b.score);
-    for (const cand of open.slice(0, 800)) {
+    for (const cand of anywhere ? open : open.slice(0, 800)) {
       const nearest = fronts.reduce<Front | null>(
         (b, f) => (!b || dist(f.p, cand.c) < dist(b.p, cand.c) ? f : b),
         null,
       );
       const t = nearest?.t ?? [1, 0];
       const ring = rectAt(cand.c, w, d, t);
-      if (fits(ring)) return { ring, c: cand.c, t };
+      if (fits(ring, overExisting, anywhere)) return { ring, c: cand.c, t };
     }
     return null;
   };
@@ -526,6 +592,7 @@ export function planSite(
       let bestScore = Infinity;
       crossings.forEach((p, i) => {
         if (takenCrossings.has(i)) return;
+        if (area && !inRing(p, area)) return;
         const onNew = newRoads.some((r) => project(r.line, p).d < 1);
         const score = dist(p, home()) - (onNew ? 300 : 0) + rand() * 40;
         if (score < bestScore && dist(p, [0, 0]) < SEARCH_RADIUS_M) {
@@ -559,4 +626,201 @@ function polygonArea(ring: Ring): number {
   for (let i = 0, j = ring.length - 1; i < ring.length; j = i++)
     s += ring[j]![0] * ring[i]![1] - ring[i]![0] * ring[j]![1];
   return Math.abs(s) / 2;
+}
+
+// ---------- choosing a project area ----------
+
+/**
+ * Picks a project area for a layout when the user hasn't drawn one: a rectangle
+ * sized for everything in the build list (plots with room around them, road
+ * lengths), turned to the local street grid, at the spot near `centre` with the
+ * most open land and some street through it. Returns a closed ring, or null
+ * without street data.
+ */
+export function chooseArea(
+  items: LayoutItem[],
+  centre: Position,
+  surroundings: Surroundings,
+  rand: () => number,
+): Position[] | null {
+  if (!surroundings.streets.length) return null;
+  const { toLocal, fromLocal } = localFrame(centre);
+  const local = (line: Position[]) => line.map(toLocal) as Pt[];
+  const near = (pts: Pt[]) => pts.some((p) => Math.hypot(p[0], p[1]) < 2200);
+  const streets = surroundings.streets
+    .map((st) => ({ line: local(st.line), kind: st.kind }))
+    .filter((st) => st.kind !== "highway" && near(st.line));
+  if (!streets.length) return null;
+
+  // How much room: plots with space around them, road corridors, small structures.
+  let need = 3000;
+  let longestRoad = 0;
+  /** The biggest plot's short side: it must fit beside the road. */
+  let biggestPlot = 0;
+  for (const it of items) {
+    if (it.kind === "area") {
+      need += it.widthM * it.depthM * 2.6;
+      biggestPlot = Math.max(biggestPlot, Math.min(it.widthM, it.depthM));
+    } else if (it.kind === "road") {
+      need += it.lengthM * 25;
+      longestRoad = Math.max(longestRoad, it.lengthM);
+    } else need += 400;
+  }
+  const clamp = (v: number, lo: number, hi: number) =>
+    Math.max(lo, Math.min(hi, v));
+  const baseWidth = clamp(
+    Math.max(Math.sqrt(need * 1.3), longestRoad + 40),
+    150,
+    1400,
+  );
+  // With a road through the middle, each side must hold the biggest plot.
+  const baseDepth = clamp(
+    Math.max(
+      need / baseWidth,
+      longestRoad > 0 ? 2 * (biggestPlot + 30) : biggestPlot + 40,
+    ),
+    150,
+    1400,
+  );
+
+  // Turn it to the local street grid (length-weighted, 10° bins).
+  const bins = new Array<number>(18).fill(0);
+  for (const st of streets)
+    for (let i = 1; i < st.line.length; i++) {
+      const a = st.line[i - 1]!;
+      const b = st.line[i]!;
+      if (Math.hypot(a[0], a[1]) > 500) continue;
+      const ang =
+        ((Math.atan2(b[1] - a[1], b[0] - a[0]) * 180) / Math.PI + 180) % 180;
+      bins[Math.floor(ang / 10) % 18]! += dist(a, b);
+    }
+  const deg = bins.indexOf(Math.max(...bins)) * 10 + 5;
+  const gridT: Pt = [
+    Math.cos((deg * Math.PI) / 180),
+    Math.sin((deg * Math.PI) / 180),
+  ];
+
+  // Where the area could go. With road work, it's centred on a street and turned
+  // along it, so the road runs through the middle with plots on both sides;
+  // otherwise on a grid of spots turned to the street grid.
+  const spots: { c: Pt; t: Pt; straight: number; road?: Pt[] }[] = [];
+  if (longestRoad > 0) {
+    for (const st of streets) {
+      const len = polylineLength(st.line);
+      if (len < Math.min(longestRoad, 80)) continue;
+      const piece = Math.min(longestRoad, len);
+      for (let d = piece / 2; d <= len - piece / 2; d += 60) {
+        const a = along(st.line, d - piece / 2).p;
+        const b = along(st.line, d + piece / 2).p;
+        const chord = dist(a, b);
+        if (chord < 1) continue;
+        const c: Pt = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+        if (Math.hypot(c[0], c[1]) > 700) continue;
+        spots.push({
+          c,
+          t: [(b[0] - a[0]) / chord, (b[1] - a[1]) / chord],
+          straight: chord / piece,
+          road: slice(st.line, d - piece / 2, d + piece / 2),
+        });
+      }
+    }
+  }
+  if (!spots.length)
+    for (let x = -700; x <= 700; x += 60)
+      for (let y = -700; y <= 700; y += 60)
+        if (Math.hypot(x, y) <= 700)
+          spots.push({ c: [x, y], t: gridT, straight: 1 });
+
+  // Existing buildings and water, for "how much open land".
+  // A building takes its lot too: land within LOT_M of it isn't open.
+  const LOT_M = 15;
+  const taken = new ShapeIndex<{ box: Box; ring: Ring; pad: number }>();
+  for (const b of surroundings.blocked.map(local).filter(near))
+    if (b.length >= 3) taken.add({ box: boxOf(b, LOT_M), ring: b, pad: LOT_M });
+  for (const b of (surroundings.parks ?? []).map(local).filter(near))
+    if (b.length >= 3) taken.add({ box: boxOf(b), ring: b, pad: 0 });
+  const zoned = new ShapeIndex<{ box: Box; ring: Ring }>();
+  for (const z of (surroundings.preferred ?? []).map(local).filter(near))
+    if (z.length >= 3) zoned.add({ box: boxOf(z), ring: z });
+  const isZoned = (p: Pt) => {
+    for (const o of zoned.near({ x0: p[0], y0: p[1], x1: p[0], y1: p[1] }))
+      if (inRing(p, o.ring)) return true;
+    return false;
+  };
+  const isTaken = (p: Pt) => {
+    for (const o of taken.near({ x0: p[0], y0: p[1], x1: p[0], y1: p[1] })) {
+      if (inRing(p, o.ring)) return true;
+      if (o.pad)
+        for (const [a, b] of edges(o.ring, true))
+          if (segDist(p, a, b) < o.pad) return true;
+    }
+    return false;
+  };
+  const streetPts: Pt[] = [];
+  for (const st of streets) {
+    const len = polylineLength(st.line);
+    for (let d = 0; d < len; d += 10) streetPts.push(along(st.line, d).p);
+  }
+
+  const step = Math.max(15, Math.sqrt((baseWidth * baseDepth) / 400));
+  let best: { c: Pt; t: Pt; score: number; road?: Pt[] } | null = null;
+  for (const { c, t, straight, road } of spots) {
+    {
+      const n: Pt = [-t[1], t[0]];
+      const off = Math.hypot(c[0], c[1]);
+      let free = 0;
+      let total = 0;
+      let openZoned = 0;
+      for (let u = -baseWidth / 2 + step / 2; u < baseWidth / 2; u += step)
+        for (let v = -baseDepth / 2 + step / 2; v < baseDepth / 2; v += step) {
+          const p: Pt = [
+            c[0] + t[0] * u + n[0] * v,
+            c[1] + t[1] * u + n[1] * v,
+          ];
+          total++;
+          if (!isTaken(p)) {
+            free++;
+            if (isZoned(p)) openZoned++;
+          }
+        }
+      let streetM = 0;
+      for (const p of streetPts) {
+        const q = sub(p, c);
+        const u = q[0] * t[0] + q[1] * t[1];
+        const v = q[0] * n[0] + q[1] * n[1];
+        if (Math.abs(u) <= baseWidth / 2 && Math.abs(v) <= baseDepth / 2)
+          streetM += 10;
+      }
+      const wantStreet = Math.max(longestRoad, 200);
+      const score =
+        free / Math.max(total, 1) +
+        (openZoned / Math.max(total, 1)) * 0.6 +
+        Math.min(streetM / wantStreet, 1) * 0.5 -
+        off / 1500 +
+        // A straight street keeps the road inside a rectangle.
+        (straight - 1) * 0.8 +
+        rand() * 0.05;
+      if (!best || score > best.score) best = { c, t, score, road };
+    }
+  }
+  if (!best) return null;
+  const { c, t } = best;
+  const n: Pt = [-t[1], t[0]];
+  // Stretch it to hold the whole road it's built around (streets bend).
+  let width = baseWidth;
+  let depth = baseDepth;
+  for (const p of best.road ?? []) {
+    const q = sub(p, c);
+    width = Math.max(width, 2 * Math.abs(q[0] * t[0] + q[1] * t[1]) + 40);
+    depth = Math.max(depth, 2 * Math.abs(q[0] * n[0] + q[1] * n[1]) + 80);
+  }
+  const corner = (u: number, v: number): Position =>
+    fromLocal([c[0] + t[0] * u + n[0] * v, c[1] + t[1] * u + n[1] * v]);
+  const ring = [
+    corner(-width / 2, -depth / 2),
+    corner(width / 2, -depth / 2),
+    corner(width / 2, depth / 2),
+    corner(-width / 2, depth / 2),
+  ];
+  return [...ring, ring[0]!];
 }

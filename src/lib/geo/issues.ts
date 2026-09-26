@@ -145,6 +145,8 @@ export function issueHighlights(
 ): IssueFeature[] {
   const out: IssueFeature[] = [];
   if (!site) return out;
+  // One link per nearby thing (the school, the creek…), from its closest component.
+  const links = new Map<string, { d: number; feature: IssueFeature }>();
   const fmt = new Intl.NumberFormat("en-CA", { maximumFractionDigits: 0 });
   for (const flag of flags) {
     const title = flag.title[locale];
@@ -203,20 +205,32 @@ export function issueHighlights(
           properties: { ...base, role: "point", label: f.name ?? "" },
         });
       }
-      if (d > 1)
-        out.push({
-          type: "Feature",
-          geometry: {
-            type: "LineString",
-            coordinates: [fromLocal(from), fromLocal(to)],
-          },
-          properties: {
-            ...base,
-            role: "link",
-            label: `${name}${fmt.format(d)} m`,
+      const key = `${flag.code}:${f.id}`;
+      if (d > 1 && (links.get(key)?.d ?? Infinity) > d)
+        links.set(key, {
+          d,
+          feature: {
+            type: "Feature",
+            geometry: {
+              type: "LineString",
+              coordinates: [fromLocal(from), fromLocal(to)],
+            },
+            properties: {
+              ...base,
+              role: "link",
+              label: `${name}${fmt.format(d)} m`,
+            },
           },
         });
     }
   }
-  return out;
+  // The highlighted thing itself only once too.
+  const seen = new Set<string>();
+  const unique = out.filter((f) => {
+    const k = `${f.properties.role}:${JSON.stringify(f.geometry.coordinates).slice(0, 80)}`;
+    if (seen.has(k)) return false;
+    seen.add(k);
+    return true;
+  });
+  return [...unique, ...[...links.values()].map((l) => l.feature)];
 }

@@ -6,7 +6,12 @@ import type {
   Position,
 } from "@/lib/schemas";
 import { newId } from "./drawing";
-import { type LayoutItem, planSite, type Surroundings } from "./site-layout";
+import {
+  chooseArea,
+  type LayoutItem,
+  planSite,
+  type Surroundings,
+} from "./site-layout";
 import { localFrame } from "./transform";
 
 // Procedural starting shapes (smart start, P1.9) and starting layouts (P1.10).
@@ -218,7 +223,30 @@ export function generateLayout(
   if (!surroundings?.streets.length)
     return gridLayout(components, centre, seed);
   const rand = rng(seed);
-  const items = components.map((c): LayoutItem => {
+  const items = layoutItems(components);
+  const placed = planSite(items, centre, surroundings, rand, boundary);
+  const out: Record<string, ComponentGeometry> = {};
+  for (const c of components) {
+    const p = placed[c.id];
+    if (!p) continue;
+    if (p.kind === "line")
+      out[c.id] = {
+        primary: {
+          type: "Feature",
+          properties: {},
+          geometry: { type: "LineString", coordinates: p.line },
+        },
+        features: [],
+      };
+    else if (p.kind === "point") out[c.id] = smartGeometry(c, p.at);
+    else out[c.id] = smartGeometry(c, p.centre, p.bearingDeg);
+  }
+  const rest = components.filter((c) => !out[c.id]);
+  return rest.length ? { ...gridLayout(rest, centre, seed), ...out } : out;
+}
+
+function layoutItems(components: LayoutComponent[]): LayoutItem[] {
+  return components.map((c): LayoutItem => {
     const size = sizeFor(c);
     if (size.kind === "line")
       return {
@@ -247,25 +275,21 @@ export function generateLayout(
       depthM: size.depthM + (c.type === "building" ? 2 * size.setbackM : 0),
     };
   });
-  const placed = planSite(items, centre, surroundings, rand, boundary);
-  const out: Record<string, ComponentGeometry> = {};
-  for (const c of components) {
-    const p = placed[c.id];
-    if (!p) continue;
-    if (p.kind === "line")
-      out[c.id] = {
-        primary: {
-          type: "Feature",
-          properties: {},
-          geometry: { type: "LineString", coordinates: p.line },
-        },
-        features: [],
-      };
-    else if (p.kind === "point") out[c.id] = smartGeometry(c, p.at);
-    else out[c.id] = smartGeometry(c, p.centre, p.bearingDeg);
-  }
-  const rest = components.filter((c) => !out[c.id]);
-  return rest.length ? { ...gridLayout(rest, centre, seed), ...out } : out;
+}
+
+/**
+ * A project area for the layout when the user hasn't drawn one: sized for the
+ * components, turned to the street grid, where there is the most open land near
+ * `centre` (site-layout.ts `chooseArea`). Null without map data.
+ */
+export function pickProjectArea(
+  components: LayoutComponent[],
+  centre: Position,
+  seed: number,
+  surroundings?: Surroundings,
+): Position[] | null {
+  if (!surroundings?.streets.length) return null;
+  return chooseArea(layoutItems(components), centre, surroundings, rng(seed));
 }
 
 /** Street-grid layout with no knowledge of the map (the fallback). */

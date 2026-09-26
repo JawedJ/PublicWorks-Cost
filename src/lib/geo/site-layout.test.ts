@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Component, Position } from "@/lib/schemas";
-import { generateLayout } from "./generate";
+import { generateLayout, pickProjectArea } from "./generate";
 import type { Surroundings } from "./site-layout";
 import { localFrame } from "./transform";
 
@@ -113,5 +113,71 @@ describe("map-aware layout", () => {
     expect(strip(generateLayout(list, centre, 3, surroundings))).toEqual(
       strip(out),
     );
+  });
+});
+
+describe("project area", () => {
+  // Streets every 200 m both ways; the west half is built up, a park sits
+  // north-east, and open land zoned open space lies south-east.
+  const grid: Surroundings = {
+    streets: [-400, -200, 0, 200, 400].flatMap((k) => [
+      {
+        line: line([
+          [-700, k],
+          [700, k],
+        ]),
+        kind: "local" as const,
+      },
+      {
+        line: line([
+          [k, -700],
+          [k, 700],
+        ]),
+        kind: "local" as const,
+      },
+    ]),
+    blocked: [
+      ...[-650, -550, -450, -350, -250, -150, -50].flatMap((x) =>
+        [
+          -650, -550, -450, -350, -250, -150, -50, 50, 150, 250, 350, 450, 550,
+        ].map((y) => box(x, y, x + 60, y + 60)),
+      ),
+    ],
+    parks: [box(20, 20, 380, 380)],
+    preferred: [box(20, -380, 380, -20)],
+    waterways: [],
+    keepClear: [],
+  };
+  const list = [
+    make("b1", "building", "library"),
+    make("k1", "parking", "surface_lot"),
+    make("b2", "building", "fire_station"),
+  ];
+
+  it("picks open land zoned open space, not the built-up side or the park", () => {
+    const ring = pickProjectArea(list, centre, 1, grid)!;
+    const pts = ring.map(toLocal);
+    const cx = pts.slice(0, -1).reduce((s, p) => s + p[0], 0) / 4;
+    const cy = pts.slice(0, -1).reduce((s, p) => s + p[1], 0) / 4;
+    expect(cx).toBeGreaterThan(0);
+    expect(cy).toBeLessThan(0);
+  });
+
+  it("places everything inside the area it picked", () => {
+    const ring = pickProjectArea(list, centre, 1, grid)!;
+    const out = generateLayout(list, centre, 1, grid, ring);
+    const area = ring.map(toLocal);
+    const inside = ([x, y]: [number, number]) => {
+      let c = false;
+      for (let i = 0, j = area.length - 1; i < area.length; j = i++) {
+        const [xi, yi] = area[i]!;
+        const [xj, yj] = area[j]!;
+        if (yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi)
+          c = !c;
+      }
+      return c;
+    };
+    for (const id of ["b1", "k1", "b2"])
+      for (const p of ringOf(out[id]!)) expect(inside(p)).toBe(true);
   });
 });
