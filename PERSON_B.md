@@ -16,6 +16,7 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 > Where an unfinished task stopped, gotchas, things to verify. Replace each session.
 
+- P6.3: `src/engine/site.ts` (pure, tested): `siteFlags(component, siteContext, skipCodes)` → `waterway_permit` (≤30 m; high for structures; skipped if the template already raised `in_water_permit`), `rail_approval` (≤30 m), `near_school` / `near_hospital` (≤200 m), `floodplain` (inside), each with the nearest point as `location` for A's markers. Called per drawn component in `computeEstimate`. `siteParamSuggestions(road, siteContext)` reads the nearest OSM road within 15 m (`lanes`, `highway` → `roadClass`, `sidewalk` → `sidewalkSides`); `setSiteContext` applies them as `site_context` params (evidence = the OSM tag) only where the param is still default, in one undo step. Auto-fill runs when the lookup is stored, not when a road is drawn later.
 - P3.7: `src/lib/estimate/evidence.ts` (pure, tested): `benchmarks(estimate, components, scopeId)` (building-only and all-in $/sq ft vs the subtype's Altus range; road $/m vs `altus-benchmarks.json` by `roadClass`), `priceTrend(region)` (4-quarter BCPI non-residential change for the region's CMA), `comparableAwards(types)` (3 most recent CanadaBuys by tag). UI `market-evidence-card.tsx`. P3.8: `charts.tsx` (plain divs): `ComponentBreakdown` (stacked bar + list, replaces the old list), `DistributionChart`, `CategoryBreakdown` (scoped), `DriversTornado`, `PerUnitMetrics`; whole-project-only except category. `EstimateTab` now takes `components` and `region`. The Northgate estimate fixture still has the old sample building prices (tests only).
 - Real data: building base rates are Altus Group 2026 (GTA/Ottawa average, per-subtype `source`, price year 2026; SPEC Change log). B.3 added 7 more Altus building subtypes (+ typologies) and `<CustomPricingForm name pricing onChange/>` in `custom-pricing-form.tsx`, shown in the Inputs tab for custom components and for each custom park feature. `customBases(refData)` / `suggestBasis(name, bases)` in `src/engine/templates/custom.ts`; building bases use ids `building:<subtype>` (per m² of drawn area). Matched = wider band; own rate = user low/high or −30%/+60%.
 - P3.11: `<InputsTab components componentId/>` in `inputs-tab.tsx` (third panel tab). Each catalog param, highest cost impact first, resolved value (subtype defaults applied), number/enum/boolean editor, source badge (Default / You / From prompt / From document / From site) with evidence, "Use default" → `clearComponentParam`. Edits use `setComponentParam` (source `user`). Shared `NumberInput` (commit on blur/Enter) in `number-input.tsx`, also used by line items. `useEstimate` now shares one result per store state across all callers (panel, map colours, 3D, component list), so extra callers are free; new callers start from the cached result.
@@ -39,6 +40,7 @@ Task ids match `PROGRESS.md`; task details are in `SPEC.md`.
 
 ## Requests to Person A
 
+- **Site lookup: include local streets (P6.3, small).** `/api/geo/context` only fetches `highway` motorway|trunk|primary|secondary, so road auto-fill (lanes, class, sidewalks from OSM tags) only works along arterials. Adding `tertiary|residential|unclassified` (tags already pass through for roads) lets it fill local streets too. Floodplain features aren't fetched yet either; the engine flags them if you add any.
 - Done by A (P7.4, 2026-09-26): creation flow with the build-list review, project file buttons (top bar + landing), P50/share in the component list, park features from the prompt (`plannedFeatures` param, placed with the park), language toggle removed, `updateComponents`.
 - **Zoning map layer (new, SPEC 8.3).** A toggleable layer showing zones inside the project area, coloured by zone family, with the zone code and by-law on click. Data: `project.zoningContext` (schema coming in Z.1, in `src/lib/schemas`). Also show zoning flags with your existing flag markers (P3.9a). Not needed before S3.
 
@@ -112,7 +114,7 @@ Flags only; never block, never change the estimate. Do Waterloo first (demo city
 - [ ] P8.2 What-if controls (date shift, price shocks, param changes, add/remove components) · Stretch
 - [ ] P8.3 Comparison view (up to 3) · Stretch
 - [ ] P8.4 Scenarios in exports · Stretch
-- [ ] P6.3 Site-context flags in engine + reports; auto-filled params (uses A's `/api/geo/context`) · Stretch
+- [x] P6.3 Site-context flags in engine + reports; auto-filled params (uses A's `/api/geo/context`) · Stretch
 - [ ] P7.6 Document upload + `/api/ai/extract` + accept/reject review · Stretch
 - [ ] P9.6 Optional concept image provider (disabled without key) · Stretch
 

@@ -15,6 +15,7 @@ import type {
   Scenario,
 } from "@/lib/schemas";
 import { bcpiEscalation, trailingAnnualRate } from "./escalation";
+import { siteFlags } from "./site";
 import { resolveParams } from "./params";
 import { createRng, normal, normalCdf, percentile, triangular } from "./rng";
 import { templates } from "./templates";
@@ -332,7 +333,14 @@ export function computeEstimate(
       (direct + softTotal) * ((1 + annualRate) ** (midpointMonths / 12) - 1);
     const { cls, hints } = componentClass(c, project.documents.length > 0);
 
-    for (const f of template.flags(ctx)) addFlag(f);
+    const templateFlags = template.flags(ctx);
+    for (const f of templateFlags) addFlag(f);
+    for (const f of siteFlags(
+      c,
+      project.siteContext,
+      new Set(templateFlags.map((f) => f.code)),
+    ))
+      addFlag(f);
     if (winter && lines.some((l) => WINTER_CATEGORIES.includes(l.category))) {
       addFlag({
         code: "winter_work",

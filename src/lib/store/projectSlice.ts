@@ -7,6 +7,7 @@ import {
   type ProjectSettings,
   type SiteContext,
 } from "@/lib/schemas";
+import { siteParamSuggestions } from "@/engine/site";
 import { newId } from "./designSlice";
 import type { Store } from "./store";
 
@@ -164,7 +165,38 @@ export const createProjectSlice: StateCreator<Store, [], [], ProjectSlice> = (
     updateSettings: (patch) =>
       updateInfo({ settings: { ...get().project.settings, ...patch } }),
 
-    setSiteContext: (siteContext) => updateInfo({ siteContext }),
+    setSiteContext: (siteContext) => {
+      updateInfo({ siteContext });
+      // P6.3: roads take lanes / class / sidewalks from the street they follow,
+      // only where the value is still a default (never over the user or the AI).
+      const patches = get()
+        .components.map((c) => {
+          const fills = siteParamSuggestions(c, siteContext).filter(
+            (s) => (c.paramMeta[s.paramId]?.source ?? "default") === "default",
+          );
+          if (fills.length === 0) return null;
+          return {
+            id: c.id,
+            patch: {
+              params: {
+                ...c.params,
+                ...Object.fromEntries(fills.map((f) => [f.paramId, f.value])),
+              },
+              paramMeta: {
+                ...c.paramMeta,
+                ...Object.fromEntries(
+                  fills.map((f) => [
+                    f.paramId,
+                    { source: "site_context" as const, evidence: f.evidence },
+                  ]),
+                ),
+              },
+            },
+          };
+        })
+        .filter((p) => p !== null);
+      if (patches.length) get().updateComponents(patches);
+    },
 
     setActiveScenario: (scenarioId) => {
       if (!get().project.scenarios.some((s) => s.id === scenarioId)) return;
