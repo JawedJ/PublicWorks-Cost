@@ -114,15 +114,10 @@ export function candidates(req: QuestionsRequest): Candidate[] {
         def.costImpact *
         Math.max(c.share, 0.02) *
         (def.id === "demolishExisting" ? DEMOLITION_BOOST : 1);
-      // Buildings group with the same kind of building only; roads, parks and
-      // structures with their whole type ("soil for all roads").
-      // Existing buildings are specific to each site, so that question is never grouped.
-      const group =
-        def.id === "demolishExisting"
-          ? c.id
-          : c.type === "building"
-            ? `${c.type}/${c.subtype}`
-            : c.type;
+      // General questions: one per type for the whole project ("soil under
+      // the roads", "quality of the buildings"). Existing buildings are
+      // specific to each site, so that question is never grouped.
+      const group = def.id === "demolishExisting" ? c.id : c.type;
       const key = `${group}:${def.id}`;
       const prev = byKey.get(key);
       if (!prev) {

@@ -41,6 +41,7 @@ import type {
   ParamValue,
   Question,
 } from "@/lib/schemas";
+import { DocumentUpload } from "./document-upload";
 import {
   answerQuestion,
   loadQuestions,
@@ -50,7 +51,8 @@ import {
 
 // P7.5 (SPEC 9.2): smart follow-up questions across the whole project, biggest
 // costs first. Answers become the user's param values (raising the class);
-// "apply to all similar" answers the same param on every matching component.
+// Questions are general: one per type for the whole project, and the answer
+// applies to every component it lists.
 
 type Props = {
   estimate: Estimate;
@@ -96,6 +98,7 @@ export function QuestionsPanel({ estimate, components, componentId }: Props) {
           {t("askAgain")}
         </Button>
       </div>
+      <DocumentUpload components={components} />
       {res?.notice && (
         <Alert>
           <Sparkles />
@@ -165,9 +168,18 @@ function QuestionCard({
   const t = useTranslations("questions");
   const [value, setValue] = useState<ParamValue>(q.suggested);
   const label = def.label.en;
-  // Asked as a plain question where we have one ("What is the soil like under Main St?").
+  const all = [c, ...others];
+  // Asked as a plain, general question: about the whole group ("the roads")
+  // when it covers several components, else about the one component.
+  const name = others.length > 0 ? t(`groups.${c.type}`) : c.name;
+  const allKey = `askAll.${c.type}.${def.id}` as Parameters<typeof t>[0];
   const askKey = `ask.${c.type}.${def.id}` as Parameters<typeof t>[0];
-  const title = t.has(askKey) ? t(askKey, { name: c.name }) : label;
+  const title =
+    others.length > 0 && t.has(allKey)
+      ? t(allKey)
+      : t.has(askKey)
+        ? t(askKey, { name })
+        : label;
   const numOk =
     def.type !== "number" ||
     (Number.isFinite(Number(value)) &&
@@ -182,8 +194,7 @@ function QuestionCard({
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>
-          {c.name}
-          {others.length > 0 && ` ${t("andOthers", { count: others.length })}`}
+          {t("appliesTo", { names: all.map((x) => x.name).join(", ") })}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -245,19 +256,13 @@ function QuestionCard({
         </Field>
       </CardContent>
       <CardFooter className="flex flex-wrap gap-2">
-        <Button size="sm" disabled={!numOk} onClick={() => save([c.id])}>
+        <Button
+          size="sm"
+          disabled={!numOk}
+          onClick={() => save(all.map((x) => x.id))}
+        >
           {t("save")}
         </Button>
-        {others.length > 0 && (
-          <Button
-            size="sm"
-            variant="outline"
-            disabled={!numOk}
-            onClick={() => save([c.id, ...others.map((o) => o.id)])}
-          >
-            {t("applyAll", { count: others.length + 1 })}
-          </Button>
-        )}
         <Button size="sm" variant="ghost" onClick={onSkip}>
           {t("skip")}
         </Button>

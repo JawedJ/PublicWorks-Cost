@@ -512,12 +512,10 @@
     "askAgain": "Ask again",
     "loading": "Picking the questions that matter most…",
     "allAnswered": "No open questions. Everything with a big effect on cost has an answer.",
-    "andOthers": "{count, plural, one {and # similar component} other {and # similar components}}",
     "suggested": "suggested",
     "yes": "Yes",
     "no": "No",
     "save": "Save answer",
-    "applyAll": "Apply to all {count}",
     "skip": "Skip",
     "fallbackNote": "Standard questions, ranked by cost impact (the AI assistant wasn't used).",
     "notices": {
@@ -573,6 +571,37 @@
         "lighting": "Will {name} be lit at night?",
         "demolishExisting": "Should the existing buildings where {name} goes be demolished?"
       }
+    },
+    "appliesTo": "Applies to {names}",
+    "groups": {
+      "road": "the roads",
+      "park": "the parks",
+      "building": "the buildings",
+      "structure": "the structures",
+      "parking": "the parking lots",
+      "custom": "the custom elements"
+    },
+    "askAll": {
+      "road": {
+        "roadClass": "What kind of roads are these?"
+      },
+      "building": {
+        "quality": "What level of finish are the buildings?",
+        "sustainability": "What energy target are the buildings aiming for?",
+        "basement": "Do the buildings need basements?",
+        "siteServicing": "How hard is it to connect the buildings to water, sewer and power?",
+        "apparatusBays": "How many truck bays do the buildings need?",
+        "sallyPort": "Do the buildings need a sally port and holding cells?"
+      },
+      "structure": {
+        "spanM": "How wide are the culvert openings?",
+        "lengthM": "How long are the culverts, end to end?",
+        "fishHabitat": "Do the watercourses have fish habitat?",
+        "deckLengthM": "How long are the bridges?",
+        "deckWidthM": "How wide are the bridge decks?",
+        "structureType": "What type of bridges are these?",
+        "capacityTier": "How big are the pumping stations?"
+      }
     }
   },
   "export": {
@@ -588,5 +617,26 @@
     "preparing": "Preparing…",
     "failed": "The export couldn't be created. Try again.",
     "sampleNote": "Reports state that road, park and structure prices are sample data and building rates come from the Altus 2026 cost guide."
+  },
+  "documents": {
+    "title": "Read a document",
+    "description": "Upload a soil report, site survey or earlier study (PDF or text, up to 10 MB). The values it finds are shown for you to check before they're used.",
+    "fileLabel": "Document",
+    "read": "Read document",
+    "reading": "Reading…",
+    "nothing": "No values the estimate uses were found in this document.",
+    "appliesTo": "Applies to {names}",
+    "apply": "{count, plural, =0 {Apply} one {Apply # value} other {Apply # values}}",
+    "discard": "Discard",
+    "applied": "{count, plural, one {Applied # value} other {Applied # values}} from {name}. They're marked \"From document\" in Inputs.",
+    "errors": {
+      "tooLarge": "That file is over 10 MB.",
+      "wrongType": "Only PDF and text files can be read.",
+      "failed": "The document couldn't be read. Try again."
+    },
+    "notices": {
+      "ai_busy": "The AI assistant is busy, so only simple keyword matching was used.",
+      "ai_unavailable": "The AI assistant is unavailable, so only simple keyword matching was used (text files only)."
+    }
   }
 }

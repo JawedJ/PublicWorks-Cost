@@ -1,11 +1,13 @@
 import { z } from "zod";
-import { type AIProvider, AIUnavailableError } from "./provider";
+import { type AIFile, type AIProvider, AIUnavailableError } from "./provider";
 
 // Gemini via the REST API (no SDK dependency). Structured output uses the
 // response JSON schema; output is validated with zod and retried once.
 
 const API = "https://generativelanguage.googleapis.com/v1beta/models";
 const TIMEOUT_MS = 30_000;
+/** Reading a document (e.g. a 40-page PDF) takes longer. */
+const FILE_TIMEOUT_MS = 90_000;
 
 export function createGeminiProvider(apiKey: string): AIProvider {
   const model = process.env.GEMINI_MODEL || "gemini-flash-latest";
@@ -16,30 +18,47 @@ export function createGeminiProvider(apiKey: string): AIProvider {
     prompt: string;
     fast?: boolean;
     jsonSchema?: unknown;
+    files?: AIFile[];
   }): Promise<string> {
+    const send = () =>
+      fetch(`${API}/${opts.fast ? fastModel : model}:generateContent`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          "x-goog-api-key": apiKey,
+        },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: opts.system }] },
+          contents: [
+            {
+              role: "user",
+              parts: [
+                ...(opts.files ?? []).map((f) => ({
+                  inlineData: { mimeType: f.mimeType, data: f.dataBase64 },
+                })),
+                { text: opts.prompt },
+              ],
+            },
+          ],
+          generationConfig: opts.jsonSchema
+            ? {
+                responseMimeType: "application/json",
+                responseJsonSchema: opts.jsonSchema,
+              }
+            : undefined,
+        }),
+        signal: AbortSignal.timeout(
+          opts.files?.length ? FILE_TIMEOUT_MS : TIMEOUT_MS,
+        ),
+      });
     let res: Response;
     try {
-      res = await fetch(
-        `${API}/${opts.fast ? fastModel : model}:generateContent`,
-        {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-            "x-goog-api-key": apiKey,
-          },
-          body: JSON.stringify({
-            systemInstruction: { parts: [{ text: opts.system }] },
-            contents: [{ role: "user", parts: [{ text: opts.prompt }] }],
-            generationConfig: opts.jsonSchema
-              ? {
-                  responseMimeType: "application/json",
-                  responseJsonSchema: opts.jsonSchema,
-                }
-              : undefined,
-          }),
-          signal: AbortSignal.timeout(TIMEOUT_MS),
-        },
-      );
+      res = await send();
+      // 503 = model briefly overloaded (common); one retry usually succeeds.
+      if (res.status === 503) {
+        await new Promise((r) => setTimeout(r, 1500));
+        res = await send();
+      }
     } catch {
       throw new AIUnavailableError("timeout");
     }

@@ -29,7 +29,7 @@ const AiQuestionsSchema = z.object({
 const SYSTEM = `You help a Canadian municipal cost estimator decide which follow-up questions to ask about a planned public works project.
 You get the project's components and a list of candidate questions (unanswered parameters), already roughly ranked by cost impact.
 Pick up to ${MAX_QUESTIONS} candidates that would most improve the estimate, most important first. Prefer big-ticket components and parameters that change cost a lot. Skip near-duplicates.
-For each: return its candidateId exactly as given, a reason (one plain sentence, under 25 words, specific to this project: mention the component or site notes; say why the answer changes cost), and "suggested": the most likely answer as a string (for enum: one of the option values; for boolean: "true" or "false"; for number: a number within min–max).
+For each: return its candidateId exactly as given, a reason (one plain sentence, under 25 words, about the project as a whole: each question applies to every component listed with it (alsoAppliesToCount), so don't single out one component; say why the answer changes cost), and "suggested": the most likely answer as a string (for enum: one of the option values; for boolean: "true" or "false"; for number: a number within min–max).
 If a candidate has a siteFinding, always pick it and base the reason on that finding.
 Never state or estimate costs, prices or dollar amounts.`;
 

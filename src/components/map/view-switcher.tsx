@@ -16,8 +16,6 @@ export function ViewSwitcher() {
   const map = useMap();
   const viewMode = useStore((s) => s.viewMode);
   const setViewMode = useStore((s) => s.setViewMode);
-  const colourByCost = useStore((s) => s.colourByCost);
-  const setColourByCost = useStore((s) => s.setColourByCost);
   const showZoning = useStore((s) => s.showZoning);
   const setShowZoning = useStore((s) => s.setShowZoning);
   const showIssues = useStore((s) => s.showIssues);
@@ -59,17 +57,6 @@ export function ViewSwitcher() {
         ))}
       </div>
       <div className="flex gap-2">
-        <button
-          type="button"
-          aria-pressed={colourByCost}
-          onClick={() => setColourByCost(!colourByCost)}
-          className={cn(
-            "rounded-md border px-3 py-1.5 text-xs font-medium shadow-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
-            colourByCost ? MAP_TOGGLE_ON : MAP_TOGGLE_OFF,
-          )}
-        >
-          {t("colourByCost")}
-        </button>
         {viewMode !== "site3d" && (
           <button
             type="button"

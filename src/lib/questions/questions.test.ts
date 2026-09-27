@@ -59,18 +59,19 @@ describe("question ranking (fallback)", () => {
     }
   });
 
-  it("asks once per type + param and applies to similar components", () => {
+  it("asks general questions: once per type + param for the whole project", () => {
     const soil = candidates(req).find(
       (c) => c.def.id === "soilCondition" && c.type === "road",
     )!;
     expect(soil.alsoApplies).toHaveLength(1); // two streets
-    // Different kinds of building don't share answers.
-    const lib = candidates(req).find(
-      (c) =>
-        name(c.componentId) === "Northgate Branch Library" &&
-        c.def.id === "basement",
+    // All buildings share one question, whatever kind they are.
+    const basement = candidates(req).filter(
+      (c) => c.type === "building" && c.def.id === "basement",
     );
-    expect(lib?.alsoApplies ?? []).toEqual([]);
+    expect(basement).toHaveLength(1);
+    expect(
+      [basement[0]!.componentId, ...basement[0]!.alsoApplies].map(name).sort(),
+    ).toEqual(["Fire Station 7", "Northgate Branch Library"]);
   });
 
   it("skips params the drawing answers and irrelevant special spaces", () => {
