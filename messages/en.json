@@ -265,6 +265,10 @@
       "tallBuilding": "“{name}” has {storeys} storeys, unusual for this type.",
       "longRoad": "“{name}” is {km} km long. Is that intended?",
       "tinyPark": "“{name}” is only {m2} m²."
+    },
+    "featureLabels": {
+      "section": "{name} · {storeys, plural, one {# storey} other {# storeys}}",
+      "sectionN": "Section {n}"
     }
   },
   "estimate": {
