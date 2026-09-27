@@ -1,0 +1,1513 @@
+{
+ "meta": {
+  "title": "City of Waterloo Zoning By-law 2018-050: zone regulations",
+  "bylaw": "2018-050",
+  "url": "https://www.waterloo.ca/media/ybpnbhdm/zoning-by-law-2018-050.pdf",
+  "retrievedAt": "2026-09-26",
+  "notes": "Permitted uses, minimum setbacks (street/front, side, rear), maximum lot coverage, minimum landscaped open space and maximum building height per zone, extracted from the by-law text (Sections 7 to 13, each zone's Permitted Uses and Regulations table; page numbers are the by-law's). Where the zone code carries a numerical suffix (e.g. C7-60), the maximum height is that many metres with the storeys given in the zone's table. Main performance standards only: excludes site-specific provisions, special regulations, podium/tower rules, parking and density. Advisory; may lag amendments."
+ },
+ "zones": {
+  "R1": {
+   "name": "Residential One",
+   "section": "7.1",
+   "page": 163,
+   "uses": [
+    "DETACHED BUILDING",
+    "CLASS A GROUP HOME (see section 3.G.2 and Table 6A)",
+    "SPIRITUAL USE (see section 3.S.4)",
+    "COACH HOUSE (see section 3.C.2)",
+    "HOME OCCUPATION (see section 3.H.3 and Table 6A)",
+    "ADDITIONAL RESIDENTIAL UNIT (see section 3.A.1B)"
+   ],
+   "setbacksM": {
+    "street": 7.5,
+    "side": 1.8,
+    "rear": 7.5
+   },
+   "maxCoveragePct": 45.0,
+   "maxHeight": {
+    "metres": 10.0
+   }
+  },
+  "R2": {
+   "name": "Residential Two",
+   "section": "7.2",
+   "page": 165,
+   "uses": [
+    "DETACHED BUILDING",
+    "CLASS A GROUP HOME (see section 3.G.2 and Table 6A)",
+    "COACH HOUSE (see section 3.C.2)",
+    "HOME OCCUPATION (see section 3.H.3 and Table 6A)",
+    "ADDITIONAL RESIDENTIAL UNIT (see section 3.A.1B)"
+   ],
+   "setbacksM": {
+    "street": 6.0,
+    "side": 1.5,
+    "rear": 9.0
+   },
+   "maxCoveragePct": 45.0,
+   "maxHeight": {
+    "metres": 10.0
+   }
+  },
+  "R3": {
+   "name": "Residential Three",
+   "section": "7.3",
+   "page": 167,
+   "uses": [
+    "DETACHED BUILDING",
+    "CLASS A GROUP HOME (see section 3.G.2 and Table 6A)",
+    "COACH HOUSE (see section 3.C.2)",
+    "HOME OCCUPATION (see section 3.H.3 and Table 6A)",
+    "ADDITIONAL RESIDENTIAL UNIT (see section 3.A.1B)"
+   ],
+   "setbacksM": {
+    "street": 13.5,
+    "side": 3.0,
+    "rear": 13.5
+   },
+   "maxCoveragePct": 45.0,
+   "maxHeight": {
+    "metres": 10.0
+   }
+  },
+  "R4": {
+   "name": "Residential Four",
+   "section": "7.4",
+   "page": 170,
+   "uses": [
+    "DETACHED BUILDING",
+    "FREEHOLD SEMI-DETACHED BUILDING",
+    "CLASS A GROUP HOME (see section 3.G.2 and Table 6A)",
+    "CLASS B GROUP HOME (see section 3.G.2 and Table 6A",
+    "SPIRITUAL USE (see section 3.S.4)",
+    "COACH HOUSE (see section 3.C.2)",
+    "HOME OCCUPATION (see section 3.H.3 and Table 6A)",
+    "ADDITIONAL RESIDENTIAL UNIT (see section 3.A.1B"
+   ],
+   "setbacksM": {
+    "street": 7.0,
+    "side": 1.2,
+    "rear": 7.5
+   },
+   "maxCoveragePct": 45.0,
+   "maxHeight": {
+    "metres": 10.0
+   }
+  },
+  "R5": {
+   "name": "Residential Five",
+   "section": "7.5",
+   "page": 172,
+   "uses": [
+    "DETACHED BUILDING",
+    "FREEHOLD SEMI-DETACHED BUILDING",
+    "CLASS A GROUP HOME (see section 3.G.2 and Table 6A)",
+    "COACH HOUSE (see section 3.C.2)",
+    "HOME OCCUPATION (see section 3.H.3 and Table 6A)",
+    "c.) ADDITIONAL RESIDENTIAL UNIT (see section 3.A.1B)"
+   ],
+   "setbacksM": {
+    "street": 6.0,
+    "side": 1.2,
+    "rear": 7.5
+   },
+   "maxCoveragePct": 45.0,
+   "maxHeight": {
+    "metres": 10.0
+   }
+  },
+  "R6": {
+   "name": "Residential Six",
+   "section": "7.6",
+   "page": 175,
+   "uses": [
+    "DETACHED BUILDING",
+    "FREEHOLD SEMI-DETACHED BUILDING",
+    "TOWNHOUSE BUILDING (see section 7.6.3)",
+    "FREEHOLD TOWNHOUSE BUILDING (see section 7.6.4)",
+    "CLASS A GROUP HOME (see section 3.G.2 and Table 6A)",
+    "COACH HOUSE (see section 3.C.2)",
+    "HOME OCCUPATION (see section 3.H.3 and Table 6A)",
+    "ADDITIONAL RESIDENTIAL UNIT (see section 3.A.1B)"
+   ],
+   "setbacksM": {
+    "street": 6.0,
+    "side": 1.2,
+    "rear": 7.5
+   },
+   "minLandscapedPct": 30.0,
+   "maxHeight": {
+    "metres": 10.0
+   }
+  },
+  "R7": {
+   "name": "Residential Seven",
+   "section": "7.7",
+   "page": 181,
+   "uses": [
+    "TOWNHOUSE BUILDING",
+    "FREEHOLD TOWNHOUSE BUILDING",
+    "COACH HOUSE (see section 3.C.2)",
+    "HOME OCCUPATION (see section 3.H.3 and Table 6A)",
+    "ADDITIONAL RESIDENTIAL UNIT (see section 3.A.1B)"
+   ],
+   "setbacksM": {
+    "street": 6.0,
+    "side": 1.2
+   },
+   "maxCoveragePct": 50.0,
+   "maxHeight": {
+    "metres": 10.0
+   }
+  },
+  "R8": {
+   "name": "Residential Eight",
+   "section": "7.8",
+   "page": 183,
+   "uses": [
+    "TOWNHOUSE BUILDING",
+    "FREEHOLD TOWNHOUSE BUILDING",
+    "STACKED TOWNHOUSE BUILDING",
+    "TRIPLEX BUILDING",
+    "HOME OCCUPATION (see section 3.H.3 and Table 6A)",
+    "COACH HOUSE (see section 3.C.2)",
+    "ADDITIONAL RESIDENTIAL UNIT (see section 3.A.1B)"
+   ],
+   "setbacksM": {
+    "street": 6.0,
+    "rear": 7.5
+   },
+   "maxCoveragePct": 45.0,
+   "minLandscapedPct": 30.0,
+   "maxHeight": {
+    "metres": 10.0
+   }
+  },
+  "R9": {
+   "name": "Residential Nine",
+   "section": "7.9",
+   "page": 185,
+   "uses": [
+    "APARTMENT BUILDING",
+    "TOWNHOUSE BUILDING",
+    "FREEHOLD TOWNHOUSE BUILDING",
+    "STACKED TOWNHOUSE BUILDING",
+    "TRIPLEX BUILDING",
+    "LONG TERM CARE FACILITY",
+    "ASSISTED LIVING FACILITY",
+    "GOVERNMENT USE",
+    "MUNICIPAL RECREATIONAL FACILITY",
+    "HOME OCCUPATION (see section 3.H.3 and Table 6A)",
+    "COACH HOUSE (see section 3.C.2)",
+    "ADDITIONAL RESIDENTIAL UNIT (see section 3.A.1B)"
+   ],
+   "setbacksM": {
+    "street": 5.0,
+    "side": 3.0,
+    "rear": 7.5
+   },
+   "minLandscapedPct": 30.0,
+   "maxHeight": {
+    "metres": 10.0
+   }
+  },
+  "RMU": {
+   "name": "Residential Mixed-Use",
+   "section": "7.10",
+   "page": 188,
+   "uses": [
+    "MULTI-UNIT RESIDENTIAL BUILDING (including APARTMENT BUILDING)",
+    "MIXED USE BUILDING with DWELLING UNITS above the FIRST STOREY",
+    "TOWNHOUSE BUILDING, for lands zoned RMU-20 and RMU-30 only",
+    "FREEHOLD TOWNHOUSE BUILDING, for lands zoned RMU-20 and RMU-30 only",
+    "STACKED TOWNHOUSE BUILDING, for lands zoned RMU-20 and RMU-30 only",
+    "TRIPLEX BUILDING, for lands zoned RMU-20 only",
+    "LONG TERM CARE FACILITY",
+    "ASSISTED LIVING FACILITY",
+    "GOVERNMENT USE",
+    "MUNICIPAL RECREATIONAL FACILITY",
+    "SPIRITUAL USE, for lands zoned RMU-20 only (see section 3.S.4)",
+    "HOME OCCUPATION (see section 3.H.3 and Table 6A)",
+    "COACH HOUSE (see section 3.C.2)",
+    "ADDITIONAL RESIDENTIAL UNIT (see section 3.A.1B)",
+    "CAFE",
+    "CHILD CARE CENTRE",
+    "COMMERCIAL RECREATION",
+    "COMMERCIAL WELLNESS",
+    "DRUG STORE",
+    "FOOD STORE",
+    "MEDICAL CLINIC",
+    "OFFICE",
+    "PERSONAL SERVICE SHOP",
+    "RESTAURANT and TAKE-OUT RESTAURANT",
+    "SPIRITUAL USE for lands zoned RMU-30, RMU-40, RMU-60, RMU-81 (see section 3.S.4)",
+    "VARIETY STORE",
+    "DETACHED BUILDING",
+    "(deleted)",
+    "FREEHOLD SEMI-DETACHED BUILDING",
+    "(deleted)"
+   ],
+   "setbacksM": {
+    "street": 5.0,
+    "side": 3.0,
+    "rear": 7.5
+   },
+   "minLandscapedPct": 30.0,
+   "maxHeight": {
+    "metres": 20.0,
+    "storeys": 6
+   }
+  },
+  "RN-6": {
+   "name": "Residential Northdale Six",
+   "section": "7.11",
+   "page": 195,
+   "uses": [
+    "MULTI-UNIT RESIDENTIAL BUILDING (including APARTMENT BUILDING)",
+    "MIXED USE BUILDING with DWELLING UNITS above the FIRST STOREY",
+    "TOWNHOUSE BUILDING",
+    "FREEHOLD TOWNHOUSE BUILDING",
+    "STACKED TOWNHOUSE BUILDING",
+    "MUNICIPAL RECREATIONAL FACILITY",
+    "PRIVATE SCHOOL ",
+    "SPIRITUAL USE  (see section 3.S.4)",
+    "HOME OCCUPATION (see section 3.H.3 and Table 6A)",
+    "MULTI-UNIT RESIDENTIAL BUILDING",
+    "MIXED USE BUILDING with DWELLING UNITS above the FIRST STOREY",
+    "STACKED TOWNHOUSE BUILDING",
+    "BAKE SHOP ",
+    "CAFE ",
+    "CHILD CARE CENTRE ",
+    "MEDICAL CLINIC ",
+    "OFFICE ",
+    "PERSONAL SERVICE SHOP ",
+    "PHARMACEUTICAL DISPENSARY ",
+    "RETAIL STORE (excluding DEPARTMENT STORES, Home Improvement Store, Automotive Supply Stores) ",
+    "VARIETY STORE ",
+    "Hydro Transformer Room"
+   ],
+   "setbacksM": {
+    "rear": 7.5
+   },
+   "minLandscapedPct": 30.0
+  },
+  "RN-8": {
+   "name": "Residential Northdale Eight",
+   "section": "7.12",
+   "page": 202,
+   "uses": [
+    "MULTI-UNIT RESIDENTIAL BUILDING (including APARTMENT BUILDING)",
+    "MIXED USE BUILDING with DWELLING UNITS above the FIRST STOREY",
+    "ASSISTED LIVING FACILITY",
+    "LONG TERM CARE FACILITY",
+    "GOVERNMENT USE",
+    "MUNICIPAL RECREATIONAL FACILITY",
+    "PRIVATE SCHOOL",
+    "SPIRITUAL USE (see section 3.S.4)",
+    "Library",
+    "Post Office",
+    "HOME OCCUPATION (see section 3.H.3 and Table 6A)",
+    "Art Gallery",
+    "ARTIST STUDIO (CLASS A)",
+    "BAKE SHOP",
+    "CAFE",
+    "CHILD CARE CENTRE",
+    "COMMERCIAL RECREATION",
+    "COMMERCIAL WELLNESS",
+    "ELECTRONIC GAMING CENTRE",
+    "MEDICAL CLINIC",
+    "OFFICE",
+    "PERSONAL SERVICE SHOP",
+    "PHARMACEUTICAL DISPENSARY",
+    "RESTAURANT",
+    "RESTAURANT, TAKE-OUT",
+    "RETAIL STORE (excluding DEPARTMENT STORES, Home Improvement Store, Automotive Supply Stores)",
+    "VARIETY STORE",
+    "Hydro Transformer Room"
+   ],
+   "setbacksM": {
+    "rear": 7.5
+   },
+   "minLandscapedPct": 30.0
+  },
+  "RN-12": {
+   "name": "Residential Northdale Twelve",
+   "section": "7.13",
+   "page": 209,
+   "uses": [
+    "MULTI-UNIT RESIDENTIAL BUILDING (including APARTMENT BUILDING)",
+    "MIXED USE BUILDING with DWELLING UNITS above the FIRST STOREY",
+    "ASSISTED LIVING FACILITY",
+    "LONG TERM CARE FACILITY",
+    "GOVERNMENT USE",
+    "COMMUNITY CENTRE",
+    "MUNICIPAL RECREATIONAL FACILITY",
+    "PRIVATE SCHOOL",
+    "SPIRITUAL USE (see section 3.S.4)",
+    "Library",
+    "Post Office",
+    "HOME OCCUPATION (see section 3.H.3 and Table 6A)",
+    "Art Gallery",
+    "ARTIST STUDIO (CLASS A)",
+    "BAKE SHOP",
+    "CAFE",
+    "CHILD CARE CENTRE",
+    "COMMERCIAL RECREATION",
+    "COMMERCIAL WELLNESS",
+    "COMMERCIAL SCHOOL",
+    "DRUG STORE",
+    "ELECTRONIC GAMING CENTRE",
+    "FINANCIAL INSTITUTION",
+    "MEDICAL CLINIC",
+    "OFFICE",
+    "PERSONAL SERVICE SHOP",
+    "PHARMACEUTICAL DISPENSARY",
+    "RESTAURANT",
+    "RESTAURANT, TAKE-OUT",
+    "RETAIL STORE (excluding DEPARTMENT STORES, Home Improvement Store, Automotive Supply Stores)",
+    "VARIETY STORE",
+    "Hydro Transformer Room"
+   ],
+   "setbacksM": {
+    "rear": 7.5
+   },
+   "minLandscapedPct": 30.0
+  },
+  "RN-25": {
+   "name": "Residential Northdale Twenty Five",
+   "section": "7.14",
+   "page": 216,
+   "uses": [
+    "MULTI-UNIT RESIDENTIAL BUILDING (including APARTMENT BUILDING)",
+    "MIXED USE BUILDING with DWELLING UNITS above the FIRST STOREY",
+    "ASSISTED LIVING FACILITY",
+    "LONG TERM CARE FACILITY",
+    "GOVERNMENT USE",
+    "COMMUNITY CENTRE",
+    "MUNICIPAL RECREATIONAL FACILITY",
+    "PRIVATE SCHOOL",
+    "SPIRITUAL USE (see section 3.S.4)",
+    "Library",
+    "Post Office",
+    "HOME OCCUPATION (see section 3.H.3 and Table 6A)",
+    "Art Gallery",
+    "ARTIST STUDIO (CLASS A)",
+    "BAKE SHOP",
+    "CAFE",
+    "CHILD CARE CENTRE",
+    "COMMERCIAL RECREATION",
+    "COMMERCIAL WELLNESS",
+    "COMMERCIAL SCHOOL",
+    "DRUG STORE",
+    "ELECTRONIC GAMING CENTRE",
+    "FINANCIAL INSTITUTION",
+    "MEDICAL CLINIC",
+    "OFFICE",
+    "PERSONAL SERVICE SHOP",
+    "PHARMACEUTICAL DISPENSARY",
+    "RESTAURANT",
+    "RESTAURANT, TAKE-OUT",
+    "RETAIL STORE (excluding DEPARTMENT STORES, Home Improvement Store, Automotive Supply Stores)",
+    "VARIETY STORE",
+    "Hydro Transformer Room"
+   ],
+   "setbacksM": {
+    "rear": 7.5
+   },
+   "minLandscapedPct": 30.0
+  },
+  "RC1": {
+   "name": "Residential Conservation One",
+   "section": "7.15",
+   "page": 223,
+   "uses": [
+    "DETACHED BUILDING",
+    "Parks operated by the CITY",
+    "COACH HOUSE (see section3.C.2)",
+    "HOME OCCUPATION (see section 3.H.3 and Table 6A)",
+    "ADDITIONAL RESIDENTIAL UNIT (see section 3.A.1B)"
+   ],
+   "setbacksM": {
+    "street": 7.5,
+    "side": 1.8,
+    "rear": 7.5
+   },
+   "maxCoveragePct": 45.0,
+   "minLandscapedPct": 30.0,
+   "maxHeight": {
+    "metres": 10.0
+   },
+   "heightFromSuffix": true,
+   "storeysForSuffix": {
+    "10.0": 3,
+    "12.0": 4,
+    "20": 6
+   }
+  },
+  "U1": {
+   "name": "Uptown Commercial Core",
+   "section": "8.1",
+   "page": 241,
+   "uses": [
+    "ARTIST STUDIO (CLASS A)",
+    "AUDITORIUM",
+    "BAKE SHOP, including OUTDOOR BAKE SHOP PATIO",
+    "BANQUET HALL",
+    "BUSINESS INCUBATOR",
+    "CAFE, including OUTDOOR CAFE PATIO",
+    "Catering Establishment",
+    "CHILD CARE CENTRE",
+    "COMMERCIAL RECREATION",
+    "COMMERCIAL SCHOOL",
+    "COMMERCIAL SERVICE",
+    "COMMERCIAL WELLNESS",
+    "COMMUNICATION PRODUCTION",
+    "CULTURAL FACILITIES",
+    "EDUCATIONAL INSTITUTION",
+    "ELECTRONIC GAMING CENTRE",
+    "FINANCIAL SERVICES",
+    "Funeral Home",
+    "HOTEL",
+    "INSTITUTION",
+    "MAJOR OFFICE",
+    "MAKERSPACE (CLASS A)",
+    "MEDICAL CLINIC",
+    "NANOBREWERY",
+    "NIGHTCLUB (see section 8.1.4)",
+    "OFFICE",
+    "OLD GOLD SHOP",
+    "PERSONAL BREWING ESTABLISHMENT",
+    "PERSONAL SERVICE SHOP",
+    "PET SERVICES (CLASS A)",
+    "PHARMACEUTICAL DISPENSARY",
+    "PRIVATE CLUB",
+    "RESTAURANT, including OUTDOOR RESTAURANT PATIO",
+    "RESTAURANT (TAKE OUT), including OUTDOOR RESTAURANT PATIO",
+    "RETAIL STORE (includes DRUG STORE, FOOD STORE, SPECIALTY FOOD STORE, VARIETY STORE)",
+    "TECH OFFICE",
+    "TRAINING FACILITY",
+    "TRANSPORTATION SERVICE",
+    "VETERINARY CLINIC",
+    "ASSISTED LIVING FACILITY above the FIRST STOREY in a MIXED USE BUILDING",
+    "DWELLING UNITS above the FIRST STOREY in a MIXED USE BUILDING",
+    "LONG TERM CARE FACILITY above the FIRST STOREY in a MIXED USE BUILDING",
+    "ALTERNATIVE EDUCATION CENTRE",
+    "COMMUNITY CENTRE",
+    "DATA CENTRE",
+    "GOVERNMENT USE",
+    "MUNICIPAL RECREATIONAL FACILITY",
+    "PARKING FACILITY",
+    "Post Office",
+    "PRIVATE SCHOOL",
+    "PUBLIC SCHOOL",
+    "PUBLIC MARKET",
+    "SPIRITUAL USE",
+    "TEMPORARY FARMERS MARKET",
+    "UNIVERSITY / COLLEGE (excluding a university or college residence)",
+    "HOME OCCUPATION (see section 3.H.3 and Table 6A)",
+    "Hydro Transformer Room",
+    "a LOT zoned for residential purposes; or",
+    "a LOT with BUILDING(S) containing one or more DWELLING UNITS."
+   ],
+   "setbacksM": {
+    "street": 4.0,
+    "side": 1.5,
+    "rear": 4.5
+   },
+   "maxHeight": {
+    "metres": 10.0,
+    "storeys": 3
+   },
+   "heightFromSuffix": true,
+   "storeysForSuffix": {
+    "10": 3,
+    "16": 4,
+    "20": 6,
+    "30": 9,
+    "40": 12,
+    "60": 18,
+    "81": 25
+   }
+  },
+  "U2": {
+   "name": "Uptown Mixed-Use",
+   "section": "8.2",
+   "page": 249,
+   "uses": [
+    "BUSINESS INCUBATOR",
+    "CHILD CARE CENTRE",
+    "COMMERCIAL SCHOOL",
+    "EDUCATIONAL INSTITUTION",
+    "FINANCIAL SERVICES",
+    "GOVERNMENT USES",
+    "MAJOR OFFICE",
+    "MEDICAL CLINIC",
+    "OFFICE",
+    "PERSONAL SERVICE SHOP",
+    "TECH OFFICE",
+    "UNIVERSITY / COLLEGE (excluding a university or college residence)",
+    "MULTI-UNIT RESIDENTIAL BUILDING (including an APARTMENT BUILDING)",
+    "ASSISTED LIVING FACILITY",
+    "DWELLING UNITS above the FIRST STOREY in a MIXED USE BUILDING",
+    "LONG TERM CARE FACILITY in a MIXED USE BUILDING",
+    "ALTERNATIVE EDUCATION CENTRE",
+    "ARTIST STUDIO (CLASS A)",
+    "AUDITORIUM",
+    "BANQUET HALL",
+    "COMMERCIAL RECREATION",
+    "COMMERCIAL WELLNESS",
+    "COMMUNITY CENTRE",
+    "CULTURAL FACILITIES",
+    "INSTITUTION",
+    "MAKERSPACE (CLASS A)",
+    "MUNICIPAL RECREATIONAL FACILITY",
+    "PARKING FACILITY",
+    "PRIVATE SCHOOL",
+    "PUBLIC SCHOOL",
+    "PUBLIC MARKET",
+    "SPIRITUAL USE",
+    "TEMPORARY FARMERS MARKET",
+    "VETERINARY CLINIC",
+    "BAKE SHOP, including OUTDOOR BAKE SHOP PATIO",
+    "CAFE, including OUTDOOR CAFE PATIO",
+    "Catering Establishment",
+    "COMMERCIAL SERVICE",
+    "COMMUNICATION PRODUCTION",
+    "DATA CENTRE",
+    "ELECTRONIC GAMING CENTRE",
+    "NANOBREWERY",
+    "OLD GOLD SHOP",
+    "PET SERVICES (CLASS A)",
+    "Post Office",
+    "PRIVATE CLUB",
+    "PERSONAL BREWING ESTABLISHMENT",
+    "PHARMACEUTICAL DISPENSARY",
+    "RESTAURANT, including OUTDOOR RESTAURANT PATIO",
+    "RESTAURANT (TAKE OUT), including OUTDOOR RESTAURANT PATIO",
+    "RETAIL STORE (includes DRUG STORE, FOOD STORE, SPECIALTY FOOD STORE,",
+    "TAKE-OUT RESTAURANT",
+    "TRAINING FACILITY",
+    "TRANSPORTATION SERVICE",
+    "HOME OCCUPATION (see section 3.H.3 and Table 6A)",
+    "Hydro Transformer Room"
+   ],
+   "setbacksM": {
+    "street": 5.0,
+    "side": 1.5,
+    "rear": 4.5
+   },
+   "maxHeight": {
+    "metres": 20.0,
+    "storeys": 6
+   },
+   "heightFromSuffix": true,
+   "storeysForSuffix": {
+    "20": 6,
+    "30": 9,
+    "40": 12,
+    "60": 18,
+    "81": 25
+   }
+  },
+  "C1": {
+   "name": "Mixed-Use Community Commercial",
+   "section": "8.3",
+   "page": 255,
+   "uses": [
+    "BAKE SHOP, including OUTDOOR BAKE SHOP PATIO",
+    "BUSINESS INCUBATOR",
+    "CAFÉ, including OUTDOOR CAFÉ PATIO",
+    "COMMERCIAL SERVICE",
+    "FINANCIAL SERVICE",
+    "MAJOR OFFICE",
+    "MEDICAL CLINIC",
+    "NANOBREWERY",
+    "OFFICE",
+    "OLD GOLD SHOP",
+    "PERSONAL SERVICE SHOP",
+    "PET SERVICES (CLASS A)",
+    "RESTAURANT, including OUTDOOR RESTAURANT PATIO",
+    "RESTAURANT (TAKE-OUT), including OUTDOOR RESTAURANT PATIO",
+    "RETAIL STORE (includes DRUG STORE, FOOD STORE, SPECIALTY FOOD STORE,",
+    "TECH OFFICE",
+    "TRAINING FACILITY",
+    "VETERINARY CLINIC",
+    "ASSISTED LIVING FACILITY above the FIRST STOREY in a MIXED USE BUILDING",
+    "DWELLING UNITS above the FIRST STOREY in a MIXED USE BUILDING",
+    "LONG TERM CARE FACILITY above the FIRST STOREY in a MIXED USE BUILDING",
+    "ALTERNATIVE EDUCATION CENTRE",
+    "ARTIST STUDIO (CLASS A)",
+    "AUDITORIUM",
+    "AUTOMOBILE GAS STATION",
+    "AUTOMOBILE SERVICE CENTRE",
+    "BANQUET HALL",
+    "CAR WASH",
+    "CHILD CARE CENTRE",
+    "COMMERCIAL RECREATION",
+    "COMMERCIAL SCHOOL",
+    "COMMERCIAL WELLNESS",
+    "COMMUNICATION PRODUCTION",
+    "CULTURAL FACILITIES",
+    "DATA CENTRE",
+    "ELECTRONIC GAMING CENTRE",
+    "GOVERNMENT USES",
+    "HOTEL",
+    "INSTITUTION",
+    "MAKERSPACE (CLASS A)",
+    "MUNICIPAL RECREATION FACILITY",
+    "NIGHTCLUB",
+    "PERSONAL BREWING ESTABLISHMENT",
+    "PRIVATE CLUB",
+    "PRIVATE SCHOOL",
+    "PUBLIC MARKET",
+    "PUBLIC SCHOOL",
+    "SPIRITUAL USE",
+    "TEMPORARY FARMERS MARKET",
+    "TRANSPORTATION SERVICE"
+   ],
+   "setbacksM": {
+    "street": 5.0,
+    "side": 5.0,
+    "rear": 5.0
+   },
+   "maxHeight": {
+    "metres": 20.0,
+    "storeys": 6
+   },
+   "heightFromSuffix": true,
+   "storeysForSuffix": {
+    "20": 6,
+    "30": 9,
+    "40": 12,
+    "60": 18,
+    "81": 25
+   }
+  },
+  "C2": {
+   "name": "Mixed-Use Neighbourhood Commercial",
+   "section": "8.4",
+   "page": 260,
+   "uses": [
+    "BAKE SHOP, including OUTDOOR BAKE SHOP PATIO",
+    "BUSINESS INCUBATOR",
+    "CAFÉ, including OUTDOOR CAFÉ PATIO",
+    "COMMERCIAL SERVICE",
+    "FINANCIAL SERVICE",
+    "MAJOR OFFICE",
+    "MEDICAL CLINIC",
+    "NANOBREWERY",
+    "OFFICE",
+    "OLD GOLD SHOP",
+    "PERSONAL BREWING ESTABLISHMENT",
+    "PERSONAL SERVICE SHOP",
+    "PET SERVICES (CLASS A)",
+    "RESTAURANT, including OUTDOOR RESTAURANT PATIO",
+    "RESTAURANT (TAKE-OUT), including OUTDOOR RESTAURANT PATIO",
+    "RETAIL STORE (includes DRUG STORE, FOOD STORE, SPECIALTY FOOD STORE, VARIETY STORE)",
+    "TECH OFFICE",
+    "VETERINARY CLINIC",
+    "ASSISTED LIVING FACILITY above the FIRST STOREY in a MIXED USE BUILDING",
+    "DWELLING UNITS above the FIRST STOREY in a MIXED USE BUILDING",
+    "LONG TERM CARE FACILITY above the FIRST STOREY in a MIXED USE BUILDING",
+    "ALTERNATIVE EDUCATION CENTRE",
+    "ARTIST STUDIO (CLASS A)",
+    "AUTOMOBILE GAS STATION",
+    "AUTOMOBILE SERVICE CENTRE",
+    "CAR WASH",
+    "CHILD CARE CENTRE",
+    "COMMERCIAL RECREATION",
+    "COMMERCIAL SCHOOL",
+    "COMMERCIAL WELLNESS",
+    "COMMUNICATION PRODUCTION",
+    "CULTURAL FACILITIES",
+    "DATA CENTRE",
+    "ELECTRONIC GAMING CENTRE",
+    "GOVERNMENT USES",
+    "INSTITUTION",
+    "MAKERSPACE (CLASS A)",
+    "MUNICIPAL RECREATION FACILITY",
+    "PRIVATE SCHOOL",
+    "PUBLIC MARKET",
+    "PUBLIC SCHOOL",
+    "SPIRITUAL USE",
+    "TEMPORARY FARMERS MARKET",
+    "TRAINING FACILITY",
+    "TRANSPORTATION SERVICE"
+   ],
+   "setbacksM": {
+    "street": 5.0,
+    "side": 3.0,
+    "rear": 7.5
+   },
+   "maxHeight": {
+    "metres": 20.0,
+    "storeys": 6
+   },
+   "heightFromSuffix": true,
+   "storeysForSuffix": {
+    "20": 6,
+    "30": 9,
+    "40": 12,
+    "60": 18,
+    "81": 25
+   }
+  },
+  "C3": {
+   "name": "Convenience Commercial",
+   "section": "8.5",
+   "page": 265,
+   "uses": [
+    "AUTOMOBILE GAS STATION",
+    "BAKE SHOP, including OUTDOOR BAKE SHOP PATIO",
+    "CAFÉ, including OUTDOOR CAFÉ PATIO",
+    "CHILD CARE CENTRE",
+    "COMMERCIAL SCHOOL",
+    "COMMERCIAL RECREATION",
+    "COMMERCIAL SERVICE",
+    "COMMERCIAL WELLNESS",
+    "ELECTRONIC GAMING CENTRE",
+    "FINANCIAL SERVICE",
+    "MEDICAL CLINIC",
+    "NANOBREWERY",
+    "OFFICE",
+    "OLD GOLD SHOP",
+    "PERSONAL BREWING ESTABLISHMENT",
+    "PERSONAL SERVICE SHOP",
+    "PET SERVICES (CLASS A)",
+    "RESTAURANT, including OUTDOOR RESTAURANT PATIO",
+    "RESTAURANT (TAKE-OUT), including OUTDOOR RESTAURANT PATIO",
+    "RETAIL STORE (includes VARIETY STORE)",
+    "VETERINARY CLINIC",
+    "ASSISTED LIVING FACILITY above the FIRST STOREY in a MIXED USE BUILDING",
+    "DWELLING UNITS above the FIRST STOREY in a MIXED USE BUILDING",
+    "LONG TERM CARE FACILITY above the FIRST STOREY in a MIXED USE BUILDING",
+    "ALTERNATIVE EDUCATION CENTRE",
+    "ARTIST STUDIO (CLASS A)",
+    "CULTURAL FACILITIES",
+    "GOVERNMENT USES",
+    "INSTITUTION",
+    "MAKERSPACE (CLASS A)",
+    "MUNICIPAL RECREATION FACILITY",
+    "PUBLIC MARKET",
+    "TEMPORARY FARMERS MARKET",
+    "TRAINING FACILITY",
+    "TRANSPORTATION SERVICE"
+   ],
+   "setbacksM": {
+    "street": 5.0,
+    "side": 3.0,
+    "rear": 7.5
+   },
+   "maxHeight": {
+    "metres": 10.0,
+    "storeys": 3
+   },
+   "heightFromSuffix": true,
+   "storeysForSuffix": {
+    "10": 3,
+    "20": 6,
+    "30": 9,
+    "40": 12,
+    "60": 18,
+    "81": 25
+   }
+  },
+  "C4": {
+   "name": "Mixed-Use Office",
+   "section": "8.6",
+   "page": 269,
+   "uses": [
+    "BUSINESS INCUBATOR",
+    "COMMERCIAL SCHOOL",
+    "COMMERCIAL SERVICE",
+    "FINANCIAL SERVICE",
+    "MAJOR OFFICE",
+    "MEDICAL CLINIC",
+    "OFFICE",
+    "Office Equipment and Supplies (Sales and Service)",
+    "PERSONAL SERVICE SHOP",
+    "PET SERVICES (CLASS A)",
+    "TECH OFFICE",
+    "TRAINING FACILITY",
+    "VETERINARY CLINIC",
+    "ALTERNATIVE EDUCATION CENTRE",
+    "CHILD CARE CENTRE",
+    "COMMERCIAL RECREATION",
+    "COMMERCIAL WELLNESS",
+    "CULTURAL FACILITIES",
+    "GOVERNMENT USES",
+    "INSTITUTION",
+    "MAKERSPACE (CLASS A)",
+    "MUNICIPAL RECREATION FACILITY",
+    "PARKING FACILITY",
+    "PUBLIC MARKET",
+    "TEMPORARY FARMERS MARKET",
+    "TRANSPORTATION SERVICE",
+    "ASSISTED LIVING FACILITY above the FIRST STOREY",
+    "DWELLING UNITS above the FIRST STOREY",
+    "LONG TERM CARE FACILITY above the FIRST STOREY",
+    "BAKE SHOP, including OUTDOOR BAKE SHOP PATIO",
+    "CAFÉ, including OUTDOOR CAFÉ PATIO",
+    "NANOBREWERY",
+    "RESTAURANT, including OUTDOOR RESTAURANT PATIO",
+    "RESTAURANT (TAKE-OUT), including OUTDOOR RESTAURANT PATIO"
+   ],
+   "setbacksM": {
+    "street": 5.0,
+    "side": 3.0,
+    "rear": 7.5
+   },
+   "maxHeight": {
+    "metres": 20.0,
+    "storeys": 6
+   },
+   "heightFromSuffix": true,
+   "storeysForSuffix": {
+    "20": 6,
+    "30": 9,
+    "40": 12,
+    "60": 18,
+    "81": 25
+   }
+  },
+  "C5": {
+   "name": "Corridor Commercial",
+   "section": "8.7",
+   "page": 273,
+   "uses": [
+    "AUDITORIUM",
+    "AUTOMOBILE GAS STATION",
+    "AUTOMOBILE SERVICE CENTRE",
+    "BAKE SHOP, including OUTDOOR BAKE SHOP PATIO",
+    "BANQUET HALL",
+    "BUSINESS INCUBATOR",
+    "CAFÉ, including OUTDOOR CAFÉ PATIO",
+    "CAR WASH",
+    "Catering Establishment",
+    "COMMERCIAL RECREATION",
+    "COMMERCIAL SCHOOL",
+    "COMMERCIAL SERVICE",
+    "COMMERCIAL WELLNESS",
+    "COMMUNICATION PRODUCTION",
+    "CUSTOM SERVICE SHOP (excluding Ornamental Metal Craftsperson)",
+    "ELECTRONIC GAMING CENTRE",
+    "FINANCIAL SERVICE",
+    "Funeral Home",
+    "HOTEL",
+    "MEDICAL CLINIC",
+    "NANOBREWERY",
+    "NIGHTCLUB",
+    "OFFICE",
+    "PAYDAY LOAN STORE",
+    "PERSONAL BREWING ESTABLISHMENT",
+    "PET SERVICES (CLASS A)",
+    "PRINTING ESTABLISHMENT",
+    "RESTAURANT, including OUTDOOR RESTAURANT PATIO",
+    "RESTAURANT (TAKE-OUT), including OUTDOOR RESTAURANT PATIO",
+    "TECH OFFICE",
+    "TRAINING FACILITY",
+    "TRANSPORTATION SERVICE",
+    "VETERINARY CLINIC",
+    "WHOLESALER which may include ancillary retailing and display of goods,",
+    "Building Material Supplies and Sales, excluding OUTDOOR STORAGE of Building Materials",
+    "Carpet / Flooring, Wall Coverings, Textiles, Draperies (Sales and Service)",
+    "Equipment Rental and Service",
+    "LARGE MERCHANDISE STORE",
+    "MOTOR VEHICLE RETAILER",
+    "OLD GOLD SHOP",
+    "Optician / Optometrist",
+    "ALTERNATIVE EDUCATION CENTRE",
+    "CULTURAL FACILITIES",
+    "GOVERNMENT USES",
+    "INSTITUTION",
+    "MAKERSPACE (CLASS A)",
+    "MUNICIPAL RECREATION FACILITY",
+    "PARKING FACILITY",
+    "PUBLIC MARKET",
+    "TEMPORARY FARMERS MARKET",
+    "DEPARTMENT STORE",
+    "DRUG STORE",
+    "FOOD STORE (including SPECIALTY FOOD STORE)"
+   ],
+   "setbacksM": {
+    "street": 5.0,
+    "side": 3.0,
+    "rear": 7.5
+   },
+   "maxHeight": {
+    "metres": 20.0,
+    "storeys": 6
+   },
+   "heightFromSuffix": true,
+   "storeysForSuffix": {
+    "20": 6,
+    "27": 9,
+    "40": 12,
+    "81": 25
+   }
+  },
+  "C7": {
+   "name": "Conestoga Commercial Centre",
+   "section": "8.9",
+   "page": 284,
+   "uses": [
+    "AUDITORIUM",
+    "BAKE SHOP, including OUTDOOR BAKE SHOP PATIO",
+    "BANQUET HALL",
+    "BUSINESS INCUBATOR",
+    "CAFÉ, including OUTDOOR CAFÉ PATIO",
+    "COMMERCIAL SERVICE",
+    "COMMUNICATION PRODUCTION",
+    "ELECTRONIC GAMING CENTRE",
+    "FINANCIAL SERVICE",
+    "Garden Centre",
+    "MAJOR OFFICE",
+    "MEDICAL CLINIC",
+    "NANOBREWERY",
+    "OFFICE",
+    "OLD GOLD SHOP",
+    "PAYDAY LOAN STORE",
+    "PERSONAL BREWING ESTABLISHMENT",
+    "PERSONAL SERVICE SHOP",
+    "PET SERVICES (CLASS A)",
+    "RESTAURANT, including OUTDOOR RESTAURANT PATIO",
+    "RESTAURANT (TAKE-OUT), including OUTDOOR RESTAURANT PATIO",
+    "RETAIL STORE (including DRUG STORE, FOOD STORE, SPECIALTY FOOD STORE,",
+    "TECH OFFICE",
+    "TRAINING FACILITY",
+    "TRANSPORTATION SERVICE",
+    "VETERINARY CLINIC",
+    "ASSISTED LIVING FACILITY above the FIRST STOREY in a MIXED USE BUILDING",
+    "DWELLING UNITS above the FIRST STOREY in a MIXED USE BUILDING",
+    "LONG TERM CARE FACILITY above the FIRST STOREY in a MIXED USE BUILDING",
+    "MULTI-UNIT RESIDENTIAL BUILDING (including an APARTMENT BUILDING)",
+    "ALTERNATIVE EDUCATION CENTRE",
+    "ARTIST STUDIO (CLASS A)",
+    "AUTOMOBILE GAS STATION",
+    "AUTOMOBILE SERVICE CENTRE",
+    "CHILD CARE CENTRE",
+    "COMMERCIAL SCHOOL",
+    "COMMERCIAL RECREATION",
+    "COMMERCIAL WELLNESS",
+    "CULTURAL FACILITY",
+    "DATA CENTRE",
+    "GOVERNMENT USES",
+    "HOTEL",
+    "INSTITUTION",
+    "MAKERSPACE (CLASS A)",
+    "MUNICIPAL RECREATION FACILITY",
+    "PARKING FACILITY",
+    "PUBLIC MARKET",
+    "TEMPORARY FARMERS MARKET"
+   ],
+   "setbacksM": {
+    "street": 5.0,
+    "side": 5.0,
+    "rear": 7.5
+   },
+   "minLandscapedPct": 15.0,
+   "maxHeight": {
+    "metres": 20.0,
+    "storeys": 6
+   },
+   "heightFromSuffix": true,
+   "storeysForSuffix": {
+    "81": 25,
+    "60": 18,
+    "10.5": 3,
+    "20": 6,
+    "30": 9,
+    "40": 12,
+    "7.5": 2
+   }
+  },
+  "E1": {
+   "name": "Business Employment One",
+   "section": "9.1",
+   "page": 313,
+   "uses": [
+    "ADVANCED TECH",
+    "BUSINESS INCUBATOR",
+    "COMMUNICATION PRODUCTION",
+    "DATA CENTRE",
+    "GOVERNMENT USE",
+    "‘LIGHT’ INDUSTRIAL ASSEMBLY",
+    "‘LIGHT’ INDUSTRIAL MANUFACTURING",
+    "‘LIGHT’ INDUSTRIAL PROCESSING",
+    "MAKERSPACE (CLASS A)",
+    "MEDICAL CLINIC",
+    "OFFICE",
+    "PARKING FACILITY (restricted to STRUCTURED PARKING)",
+    "PRINTING ESTABLISHMENT",
+    "TECH OFFICE",
+    "TRAINING FACILITY",
+    "Repair and Servicing Operations",
+    "WAREHOUSE (no retail)",
+    "ALTERNATIVE EDUCATION CENTRE",
+    "BAKE SHOP, including OUTDOOR BAKE SHOP PATIO",
+    "CAFÉ, including OUTDOOR CAFÉ PATIO",
+    "Catering Establishment",
+    "CHILD CARE CENTRE (which shall be subject to a holding (H) symbol – see section 9.1.14)",
+    "COMMERCIAL RECREATION",
+    "COMMERCIAL SCHOOL",
+    "COMMERCIAL SERVICE",
+    "COMMERCIAL WELLNESS",
+    "FINANCIAL SERVICE",
+    "MICROBREWERY",
+    "MUNICIPAL RECREATION FACILITY",
+    "NANOBREWERY",
+    "RESTAURANT, including OUTDOOR RESTAURANT PATIO",
+    "RESTAURANT (TAKE-OUT), including OUTDOOR RESTAURANT PATIO",
+    "TRANSPORTATION SERVICE"
+   ],
+   "setbacksM": {
+    "street": 5.0,
+    "side": 3.0,
+    "rear": 5.0
+   },
+   "maxHeight": {
+    "metres": 27.0,
+    "storeys": 9
+   },
+   "heightFromSuffix": true,
+   "storeysForSuffix": {
+    "27": 9,
+    "40": 12,
+    "81": 25
+   }
+  },
+  "E2": {
+   "name": "Business Employment Two",
+   "section": "9.2",
+   "page": 319,
+   "uses": [
+    "ADVANCED TECH",
+    "BUSINESS INCUBATOR",
+    "COMMUNICATION PRODUCTION",
+    "DATA CENTRE",
+    "GOVERNMENT USE",
+    "‘LIGHT’ INDUSTRIAL ASSEMBLY",
+    "‘LIGHT’ INDUSTRIAL MANUFACTURING",
+    "‘LIGHT’ INDUSTRIAL PROCESSING",
+    "MAKERSPACE (CLASS A)",
+    "MAJOR OFFICE",
+    "MEDICAL CLINIC",
+    "OFFICE",
+    "PARKING FACILITY (restricted to STRUCTURED PARKING)",
+    "PRINTING ESTABLISHMENT",
+    "TECH OFFICE",
+    "TRAINING FACILITY",
+    "Repair and Servicing Operations",
+    "WAREHOUSE(no retail)",
+    "ALTERNATIVE EDUCATION CENTRE",
+    "BAKE SHOP, including OUTDOOR BAKE SHOP PATIO",
+    "CAFÉ, including OUTDOOR CAFÉ PATIO",
+    "Catering Establishment",
+    "CHILD CARE CENTRE (which shall be subject to a holding (H) symbol – see section",
+    "COMMERCIAL RECREATION",
+    "COMMERCIAL SCHOOL",
+    "COMMERCIAL SERVICE",
+    "COMMERCIAL WELLNESS",
+    "Convenience Retail Establishment, restricted to:",
+    "FINANCIAL SERVICE",
+    "MICROBREWERY",
+    "MUNICIPAL RECREATION FACILITY",
+    "NANOBREWERY",
+    "PERSONAL SERVICE SHOP",
+    "RESTAURANT, including OUTDOOR RESTAURANT PATIO",
+    "RESTAURANT (TAKE-OUT), including OUTDOOR RESTAURANT PATIO",
+    "TRANSPORTATION SERVICE"
+   ],
+   "setbacksM": {
+    "street": 5.0,
+    "side": 3.0,
+    "rear": 5.0
+   },
+   "maxHeight": {
+    "metres": 27.0,
+    "storeys": 9
+   },
+   "heightFromSuffix": true,
+   "storeysForSuffix": {
+    "27": 9,
+    "40": 12,
+    "81": 25
+   }
+  },
+  "E3": {
+   "name": "Flexible Industrial",
+   "section": "9.3",
+   "page": 325,
+   "uses": [
+    "ADVANCED TECH",
+    "ARTIST STUDIO (CLASS B)",
+    "AUTOMOBILE SERVICE CENTRE",
+    "BUSINESS INCUBATOR",
+    "COMMUNICATION PRODUCTION",
+    "CUSTOM SERVICE SHOP",
+    "DATA CENTRE",
+    "Dry Cleaning and Laundry Facility",
+    "FOOD AND BEVERAGE MANUFACTURING INDUSTRY",
+    "GOVERNMENT USE",
+    "INDUSTRIAL ASSEMBLY",
+    "INDUSTRIAL MANUFACTURING",
+    "INDUSTRIAL PROCESSING",
+    "Industrial or Construction Equipment Supplier (Sales or Rental)",
+    "LABORATORY",
+    "MICROBREWERY",
+    "OFFICE",
+    "PARKING FACILITY (restricted to STRUCTURED PARKING)",
+    "PET SERVICES (CLASS B)",
+    "PHARMACEUTICAL INDUSTRY",
+    "PRINTING ESTABLISHMENT",
+    "TECH OFFICE",
+    "TRAINING FACILITY",
+    "TRUCK DEPOT",
+    "VETERINARY HOSPITAL",
+    "WAREHOUSE (no retail)",
+    "WHOLESALER (no retail)",
+    "COMMERCIAL SERVICE",
+    "MAKERSPACE (CLASS A and CLASS B)",
+    "TRANSPORTATION SERVICE"
+   ],
+   "setbacksM": {
+    "street": 5.0,
+    "side": 3.0,
+    "rear": 5.0
+   },
+   "maxHeight": {
+    "metres": 27.0,
+    "storeys": 9
+   },
+   "heightFromSuffix": true,
+   "storeysForSuffix": {
+    "27": 9,
+    "40": 12,
+    "81": 25
+   }
+  },
+  "UC": {
+   "name": "University College",
+   "section": "9.4",
+   "page": 329,
+   "uses": [
+    "UNIVERSITY / COLLEGE",
+    "GOVERNMENT USE",
+    "ALTERNATIVE EDUCATION CENTRE",
+    "BUSINESS INCUBATOR",
+    "MAKERSPACE (CLASS A and CLASS B)",
+    "OFFICE",
+    "TECH OFFICE",
+    "TRAINING FACILITY",
+    "CAFÉ, including OUTDOOR CAFÉ PATIO",
+    "CHILD CARE CENTRE",
+    "COMMERCIAL RECREATION",
+    "COMMERCIAL SERVICE",
+    "COMMERCIAL WELLNESS",
+    "CULTURAL FACILITIES",
+    "Early Years Centre",
+    "ELECTRONIC GAMING CENTRE",
+    "FINANCIAL SERVICE",
+    "OFFICE (including Travel Agency)",
+    "NANOBREWERY",
+    "PERSONAL SERVICE SHOP",
+    "PUBLIC MARKET",
+    "RESTAURANT, including OUTDOOR RESTAURANT PATIO",
+    "RESTAURANT (TAKE-OUT), including OUTDOOR RESTAURANT PATIO",
+    "RETAIL STORE",
+    "SPIRITUAL USE",
+    "TEMPORARY FARMERS MARKET",
+    "TRANSPORTATION SERVICE",
+    "For Wilfrid Laurier University (hereinafter “Laurier”), the lands bounded by University Avenue,",
+    "For the University of Waterloo (hereinafter “UW”), the lands bounded by University Avenue,",
+    "For Conestoga College (hereinafter “Conestoga”), the lands known municipally as 108"
+   ],
+   "setbacksM": {
+    "street": 5.0,
+    "side": 5.0,
+    "rear": 7.5
+   },
+   "minLandscapedPct": 15.0,
+   "maxHeight": {
+    "metres": 10.0,
+    "storeys": 3
+   },
+   "heightFromSuffix": true,
+   "storeysForSuffix": {
+    "10": 3,
+    "27": 6,
+    "40": 12,
+    "60": 18,
+    "81": 25,
+    "14.3": 4,
+    "14.7": 4,
+    "21": 6,
+    "10.5": 3,
+    "7.5": 2,
+    "105": 30
+   }
+  },
+  "EI": {
+   "name": "Educational Institution",
+   "section": "10.1",
+   "page": 354,
+   "uses": [
+    "ALTERNATIVE EDUCATION CENTRE",
+    "CHILD CARE CENTRE",
+    "EDUCATIONAL INSTITUTION",
+    "GOVERNMENT USE",
+    "INSTITUTION",
+    "PRIVATE SCHOOL",
+    "PUBLIC SCHOOL",
+    "UNIVERSITY / COLLEGE",
+    "CULTURAL FACILITIES",
+    "Residence of an EDUCATIONAL INSTITUTION or UNIVERSITY / COLLEGE",
+    "OFFICE",
+    "TECH OFFICE",
+    "CAFÉ, including OUTDOOR CAFÉ PATIO",
+    "COMMERCIAL SERVICE",
+    "Gift Shop",
+    "RESTAURANT, including OUTDOOR RESTAURANT PATIO",
+    "RESTAURANT (TAKE-OUT), including OUTDOOR RESTAURANT PATIO",
+    "SPIRITUAL USE",
+    "TRAINING FACILITY"
+   ],
+   "setbacksM": {
+    "street": 5.0,
+    "side": 3.0,
+    "rear": 7.5
+   },
+   "minLandscapedPct": 15.0,
+   "maxHeight": {
+    "metres": 10.0,
+    "storeys": 3
+   },
+   "heightFromSuffix": true,
+   "storeysForSuffix": {
+    "10": 3,
+    "20": 6,
+    "30": 9,
+    "40": 12,
+    "60": 18,
+    "81": 25
+   }
+  },
+  "I": {
+   "name": "Institutional",
+   "section": "10.2",
+   "page": 357,
+   "uses": [
+    "AUDITORIUM",
+    "EDUCATIONAL INSTITUTION",
+    "INSTITUTION",
+    "GOVERNMENT USE",
+    "MUNICIPAL RECREATION FACILITY",
+    "UNIVERSITY / COLLEGE",
+    "ALTERNATIVE EDUCATION CENTRE",
+    "CHILD CARE CENTRE",
+    "PRIVATE SCHOOL",
+    "PUBLIC SCHOOL",
+    "SPIRITUAL USE",
+    "CAFÉ, including OUTDOOR CAFÉ PATIO",
+    "COMMERCIAL SERVICE",
+    "Gift Shop",
+    "MEDICAL CLINIC",
+    "OFFICE",
+    "TECH OFFICE",
+    "TRAINING FACILITY"
+   ],
+   "setbacksM": {
+    "street": 6.0,
+    "side": 3.0,
+    "rear": 7.5
+   },
+   "minLandscapedPct": 15.0,
+   "maxHeight": {
+    "metres": 10.0,
+    "storeys": 3
+   },
+   "heightFromSuffix": true,
+   "storeysForSuffix": {
+    "10": 3,
+    "20": 6,
+    "30": 9,
+    "40": 12,
+    "60": 18,
+    "81": 25
+   }
+  },
+  "S": {
+   "name": "School",
+   "section": "10.3",
+   "page": 360,
+   "uses": [
+    "PRIVATE SCHOOL",
+    "PUBLIC SCHOOL",
+    "ALTERNATIVE EDUCATION CENTRE",
+    "BUSINESS INCUBATOR",
+    "CAFÉ, including OUTDOOR CAFÉ PATIO",
+    "CHILD CARE CENTRE",
+    "Community Centre",
+    "COMMERCIAL RECREATION",
+    "COMMERCIAL WELLNESS",
+    "CULTURAL FACILITIES",
+    "Early Years Centre",
+    "EDUCATIONAL INSTITUTION",
+    "GOVERNMENT USE",
+    "INSTITUTION",
+    "Fair",
+    "MAKERSPACE (CLASS A)",
+    "MUNICIPAL RECREATION FACILITY",
+    "PRIVATE CLUB",
+    "PUBLIC MARKET",
+    "Recreational Competitions",
+    "SPIRITUAL USE",
+    "Sporting Events / Tournaments / Training",
+    "TEMPORARY FARMERS MARKET",
+    "TRAINING FACILITY",
+    "UNIVERSITY / COLLEGE (excluding a university or college residence)"
+   ],
+   "setbacksM": {
+    "street": 6.0,
+    "side": 5.0,
+    "rear": 7.5
+   },
+   "maxCoveragePct": 60.0,
+   "minLandscapedPct": 30.0,
+   "maxHeight": {
+    "metres": 14.0
+   }
+  },
+  "OS1": {
+   "name": "Parks & Recreation",
+   "section": "11.1",
+   "page": 363,
+   "uses": [
+    "Cemetery",
+    "Crematoria, Funeral Home, and Mausoleum ancillary to a Municipal Cemetery",
+    "Parkland",
+    "CITY Arboretum and Greenhouse",
+    "Community Centre",
+    "GOVERNMENT USE",
+    "MUNICIPAL RECREATION FACILITY",
+    "Private Recreation Facility",
+    "Trails and Pathways",
+    "Utility Corridor, including hydro transmission and distribution corridors"
+   ],
+   "setbacksM": {
+    "street": 6.0,
+    "side": 3.0,
+    "rear": 7.5
+   },
+   "maxCoveragePct": 40.0,
+   "maxHeight": {
+    "metres": 10.0
+   },
+   "heightFromSuffix": true,
+   "storeysForSuffix": {}
+  },
+  "OS2": {
+   "name": "Golf Course",
+   "section": "11.2",
+   "page": 364,
+   "uses": [
+    "Golf Course",
+    "CITY Parkland, Trails, Pathways",
+    "Community Centre",
+    "Driving Ranges",
+    "Putting Greens",
+    "Mini-Putt Courses",
+    "MUNICIPAL RECREATION FACILITY"
+   ],
+   "setbacksM": {
+    "street": 6.0,
+    "side": 3.0,
+    "rear": 7.5
+   },
+   "maxCoveragePct": 40.0,
+   "maxHeight": {
+    "metres": 10.0
+   },
+   "heightFromSuffix": true,
+   "storeysForSuffix": {}
+  },
+  "OS3": {
+   "name": "Conservation",
+   "section": "11.3",
+   "page": 365,
+   "uses": [
+    "Beekeeping, subject to compliance with the Ontario Bees Act",
+    "Conservation Lands, meaning natural resource areas including woodlots, wetlands, grasslands,",
+    "CITY, REGIONAL, and GRCA flood and erosion control infrastructure",
+    "Parkland, Trails, and Pathways",
+    "Restorative, scientific, and educational uses solely related to the natural and environmental"
+   ],
+   "setbacksM": {}
+  },
+  "ESL1": {
+   "name": "Environmentally Sensitive Landscape One",
+   "section": "12.1",
+   "page": 367,
+   "uses": [
+    "Agriculture, meaning the cultivation of land and associated growing and harvesting of field",
+    "Beekeeping, subject to compliance with the Ontario Bees Act",
+    "Conservation Lands, meaning natural resource areas including woodlots, wetlands, grasslands,",
+    "Parkland, Trails, and Pathways",
+    "DETACHED BUILDING on an EXISTING LOT"
+   ],
+   "setbacksM": {
+    "street": 7.5
+   },
+   "maxHeight": {
+    "metres": 10.0
+   }
+  },
+  "ESL2": {
+   "name": "Environmentally Sensitive Landscape Two",
+   "section": "12.2",
+   "page": 368,
+   "uses": [
+    "Beekeeping, subject to compliance with the Ontario Bees Act",
+    "Conservation Lands, meaning natural resource areas including woodlots, wetlands, grasslands,",
+    "Parkland, Trails, and Pathways"
+   ],
+   "setbacksM": {}
+  },
+  "FD": {
+   "name": "Future Determination",
+   "section": "13.1",
+   "page": 370,
+   "uses": [
+    "A USE that actually and legally existed on the LOT on the effective date of this BY-LAW.",
+    "A BUILDING or STRUCTURE which actually and legally existed on the LOT on the effective date"
+   ],
+   "setbacksM": {}
+  },
+  "WM": {
+   "name": "Waste Management",
+   "section": "13.2",
+   "page": 371,
+   "uses": [
+    "REGIONAL or CITY waste management facility, including:",
+    "Municipal waste transfer station.",
+    "Upon the closure of the waste management site, subject to approval of the Province of"
+   ],
+   "setbacksM": {
+    "street": 15.0,
+    "side": 7.5,
+    "rear": 15.0
+   }
+  },
+  "ZC": {
+   "name": "Zone Change Application",
+   "section": "13.3",
+   "page": 372,
+   "uses": [
+    "USES permitted in the zoning applied to the LOT on the day before the effective date of this",
+    "BUILDINGS and STRUCTURES permitted in the zoning applied to the LOT on the day before"
+   ],
+   "setbacksM": {}
+  }
+ }
+}

@@ -10,6 +10,7 @@ import {
   RegionalFactorsFileSchema,
   StructuresFileSchema,
   UnitPricesFileSchema,
+  ZoneRulesFileSchema,
   type BcpiFile,
   type BuildingCostsFile,
   type AltusBenchmarksFile,
@@ -21,6 +22,7 @@ import {
   type RegionalFactorsFile,
   type StructuresFile,
   type UnitPricesFile,
+  type ZoneRulesFile,
 } from "@/lib/schemas";
 import buildingCostsJson from "./building-costs.json";
 import overrunReferenceJson from "./overrun-reference.json";
@@ -32,6 +34,7 @@ import constructionDurationsJson from "./public/construction-durations.json";
 import altusBenchmarksJson from "./altus-benchmarks.json";
 import statcanBcpiJson from "./public/statcan-bcpi.json";
 import unitPricesJson from "./unit-prices.json";
+import waterlooRulesJson from "./zoning/waterloo-rules.json";
 
 // Seed data (SPEC 8), parsed once so consumers get typed, validated objects.
 // Sample data only: every file has `meta.sample: true`. Treat as read-only.
@@ -75,3 +78,7 @@ export const altusBenchmarks: AltusBenchmarksFile =
 /** Construction duration vs contract value, fitted on CanadaBuys contracts (scripts/fetch-durations.ts). */
 export const constructionDurations: ConstructionDurationsFile =
   ConstructionDurationsFileSchema.parse(constructionDurationsJson);
+
+/** City of Waterloo Zoning By-law 2018-050 regulations per zone (advisory checks only). */
+export const waterlooZoneRules: ZoneRulesFile =
+  ZoneRulesFileSchema.parse(waterlooRulesJson);

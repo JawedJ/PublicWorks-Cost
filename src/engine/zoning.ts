@@ -1,10 +1,12 @@
 import type { Component, ZoningContext } from "@/lib/schemas";
 import { L, t } from "./text";
 import type { TemplateFlag } from "./types";
+import { zoneLimitFlags } from "./zoning-limits";
 
 // SPEC 8.3 (MVP): advisory zoning flags from the looked-up zone of each building.
-// No hand-transcribed limits yet: we name the zone and by-law, flag an obvious use
-// mismatch, and say when zoning couldn't be checked. Never changes the estimate.
+// Waterloo zones are checked against their by-law limits (zoning-limits.ts);
+// elsewhere we name the zone and by-law, flag an obvious use mismatch, and say
+// when zoning couldn't be checked. Never changes the estimate.
 
 const HOUSING = new Set([
   "house",
@@ -51,6 +53,8 @@ export function zoningFlags(
       z.bylaw,
       z.link ? t(" (", z.link, ")") : "",
     );
+    // Transcribed limits (Waterloo): check use, height, setbacks, coverage.
+    const limits = zoneLimitFlags(c, z);
     out.push({
       code: "zoning_zone",
       severity: z.siteSpecific ? "warning" : "info",
@@ -64,13 +68,18 @@ export function zoningFlags(
         where,
         ".",
         z.siteSpecific ? t(" ", z.siteSpecific, ".") : "",
-        L(
-          " Check this zone's height, coverage, setback and use limits before design. Advisory only.",
-          " Vérifiez les limites de hauteur, d'emprise, de marges et d'usage de la zone. À titre indicatif.",
-        ),
+        limits.summary
+          ? t(" ", limits.summary, L(" Advisory only.", " À titre indicatif."))
+          : L(
+              " Check this zone's height, coverage, setback and use limits before design. Advisory only.",
+              " Vérifiez les limites de hauteur, d'emprise, de marges et d'usage de la zone. À titre indicatif.",
+            ),
       ),
       componentIds: [c.id],
     });
+    out.push(...limits.flags);
+    // With transcribed limits, the use check above replaces the rough one below.
+    if (limits.summary) continue;
 
     const fam = family(z.name);
     const housing = HOUSING.has(c.subtype);
