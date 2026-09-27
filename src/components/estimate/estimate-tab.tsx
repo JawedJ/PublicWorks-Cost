@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -120,9 +119,9 @@ export function EstimateTab({ estimate, scoped, components, region }: Props) {
               >
                 {money.format(estimate.recommendedContingency.amount)}
               </CardTitle>
-              <CardAction>
+              <div>
                 <LevelBadge level={contingency} />
-              </CardAction>
+              </div>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground">
               {t("contingencyPct", {
@@ -142,9 +141,9 @@ export function EstimateTab({ estimate, scoped, components, region }: Props) {
               >
                 {pct(estimate.overrunRisk.probabilityOfOverrun * 100)}%
               </CardTitle>
-              <CardAction>
+              <div>
                 <LevelBadge level={overrun} />
-              </CardAction>
+              </div>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground">
               {t("overrunTypical", {

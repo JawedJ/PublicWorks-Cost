@@ -22,6 +22,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { useMap } from "@/components/map/map-context";
 import { readSurroundings } from "@/components/map/read-surroundings";
@@ -37,16 +38,28 @@ import {
 } from "@/lib/schemas";
 import { useStore } from "@/lib/store/store";
 
-// P7.6 (SPEC 9.3): upload a report (e.g. a soil report); the AI proposes input
-// values with quotes; the user ticks which to apply. Applied values are marked
-// "From document" with the quote as evidence. The file is never stored.
+// P7.6 (SPEC 9.3): upload one or more reports (e.g. a soil report and a
+// traffic memo); the AI reads each and proposes input values with quotes; the
+// user ticks which to apply. Applied values are marked "From document" with
+// the quote as evidence. Files are never stored.
+
+/** Read in parallel; the AI route allows 10 requests a minute. */
+const MAX_FILES = 5;
+
+type FileResult =
+  | { fileName: string; ok: true; res: ExtractResponse }
+  | {
+      fileName: string;
+      ok: false;
+      error: "tooLarge" | "wrongType" | "failed";
+    };
 
 type Status =
   | { kind: "idle" }
-  | { kind: "reading" }
-  | { kind: "review"; fileName: string; res: ExtractResponse }
-  | { kind: "applied"; fileName: string; count: number; relaid: boolean }
-  | { kind: "error"; message: "tooLarge" | "wrongType" | "failed" };
+  | { kind: "reading"; done: number; total: number }
+  | { kind: "review"; results: FileResult[] }
+  | { kind: "applied"; names: string[]; count: number; relaid: boolean }
+  | { kind: "error"; message: "tooMany" };
 
 function toBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -96,24 +109,24 @@ function useOptionalMap() {
 export function DocumentUpload({ components }: { components: Component[] }) {
   const t = useTranslations("documents");
   const map = useOptionalMap();
-  const [file, setFile] = useState<File | null>(null);
+  const [files, setFiles] = useState<File[]>([]);
   const [status, setStatus] = useState<Status>({ kind: "idle" });
+  // Unticked findings, keyed `${file index}:${finding id}`.
   const [rejected, setRejected] = useState<Set<string>>(new Set());
   const byId = new Map(components.map((c) => [c.id, c]));
 
-  async function read() {
-    if (!file) return;
+  async function readOne(file: File): Promise<FileResult> {
+    const fileName = file.name;
     const mimeType = mimeOf(file);
-    if (!mimeType) return setStatus({ kind: "error", message: "wrongType" });
+    if (!mimeType) return { fileName, ok: false, error: "wrongType" };
     if (file.size > MAX_DOCUMENT_BYTES)
-      return setStatus({ kind: "error", message: "tooLarge" });
-    setStatus({ kind: "reading" });
+      return { fileName, ok: false, error: "tooLarge" };
     try {
       const res = await fetch("/api/ai/extract", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          fileName: file.name,
+          fileName,
           mimeType,
           dataBase64: await toBase64(file),
           components: components.map((c) => ({
@@ -126,30 +139,58 @@ export function DocumentUpload({ components }: { components: Component[] }) {
         }),
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      setRejected(new Set());
-      setStatus({
-        kind: "review",
-        fileName: file.name,
+      return {
+        fileName,
+        ok: true,
         res: ExtractResponseSchema.parse(await res.json()),
-      });
+      };
     } catch {
-      setStatus({ kind: "error", message: "failed" });
+      return { fileName, ok: false, error: "failed" };
     }
   }
 
-  function apply(fileName: string, res: ExtractResponse) {
-    const accepted = res.findings.filter((f) => !rejected.has(f.id));
+  async function read() {
+    if (!files.length) return;
+    if (files.length > MAX_FILES)
+      return setStatus({ kind: "error", message: "tooMany" });
+    let done = 0;
+    setStatus({ kind: "reading", done, total: files.length });
+    const results = await Promise.all(
+      files.map((f) =>
+        readOne(f).then((r) => {
+          done++;
+          setStatus({ kind: "reading", done, total: files.length });
+          return r;
+        }),
+      ),
+    );
+    setRejected(new Set());
+    setStatus({ kind: "review", results });
+  }
+
+  /** Every ticked finding, in file order (a later document wins on a clash). */
+  const accepted = (results: FileResult[]) =>
+    results.flatMap((r, i) =>
+      r.ok
+        ? r.res.findings
+            .filter((f) => !rejected.has(`${i}:${f.id}`))
+            .map((f) => ({ ...f, fileName: r.fileName }))
+        : [],
+    );
+
+  function apply(results: FileResult[]) {
+    const chosen = accepted(results);
     const {
       components: all,
       updateComponents,
       addDocument,
     } = useStore.getState();
     const patches = new Map<string, Component>();
-    for (const f of accepted)
+    for (const f of chosen)
       for (const id of f.componentIds) {
         const c = patches.get(id) ?? all.find((x) => x.id === id);
         if (!c) continue;
-        const where = f.page ? `${fileName}, p. ${f.page}` : fileName;
+        const where = f.page ? `${f.fileName}, p. ${f.page}` : f.fileName;
         patches.set(id, {
           ...c,
           params: { ...c.params, [f.paramId]: f.value },
@@ -168,10 +209,12 @@ export function DocumentUpload({ components }: { components: Component[] }) {
         patch: { params: c.params, paramMeta: c.paramMeta },
       })),
     );
-    addDocument({ name: fileName, extractedAt: new Date().toISOString() });
+    const names = [...new Set(chosen.map((f) => f.fileName))];
+    const now = new Date().toISOString();
+    for (const name of names) addDocument({ name, extractedAt: now });
     // New sizes for things the layout placed: lay them out again (same
     // arrangement) so they resize and move to fit. Drawn-by-hand stays put.
-    const resized = accepted.some(
+    const resized = chosen.some(
       (f) =>
         SIZE_IDS.has(f.paramId) &&
         f.componentIds.some((id) => {
@@ -182,11 +225,11 @@ export function DocumentUpload({ components }: { components: Component[] }) {
     if (resized) void relayout();
     setStatus({
       kind: "applied",
-      fileName,
-      count: accepted.length,
+      names,
+      count: chosen.length,
       relaid: resized,
     });
-    setFile(null);
+    setFiles([]);
   }
 
   async function relayout() {
@@ -205,12 +248,15 @@ export function DocumentUpload({ components }: { components: Component[] }) {
     latest.generateLayout(centre, latest.layoutSeed, surroundings);
   }
 
-  const toggle = (id: string, on: boolean) => {
+  const toggle = (key: string, on: boolean) => {
     const next = new Set(rejected);
-    if (on) next.delete(id);
-    else next.add(id);
+    if (on) next.delete(key);
+    else next.add(key);
     setRejected(next);
   };
+
+  const chosenCount =
+    status.kind === "review" ? accepted(status.results).length : 0;
 
   return (
     <Card size="sm">
@@ -230,81 +276,110 @@ export function DocumentUpload({ components }: { components: Component[] }) {
             <Input
               id="document-file"
               type="file"
+              multiple
               accept=".pdf,.txt,application/pdf,text/plain"
               onChange={(e) => {
-                setFile(e.target.files?.[0] ?? null);
+                setFiles([...(e.target.files ?? [])]);
                 setStatus({ kind: "idle" });
               }}
             />
+            {files.length > 1 && (
+              <FieldDescription>
+                {files.map((f) => f.name).join(", ")}
+              </FieldDescription>
+            )}
           </Field>
         )}
         {status.kind === "error" && (
           <Alert variant="destructive">
             <TriangleAlert />
-            <AlertDescription>{t(`errors.${status.message}`)}</AlertDescription>
+            <AlertDescription>
+              {t(`errors.${status.message}`, { max: MAX_FILES })}
+            </AlertDescription>
           </Alert>
         )}
         {status.kind === "applied" && (
           <Alert>
             <CircleCheck />
             <AlertDescription>
-              {t("applied", { count: status.count, name: status.fileName })}
+              {t("applied", {
+                count: status.count,
+                name: status.names.join(", "),
+              })}
               {status.relaid && ` ${t("relaid")}`}
             </AlertDescription>
           </Alert>
         )}
-        {status.kind === "review" && (
-          <>
-            {status.res.notice && (
-              <Alert>
-                <Sparkles />
-                <AlertDescription>
-                  {t(`notices.${status.res.notice}`)}
-                </AlertDescription>
-              </Alert>
-            )}
-            <p className="text-sm">
-              <span className="font-medium">{status.fileName}</span>
-              {status.res.summary && ` · ${status.res.summary}`}
-            </p>
-            {status.res.findings.length === 0 ? (
-              <p className="text-sm text-muted-foreground">{t("nothing")}</p>
-            ) : (
-              <FieldGroup className="gap-3">
-                {status.res.findings.map((f) => {
-                  const first = byId.get(f.componentIds[0]!);
-                  const def = first ? defOf(first, f.paramId) : undefined;
-                  if (!def) return null;
-                  const id = `finding-${f.id}`;
-                  return (
-                    <Field key={f.id} orientation="horizontal">
-                      <Checkbox
-                        id={id}
-                        checked={!rejected.has(f.id)}
-                        onCheckedChange={(v) => toggle(f.id, v === true)}
-                      />
-                      <FieldContent>
-                        <FieldLabel htmlFor={id}>
-                          {def.label.en}: {formatParam(def, f.value)}
-                        </FieldLabel>
-                        <FieldDescription>
-                          {t("appliesTo", {
-                            names: f.componentIds
-                              .map((c) => byId.get(c)?.name ?? c)
-                              .join(", "),
-                          })}
-                        </FieldDescription>
-                        <FieldDescription className="italic">
-                          “{f.evidence}”{f.page ? ` (p. ${f.page})` : ""}
-                        </FieldDescription>
-                      </FieldContent>
-                    </Field>
-                  );
-                })}
-              </FieldGroup>
-            )}
-          </>
-        )}
+        {status.kind === "review" &&
+          status.results.map((r, i) => (
+            <section
+              key={`${i}:${r.fileName}`}
+              className="flex flex-col gap-3"
+              aria-label={r.fileName}
+            >
+              {i > 0 && <Separator />}
+              <p className="text-sm">
+                <span className="font-medium">{r.fileName}</span>
+                {r.ok && r.res.summary && ` · ${r.res.summary}`}
+              </p>
+              {!r.ok ? (
+                <Alert variant="destructive">
+                  <TriangleAlert />
+                  <AlertDescription>{t(`errors.${r.error}`)}</AlertDescription>
+                </Alert>
+              ) : (
+                <>
+                  {r.res.notice && (
+                    <Alert>
+                      <Sparkles />
+                      <AlertDescription>
+                        {t(`notices.${r.res.notice}`)}
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                  {r.res.findings.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">
+                      {t("nothing")}
+                    </p>
+                  ) : (
+                    <FieldGroup className="gap-3">
+                      {r.res.findings.map((f) => {
+                        const first = byId.get(f.componentIds[0]!);
+                        const def = first ? defOf(first, f.paramId) : undefined;
+                        if (!def) return null;
+                        const key = `${i}:${f.id}`;
+                        const id = `finding-${i}-${f.id}`;
+                        return (
+                          <Field key={key} orientation="horizontal">
+                            <Checkbox
+                              id={id}
+                              checked={!rejected.has(key)}
+                              onCheckedChange={(v) => toggle(key, v === true)}
+                            />
+                            <FieldContent>
+                              <FieldLabel htmlFor={id}>
+                                {def.label.en}: {formatParam(def, f.value)}
+                              </FieldLabel>
+                              <FieldDescription>
+                                {t("appliesTo", {
+                                  names: f.componentIds
+                                    .map((c) => byId.get(c)?.name ?? c)
+                                    .join(", "),
+                                })}
+                              </FieldDescription>
+                              <FieldDescription className="italic">
+                                “{f.evidence}”{f.page ? ` (p. ${f.page})` : ""}
+                              </FieldDescription>
+                            </FieldContent>
+                          </Field>
+                        );
+                      })}
+                    </FieldGroup>
+                  )}
+                </>
+              )}
+            </section>
+          ))}
       </CardContent>
       <CardFooter className="flex flex-wrap justify-end gap-2">
         {status.kind === "review" ? (
@@ -318,26 +393,22 @@ export function DocumentUpload({ components }: { components: Component[] }) {
             </Button>
             <Button
               size="sm"
-              disabled={
-                status.res.findings.filter((f) => !rejected.has(f.id))
-                  .length === 0
-              }
-              onClick={() => apply(status.fileName, status.res)}
+              disabled={chosenCount === 0}
+              onClick={() => apply(status.results)}
             >
-              {t("apply", {
-                count: status.res.findings.filter((f) => !rejected.has(f.id))
-                  .length,
-              })}
+              {t("apply", { count: chosenCount })}
             </Button>
           </>
         ) : (
           <Button
             size="sm"
-            disabled={!file || status.kind === "reading"}
+            disabled={!files.length || status.kind === "reading"}
             onClick={() => void read()}
           >
             {status.kind === "reading" && <Spinner data-icon="inline-start" />}
-            {status.kind === "reading" ? t("reading") : t("read")}
+            {status.kind === "reading"
+              ? t("reading", { done: status.done, total: status.total })
+              : t("read", { count: Math.max(files.length, 1) })}
           </Button>
         )}
       </CardFooter>
