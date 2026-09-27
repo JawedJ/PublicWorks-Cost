@@ -86,6 +86,9 @@ function TypeIcon({ type }: { type: ComponentType }) {
   return <I />;
 }
 
+/** A catalog name without its pricing note: "Skate park (per m²)" → "Skate park". */
+const plainLabel = (label: string) => label.replace(/\s*\(per [^)]*\)/g, "");
+
 /** Components that can hold placed features (a park's playground). */
 function featureHost(c: Component | undefined) {
   return c?.geometry && (c.type === "park" || c.type === "building")
@@ -255,7 +258,7 @@ export function DrawToolbar() {
       case "hole":
         return t("targets.hole", { name: holed?.name ?? "" });
       case "feature":
-        return featureLabel(c.featureKind);
+        return plainLabel(featureLabel(c.featureKind));
       case "customFeature":
         return name || t("targets.customFeatureShort");
       case "custom":
@@ -594,11 +597,8 @@ export function DrawToolbar() {
               <div className="overflow-y-auto py-1">
                 {groups.map((g) => {
                   const inGroup = shown.filter((i) => i.group === g);
-                  // "Add to <selected>" is always open; others open on click or search.
-                  const contextual =
-                    selected !== undefined &&
-                    g === t("addTo", { name: selected.name });
-                  const isOpen = Boolean(q) || contextual || openFolders.has(g);
+                  // Every folder starts closed; a click opens it, and searching opens them all.
+                  const isOpen = Boolean(q) || openFolders.has(g);
                   const FolderIcon = isOpen ? FolderOpen : Folder;
                   return (
                     <div key={g}>
@@ -638,7 +638,9 @@ export function DrawToolbar() {
                               className="flex w-full items-center gap-2 py-1.5 pr-3 pl-10 text-left hover:bg-muted focus-visible:bg-muted focus-visible:outline-none"
                             >
                               <ItemIcon className="size-4 shrink-0 text-muted-foreground" />
-                              <span className="truncate">{i.label}</span>
+                              <span className="truncate">
+                                {plainLabel(i.label)}
+                              </span>
                             </button>
                           );
                         })}

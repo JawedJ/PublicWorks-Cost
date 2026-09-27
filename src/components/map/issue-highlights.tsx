@@ -169,7 +169,11 @@ export function IssueHighlights({
                     focus.componentIds.includes(id),
                   ),
                 }))
-            : (estimate?.flags ?? []),
+            : // Demolished buildings are gone from the map; their outlines
+              // show only when that entry is clicked.
+              (estimate?.flags ?? []).filter(
+                (f) => f.code !== "existing_buildings_demolished",
+              ),
           site,
           locale,
         ),
