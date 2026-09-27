@@ -22,6 +22,8 @@ export const ExtractRequestSchema = z.object({
         name: z.string(),
         type: ComponentTypeSchema,
         subtype: z.string(),
+        /** Planned or placed by the layout: a document may set its size, and the layout follows. */
+        resizable: z.boolean().default(false),
       }),
     )
     .min(1)

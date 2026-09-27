@@ -32,12 +32,16 @@ import { resolveParams } from "@/engine/params";
 import { templates } from "@/engine/templates";
 import type {
   Component,
+  Flag,
   ParamDefinition,
   ParamSource,
   ParamValue,
 } from "@/lib/schemas";
 import { useStore } from "@/lib/store/store";
+import { relevantReviews, SITE_REVIEW_PARAMS } from "@/engine/site-reviews";
 import { CustomPricingForm } from "./custom-pricing-form";
+
+const REVIEW_IDS = new Set(SITE_REVIEW_PARAMS.map((d) => d.id));
 import { NumberInput } from "./number-input";
 
 // P3.11: parameters per component. Values from the prompt, a document or the site
@@ -50,9 +54,11 @@ type Props = {
   components: Component[];
   /** Scope: one component, or null for all. */
   componentId: string | null;
+  /** Estimate flags: site review inputs show only where their flag applies. */
+  flags?: Flag[];
 };
 
-export function InputsTab({ components: all, componentId }: Props) {
+export function InputsTab({ components: all, componentId, flags = [] }: Props) {
   const t = useTranslations("inputs");
   const components = componentId
     ? all.filter((c) => c.id === componentId)
@@ -70,7 +76,16 @@ export function InputsTab({ components: all, componentId }: Props) {
   return (
     <div className="flex flex-col gap-4">
       {components.map((c) => (
-        <ComponentInputs key={c.id} component={c} showName={!componentId} />
+        <ComponentInputs
+          key={c.id}
+          component={c}
+          showName={!componentId}
+          reviews={relevantReviews(
+            flags
+              .filter((f) => f.componentIds.includes(c.id))
+              .map((f) => f.code),
+          )}
+        />
       ))}
     </div>
   );
@@ -79,16 +94,18 @@ export function InputsTab({ components: all, componentId }: Props) {
 function ComponentInputs({
   component: c,
   showName,
+  reviews,
 }: {
   component: Component;
   showName: boolean;
+  reviews: Set<string>;
 }) {
   const t = useTranslations("inputs");
   const tpl = templates[c.type];
   const values = resolveParams(tpl, c.subtype, c.params);
-  const defs = [...tpl.paramCatalog].sort(
-    (a, b) => b.costImpact - a.costImpact,
-  );
+  const defs = tpl.paramCatalog
+    .filter((d) => !REVIEW_IDS.has(d.id) || reviews.has(d.id))
+    .sort((a, b) => b.costImpact - a.costImpact);
   const subtype = tpl.subtypes.find((s) => s.id === c.subtype)?.label.en;
   const updateComponent = useStore((s) => s.updateComponent);
   // Custom park features are priced like custom components (SPEC 6.5).

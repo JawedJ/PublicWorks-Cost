@@ -8,14 +8,22 @@ const components = [
     name: "Main St",
     type: "road" as const,
     subtype: "road_reconstruction",
+    resizable: false,
   },
   {
     id: "r2",
     name: "Oak Ave",
     type: "road" as const,
     subtype: "road_reconstruction",
+    resizable: false,
   },
-  { id: "b1", name: "Library", type: "building" as const, subtype: "library" },
+  {
+    id: "b1",
+    name: "Library",
+    type: "building" as const,
+    subtype: "library",
+    resizable: true,
+  },
 ];
 
 describe("toFindings", () => {
@@ -49,6 +57,47 @@ describe("toFindings", () => {
     expect(f[1]!.page).toBeUndefined();
   });
 
+  it("takes site reviews, and sizes only for components the layout placed", () => {
+    const f = toFindings(
+      [
+        {
+          paramId: "schoolReview",
+          value: "no_measures",
+          appliesTo: ["all:road"],
+          evidence: "no concern",
+          page: 1,
+        },
+        {
+          paramId: "gfaOverrideM2",
+          value: "2400",
+          appliesTo: ["b1"],
+          evidence: "2,400 m²",
+          page: 2,
+        },
+        {
+          paramId: "storeys",
+          value: "3",
+          appliesTo: ["b1"],
+          evidence: "three storeys",
+          page: 2,
+        },
+        {
+          paramId: "lengthM",
+          value: "900",
+          appliesTo: ["r1"],
+          evidence: "900 m",
+          page: 2,
+        },
+      ],
+      components,
+    );
+    expect(f.map((x) => [x.paramId, x.value, x.componentIds])).toEqual([
+      ["schoolReview", "no_measures", ["r1", "r2"]],
+      ["gfaOverrideM2", 2400, ["b1"]],
+      ["storeys", 3, ["b1"]],
+    ]);
+  });
+
   it("drops unknown params, invalid values and sizes", () => {
     expect(
       toFindings(
@@ -68,9 +117,10 @@ describe("toFindings", () => {
             page: 1,
           },
           {
-            paramId: "gfaOverrideM2",
+            // r1 was drawn by the user: its size comes from the drawing.
+            paramId: "lengthM",
             value: "900",
-            appliesTo: ["b1"],
+            appliesTo: ["r1"],
             evidence: "",
             page: 1,
           },

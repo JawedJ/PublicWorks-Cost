@@ -23,7 +23,11 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
+import { useMap } from "@/components/map/map-context";
+import { readSurroundings } from "@/components/map/read-surroundings";
 import { templates } from "@/engine/templates";
+import { SIZE_HINTS } from "@/lib/ai/parse";
+import { featureBounds } from "@/lib/geo/bounds";
 import { formatParam } from "@/lib/export/report-data";
 import {
   type Component,
@@ -41,7 +45,7 @@ type Status =
   | { kind: "idle" }
   | { kind: "reading" }
   | { kind: "review"; fileName: string; res: ExtractResponse }
-  | { kind: "applied"; fileName: string; count: number }
+  | { kind: "applied"; fileName: string; count: number; relaid: boolean }
   | { kind: "error"; message: "tooLarge" | "wrongType" | "failed" };
 
 function toBase64(file: File): Promise<string> {
@@ -61,8 +65,37 @@ function mimeOf(file: File): "application/pdf" | "text/plain" | null {
   return null;
 }
 
+/** Sizes a document can change on components the layout placed. */
+const SIZE_IDS = new Set([
+  "gfaOverrideM2",
+  "storeys",
+  "areaM2",
+  "lengthM",
+  "stalls",
+]);
+const isPlaced = (c: Component) =>
+  c.status === "planned" || c.origin === "generated";
+
+/** Catalog inputs plus the layout's size hints, for showing a finding. */
+function defOf(c: Component, paramId: string) {
+  return (
+    templates[c.type].paramCatalog.find((d) => d.id === paramId) ??
+    SIZE_HINTS[c.type]?.find((d) => d.id === paramId)
+  );
+}
+
+/** The map, when there is one (tests render the panel without it). */
+function useOptionalMap() {
+  try {
+    return useMap();
+  } catch {
+    return null;
+  }
+}
+
 export function DocumentUpload({ components }: { components: Component[] }) {
   const t = useTranslations("documents");
+  const map = useOptionalMap();
   const [file, setFile] = useState<File | null>(null);
   const [status, setStatus] = useState<Status>({ kind: "idle" });
   const [rejected, setRejected] = useState<Set<string>>(new Set());
@@ -88,6 +121,7 @@ export function DocumentUpload({ components }: { components: Component[] }) {
             name: c.name,
             type: c.type,
             subtype: c.subtype,
+            resizable: isPlaced(c),
           })),
         }),
       });
@@ -135,8 +169,40 @@ export function DocumentUpload({ components }: { components: Component[] }) {
       })),
     );
     addDocument({ name: fileName, extractedAt: new Date().toISOString() });
-    setStatus({ kind: "applied", fileName, count: accepted.length });
+    // New sizes for things the layout placed: lay them out again (same
+    // arrangement) so they resize and move to fit. Drawn-by-hand stays put.
+    const resized = accepted.some(
+      (f) =>
+        SIZE_IDS.has(f.paramId) &&
+        f.componentIds.some((id) => {
+          const c = all.find((x) => x.id === id);
+          return c && isPlaced(c);
+        }),
+    );
+    if (resized) void relayout();
+    setStatus({
+      kind: "applied",
+      fileName,
+      count: accepted.length,
+      relaid: resized,
+    });
     setFile(null);
+  }
+
+  async function relayout() {
+    const store = useStore.getState();
+    const area = store.areaBoundary && featureBounds(store.areaBoundary);
+    const centre: [number, number] | null = area
+      ? [(area[0] + area[2]) / 2, (area[1] + area[3]) / 2]
+      : map
+        ? (map.getCenter().toArray() as [number, number])
+        : null;
+    if (!centre) return;
+    const surroundings = map
+      ? await readSurroundings(map, centre).catch(() => undefined)
+      : undefined;
+    const latest = useStore.getState();
+    latest.generateLayout(centre, latest.layoutSeed, surroundings);
   }
 
   const toggle = (id: string, on: boolean) => {
@@ -183,6 +249,7 @@ export function DocumentUpload({ components }: { components: Component[] }) {
             <CircleCheck />
             <AlertDescription>
               {t("applied", { count: status.count, name: status.fileName })}
+              {status.relaid && ` ${t("relaid")}`}
             </AlertDescription>
           </Alert>
         )}
@@ -206,11 +273,7 @@ export function DocumentUpload({ components }: { components: Component[] }) {
               <FieldGroup className="gap-3">
                 {status.res.findings.map((f) => {
                   const first = byId.get(f.componentIds[0]!);
-                  const def = first
-                    ? templates[first.type].paramCatalog.find(
-                        (d) => d.id === f.paramId,
-                      )
-                    : undefined;
+                  const def = first ? defOf(first, f.paramId) : undefined;
                   if (!def) return null;
                   const id = `finding-${f.id}`;
                   return (

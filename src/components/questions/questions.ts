@@ -20,6 +20,8 @@ const SITE_CODES = new Set([
   "rail_approval",
   "near_school",
   "near_hospital",
+  "near_waterway",
+  "near_rail",
   "floodplain",
 ]);
 
@@ -47,6 +49,11 @@ export function buildQuestionsRequest(estimate: Estimate): QuestionsRequest {
           Object.entries(c.paramMeta).map(([k, m]) => [k, m.source]),
         ),
         existing: existing(c),
+        siteFlags: estimate.flags
+          .filter(
+            (f) => f.componentIds.includes(c.id) && SITE_CODES.has(f.code),
+          )
+          .map((f) => f.code),
       })),
     siteNotes: estimate.flags
       .filter((f) => SITE_CODES.has(f.code))

@@ -43,6 +43,8 @@ export const QuestionsRequestSchema = z.object({
             floorAreaM2: z.number().min(0),
           })
           .optional(),
+        /** Site flag codes on it (e.g. near_school), so reviews are asked only there. */
+        siteFlags: z.array(z.string().max(40)).max(20).optional(),
       }),
     )
     .max(60),

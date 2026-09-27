@@ -1,4 +1,5 @@
 import { resolveParams } from "@/engine/params";
+import { relevantReviews, SITE_REVIEW_PARAMS } from "@/engine/site-reviews";
 import { templates } from "@/engine/templates";
 import type {
   ParamDefinition,
@@ -41,6 +42,8 @@ const ONLY_IF: Record<string, (v: Record<string, ParamValue>) => boolean> = {
   hardscapeSurface: (v) => Number(v.hardscapeShare) > 0,
 };
 
+const REVIEW_IDS = new Set(SITE_REVIEW_PARAMS.map((d) => d.id));
+
 /** Existing buildings in the way outrank everything: they can add a lot and only the user knows. */
 const DEMOLITION_BOOST = 4;
 
@@ -66,6 +69,9 @@ function relevant(
   values: Record<string, ParamValue>,
 ) {
   if (NOT_ASKED.has(def.id)) return false;
+  // Site reviews: only where the map found that school, rail line, etc.
+  if (REVIEW_IDS.has(def.id))
+    return relevantReviews(c.siteFlags ?? []).has(def.id);
   if (def.id === "demolishExisting") return (c.existing?.count ?? 0) > 0;
   if (def.costImpact < MIN_IMPACT) return false;
   if (c.type === "structure")

@@ -540,11 +540,19 @@
         "soilCondition": "What is the soil like under {name}?",
         "rockExpected": "Is there bedrock close to the surface along {name}?",
         "trafficStaging": "How will traffic get through while {name} is under construction?",
-        "utilityConflicts": "Are gas, hydro or telecom lines in the way on {name}?"
+        "utilityConflicts": "Are gas, hydro or telecom lines in the way on {name}?",
+        "schoolReview": "Has a review confirmed the school near {name} needs no special measures?",
+        "hospitalReview": "Has a review confirmed the hospital near {name} needs no special measures?",
+        "waterwayReview": "Is the watercourse permit for {name} settled?",
+        "railReview": "Has the railway reviewed the work near {name}?"
       },
       "park": {
         "hardscapeShare": "How much of {name} is paved (plazas, courts, paths)?",
-        "demolishExisting": "Should the existing buildings where {name} goes be demolished?"
+        "demolishExisting": "Should the existing buildings where {name} goes be demolished?",
+        "schoolReview": "Has a review confirmed the school near {name} needs no special measures?",
+        "hospitalReview": "Has a review confirmed the hospital near {name} needs no special measures?",
+        "waterwayReview": "Is the watercourse permit for {name} settled?",
+        "railReview": "Has the railway reviewed the work near {name}?"
       },
       "building": {
         "quality": "What level of finish is {name}?",
@@ -556,7 +564,11 @@
         "iceRink": "Will {name} have an indoor ice rink?",
         "apparatusBays": "How many truck bays does {name} need?",
         "sallyPort": "Does {name} need a sally port and holding cells?",
-        "demolishExisting": "Should the existing buildings where {name} goes be demolished?"
+        "demolishExisting": "Should the existing buildings where {name} goes be demolished?",
+        "schoolReview": "Has a review confirmed the school near {name} needs no special measures?",
+        "hospitalReview": "Has a review confirmed the hospital near {name} needs no special measures?",
+        "waterwayReview": "Is the watercourse permit for {name} settled?",
+        "railReview": "Has the railway reviewed the work near {name}?"
       },
       "structure": {
         "spanM": "How wide is the culvert opening at {name}?",
@@ -565,12 +577,20 @@
         "deckLengthM": "How long is the bridge at {name}?",
         "deckWidthM": "How wide is the bridge deck at {name}?",
         "structureType": "What type of bridge is {name}?",
-        "capacityTier": "How big is the pumping station at {name}?"
+        "capacityTier": "How big is the pumping station at {name}?",
+        "schoolReview": "Has a review confirmed the school near {name} needs no special measures?",
+        "hospitalReview": "Has a review confirmed the hospital near {name} needs no special measures?",
+        "waterwayReview": "Is the watercourse permit for {name} settled?",
+        "railReview": "Has the railway reviewed the work near {name}?"
       },
       "parking": {
         "surface": "What surface will {name} have?",
         "lighting": "Will {name} be lit at night?",
-        "demolishExisting": "Should the existing buildings where {name} goes be demolished?"
+        "demolishExisting": "Should the existing buildings where {name} goes be demolished?",
+        "schoolReview": "Has a review confirmed the school near {name} needs no special measures?",
+        "hospitalReview": "Has a review confirmed the hospital near {name} needs no special measures?",
+        "waterwayReview": "Is the watercourse permit for {name} settled?",
+        "railReview": "Has the railway reviewed the work near {name}?"
       }
     },
     "appliesTo": "Applies to {names}",
@@ -584,7 +604,11 @@
     },
     "askAll": {
       "road": {
-        "roadClass": "What kind of roads are these?"
+        "roadClass": "What kind of roads are these?",
+        "schoolReview": "Has a review confirmed the nearby school needs no special measures?",
+        "hospitalReview": "Has a review confirmed the nearby hospital needs no special measures?",
+        "waterwayReview": "Are the watercourse permits settled?",
+        "railReview": "Has the railway reviewed the work near the rail line?"
       },
       "building": {
         "quality": "What level of finish are the buildings?",
@@ -592,7 +616,11 @@
         "basement": "Do the buildings need basements?",
         "siteServicing": "How hard is it to connect the buildings to water, sewer and power?",
         "apparatusBays": "How many truck bays do the buildings need?",
-        "sallyPort": "Do the buildings need a sally port and holding cells?"
+        "sallyPort": "Do the buildings need a sally port and holding cells?",
+        "schoolReview": "Has a review confirmed the nearby school needs no special measures?",
+        "hospitalReview": "Has a review confirmed the nearby hospital needs no special measures?",
+        "waterwayReview": "Are the watercourse permits settled?",
+        "railReview": "Has the railway reviewed the work near the rail line?"
       },
       "structure": {
         "spanM": "How wide are the culvert openings?",
@@ -601,7 +629,23 @@
         "deckLengthM": "How long are the bridges?",
         "deckWidthM": "How wide are the bridge decks?",
         "structureType": "What type of bridges are these?",
-        "capacityTier": "How big are the pumping stations?"
+        "capacityTier": "How big are the pumping stations?",
+        "schoolReview": "Has a review confirmed the nearby school needs no special measures?",
+        "hospitalReview": "Has a review confirmed the nearby hospital needs no special measures?",
+        "waterwayReview": "Are the watercourse permits settled?",
+        "railReview": "Has the railway reviewed the work near the rail line?"
+      },
+      "park": {
+        "schoolReview": "Has a review confirmed the nearby school needs no special measures?",
+        "hospitalReview": "Has a review confirmed the nearby hospital needs no special measures?",
+        "waterwayReview": "Are the watercourse permits settled?",
+        "railReview": "Has the railway reviewed the work near the rail line?"
+      },
+      "parking": {
+        "schoolReview": "Has a review confirmed the nearby school needs no special measures?",
+        "hospitalReview": "Has a review confirmed the nearby hospital needs no special measures?",
+        "waterwayReview": "Are the watercourse permits settled?",
+        "railReview": "Has the railway reviewed the work near the rail line?"
       }
     }
   },
@@ -638,6 +682,7 @@
     "notices": {
       "ai_busy": "The AI assistant is busy, so only simple keyword matching was used.",
       "ai_unavailable": "The AI assistant is unavailable, so only simple keyword matching was used (text files only)."
-    }
+    },
+    "relaid": "Sizes changed, so the layout was redone to fit."
   }
 }

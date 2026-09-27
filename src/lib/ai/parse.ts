@@ -21,13 +21,17 @@ import { type AIProvider, AIUnavailableError } from "./provider";
 const MAX_PER_ITEM = 20;
 
 /** Size hints A's smart start / Generate layout read; not engine params (geometry wins once drawn). */
-const SIZE_HINTS: Partial<Record<ComponentType, ParamDefinition[]>> = {
-  building: [hint("storeys", "storeys", 1, 60)],
-  park: [hint("areaM2", "m²", 1, 5_000_000)],
-  road: [hint("lengthM", "m", 1, 50_000)],
-  parking: [hint("areaM2", "m²", 1, 500_000)],
+export const SIZE_HINTS: Partial<Record<ComponentType, ParamDefinition[]>> = {
+  building: [hint("storeys", "storeys", 1, 60, "Storeys", "Étages")],
+  park: [hint("areaM2", "m²", 1, 5_000_000, "Park area", "Superficie du parc")],
+  road: [
+    hint("lengthM", "m", 1, 50_000, "Road length", "Longueur de la route"),
+  ],
+  parking: [
+    hint("areaM2", "m²", 1, 500_000, "Lot area", "Superficie du stationnement"),
+  ],
   // Sizes the generated shape, which is what a custom element is priced from.
-  custom: [hint("areaM2", "m²", 1, 50_000_000)],
+  custom: [hint("areaM2", "m²", 1, 50_000_000, "Area", "Superficie")],
 };
 
 function hint(
@@ -35,8 +39,10 @@ function hint(
   unit: string,
   min: number,
   max: number,
+  en: string,
+  fr: string,
 ): ParamDefinition {
-  const label = { en: `Size hint: ${id}`, fr: `Indication de taille : ${id}` };
+  const label = { en, fr };
   return {
     id,
     label,
