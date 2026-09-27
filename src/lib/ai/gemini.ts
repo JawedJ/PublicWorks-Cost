@@ -20,8 +20,8 @@ export function createGeminiProvider(apiKey: string): AIProvider {
     jsonSchema?: unknown;
     files?: AIFile[];
   }): Promise<string> {
-    const send = () =>
-      fetch(`${API}/${opts.fast ? fastModel : model}:generateContent`, {
+    const send = (useModel = opts.fast ? fastModel : model) =>
+      fetch(`${API}/${useModel}:generateContent`, {
         method: "POST",
         headers: {
           "content-type": "application/json",
@@ -59,6 +59,8 @@ export function createGeminiProvider(apiKey: string): AIProvider {
         await new Promise((r) => setTimeout(r, 1500));
         res = await send();
       }
+      // Still overloaded: the lighter model is usually available.
+      if (res.status === 503 && !opts.fast) res = await send(fastModel);
     } catch {
       throw new AIUnavailableError("timeout");
     }
