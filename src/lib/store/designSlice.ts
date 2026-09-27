@@ -91,6 +91,8 @@ export type DesignSlice = DesignSnapshot & {
   showIssues: boolean;
   /** Component hovered in the estimate panel (bar chart), highlighted on the map. */
   hoveredComponentId: string | null;
+  /** A "Things to check" entry clicked in the panel: its components and issue are highlighted on the map. */
+  flagFocus: { key: string; code: string; componentIds: string[] } | null;
   unitSystem: UnitSystem;
   /** Undo/redo stacks; most recent last. */
   past: DesignSnapshot[];
@@ -116,6 +118,7 @@ export type DesignSlice = DesignSnapshot & {
   setShowZoning: (on: boolean) => void;
   setShowIssues: (on: boolean) => void;
   setHoveredComponent: (id: string | null) => void;
+  setFlagFocus: (focus: DesignSlice["flagFocus"]) => void;
   setUnitSystem: (units: UnitSystem) => void;
 
   /** Adds a component; it is 'drawn' if it has geometry, otherwise 'planned'. Returns its id. */
@@ -307,6 +310,7 @@ export const createDesignSlice: StateCreator<Store, [], [], DesignSlice> = (
     showZoning: false,
     showIssues: true,
     hoveredComponentId: null,
+    flagFocus: null,
     unitSystem: "metric",
     past: [],
     future: [],
@@ -321,6 +325,7 @@ export const createDesignSlice: StateCreator<Store, [], [], DesignSlice> = (
       set({
         selectedComponentId: componentId,
         selectedElement: componentId ? { componentId } : null,
+        flagFocus: null,
       }),
     selectElement: (element) =>
       set({
@@ -332,6 +337,7 @@ export const createDesignSlice: StateCreator<Store, [], [], DesignSlice> = (
     setShowZoning: (showZoning) => set({ showZoning }),
     setShowIssues: (showIssues) => set({ showIssues }),
     setHoveredComponent: (hoveredComponentId) => set({ hoveredComponentId }),
+    setFlagFocus: (flagFocus) => set({ flagFocus }),
     setUnitSystem: (unitSystem) => set({ unitSystem }),
 
     addComponent: (input) => get().addComponents([input])[0]!,

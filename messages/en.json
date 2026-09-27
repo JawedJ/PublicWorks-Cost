@@ -286,6 +286,7 @@
     "overrunHeading": "Overrun risk",
     "overrunChance": "{pct}% chance of going over",
     "overrunTypical": "Similar projects typically run {pct}% over budget",
+    "flagShowOnMap": "Show on the map (click again to clear)",
     "projectWide": "Whole project",
     "severity": {
       "high": "High",

@@ -146,6 +146,7 @@ export function IssueHighlights({
   const components = useStore((s) => s.components);
   const site = useStore((s) => s.project.siteContext);
   const show = useStore((s) => s.showIssues);
+  const focus = useStore((s) => s.flagFocus);
   const viewMode = useStore((s) => s.viewMode);
   const tooltip = useRef<Popup | null>(null);
 
@@ -158,12 +159,23 @@ export function IssueHighlights({
         type: "FeatureCollection",
         features: issueHighlights(
           components,
-          estimate?.flags ?? [],
+          // A clicked entry shows just that issue (even with the toggle off).
+          focus
+            ? (estimate?.flags ?? [])
+                .filter((f) => f.code === focus.code)
+                .map((f) => ({
+                  ...f,
+                  componentIds: f.componentIds.filter((id) =>
+                    focus.componentIds.includes(id),
+                  ),
+                }))
+            : (estimate?.flags ?? []),
           site,
           locale,
         ),
       });
-      const visible = show && viewMode !== "site3d" ? "visible" : "none";
+      const visible =
+        (show || focus) && viewMode !== "site3d" ? "visible" : "none";
       for (const id of LAYERS)
         if (map.getLayer(id)) map.setLayoutProperty(id, "visibility", visible);
     };
@@ -172,7 +184,7 @@ export function IssueHighlights({
     return () => {
       map.off("style.load", update);
     };
-  }, [map, estimate, components, site, locale, show, viewMode]);
+  }, [map, estimate, components, site, locale, show, focus, viewMode]);
 
   // Hover: what the highlight is about.
   useEffect(() => {

@@ -13,10 +13,13 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { groupFlags } from "@/lib/estimate/group-flags";
 import type { Flag } from "@/lib/schemas";
+import { useStore } from "@/lib/store/store";
+import { cn } from "@/lib/utils";
 
-// P3.9b: flags list in the panel, most severe first. A owns the map markers (P3.9a).
-// Collapsed by default so it doesn't crowd the panel. Read-only explanations.
-// The same issue on several components is one entry listing each of them.
+// P3.9b: flags list in the panel, most severe first. Collapsed by default so it
+// doesn't crowd the panel. The same issue on several components is one entry
+// listing each of them. Clicking an entry (or one of its rows) highlights the
+// components it applies to, and the issue itself, on the map; again to clear.
 
 const ICON = { high: OctagonAlert, warning: TriangleAlert, info: Info };
 const BADGE = {
@@ -33,7 +36,39 @@ type Props = {
 
 export function FlagsList({ flags, names }: Props) {
   const t = useTranslations("estimate");
+  const focus = useStore((s) => s.flagFocus);
+  const setFocus = useStore((s) => s.setFlagFocus);
   if (flags.length === 0) return null;
+  /** Highlight these components for this issue, or clear if already shown. */
+  const toggle = (key: string, code: string, componentIds: string[]) =>
+    setFocus(
+      focus?.key === key || componentIds.length === 0
+        ? null
+        : { key, code, componentIds },
+    );
+  const clickable = (
+    key: string,
+    code: string,
+    componentIds: string[],
+  ): React.HTMLAttributes<HTMLElement> =>
+    componentIds.length === 0
+      ? {}
+      : {
+          role: "button",
+          tabIndex: 0,
+          title: t("flagShowOnMap"),
+          "aria-pressed": focus?.key === key,
+          onClick: (e) => {
+            e.stopPropagation();
+            toggle(key, code, componentIds);
+          },
+          onKeyDown: (e) => {
+            if (e.key !== "Enter" && e.key !== " ") return;
+            e.preventDefault();
+            e.stopPropagation();
+            toggle(key, code, componentIds);
+          },
+        };
   const groups = groupFlags(flags);
   const high = groups.filter((g) => g.severity === "high").length;
   const nameList = (ids: string[]) =>
@@ -62,10 +97,19 @@ export function FlagsList({ flags, names }: Props) {
                 const Icon = ICON[g.severity];
                 const listed =
                   g.items.length > 1 || g.items.some((i) => i.detail);
+                const all = [
+                  ...new Set(g.items.flatMap((i) => i.componentIds)),
+                ];
                 return (
                   <Alert
                     key={g.id}
                     variant={g.severity === "high" ? "destructive" : "default"}
+                    {...clickable(g.id, g.code, all)}
+                    className={cn(
+                      all.length > 0 &&
+                        "cursor-pointer transition-colors hover:bg-muted/50 focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",
+                      focus?.key === g.id && "ring-2 ring-amber-400",
+                    )}
                   >
                     <Icon />
                     <AlertTitle className="flex flex-wrap items-center gap-2">
@@ -87,7 +131,20 @@ export function FlagsList({ flags, names }: Props) {
                       {listed ? (
                         <ul className="flex list-disc flex-col gap-1 pl-4 text-xs">
                           {g.items.map((i, n) => (
-                            <li key={n}>
+                            <li
+                              key={n}
+                              {...clickable(
+                                `${g.id}:${n}`,
+                                g.code,
+                                i.componentIds,
+                              )}
+                              className={cn(
+                                i.componentIds.length > 0 &&
+                                  "cursor-pointer rounded-sm hover:underline",
+                                focus?.key === `${g.id}:${n}` &&
+                                  "font-medium text-amber-300",
+                              )}
+                            >
                               {names && (
                                 <span className="font-medium">
                                   {nameList(i.componentIds)}

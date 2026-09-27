@@ -520,26 +520,46 @@ export function ComponentLayers() {
     ]);
   }, [map, selectedId, components]);
 
-  // Hovering a component elsewhere (the bar chart) lights it up here.
+  // Hovering a component elsewhere (the bar chart), or clicking a "Things to
+  // check" entry, lights those components up here.
   const hoveredId = useStore((s) => s.hoveredComponentId);
+  const flagFocus = useStore((s) => s.flagFocus);
   useEffect(() => {
     if (!map?.getLayer("pw-hover-line")) return;
-    map.setFilter("pw-hover-fill", [
-      "all",
-      isPolygon,
-      selectedFilter(hoveredId),
-    ]);
+    const ids = hoveredId ? [hoveredId] : (flagFocus?.componentIds ?? []);
+    const of: ExpressionSpecification = [
+      "in",
+      ["get", "componentId"],
+      ["literal", ids],
+    ];
+    map.setFilter("pw-hover-fill", ["all", isPolygon, of]);
     map.setFilter("pw-hover-line", [
       "all",
       ["!=", ["geometry-type"], "Point"],
-      selectedFilter(hoveredId),
+      of,
     ]);
-    map.setFilter("pw-hover-point", [
-      "all",
-      isPoint,
-      selectedFilter(hoveredId),
-    ]);
-  }, [map, hoveredId, components]);
+    map.setFilter("pw-hover-point", ["all", isPoint, of]);
+  }, [map, hoveredId, flagFocus, components]);
+
+  // A clicked "Things to check" entry: bring its components into view.
+  useEffect(() => {
+    if (!map || !flagFocus) return;
+    const boxes = useStore
+      .getState()
+      .components.filter((c) => flagFocus.componentIds.includes(c.id))
+      .map(componentBounds)
+      .filter((b): b is NonNullable<typeof b> => b !== null);
+    if (!boxes.length) return;
+    map.fitBounds(
+      [
+        Math.min(...boxes.map((b) => b[0])),
+        Math.min(...boxes.map((b) => b[1])),
+        Math.max(...boxes.map((b) => b[2])),
+        Math.max(...boxes.map((b) => b[3])),
+      ],
+      { padding: 120, maxZoom: 17, duration: 600 },
+    );
+  }, [map, flagFocus]);
 
   return (
     <>
