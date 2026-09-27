@@ -125,7 +125,14 @@ export function formatParam(def: ParamDefinition, value: ParamValue): string {
     return (
       def.options?.find((o) => o.value === value)?.label.en ?? String(value)
     );
-  return def.unit ? `${value} ${def.unit}` : String(value);
+  const n = Number(value);
+  // Shares stored as fractions read as percentages ("30%", not "0.3").
+  if (/(Share|Fraction)$/.test(def.id) && n <= 1)
+    return `${Math.round(n * 100)}%`;
+  const num = new Intl.NumberFormat("en-CA", {
+    maximumFractionDigits: 2,
+  }).format(n);
+  return def.unit ? `${num} ${def.unit}` : num;
 }
 
 export function buildReport(

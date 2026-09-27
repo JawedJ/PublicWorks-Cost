@@ -46,14 +46,16 @@ export async function buildReportPdf(
       y = MARGIN;
     }
   };
+  let section = 0;
   const heading = (text: string) => {
-    ensure(40);
+    ensure(60);
     y += 10;
+    section += 1;
     doc
       .setFont("helvetica", "bold")
       .setFontSize(13)
       .setTextColor(...INK);
-    doc.text(clean(text), MARGIN, y);
+    doc.text(clean(`${section}. ${text}`), MARGIN, y);
     doc.setDrawColor(...ACCENT).setLineWidth(1.5);
     doc.line(MARGIN, y + 5, MARGIN + 36, y + 5);
     y += 20;
@@ -70,6 +72,38 @@ export async function buildReportPdf(
       y += size * 1.4;
     }
     y += 4;
+  };
+  const subheading = (text: string, note?: string) => {
+    ensure(50);
+    y += 4;
+    doc
+      .setFont("helvetica", "bold")
+      .setFontSize(10.5)
+      .setTextColor(...INK);
+    doc.text(clean(text), MARGIN, y);
+    if (note) {
+      const w = doc.getTextWidth(clean(text));
+      doc
+        .setFont("helvetica", "normal")
+        .setFontSize(9)
+        .setTextColor(...MUTED);
+      doc.text(clean(note), MARGIN + w + 8, y);
+    }
+    y += 8;
+  };
+  const bullet = (text: string, size = 9.5) => {
+    doc
+      .setFont("helvetica", "normal")
+      .setFontSize(size)
+      .setTextColor(...INK);
+    const lines = doc.splitTextToSize(clean(text), inner - 14) as string[];
+    lines.forEach((line, i) => {
+      ensure(size * 1.45);
+      if (i === 0) doc.text("•", MARGIN + 2, y);
+      doc.text(line, MARGIN + 14, y);
+      y += size * 1.45;
+    });
+    y += 3;
   };
   const table = (
     head: string[],
@@ -186,6 +220,45 @@ export async function buildReportPdf(
   );
   y += 108;
 
+  // Report details, so the cover stands on its own.
+  autoTable(doc, {
+    startY: y,
+    margin: { left: MARGIN, right: MARGIN },
+    body: [
+      ["Project", r.projectName],
+      ["Municipality", r.municipality || "Ontario"],
+      [
+        "Scope",
+        `${r.components.length} components: ${r.components.map((c) => c.name).join(", ")}`,
+      ],
+      ["Construction start", r.startDate],
+      ["Construction duration", `About ${r.durationMonths} months`],
+      [
+        "Estimate class",
+        `Class ${r.headline.estimateClass} (expected accuracy ${r.headline.lowPct}% to +${r.headline.highPct}%)`,
+      ],
+      [
+        "Recommended budget",
+        `${money.format(r.headline.p80)} (P80: estimate plus recommended contingency)`,
+      ],
+      ["Report date", r.generatedOn],
+    ].map((row) => row.map(clean)),
+    theme: "plain",
+    styles: {
+      font: "helvetica",
+      fontSize: 9.5,
+      cellPadding: { top: 3, bottom: 3, left: 0, right: 6 },
+      textColor: INK,
+    },
+    columnStyles: { 0: { cellWidth: 130, textColor: MUTED } },
+  });
+  y = endY() + 14;
+  para(
+    "Purpose: this report gives a planning-level capital cost estimate to support budgeting and early decisions. It states the expected range of cost, the main risks, and the assumptions behind the figures.",
+    9,
+    MUTED,
+  );
+
   if (mapPng) {
     const props = doc.getImageProperties(mapPng);
     const maxH = H - y - MARGIN - (r.sampleData ? 60 : 36);
@@ -290,7 +363,7 @@ export async function buildReportPdf(
     ["Component", "Type", "Class", "P10", "P50", "P90", "Share"],
     byCost.map((c) => [
       c.name,
-      c.type,
+      c.type.charAt(0).toUpperCase() + c.type.slice(1),
       c.estimateClass,
       compact.format(c.p10),
       compact.format(c.p50),
@@ -344,43 +417,55 @@ export async function buildReportPdf(
   }
 
   heading("Assumptions");
-  // Compact: settings on one line, then one entry per component with its inputs.
-  para(r.settings.map((s) => `${s.label}: ${s.value}`).join("  ·  "), 9);
-  const byComponent = new Map<string, string[]>();
+  para(
+    "The estimate rests on the project settings and design inputs below. Inputs the project team has not yet confirmed use typical values for that kind of component; changing any of them changes the estimate.",
+    9.5,
+  );
+  subheading(`${section}.1  Project basis`);
+  table(
+    ["Setting", "Assumed value"],
+    r.settings.map((s) => [s.label, s.value]),
+    { widths: { 0: 170 } },
+  );
+  subheading(`${section}.2  Design inputs by component`);
+  y += 8;
+  const typeOf = new Map(r.components.map((c) => [c.name, c.type]));
+  const byComponent = new Map<string, { input: string; value: string }[]>();
   for (const a of r.assumptions)
     byComponent.set(a.component, [
       ...(byComponent.get(a.component) ?? []),
-      `${a.parameter}: ${a.value}`,
+      { input: a.parameter, value: a.value },
     ]);
-  for (const [name, items] of byComponent) {
-    ensure(26);
-    doc
-      .setFont("helvetica", "bold")
-      .setFontSize(9.5)
-      .setTextColor(...INK);
-    doc.text(clean(`• ${name}`), MARGIN, y);
-    y += 12;
-    doc.setFont("helvetica", "normal").setFontSize(9);
-    const lines = doc.splitTextToSize(
-      clean(items.join("; ")),
-      inner - 10,
-    ) as string[];
-    for (const line of lines) {
-      ensure(12);
-      doc.text(line, MARGIN + 10, y);
-      y += 12;
-    }
-    y += 4;
+  for (const [name, inputs] of byComponent) {
+    // Keep a component's title with at least the start of its table.
+    ensure(70);
+    const type = typeOf.get(name) ?? "";
+    subheading(name, type.charAt(0).toUpperCase() + type.slice(1));
+    table(
+      ["Input", "Assumed value"],
+      inputs.map((i) => [i.input, i.value]),
+      { widths: { 0: 250 } },
+    );
+    y -= 4;
   }
   y += 6;
 
   heading("Data sources");
-  for (const s of r.sources) para(`- ${s}`, 9);
+  for (const s of r.sources) bullet(s, 9);
   para(
     "Full line items with quantities, unit prices and their sources are in the accompanying Excel workbook.",
     9,
     MUTED,
   );
+
+  heading("Limitations");
+  for (const text of [
+    `This is a Class ${r.headline.estimateClass} planning estimate prepared before detailed design. It is suitable for budgeting and comparing options, not for tendering or contract award.`,
+    "Quantities come from the concept layout and typical values; actual quantities will change with survey, geotechnical investigation and design.",
+    "Prices are escalated to the construction midpoint and include a recommended contingency based on a risk simulation. Market conditions at tender may differ.",
+    "Site checks (nearby schools, watercourses, rail, zoning) use open map data and are advisory. Permits and approvals must be confirmed with the relevant authorities.",
+  ])
+    bullet(text, 9);
 
   // Footer on every page.
   const pages = doc.getNumberOfPages();
