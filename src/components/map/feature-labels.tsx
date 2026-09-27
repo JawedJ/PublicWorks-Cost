@@ -78,17 +78,17 @@ function addLayer(map: MapLibreMap) {
     layout: {
       "text-field": ["get", "text"],
       "text-font": ["Noto Sans Regular"],
-      "text-size": 12,
+      "text-size": 26,
       // Sits on the shape's top edge; nudged below or aside when two collide.
       "text-variable-anchor": ["bottom", "top", "left", "right"],
-      "text-radial-offset": 0.4,
+      "text-radial-offset": 0.9,
       "text-allow-overlap": false,
-      "text-max-width": 12,
+      "text-max-width": 14,
     },
     paint: {
       "text-color": "#111827",
       "text-halo-color": "#ffffff",
-      "text-halo-width": 2,
+      "text-halo-width": 3,
     },
   });
 }
