@@ -5,6 +5,7 @@ import { AIUnavailableError, type AIProvider, noneProvider } from "./provider";
 const raw = {
   name: "Neighbourhood hub",
   municipality: "Waterloo",
+  site: "",
   startDate: "2027-05-01",
   components: [
     {

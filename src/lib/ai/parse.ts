@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { findMunicipality, findSite } from "@/lib/geo/place";
 import { keywordParse } from "@/components/landing/keyword-parse";
 import { parkFeatures, refData } from "@/data";
 import { autoPricing, customBases } from "@/engine/templates/custom";
@@ -65,6 +66,7 @@ function paramDefs(type: ComponentType): ParamDefinition[] {
 const AiDraftSchema = z.object({
   name: z.string(),
   municipality: z.string(),
+  site: z.string(),
   startDate: z.string(),
   components: z.array(
     z.object({
@@ -130,6 +132,7 @@ Rules:
 - Never output costs or prices.
 - Resolve relative dates ("next spring") from today's date.
 - name: short project name. municipality, startDate (YYYY-MM-DD), spatialHint: empty string if not stated.
+- municipality is just the city or town name ("Waterloo", not "north Waterloo"). site: where in it, as written: a street, intersection, landmark, neighbourhood or part of town ("north end near Laurel Creek", "King St and University Ave"); empty string if not stated.
 - Write names in the user's language.
 
 Catalog:
@@ -228,6 +231,7 @@ export function toProjectDraft(
   return {
     name: raw.name.trim() || components[0]?.name || "Project",
     ...(raw.municipality.trim() && { municipality: raw.municipality.trim() }),
+    ...(raw.site.trim() && { site: raw.site.trim() }),
     ...(startDate.success && { startDate: startDate.data }),
     components,
   };
@@ -247,7 +251,14 @@ export function fallbackDraft(
       evidence: {},
     };
   });
-  return { name: prompt.trim().slice(0, 60), components };
+  const municipality = findMunicipality(prompt);
+  const site = findSite(prompt, municipality);
+  return {
+    name: prompt.trim().slice(0, 60),
+    ...(municipality && { municipality }),
+    ...(site && { site }),
+    components,
+  };
 }
 
 const cache = new Map<string, ParseResponse>();

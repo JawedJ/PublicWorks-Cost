@@ -351,6 +351,8 @@
   "buildList": {
     "projectName": "Project name",
     "municipality": "Municipality",
+    "site": "Where in it",
+    "sitePlaceholder": "A street, intersection or landmark (optional)",
     "startDate": "Construction start",
     "fallbackNote": "AI assistant unavailable, so this list comes from keyword matching. Check it before continuing.",
     "heading": "{count, plural, =0 {Build list} one {Build list (# component)} other {Build list (# components)}}",

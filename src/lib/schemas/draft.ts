@@ -26,6 +26,8 @@ export type BuildListItem = z.infer<typeof BuildListItemSchema>;
 export const ProjectDraftSchema = z.object({
   name: z.string().min(1),
   municipality: z.string().optional(),
+  /** Where in the municipality, as written: "near Laurel Creek", "north end", "King and University". */
+  site: z.string().max(200).optional(),
   /** ISO date guess, e.g. "2027-05-01". */
   startDate: z.iso.date().optional(),
   components: z.array(BuildListItemSchema),

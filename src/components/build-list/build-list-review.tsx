@@ -88,6 +88,17 @@ export function BuildListReview({ initial, source, onConfirm, onBack }: Props) {
           />
         </label>
         <label className="flex flex-col gap-1 text-sm">
+          <span className="font-medium">{t("site")}</span>
+          <input
+            className={input}
+            value={draft.site ?? ""}
+            placeholder={t("sitePlaceholder")}
+            onChange={(e) =>
+              setDraft({ ...draft, site: e.target.value || undefined })
+            }
+          />
+        </label>
+        <label className="flex flex-col gap-1 text-sm">
           <span className="font-medium">{t("startDate")}</span>
           <input
             type="date"

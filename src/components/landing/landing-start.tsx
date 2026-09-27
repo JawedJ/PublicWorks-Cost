@@ -46,7 +46,7 @@ export function LandingStart() {
         source={parsed.source}
         onConfirm={(d) => {
           applyDraft(d);
-          void locateMunicipality(locale);
+          void locateMunicipality(locale, d.site);
           router.push("/workspace");
         }}
         onBack={() => setParsed(null)}

@@ -1,6 +1,7 @@
 import { fallbackDraft } from "@/lib/ai/parse";
 import { PLANNED_FEATURES_PARAM } from "@/lib/geo/generate";
 import { geocode } from "@/lib/geo/geocode";
+import { directionView, kmBetween, siteQuery, zoomFor } from "@/lib/geo/place";
 import { regionForPlace } from "@/lib/geo/region";
 import {
   type ParseResponse,
@@ -88,26 +89,51 @@ export function applyDraft(draft: ProjectDraft): string[] {
 const maptilerKey = process.env.NEXT_PUBLIC_MAPTILER_KEY || undefined;
 
 /**
- * Looks up the project's municipality and moves the project (and so the map)
- * there; also sets the pricing region from the result if the name alone didn't.
- * Never throws: not found or offline → the project stays where it is.
+ * Moves the project (and so the map) to where it is: the site within the
+ * municipality when one is given ("near Laurel Creek" → that creek, street
+ * level; "north end" → that part of town), else the municipality itself, close
+ * enough to work in. Also sets the pricing region from the result if the name
+ * alone didn't. Never throws: not found or offline → the project stays put.
  */
-export async function locateMunicipality(locale: string): Promise<void> {
+export async function locateMunicipality(
+  locale: string,
+  site?: string,
+): Promise<void> {
   const { project } = useStore.getState();
   const place = project.municipality.trim();
   if (!place) return;
+  const opts = { language: locale, maptilerKey };
   try {
-    const [hit] = await geocode(place, { language: locale, maptilerKey });
+    const [city] = await geocode(place, opts);
     // The user may have started another project meanwhile.
-    const now = useStore.getState().project;
-    if (!hit || now.id !== project.id) return;
-    const [lng, lat] = hit.center;
-    // Zoom that fits the place's extent, at least city level (12) and at most 15.
-    const span = hit.bbox ? Math.max(hit.bbox[2] - hit.bbox[0], 1e-3) : 0.1;
-    const zoom = Math.min(15, Math.max(12, Math.log2(360 / span) - 0.5));
-    const region = regionForPlace(place) ?? regionForPlace(hit.label);
+    if (!city || useStore.getState().project.id !== project.id) return;
+    let view: { lng: number; lat: number; zoom: number } = {
+      lng: city.center[0],
+      lat: city.center[1],
+      // Close enough to see streets, even for a whole city.
+      zoom: zoomFor(city, 13.5, 15),
+    };
+    if (site?.trim()) {
+      const query = siteQuery(site, place);
+      const hits = query ? await geocode(`${query}, ${place}`, opts) : [];
+      // A match in (or right by) the municipality, and not the municipality itself.
+      const spot = hits.find(
+        (h) =>
+          kmBetween(h.center, city.center) < 25 &&
+          !(kmBetween(h.center, city.center) < 0.3 && h.label === city.label),
+      );
+      if (spot)
+        view = {
+          lng: spot.center[0],
+          lat: spot.center[1],
+          zoom: zoomFor(spot, 15, 16.5),
+        };
+      else view = directionView(city, site) ?? view;
+    }
+    if (useStore.getState().project.id !== project.id) return;
+    const region = regionForPlace(place) ?? regionForPlace(city.label);
     useStore.getState().updateProjectInfo({
-      location: { lng, lat, zoom },
+      location: view,
       ...(region && { region }),
     });
   } catch {
