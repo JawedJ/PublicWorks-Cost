@@ -58,7 +58,7 @@ Run typecheck, lint, and all tests; fix failures; confirm the phase's "Done when
 - Validate every API route body with zod. Rate-limit AI and geo routes.
 - All user-facing strings go through next-intl (`messages/en.json`). No hard-coded UI text. English only: French is dropped (SPEC 17), don't add to `messages/fr.json`.
 - Metric units first, CAD currency, `en-CA` formatting via `Intl`.
-- Seed data is sample data: keep the sample-data disclaimers visible (the top-bar badge was removed per the human).
+- Seed data is sample data: sample data stays labelled on the /data page and in line item sources; the top-bar badge and the PDF demo disclaimers were removed per the human (demo pitch).
 - Public data (StatCan BCPI, CanadaBuys) is fetched only by the scripts in `scripts/` and committed as JSON; never call these services at runtime. CanadaBuys records are evidence only and never feed the cost engine. Always show source, date, and limits.
 
 ## Conventions

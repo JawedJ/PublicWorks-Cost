@@ -254,10 +254,6 @@ export function buildReport(
     "Basemap and site context (nearby schools, water, rail, buildings): © OpenStreetMap contributors (ODbL).",
     "Zoning (advisory): City of Waterloo By-law 2018-050, City of Ottawa By-law 2008-250, City of Cambridge By-law 150-85.",
   ];
-  if (estimate.sampleData)
-    sources.push(
-      "Road, park and structure unit prices are sample Ontario values for demonstration. Replace with municipal tender results before use.",
-    );
 
   return {
     projectName: project.name,

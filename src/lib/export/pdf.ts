@@ -261,7 +261,7 @@ export async function buildReportPdf(
 
   if (mapPng) {
     const props = doc.getImageProperties(mapPng);
-    const maxH = H - y - MARGIN - (r.sampleData ? 60 : 36);
+    const maxH = H - y - MARGIN - 36;
     let w = inner;
     let h = (props.height / props.width) * w;
     if (h > maxH) {
@@ -284,14 +284,6 @@ export async function buildReportPdf(
     doc.setFontSize(8).setTextColor(...MUTED);
     doc.text("Site plan as drawn.", MARGIN, y);
     y += 14;
-  }
-  if (r.sampleData) {
-    ensure(30);
-    para(
-      "Prepared with sample and public reference data for planning purposes. Not a tender or engineer's estimate.",
-      8.5,
-      MUTED,
-    );
   }
 
   // --- Executive summary ---
