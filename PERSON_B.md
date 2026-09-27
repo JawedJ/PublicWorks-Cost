@@ -130,6 +130,8 @@ Flags only; never block, never change the estimate. Do Waterloo first (demo city
 - [x] P6.3 Site-context flags in engine + reports; auto-filled params (uses A's `/api/geo/context`) · Stretch
 - [x] P7.6 Document upload (per the human): `src/components/questions/document-upload.tsx`, `src/lib/ai/extract.ts`, `/api/ai/extract`; review then apply as ai_document
 - [x] General questions (per the human): one per type + param project-wide (`rank.ts`), group wording (`questions.groups`, `questions.askAll`), one Save for all listed
+- [x] Site reviews + document-driven sizes and relayout (per the human): `src/engine/site-reviews.ts`, extraction `resizable` components, `DocumentUpload.relayout()` calls `generateLayout` with the same seed
+- Request for A: after a document makes components bigger, `generateLayout` keeps the existing project area, so things can land outside it ("extends outside the project area"). Could the auto-picked area grow when the build list's sizes change?
 - Note for A: per the human I removed the Colour by cost button from `view-switcher.tsx` (your file; store flag left in place, always off) and deleted `src/lib/export/_tmp_pdf.test.ts` (it wrote to your home folder and failed elsewhere).
 - [ ] P9.6 Optional concept image provider (disabled without key) · Stretch
 

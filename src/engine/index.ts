@@ -16,6 +16,11 @@ import type {
   Scenario,
 } from "@/lib/schemas";
 import { durationFit, durationSourceNote, typicalMonths } from "./duration";
+import {
+  applySiteReviews,
+  relevantReviews,
+  SITE_REVIEW_PARAMS,
+} from "./site-reviews";
 import { bcpiEscalation, trailingAnnualRate } from "./escalation";
 import { zoningFlags } from "./zoning";
 import { resolveParams } from "./params";
@@ -148,14 +153,18 @@ function overlapsWinter(start: Date, months: number): boolean {
   return false;
 }
 
+const REVIEW_IDS = new Set(SITE_REVIEW_PARAMS.map((d) => d.id));
+
 /** Input completeness → class (SPEC 7.3). */
 function componentClass(
   c: Component,
   hasDocuments: boolean,
+  /** Site review inputs that apply (the component has that site flag). */
+  reviews: Set<string> = new Set(),
 ): { cls: EstimateClass; hints: ImprovementHint[] } {
   if (c.type === "custom") return { cls: "D", hints: [] };
   const important = templates[c.type].paramCatalog.filter(
-    (d) => d.costImpact >= 3,
+    (d) => d.costImpact >= 3 && (!REVIEW_IDS.has(d.id) || reviews.has(d.id)),
   );
   const total = important.reduce((s, d) => s + d.costImpact, 0) || 1;
   // On/off inputs are always answered: off means the thing isn't there, so toggling
@@ -358,12 +367,19 @@ export function computeEstimate(
     });
 
     // Site context (P6.3): allowances and permit flags for nearby schools, water, rail…
-    const site = siteAllowances(
+    const siteRaw = siteAllowances(
       c,
       siteProximity(c, project.siteContext),
       lines.reduce((s, l) => s + l.total, 0),
       regionFactor * bcpi.factor,
     );
+    // A review (document or answer) can settle a site condition (site-reviews.ts).
+    const site = applySiteReviews(
+      siteRaw,
+      ctx.params,
+      (p) => c.paramMeta[p]?.evidence,
+    );
+    const reviews = relevantReviews(siteRaw.flags.map((f) => f.code));
     lines.push(...site.lines);
     const templateFlags = template.flags(ctx);
     // The template's own in-water permit flag already covers the watercourse permit.
@@ -389,7 +405,11 @@ export function computeEstimate(
     );
     const escalation =
       (direct + softTotal) * ((1 + annualRate) ** (midpointMonths / 12) - 1);
-    const { cls, hints } = componentClass(c, project.documents.length > 0);
+    const { cls, hints } = componentClass(
+      c,
+      project.documents.length > 0,
+      reviews,
+    );
 
     for (const f of templateFlags) addFlag(f);
     if (winter && lines.some((l) => WINTER_CATEGORIES.includes(l.category))) {

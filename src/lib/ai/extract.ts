@@ -1,8 +1,10 @@
 import { z } from "zod";
 import { templates } from "@/engine/templates";
 import { coerceAnswer } from "@/lib/questions/rank";
+import { SIZE_HINTS } from "./parse";
 import type {
   ComponentType,
+  ParamDefinition,
   ExtractFinding,
   ExtractRequest,
   ExtractResponse,
@@ -14,8 +16,25 @@ import { type AIProvider, AIUnavailableError } from "./provider";
 // and values from the catalog; every value is validated here, and the user
 // reviews each one before it's applied. No costs, ever.
 
-/** Sizes come from the drawing, not from documents. */
+/** Sizes come from the drawing, except for components the layout placed (sizeDefs). */
 const SKIP = new Set(["gfaOverrideM2", "areaM2"]);
+
+/** Size inputs a document may set on planned or generated components; the layout then resizes them. */
+function sizeDefs(type: ComponentType): ParamDefinition[] {
+  const catalog = templates[type].paramCatalog.filter((d) => SKIP.has(d.id));
+  const hints = (SIZE_HINTS[type] ?? []).filter(
+    (h) => !catalog.some((d) => d.id === h.id),
+  );
+  return [...catalog, ...hints];
+}
+
+/** What a document may set on a component. */
+function defsFor(c: ExtractRequest["components"][number]): ParamDefinition[] {
+  return [
+    ...templates[c.type].paramCatalog.filter((d) => !SKIP.has(d.id)),
+    ...(c.resizable ? sizeDefs(c.type) : []),
+  ];
+}
 
 const AiExtractSchema = z.object({
   summary: z.string(),
@@ -33,7 +52,8 @@ const AiExtractSchema = z.object({
 
 const SYSTEM = `You read documents for a Canadian municipal cost estimator (e.g. geotechnical reports, site surveys, previous studies, drawings).
 You get the project's components and, per component type, the parameters the estimator uses (id, type, allowed values).
-Find every parameter value the document clearly states or strongly implies, for example soil condition (good / average / poor), bedrock depth (rockExpected), groundwater, excavation depth, fish habitat in a watercourse, culvert span, building basement or site servicing.
+Find every parameter value the document clearly states or strongly implies, for example soil condition (good / average / poor), bedrock depth (rockExpected), groundwater, excavation depth, fish habitat in a watercourse, culvert span, building basement or site servicing, traffic staging, and sizes (floor area, storeys, park area, road length) where listed.
+Reviews: if the document concludes that a nearby school, hospital, watercourse or rail line needs no special measures (or that a permit or approval is already settled), set schoolReview / hospitalReview / waterwayReview / railReview to "no_measures" for the components it covers; if it says measures are needed, "measures_needed".
 For each finding return:
 - paramId: exactly one of the listed ids for that type;
 - value: as text (enum: one of the listed values; boolean: "true" or "false"; number: a number in the listed unit);
@@ -43,11 +63,16 @@ For each finding return:
 Only report what the document supports. Skip anything not in the parameter list. Never state or estimate costs.
 summary: one short line saying what the document is (e.g. "Geotechnical report, 6 boreholes along Main St").`;
 
-function catalogText(types: ComponentType[]): string {
+function catalogText(components: ExtractRequest["components"]): string {
+  const types = [...new Set(components.map((c) => c.type))].filter(
+    (t) => t !== "custom",
+  );
   return types
     .map((type) => {
+      const resizable = components.some((c) => c.type === type && c.resizable);
       const params = templates[type].paramCatalog
         .filter((d) => !SKIP.has(d.id))
+        .concat(resizable ? sizeDefs(type) : [])
         .map((d) => {
           const detail =
             d.type === "enum"
@@ -76,15 +101,12 @@ export function toFindings(
       for (const c of components)
         if (all ? c.type === all : c.id === a) ids.add(c.id);
     }
-    // Only components whose catalog has this param; the value must be valid for it.
+    // Only components that can take this param; the value must be valid for it.
     const targets = components.filter(
-      (c) =>
-        ids.has(c.id) &&
-        !SKIP.has(f.paramId) &&
-        templates[c.type].paramCatalog.some((d) => d.id === f.paramId),
+      (c) => ids.has(c.id) && defsFor(c).some((d) => d.id === f.paramId),
     );
     const def = targets[0]
-      ? templates[targets[0].type].paramCatalog.find((d) => d.id === f.paramId)
+      ? defsFor(targets[0]).find((d) => d.id === f.paramId)
       : undefined;
     const value = def ? coerceAnswer(def, f.value) : null;
     if (!def || value === null) return;
@@ -150,9 +172,6 @@ export async function extractDocument(
   req: ExtractRequest,
   provider: AIProvider,
 ): Promise<ExtractResponse> {
-  const types = [...new Set(req.components.map((c) => c.type))].filter(
-    (t) => t !== "custom",
-  );
   try {
     const raw = await provider.generateStructured({
       system: SYSTEM,
@@ -160,7 +179,7 @@ export async function extractDocument(
         .map((c) => `- ${c.id}: ${c.name} (${c.type}, ${c.subtype})`)
         .join(
           "\n",
-        )}\n\nParameters by type:\n${catalogText(types)}\n\nDocument: ${req.fileName}`,
+        )}\n\nParameters by type:\n${catalogText(req.components)}\n\nDocument: ${req.fileName}`,
       schema: AiExtractSchema,
       files: [{ mimeType: req.mimeType, dataBase64: req.dataBase64 }],
     });

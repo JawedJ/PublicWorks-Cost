@@ -151,7 +151,11 @@ export function EstimatePanel() {
           <LineItemsTab estimate={estimate} scoped={scoped} />
         </TabsContent>
         <TabsContent value="inputs">
-          <InputsTab components={components} componentId={scopeId} />
+          <InputsTab
+            components={components}
+            componentId={scopeId}
+            flags={estimate.flags}
+          />
         </TabsContent>
         <TabsContent value="export">
           <ExportTab estimate={estimate} />
