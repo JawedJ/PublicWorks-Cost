@@ -89,6 +89,8 @@ export type DesignSlice = DesignSnapshot & {
   showZoning: boolean;
   /** "Things to check" highlighted on the map (buildings in the way, creeks, schools…). */
   showIssues: boolean;
+  /** Component hovered in the estimate panel (bar chart), highlighted on the map. */
+  hoveredComponentId: string | null;
   unitSystem: UnitSystem;
   /** Undo/redo stacks; most recent last. */
   past: DesignSnapshot[];
@@ -113,6 +115,7 @@ export type DesignSlice = DesignSnapshot & {
   setColourByCost: (on: boolean) => void;
   setShowZoning: (on: boolean) => void;
   setShowIssues: (on: boolean) => void;
+  setHoveredComponent: (id: string | null) => void;
   setUnitSystem: (units: UnitSystem) => void;
 
   /** Adds a component; it is 'drawn' if it has geometry, otherwise 'planned'. Returns its id. */
@@ -303,6 +306,7 @@ export const createDesignSlice: StateCreator<Store, [], [], DesignSlice> = (
     colourByCost: false,
     showZoning: false,
     showIssues: true,
+    hoveredComponentId: null,
     unitSystem: "metric",
     past: [],
     future: [],
@@ -327,6 +331,7 @@ export const createDesignSlice: StateCreator<Store, [], [], DesignSlice> = (
     setColourByCost: (colourByCost) => set({ colourByCost }),
     setShowZoning: (showZoning) => set({ showZoning }),
     setShowIssues: (showIssues) => set({ showIssues }),
+    setHoveredComponent: (hoveredComponentId) => set({ hoveredComponentId }),
     setUnitSystem: (unitSystem) => set({ unitSystem }),
 
     addComponent: (input) => get().addComponents([input])[0]!,

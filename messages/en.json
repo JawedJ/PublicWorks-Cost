@@ -473,6 +473,7 @@
   "charts": {
     "byComponent": "By component (P50)",
     "byComponentLabel": "P50 by component. Select one to see its own estimate.",
+    "byComponentHint": "Click a bar to open that component",
     "distribution": "Range of outcomes",
     "distributionLabel": "Simulated project cost: P10 {p10}, P50 {p50}, P90 {p90}",
     "distributionNote": "5,000 simulated outcomes. The shaded middle is the likely range (P10–P90).",

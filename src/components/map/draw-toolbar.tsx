@@ -2,8 +2,11 @@
 
 import {
   ChevronDown,
+  ChevronRight,
   Circle,
   CircleDashed,
+  Folder,
+  FolderOpen,
   Frame,
   Lasso,
   Layers,
@@ -121,6 +124,8 @@ export function DrawToolbar() {
   const [choice, setChoice] = useState<Choice | null>(null);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  /** Folders opened in the picker (all open while searching). */
+  const [openFolders, setOpenFolders] = useState<Set<string>>(new Set());
   /** A custom element or feature waiting for its name. */
   const [naming, setNaming] = useState<Choice | null>(null);
   const [customName, setCustomName] = useState("");
@@ -587,29 +592,59 @@ export function DrawToolbar() {
                 />
               </div>
               <div className="overflow-y-auto py-1">
-                {groups.map((g) => (
-                  <div key={g} className="py-1">
-                    <p className="px-3 pt-1 pb-0.5 text-[11px] font-medium tracking-wide text-muted-foreground uppercase">
-                      {g}
-                    </p>
-                    {shown
-                      .filter((i) => i.group === g)
-                      .map((i) => {
-                        const ItemIcon = i.icon;
-                        return (
-                          <button
-                            key={i.key}
-                            type="button"
-                            onClick={() => pick(i)}
-                            className="flex w-full items-center gap-2 px-3 py-1.5 text-left hover:bg-muted focus-visible:bg-muted focus-visible:outline-none"
-                          >
-                            <ItemIcon className="size-4 shrink-0 text-muted-foreground" />
-                            <span className="truncate">{i.label}</span>
-                          </button>
-                        );
-                      })}
-                  </div>
-                ))}
+                {groups.map((g) => {
+                  const inGroup = shown.filter((i) => i.group === g);
+                  // "Add to <selected>" is always open; others open on click or search.
+                  const contextual =
+                    selected !== undefined &&
+                    g === t("addTo", { name: selected.name });
+                  const isOpen = Boolean(q) || contextual || openFolders.has(g);
+                  const FolderIcon = isOpen ? FolderOpen : Folder;
+                  return (
+                    <div key={g}>
+                      <button
+                        type="button"
+                        aria-expanded={isOpen}
+                        onClick={() =>
+                          setOpenFolders((prev) => {
+                            const next = new Set(prev);
+                            if (next.has(g)) next.delete(g);
+                            else next.add(g);
+                            return next;
+                          })
+                        }
+                        className="flex w-full items-center gap-2 px-3 py-1.5 text-left font-medium hover:bg-muted focus-visible:bg-muted focus-visible:outline-none"
+                      >
+                        <ChevronRight
+                          className={cn(
+                            "size-3.5 shrink-0 text-muted-foreground transition-transform",
+                            isOpen && "rotate-90",
+                          )}
+                        />
+                        <FolderIcon className="size-4 shrink-0 text-muted-foreground" />
+                        <span className="flex-1 truncate">{g}</span>
+                        <span className="text-xs text-muted-foreground tabular-nums">
+                          {inGroup.length}
+                        </span>
+                      </button>
+                      {isOpen &&
+                        inGroup.map((i) => {
+                          const ItemIcon = i.icon;
+                          return (
+                            <button
+                              key={i.key}
+                              type="button"
+                              onClick={() => pick(i)}
+                              className="flex w-full items-center gap-2 py-1.5 pr-3 pl-10 text-left hover:bg-muted focus-visible:bg-muted focus-visible:outline-none"
+                            >
+                              <ItemIcon className="size-4 shrink-0 text-muted-foreground" />
+                              <span className="truncate">{i.label}</span>
+                            </button>
+                          );
+                        })}
+                    </div>
+                  );
+                })}
                 {shown.length === 0 && (
                   <p className="px-3 py-3 text-xs text-muted-foreground">
                     {t("noMatches")}

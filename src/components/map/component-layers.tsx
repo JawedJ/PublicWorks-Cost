@@ -101,6 +101,8 @@ function areaFeatures(area: PolygonFeature | null): GeoJSON.Feature[] {
 const isPolygon: ExpressionSpecification = ["==", ["geometry-type"], "Polygon"];
 const isLine: ExpressionSpecification = ["==", ["geometry-type"], "LineString"];
 const isPoint: ExpressionSpecification = ["==", ["geometry-type"], "Point"];
+/** Hover highlight colour (bright amber, distinct from the selection outline). */
+const HOVER_COLOR = "#fbbf24";
 const selectedFilter = (id: string | null): ExpressionSpecification => [
   "==",
   ["get", "componentId"],
@@ -238,6 +240,47 @@ function addLayers(map: MapLibreMap) {
         ],
         "fill-extrusion-height": ["get", "heightM"],
         "fill-extrusion-opacity": 0.9,
+      },
+    },
+    beforeId,
+  );
+  // Hover highlight (e.g. from the estimate's bar chart): a glow under the selection.
+  map.addLayer(
+    {
+      id: "pw-hover-fill",
+      type: "fill",
+      source: SOURCE,
+      filter: ["all", isPolygon, selectedFilter(null)],
+      paint: { "fill-color": HOVER_COLOR, "fill-opacity": 0.35 },
+    },
+    beforeId,
+  );
+  map.addLayer(
+    {
+      id: "pw-hover-line",
+      type: "line",
+      source: SOURCE,
+      filter: ["all", ["!=", ["geometry-type"], "Point"], selectedFilter(null)],
+      layout: { "line-cap": "round", "line-join": "round" },
+      paint: {
+        "line-color": HOVER_COLOR,
+        "line-width": 7,
+        "line-blur": 2,
+        "line-opacity": 0.9,
+      },
+    },
+    beforeId,
+  );
+  map.addLayer(
+    {
+      id: "pw-hover-point",
+      type: "circle",
+      source: SOURCE,
+      filter: ["all", isPoint, selectedFilter(null)],
+      paint: {
+        "circle-radius": 14,
+        "circle-color": HOVER_COLOR,
+        "circle-opacity": 0.45,
       },
     },
     beforeId,
@@ -476,6 +519,27 @@ export function ComponentLayers() {
       selectedFilter(selectedId),
     ]);
   }, [map, selectedId, components]);
+
+  // Hovering a component elsewhere (the bar chart) lights it up here.
+  const hoveredId = useStore((s) => s.hoveredComponentId);
+  useEffect(() => {
+    if (!map?.getLayer("pw-hover-line")) return;
+    map.setFilter("pw-hover-fill", [
+      "all",
+      isPolygon,
+      selectedFilter(hoveredId),
+    ]);
+    map.setFilter("pw-hover-line", [
+      "all",
+      ["!=", ["geometry-type"], "Point"],
+      selectedFilter(hoveredId),
+    ]);
+    map.setFilter("pw-hover-point", [
+      "all",
+      isPoint,
+      selectedFilter(hoveredId),
+    ]);
+  }, [map, hoveredId, components]);
 
   return (
     <>
