@@ -10,6 +10,8 @@ export interface AIProvider {
     prompt: string;
     schema: S;
     fast?: boolean;
+    /** Documents sent alongside the prompt (e.g. a PDF report), base64. */
+    files?: AIFile[];
   }): Promise<z.infer<S>>;
   generateText(opts: {
     system: string;
@@ -17,6 +19,8 @@ export interface AIProvider {
     fast?: boolean;
   }): Promise<string>;
 }
+
+export type AIFile = { mimeType: string; dataBase64: string };
 
 export type AIUnavailableReason =
   "no_provider" | "rate_limited" | "timeout" | "error" | "invalid_output";

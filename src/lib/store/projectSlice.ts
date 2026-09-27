@@ -56,6 +56,8 @@ export type ProjectSlice = {
   /** Stores the zone lookup for the buildings (SPEC 8.3). */
   setZoningContext: (zoningContext: ZoningContext | undefined) => void;
   setActiveScenario: (scenarioId: string) => void;
+  /** Records a document the user had read (metadata only; the file isn't kept). */
+  addDocument: (doc: Project["documents"][number]) => void;
 
   /** Sets one parameter and records where the value came from. One undo step. */
   setComponentParam: (
@@ -202,6 +204,9 @@ export const createProjectSlice: StateCreator<Store, [], [], ProjectSlice> = (
     },
 
     setZoningContext: (zoningContext) => updateInfo({ zoningContext }),
+
+    addDocument: (doc) =>
+      updateInfo({ documents: [...get().project.documents, doc] }),
 
     setActiveScenario: (scenarioId) => {
       if (!get().project.scenarios.some((s) => s.id === scenarioId)) return;

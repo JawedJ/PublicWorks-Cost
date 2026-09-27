@@ -128,7 +128,9 @@ Flags only; never block, never change the estimate. Do Waterloo first (demo city
 - [ ] P8.3 Comparison view (up to 3) · Stretch
 - [ ] P8.4 Scenarios in exports · Stretch
 - [x] P6.3 Site-context flags in engine + reports; auto-filled params (uses A's `/api/geo/context`) · Stretch
-- [ ] P7.6 Document upload + `/api/ai/extract` + accept/reject review · Stretch
+- [x] P7.6 Document upload (per the human): `src/components/questions/document-upload.tsx`, `src/lib/ai/extract.ts`, `/api/ai/extract`; review then apply as ai_document
+- [x] General questions (per the human): one per type + param project-wide (`rank.ts`), group wording (`questions.groups`, `questions.askAll`), one Save for all listed
+- Note for A: per the human I removed the Colour by cost button from `view-switcher.tsx` (your file; store flag left in place, always off) and deleted `src/lib/export/_tmp_pdf.test.ts` (it wrote to your home folder and failed elsewhere).
 - [ ] P9.6 Optional concept image provider (disabled without key) · Stretch
 
 ### S4 → S5 — Polish (after feature freeze)
