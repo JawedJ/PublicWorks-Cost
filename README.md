@@ -4,11 +4,6 @@ Map-based, AI-assisted cost estimating for Canadian public infrastructure. Descr
 
 > All pricing and reference data in this repo is **illustrative sample data**, not real cost data.
 
-- What to build: [`SPEC.md`](SPEC.md)
-- Where the build is: [`PROGRESS.md`](PROGRESS.md), [`PERSON_A.md`](PERSON_A.md), [`PERSON_B.md`](PERSON_B.md)
-- How we work: [`CLAUDE.md`](CLAUDE.md), [`TEAM.md`](TEAM.md)
-- Deploying: [`DEPLOY.md`](DEPLOY.md)
-
 ## Requirements
 
 - Node.js 20.9+ (developed on Node 26)
