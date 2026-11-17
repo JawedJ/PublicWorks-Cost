@@ -4,6 +4,27 @@ Map-based, AI-assisted cost estimating for Canadian public infrastructure. Descr
 
 > All pricing and reference data in this repo is **illustrative sample data**, not real cost data.
 
+**[▶ Watch the demo video](https://www.youtube.com/watch?v=2-e5I5Dqry4)** · **[Try it live](https://publicworkscost.vercel.app)**
+
+![Cost estimate for a community hub laid out on the map](docs/images/estimate.jpg)
+
+## Screenshots
+
+**Describe the whole build in plain English**
+
+![Describe the build](docs/images/describe.jpg)
+
+**See the range of outcomes and where the money goes**
+
+![Range of outcomes from 5,000 simulations](docs/images/range.jpg)
+
+**Flag risks and zoning issues, and answer questions that narrow the estimate**
+
+<p>
+  <img src="docs/images/things-to-check.jpg" alt="Things to check: soil, winter construction and zoning" width="49%">
+  <img src="docs/images/questions.jpg" alt="Questions that refine the estimate" width="49%">
+</p>
+
 ## Requirements
 
 - Node.js 20.9+ (developed on Node 26)
